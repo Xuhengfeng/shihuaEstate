@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <router-view/>
+  	<!-- 缓存组件,created只触发一次啦 -->
+    <keep-alive>
+    		<router-view v-if="$route.meta.keepAlive"></router-view>
+		</keep-alive>
+		<!-- 设置不缓存的页面 -->
+				<router-view v-if="!$route.meta.keepAlive"></router-view>
     <o-footer></o-footer>
   </div>
 </template>
@@ -10,9 +15,6 @@
 	export default {
 	  components: {
 	  	oFooter
-	  },
-	  methods:{
-	  	
 	  }
 	}
 </script>

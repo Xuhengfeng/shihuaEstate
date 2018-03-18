@@ -6,8 +6,12 @@ import actions from './actions'
 
 Vue.use(Vuex)
 
+//初始化vuex
+const localLoginData = localStorage.getItem('data')
 export default new Vuex.Store({
-	state,
+	state:{
+  		logindata: localLoginData ?  JSON.parse(localLoginData) : {}
+  	},
 	actions,
 	mutations,
 })
