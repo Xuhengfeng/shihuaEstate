@@ -1,32 +1,52 @@
 <template>
     <!-- 地图找房 -->
-    <div class="maplookhouse">
+    <div class="mapSearch">
         <div class="header">
             <div class="header-hd">
-                <div class="logo fl">
-                    <img src="../../imgs/home/logo1.png"/>
-                </div>
-                <div class="fr">
-                    <div>
-                        <div class="iconfont icon-yonghu" v-if="rightnow">
-                            <span class="login" @click="loginResize()">登录</span>|
-                            <span class="logout" @click="rightResize()">立即注册</span>
-                        </div>
-                        <div class="iconfont icon-yonghu" v-else><span class="login">徐横峰</span>|<span class="logout">退出</span></div>
+                <router-link to="" tag="div" class="logo"></router-link>
+                <div class="sign fr">
+                    <div v-if="true">
+                        <span class="login">登录</span><span class="logout">注册</span>
                     </div>
+                    <div v-else><span class="login">徐横峰</span>|<span class="logout">退出</span></div>
                 </div>
                 <div class="menu fr">
                     <ul>
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                        <li>4</li>
-                        <li>5</li>
+                        <router-link tag="li" to="/buyhouseguide">购房指南</router-link>
+						<router-link tag="li" to="/broker">经纪人</router-link>
+						<router-link tag="li" to="/houseestate">小区</router-link>
+						<router-link tag="li" to="/sellrent">我要售/租</router-link>
+						<router-link tag="li" to="/renthouse">我要租房</router-link>
+						<router-link tag="li" to="/buyhouse">我要买房</router-link>
+						<router-link tag="li" to="/home">首页</router-link>
                     </ul>
                 </div>
             </div>    
             <div class="header-bd">
-                
+                <div class="search-bar fl">
+                    <input type="text" placeholder="输入小区或地铁附站开始找房">
+                    <img src="../../imgs/home/search.png" style="width:15px;height:15px;">
+                </div>
+                <ul class="filters fl">
+                    <li>售价
+                        <div class="filters-content">
+                            <li>111</li>
+                        </div>
+                    </li>
+                    <li>售价
+                        <div class="filters-content">
+                            <li>111</li>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="tools fr">
+                    <li>
+                        <i class="iconfont icon-location">南宁</i>                        
+                    </li>
+                    <li>
+                        <i class="iconfont icon-location">南宁</i>                        
+                    </li>
+                </ul>
             </div>
         </div> 
         <div id="map"></div>
@@ -35,11 +55,10 @@
 
 <script>
     export default {
-        data() {
-            return {
-                
-            }
-        },
+       	data(){
+			return{
+			}
+		},
         created() {
             this.houseAll()//区域级别房源
         },
@@ -58,7 +77,6 @@
             }
         },
         mounted() {
-            console.log(this.$url.URL)
             //创建和初始化地图函数：
         function initMap() {
             createMap();//创建地图
@@ -194,28 +212,112 @@
 </script>
 
 <style scoped="scoped">
-.maplookhouse{
-    width: 100%;
-    height: 100%;
-}
-#map{
-    width: 100%;
-    height: 100%;
-}
+
+/* 第一块 */
 .header .header-hd{
     overflow: hidden;
+    height: 59px;
+    border-bottom: 1px solid #eee;
 }
-.header .logo{
-    height: 60px;
-    line-height: 90px;
-    background: red;
-}
-.header .logo img{
-    zoom: 0.9
-}
-.header .menu li{
+.header-hd .logo{
     float: left;
+    width: 240px;
+    height: 60px;
+    background:url("../../imgs/buyhouse/logored.png") no-repeat center center;
+}
+.header-hd .logo img{
+    vertical-align: middle;
+}
+.header-hd .menu{
+    overflow: hidden;
     height: 60px;
     line-height: 60px;
+    text-align: center;
+}
+.header-hd ul li{
+    float: right;
+    width: 100px;
+    height: 100%;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+.header-hd ul li:hover{
+    color: #ff4343;
+}
+.header-hd .sign>div{
+    font-size: 12px;
+    color: #666;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    margin-right: 12px;
+    margin-left: 40px;
+}
+.login,.logout{
+    color: #666;
+    padding: 0 10px;
+}
+
+/* 第二块 */
+.header .header-bd{
+    height: 50px;
+    border-bottom: 1px solid #eee;
+}
+.header .search-bar{
+    position: relative;
+    vertical-align: middle;
+    height: 100%;
+    border-right: 1px solid #eee;
+}
+.header .search-bar input{
+    height: 100%;
+    width: 400px;
+    box-sizing: border-box;
+    margin-left: 20px;
+    padding: 13px 60px 10px 0;
+    outline: none;
+    border: 0;
+    font-size: 13px;
+}
+.header .search-bar img{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.header-bd .filters,
+.header-bd .tools{
+    height: 50px;
+    line-height: 50px;
+}
+.header-bd .filters>li{
+    float: left;
+    height: 100%;
+    width: 80px;
+    border-right: 1px solid #eee;
+    text-align: center;
+    position: relative;
+}
+.header-bd .tools>li{
+    float: right;
+    height: 100%;
+}
+.filters-content{
+    position: absolute;
+    left: 0;
+     z-index: 1100;
+}
+
+/* 地图 */
+#map{
+    position: absolute;
+    top: 111px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden;
 }
 </style>

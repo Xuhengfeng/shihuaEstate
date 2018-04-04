@@ -3,12 +3,10 @@
 		<div class="header">
 			<div class="container">
 				<div class="fl">
-					<router-link to="" class="logo">
-						<img src="../../imgs/home/logo1.png"/>
-					</router-link>
-					<el-button type="text" class="location" @click.native="changeCity()">
+					<router-link to="" class="logo" tag="div"></router-link>
+					<div type="text" class="location" @click="changeCity()">
 						<i class="iconfont icon-location">南宁</i>
-					</el-button>
+					</div>
 					<div class="shadowlay" v-if="toggleShow" @click="closeCity()"></div>
 					<div class="city-change " v-if="cityChange">
 						<!--关闭定位阴影-->
@@ -234,8 +232,8 @@
 										<div class="login_input">
 											<input type="text" placeholder="请输入手机号" maxlength="11">
 											<div class="login_input_resgize"><input  type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-											<input type="text" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
-											<input type="text" placeholder="请再次输入密码" maxlength="11">
+											<input type="password" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
+											<input type="password" placeholder="请再次输入密码" maxlength="11">
 										</div>
 										<label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label>
 											<button class="org_btn">注册</button>	
@@ -312,8 +310,8 @@
 						<input class="search-box" :placeholder="souText"></input>
 						<div class="search-box-btn fr">开始找房</div>
 					</div>
-					<router-link tag="div" to="/home/maplookhouse" class="maplookhouse" @click="maplookhouse">
-						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
+					<router-link tag="div" to="/home/mapSearch" class="mapSearchHouse">
+						<i class="iconfont icon-location"></i>
 						<span>地图找房</span>
 					</router-link>
 				</div>
@@ -406,7 +404,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in [1,1,1]">
+						<li v-for="(item,index) in [1,1,1]" :key="index">
 							<div class="image">
 								<img src="../../imgs/home/goufang.png"/>
 							</div>
@@ -470,13 +468,13 @@
 				this.cityChange = false;
 			},
 			zuFang(num) {  //替换搜索内容
-				if(num ==1) {
+				if(num == 1) {
 					this.$refs.sanjiao.style.left = '0px'; 
 					this.souText = '请输入区域丶商圈或小区名开始找房';
-				}else if(num ==2) {
+				}else if(num == 2) {
 					this.$refs.sanjiao.style.left = '120px'; 
 					this.souText = '请输区名开始租房';
-				}else if(num ==3) {
+				}else if(num == 3) {
 					this.$refs.sanjiao.style.left = '220px'; 
 					this.souText = '请输入区域丶名开始找房';
 				}
@@ -500,13 +498,7 @@
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
 			}
-		},
-		mounted() {
-			console.log(this.$refs.test)
-			console.log(this.$refs)
-			this.$refs.test.height='800px!important';
 		}
-		
 	}
 </script>
 
@@ -661,6 +653,7 @@
 	width: 188px;
 	height: 52px;
 	vertical-align: middle;
+	background:url('../../imgs/home/logo.png') no-repeat center center;
 }
 .header .logo img{
 	width: 100%;
@@ -670,7 +663,7 @@
 	display: inline-block;
 	width: 69px;
 	height: 32px;
-	line-height: 10px;
+	line-height: 32px;
 	background: rgba(0,0,0,0.2);
 	border-radius: 15px;
 	text-align: center;
@@ -729,13 +722,17 @@
 	overflow: hidden;
 }
 /* 地图找房 */
-.search-box-wrap .maplookhouse{
+.search-box-wrap .mapSearchHouse{
 	position: absolute;
-	right: -250px;
-	top: 70px;
-	width: 200px;
+	right: -130px;
+	top: 63px;
+	width: 100px;
 	height: 50px;
+	line-height: 50px;
 	background: red;
+	font-size: 15px;
+	color: #ffffff;
+	text-align: center;
 	z-index: 1100;
 }
 .search-box-wrap .search-hd span{
