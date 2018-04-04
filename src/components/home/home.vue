@@ -312,7 +312,7 @@
 						<input class="search-box" :placeholder="souText"></input>
 						<div class="search-box-btn fr">开始找房</div>
 					</div>
-					<router-link tag="div" to="/home/maplookhouse" class="maplookhouse">
+					<router-link tag="div" to="/home/maplookhouse" class="maplookhouse" @click="maplookhouse">
 						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
 						<span>地图找房</span>
 					</router-link>
@@ -501,7 +501,7 @@
 				this.loginshow = 4;
 			}
 		},
-		mounted: function(){
+		mounted() {
 			console.log(this.$refs.test)
 			console.log(this.$refs)
 			this.$refs.test.height='800px!important';
