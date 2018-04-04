@@ -28,7 +28,7 @@ export default {
 	watch: {
     '$route' (to, from) {
       var path = to.path;
-      if (path == "/home/mapSearch") {
+      if (path == "/mapSearch") {
         sessionStorage.isShowFooter = 0;
         this.isShowFooter = 0;
       } else {

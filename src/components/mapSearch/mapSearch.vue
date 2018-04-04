@@ -35,7 +35,19 @@
                         </div>
                     </li>
                     <li>
-                        <span>售价<i class="iconfont icon-location"></i>  </span>
+                        <span>户型<i class="iconfont icon-location"></i>  </span>
+                        <div class="filters-content">
+                            <li>111</li>
+                        </div>
+                    </li>
+                    <li>
+                        <span>面积<i class="iconfont icon-location"></i>  </span>
+                        <div class="filters-content">
+                            <li>111</li>
+                        </div>
+                    </li>
+                    <li>
+                        <span>更多选项<i class="iconfont icon-location"></i>  </span>
                         <div class="filters-content">
                             <li>111</li>
                         </div>
