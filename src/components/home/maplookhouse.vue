@@ -1,6 +1,34 @@
 <template>
     <!-- 地图找房 -->
     <div class="maplookhouse">
+        <div class="header">
+            <div class="header-hd">
+                <div class="logo fl">
+                    <img src="../../imgs/home/logo1.png"/>
+                </div>
+                <div class="fr">
+                    <div>
+                        <div class="iconfont icon-yonghu" v-if="rightnow">
+                            <span class="login" @click="loginResize()">登录</span>|
+                            <span class="logout" @click="rightResize()">立即注册</span>
+                        </div>
+                        <div class="iconfont icon-yonghu" v-else><span class="login">徐横峰</span>|<span class="logout">退出</span></div>
+                    </div>
+                </div>
+                <div class="menu fr">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                        <li>3</li>
+                        <li>4</li>
+                        <li>5</li>
+                    </ul>
+                </div>
+            </div>    
+            <div class="header-bd">
+                
+            </div>
+        </div> 
         <div id="map"></div>
     </div>
 </template>
@@ -42,7 +70,8 @@
         function createMap() {
 
             map = new BMap.Map("map",{
-                
+                minZoom: 13,
+                maxZoom: 18
             });
             map.centerAndZoom(new BMap.Point(109.228518, 21.496304), 13);
  
@@ -172,5 +201,21 @@
 #map{
     width: 100%;
     height: 100%;
+}
+.header .header-hd{
+    overflow: hidden;
+}
+.header .logo{
+    height: 60px;
+    line-height: 90px;
+    background: red;
+}
+.header .logo img{
+    zoom: 0.9
+}
+.header .menu li{
+    float: left;
+    height: 60px;
+    line-height: 60px;
 }
 </style>
