@@ -310,7 +310,7 @@
 						<input class="search-box" :placeholder="souText"></input>
 						<div class="search-box-btn fr">开始找房</div>
 					</div>
-					<router-link tag="div" to="/home/mapSearch" class="mapSearchHouse">
+					<router-link tag="div" to="/mapSearch" class="mapSearchHouse">
 						<i class="iconfont icon-location"></i>
 						<span>地图找房</span>
 					</router-link>
