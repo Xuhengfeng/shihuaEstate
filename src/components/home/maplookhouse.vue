@@ -1,7 +1,6 @@
 <template>
     <!-- 地图找房 -->
     <div class="maplookhouse">
-        <div class="card"></div>
         <div id="map"></div>
     </div>
 </template>
@@ -10,10 +9,28 @@
     export default {
         data() {
             return {
-
+                
+            }
+        },
+        created() {
+            this.houseAll()//区域级别房源
+        },
+        methods: {
+            //区域级别房源
+            houseAll() {
+                this.$http.post(this.$url.URL.MAPHOUSEALL, {
+                    scity: 'beihai'
+                })
+                .then((res)=> {
+                    console.log(res)
+                })
+                .catch((error)=> {
+                    console.log(error)
+                })
             }
         },
         mounted() {
+            console.log(this.$url.URL)
             //创建和初始化地图函数：
         function initMap() {
             createMap();//创建地图
@@ -21,11 +38,16 @@
             addMapControl();//向地图添加控件
             addMapOverlay();//向地图添加覆盖物
         }
+        
         function createMap() {
-            map = new BMap.Map("map");
-            map.centerAndZoom(new BMap.Point(114.604748, 38.05118), 13);
+
+            map = new BMap.Map("map",{
+                
+            });
+            map.centerAndZoom(new BMap.Point(109.228518, 21.496304), 13);
  
             function myFun(result) {
+                console.log(result)
                 var cityName = result.name;
                 map.setCenter("cityName");
                 //alert("当前定位城市:" + cityName);
@@ -33,6 +55,7 @@
             var myCity = new BMap.LocalCity();
             myCity.get(myFun);
         }
+        
         function setMapEvent() {
             map.enableScrollWheelZoom();
             map.enableKeyboard();
