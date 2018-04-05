@@ -64,7 +64,11 @@
             </div>
         </div> 
         <div id="map"></div>
-       
+        <!-- 房源列表 -->
+        <div class="side" ref="side">
+            发呆发斯蒂芬
+            <div class="showController" @click="isShowHouseList">></div>
+        </div>
     </div>
 </template>
 
@@ -97,51 +101,56 @@ export default {
         ]},
         {px:109.175113,py:21.489796,'value':'南珠汽车站(区域)',
           districtList:[
-            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区21',
+            {px:109.09822473723126,py:21.463802752968178,'value':'片区21',
               streetList:[
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道221'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道222'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道223'}
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道221'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道222'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道223'}
             ]},
-            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区22',
+            {px:109.09822473723126,py:21.463802752968178,'value':'片区22',
               streetList:[
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道221'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道222'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道223'}
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道221'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道222'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道223'}
             ]},
-            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区23',
+            {px:109.09822473723126,py:21.463802752968178,'value':'片区23',
               streetList:[
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道221'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道222'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道223'}
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道221'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道222'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道223'}
             ]}
         ]},
         {px:109.128545,py:21.450509,'value':'海洋之窗(区域)',
           districtList:[
-            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区31',
+            {px:109.122868,py:21.448356,'value':'片区31',
               streetList:[
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道331'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道332'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道333'}
+                {px:109.1187,py:21.43944,'value':'街道331'},
+                {px:109.131707,py:21.436648,'value':'街道332'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道333'}
             ]},
-            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区32',
+            {px:109.152117,py:21.414441,'value':'片区32',
               streetList:[
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道331'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道332'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道333'}
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道331'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道332'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道333'}
             ]},
-            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区33',
+            {px:109.09822473723126,py:21.463802752968178,'value':'片区33',
               streetList:[
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道331'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道332'},
-                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道333'}
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道331'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道332'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道333'}
             ]}
         ]}
       ],
       inputKeyword: '',//输入关键词
+      isShowSide: true,//是否显示side
     }
   },
   methods: {
+    isShowHouseList() {
+      this.isShowSide?this.$refs.side.style.left="0":this.$refs.side.style.left="-438px";
+      this.isShowSide = !this.isShowSide
+    },
     //区域级别房源
     requestAllCityData() {
       if(!this.inputKeyword) {
@@ -243,8 +252,8 @@ export default {
             let point = new BMap.Point(item2.px, item2.py);
             this.addLabel(point, item2);
           })
-        }else{
-
+        }else if(currentZoom>14) { 
+          //show  左边 房源列表选项
         }
       }) 
 
@@ -261,29 +270,37 @@ export default {
     //初始化百度地图
     this.initMap();
 
-    // this.map.addEventListener("zoomend", ()=>{
-    //     //清空覆盖物
-    //     this.map.clearOverlays();    
+    this.map.addEventListener("zoomend", ()=>{
+        //清空覆盖物
+        this.map.clearOverlays();    
 
-    //     let currentZoom = this.map.getZoom();
-    //     if(currentZoom<=12) {//区域级别
-    //       //区域级别数据显示
-    //       this.areaList.forEach((item)=>{
-    //         let point = new BMap.Point(item.px, item.py);
-    //         this.addLabel(point, item);
-    //       })
-    //     }else if(currentZoom>12&&currentZoom<=14) {//片区级别
-    //       //片区级别数据显示
-    //       this.areaList.forEach((item)=>{
-    //         item.districtList.forEach((item2)=>{
-    //           let point = new BMap.Point(item2.px, item2.py);
-    //           this.addLabel(point, item);
-    //         })
-    //       })
-    //     }else if(currentZoom>15) {//街道级别
-    //       return;
-    //     }
-    // })    
+        let currentZoom = this.map.getZoom();
+        if(currentZoom<=12) {//区域级别
+          //区域级别数据显示
+          this.areaList.forEach((item)=>{
+            let point = new BMap.Point(item.px, item.py);
+            this.addLabel(point, item);
+          })
+        }else if(currentZoom>12&&currentZoom<=14) {//片区级别
+          //片区级别数据显示
+          this.areaList.forEach((item)=>{
+            item.districtList.forEach((item2)=>{
+              let point = new BMap.Point(item2.px, item2.py);
+              this.addLabel(point, item2);
+            })
+          })
+        }else if(currentZoom>15) {//街道级别
+          //街道级别数据显示
+          this.areaList.forEach((item)=>{
+            item.districtList.forEach((item2)=>{
+              item2.streetList.forEach((item3)=>{
+                let point = new BMap.Point(item3.px, item3.py);
+                this.addLabel(point, item3);
+              })
+            })
+          })
+        }
+    })    
   }
 };
 </script>
@@ -387,19 +404,48 @@ export default {
   left: 0;
   z-index: 1100;
 }
+
+/* 房源列表 */
+.side{
+  position: fixed;
+  left: -438px;
+  top: 111px;
+  background: #ffffff;
+  width: 438px;
+  bottom: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+.side .showController{
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  width: 40px;
+  height: 60px;
+  line-height: 60px;
+  background: #ffffff;
+  text-align: center;
+  transform: translateY(-50%);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 1px 0 0 rgba(0,0,0,0.3),
+              0 -1px 0 rgba(0,0,0,0.3), 
+              0 1px 0  rgba(0,0,0,0.3); 
+  cursor: pointer;
+}
 </style>
 
 <style>
-/* 地图 */
+/* 百度地图样式 ----------------------------------------------<<<<<<*/
 #map {
   position: absolute;
+  min-width: 1200px;
   top: 111px;
   bottom: 0;
   right: 0;
   left: 0;
   overflow: hidden;
 }
-/* 百度地图样式 */
 .BMapLabel{
   width: auto!important;
   height: auto!important;
@@ -470,4 +516,5 @@ export default {
   color: rgba(83,145,244,1);
   line-height: 0;
 }
+/* 百度地图样式 ----------------------------------------------<<<<<<*/
 </style>
