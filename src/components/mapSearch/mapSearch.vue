@@ -13,19 +13,19 @@
                 <div class="menu fr">
                     <ul>
                         <router-link tag="li" to="/buyhouseguide">购房指南</router-link>
-						<router-link tag="li" to="/broker">经纪人</router-link>
-						<router-link tag="li" to="/houseestate">小区</router-link>
-						<router-link tag="li" to="/sellrent">我要售/租</router-link>
-						<router-link tag="li" to="/renthouse">我要租房</router-link>
-						<router-link tag="li" to="/buyhouse">我要买房</router-link>
-						<router-link tag="li" to="/home">首页</router-link>
+                        <router-link tag="li" to="/broker">经纪人</router-link>
+                        <router-link tag="li" to="/houseestate">小区</router-link>
+                        <router-link tag="li" to="/sellrent">我要售/租</router-link>
+                        <router-link tag="li" to="/renthouse">我要租房</router-link>
+                        <router-link tag="li" to="/buyhouse">我要买房</router-link>
+                        <router-link tag="li" to="/home">首页</router-link>
                     </ul>
                 </div>
             </div>    
             <div class="header-bd">
                 <div class="search-bar fl">
-                    <input type="text" placeholder="输入小区或地铁附站开始找房">
-                    <img src="../../imgs/home/search.png" style="width:15px;height:15px;">
+                    <input v-model="inputKeyword" type="text" placeholder="输入小区或地铁附站开始找房">
+                    <img src="../../imgs/home/search.png" style="width:15px;height:15px;" @click="requestAllCityData()">
                 </div>
                 <ul class="filters fl">
                     <li> 
@@ -64,22 +64,90 @@
             </div>
         </div> 
         <div id="map"></div>
+       
     </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {};
-  },
-  created() {
-    this.houseAll(); //区域级别房源
+    return {
+      map: null,//地图实例
+      areaList: [//地图找房
+        {px:109.136307,py:21.460197,value:'北海站(区域)',
+          districtList:[
+            {px:109.153374,py:21.495076,'value':'片区11',
+              streetList:[
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道111'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道112'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道113'}
+            ]},
+            {px:109.147338,py:21.489527,'value':'片区12',
+              streetList:[
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道111'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道112'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道113'}
+            ]},
+            {px:109.153374,py:21.48502,'value':'片区13',
+              streetList:[
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道111'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道112'},
+                {px:109.09822473723126,py:21.463802752968178,'value':'街道113'}
+            ]}
+        ]},
+        {px:109.175113,py:21.489796,'value':'南珠汽车站(区域)',
+          districtList:[
+            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区21',
+              streetList:[
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道221'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道222'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道223'}
+            ]},
+            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区22',
+              streetList:[
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道221'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道222'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道223'}
+            ]},
+            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区23',
+              streetList:[
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道221'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道222'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道223'}
+            ]}
+        ]},
+        {px:109.128545,py:21.450509,'value':'海洋之窗(区域)',
+          districtList:[
+            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区31',
+              streetList:[
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道331'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道332'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道333'}
+            ]},
+            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区32',
+              streetList:[
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道331'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道332'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道333'}
+            ]},
+            {'px':109.09822473723126,'py':21.463802752968178,'value':'片区33',
+              streetList:[
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道331'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道332'},
+                {'px':109.09822473723126,'py':21.463802752968178,'value':'街道333'}
+            ]}
+        ]}
+      ],
+      inputKeyword: '',//输入关键词
+    }
   },
   methods: {
     //区域级别房源
-    houseAll() {
-      this.$http
-        .post(this.$url.URL.MAPHOUSEALL, {
+    requestAllCityData() {
+      if(!this.inputKeyword) {
+        this.$alert('输入关键词!')
+      }else{
+        this.$http.post(this.$url.URL.MAPHOUSEALL, {
           scity: "beihai"
         })
         .then(res => {
@@ -88,171 +156,134 @@ export default {
         .catch(error => {
           console.log(error);
         });
-    }
-  },
-  mounted() {
-    //创建和初始化地图函数：
-    function initMap() {
-      createMap(); //创建地图
-      setMapEvent(); //设置地图事件
-      addMapControl(); //向地图添加控件
-      addMapOverlay(); //向地图添加覆盖物
-    }
-
-    function createMap() {
-      map = new BMap.Map("map", {
-        minZoom: 13,
+      }
+    },
+    //这里百度地图start------------------------------------------------------------------------<<<<<<<<<<
+    initMap() {
+      this.createMap(); //创建地图
+      this.setMapEvent(); //设置地图事件
+    },
+    createMap() {//创建地图
+      //11 12     区域级别
+      //13 14      片区级别
+      //15 16      街道级别
+      this.map = new BMap.Map("map", {
+        minZoom: 11,
         maxZoom: 18
       });
-      map.centerAndZoom(new BMap.Point(109.228518, 21.496304), 13);
+      let pt = new BMap.Point(109.134582,21.459389);//初始时候 首先获取到目的城市的坐标 例如: 北海站坐标
+      this.map.centerAndZoom(pt, 12);//初始中心点和缩放比例
+     
+      //初始化区域级别数据显示
+      this.areaList.forEach((item)=>{
+          let point = new BMap.Point(item.px, item.py);
+          this.addLabel(point, item);
+      })
+    },
+    addLabel(point, obj){//创建label 
+        //判断当前是处于什么zoom 级别的;
+        let currentZoom = this.map.getZoom();
 
-      function myFun(result) {
-        console.log(result);
-        var cityName = result.name;
-        map.setCenter("cityName");
-        //alert("当前定位城市:" + cityName);
-      }
-      var myCity = new BMap.LocalCity();
-      myCity.get(myFun);
-    }
+        //区域级别 和 片区级别 
+        let html1=`<div class="bubble-2 bubble">
+                      <p class="name">${obj.value}</p>
+                      <p class="num">57万</p>
+                      <p class="count">5000套</p>
+                    </div>`;
 
-    function setMapEvent() {
-      map.enableScrollWheelZoom();
-      map.enableKeyboard();
-      map.enableDragging();
-      map.enableDoubleClickZoom();
-    }
-    function addClickHandler(target, poi, window) {
-      //pop弹窗标题
-      var title =
-        '<div style="font-weight:bold;color:#CE5521;font-size:14px">' +
-        poi.title +
-        "</div>";
-      //pop弹窗信息
-      var html = [];
-      html.push(
-        '<table cellspacing="0" style="table-layout:fixed;width:100%;font:12px arial,simsun,sans-serif"><tbody>'
-      );
-      html.push("<tr>");
-      html.push(
-        '<td style="vertical-align:top;width:38px;white-space:nowrap;word-break:keep-all">建设内容:</td>'
-      );
-
-      html.push("<tr>");
-      html.push('<td style="text-align:left;">' + poi.content + " </td>");
-      html.push("</tr>");
-      html.push("</tbody></table>");
-      var infoWindow = new BMap.InfoWindow(html.join(""), {
-        title: title,
-        width: 200
-      });
-
-      target.addEventListener("click", function() {
-        target.openInfoWindow(infoWindow);
-      });
-
-      map.addEventListener("zoomend", function() {
-        var DiTu = this.getZoom();
-        var allOverlay = map.getOverlays();
-        if (DiTu >= 13) {
-          for (var i = 0; i < allOverlay.length - 1; i++) {
-            if (allOverlay[i].toString() == "[object Marker]") {
-            }
-          }
-        } else {
+        //街道级别
+        let html2 = `<div class="bubble-3 bubble">
+                      <p class="name">${obj.value}</p>
+                      <i class="iconfont icon-sanjiaoxing-down"></i>
+                    </div>`;
+        let content;
+        if(currentZoom == 16) {
+          content = html2;
+        }else{
+          content = html1;
         }
+        
 
-        //map.removeEventListener("zoomend", showInfo);
-      });
-    }
+        var label = new BMap.Label(content, {
+            offset: new BMap.Size(-40,-40),
+            position: point //指定文本标注所在的地理位置               
+          })
+          label.setStyle({
+            border: 0,
+            backgroundColor: 'none',
+            overflow: 'hidden',
+            width: '86px',
+            height: '86px'
+          })
+      this.map.addOverlay(label); //将标注添加到地图中
+      
+      label.addEventListener('click',(e)=>{
+        //重新设置中心位置 
+        this.map.setCenter(e.point);
+        
+        //进入下一级 改变 zoom 和 数据;
+        if(currentZoom<=12) {//区域级别 
+          //清空覆盖物
+          this.map.clearOverlays();    
+          this.map.setZoom(14);
 
-    function addMapOverlay() {
-      var markers = [
-        {
-          MingCheng: "1(前期项目)",
-          content: "<p style='text-align:right;'>1</p>",
-          title:
-            "<a href='/Admin/Project/pro_qqdetails.aspx?ID=581&PageUrl=/Admin/Project/map.aspx'>1</a>(前期项目)",
-          imageOffset: { width: -23, height: -21 },
-          position: { lat: 37.983687, lng: 114.639084 }
-        },
-        {
-          MingCheng: "19(前期项目)",
-          content: "<p style='text-align:right;'>9</p>",
-          title:
-            "<a href='/Admin/Project/pro_qqdetails.aspx?ID=582&PageUrl=/Admin/Project/map.aspx'>19</a>(前期项目)",
-          imageOffset: { width: -23, height: -21 },
-          position: { lat: 37.975951, lng: 114.603152 }
+          //片区级别数据显示 这里的obj是区域级别的遍历对象
+          obj.districtList.forEach((item2)=>{
+            let point = new BMap.Point(item2.px, item2.py);
+            this.addLabel(point, item2);//递归 item2传给下一级别的obj
+          })
+        }else if(currentZoom>12&&currentZoom<=14) {//片区级别
+          //清空覆盖物
+          this.map.clearOverlays();  
+          this.map.setZoom(16);
+
+          //街道级别数据显示 这里的obj是片区级别的对象
+          obj.streetList.forEach((item2)=>{
+            console.log(item2)
+            let point = new BMap.Point(item2.px, item2.py);
+            this.addLabel(point, item2);
+          })
+        }else{
+
         }
-      ];
-      for (var index = 0; index < markers.length; index++) {
-        var point = new BMap.Point(
-          markers[index].position.lng,
-          markers[index].position.lat
-        );
-        var marker = new BMap.Marker(point, {
-          icon: new BMap.Icon(
-            "http://api.map.baidu.com/lbsapi/createmap/images/icon.png",
-            new BMap.Size(20, 25),
-            {
-              imageOffset: new BMap.Size(
-                markers[index].imageOffset.width,
-                markers[index].imageOffset.height
-              )
-            }
-          )
-        });
-        var label = new BMap.Label(markers[index].title, {
-          offset: new BMap.Size(25, 5)
-        });
-        var opts = {
-          width: 200,
-          title: markers[index].title,
-          enableMessage: false
-        };
-        var infoWindow = new BMap.InfoWindow(markers[index].content, opts);
-        marker.setLabel(label);
-        marker.setTitle(markers[index].MingCheng);
+      }) 
 
-        addClickHandler(marker, markers[index], infoWindow);
-        map.addOverlay(marker);
-      }
-    }
-    //向地图添加控件
-    function addMapControl() {
-      //添加城市查询 start
-      var size = new BMap.Size(10, 20);
-      map.addControl(
-        new BMap.CityListControl({
-          anchor: BMAP_ANCHOR_TOP_LEFT,
-          offset: size
-        })
-      );
-      //添加城市查询 end
+    },
+    setMapEvent() {//设置地图事件
+      this.map.enableScrollWheelZoom();
+      this.map.enableKeyboard();
+      this.map.enableDragging();
+      this.map.enableDoubleClickZoom();
+    },
+    //这里百度地图end------------------------------------------------------------------<<<<<<<<<<
+  },
+  mounted() {
+    //初始化百度地图
+    this.initMap();
 
-      //比例尺 start
-      var scaleControl = new BMap.ScaleControl({
-        anchor: BMAP_ANCHOR_BOTTOM_LEFT
-      });
-      scaleControl.setUnit(BMAP_UNIT_IMPERIAL);
-      map.addControl(scaleControl);
-      //比例尺 end
+    // this.map.addEventListener("zoomend", ()=>{
+    //     //清空覆盖物
+    //     this.map.clearOverlays();    
 
-      //比例尺控件 start
-      //var navControl = new BMap.NavigationControl({ anchor: BMAP_ANCHOR_TOP_LEFT, type: BMAP_NAVIGATION_CONTROL_LARGE });
-      //map.addControl(navControl);
-      //比例尺控件 end
-
-      //小地图 start
-      var overviewControl = new BMap.OverviewMapControl({
-        anchor: BMAP_ANCHOR_BOTTOM_RIGHT,
-        isOpen: true
-      });
-      map.addControl(overviewControl);
-      //小地图 end
-    }
-    var map;
-    initMap();
+    //     let currentZoom = this.map.getZoom();
+    //     if(currentZoom<=12) {//区域级别
+    //       //区域级别数据显示
+    //       this.areaList.forEach((item)=>{
+    //         let point = new BMap.Point(item.px, item.py);
+    //         this.addLabel(point, item);
+    //       })
+    //     }else if(currentZoom>12&&currentZoom<=14) {//片区级别
+    //       //片区级别数据显示
+    //       this.areaList.forEach((item)=>{
+    //         item.districtList.forEach((item2)=>{
+    //           let point = new BMap.Point(item2.px, item2.py);
+    //           this.addLabel(point, item);
+    //         })
+    //       })
+    //     }else if(currentZoom>15) {//街道级别
+    //       return;
+    //     }
+    // })    
   }
 };
 </script>
@@ -356,7 +387,9 @@ export default {
   left: 0;
   z-index: 1100;
 }
+</style>
 
+<style>
 /* 地图 */
 #map {
   position: absolute;
@@ -365,5 +398,76 @@ export default {
   right: 0;
   left: 0;
   overflow: hidden;
+}
+/* 百度地图样式 */
+.BMapLabel{
+  width: auto!important;
+  height: auto!important;
+  overflow: visible!important;
+}
+.bubble:hover{
+  background: red;
+  border: 1px solid rgb(255,0,0);
+}
+.bubble-3:hover i{
+  color: red;
+}
+.bubble-2{
+  color:red;
+  position:absolute;
+  top:0;
+  left:0;
+  width:86px;
+  height:86px;
+  border-radius: 50%;
+  text-align:center;
+  background-size: cover;
+  color: #ffffff;
+  cursor: pointer;
+  border: 1px solid rgb(83,145,244);
+  background: rgba(83,145,244,1);
+}
+.bubble-2 .name,
+.bubble-2 .num,
+.bubble-2 .count{
+  font-size:10px;
+  margin-top:20px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding:0 10px
+}
+.bubble-2 .num{
+  font-size:10px;
+  margin-top:5px;
+}
+.bubble-2 .count{
+  font-size:10px;
+  margin-top:5px;
+}
+.bubble-3{
+  height: 24px;
+  line-height: 24px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  background: rgba(83,145,244,1);
+  position: relative;
+  color: #ffffff;
+}
+.bubble-3 .name{
+  font-size:10px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding:0 10px
+}
+.bubble-3 i{
+  position: absolute;
+  top: 27px;
+  left: 50%;
+  font-size: 18px;
+  color: rgba(83,145,244,1);
+  line-height: 0;
 }
 </style>
