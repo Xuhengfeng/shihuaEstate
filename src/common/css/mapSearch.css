@@ -1,0 +1,84 @@
+/* 百度地图样式 ----------------------------------------------<<<<<<*/
+#map {
+  position: absolute;
+  min-width: 1200px;
+  top: 111px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+}
+.BMapLabel{
+  width: auto!important;
+  height: auto!important;
+  overflow: visible!important;
+}
+.bubble:hover{
+  background: red;
+  border: 1px solid rgb(255,0,0);
+}
+.bubble-3:hover i{
+  color: red;
+}
+.bubble-2{
+  color:red;
+  position:absolute;
+  top:0;
+  left:0;
+  width:86px;
+  height:86px;
+  border-radius: 50%;
+  text-align:center;
+  background-size: cover;
+  color: #ffffff;
+  cursor: pointer;
+  border: 1px solid rgb(83,145,244);
+  background: rgba(83,145,244,1);
+}
+.bubble-2 .name,
+.bubble-2 .num,
+.bubble-2 .count{
+  font-size:10px;
+  margin-top:20px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding:0 10px
+}
+.bubble-2 .num{
+  font-size:10px;
+  margin-top:5px;
+}
+.bubble-2 .count{
+  font-size:10px;
+  margin-top:5px;
+}
+.bubble-3{
+  height: 24px;
+  line-height: 24px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  background: rgba(83,145,244,1);
+  position: relative;
+  color: #ffffff;
+}
+.bubble-3 .name{
+  font-size:10px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  padding:0 10px
+}
+.bubble-3 i{
+  position: absolute;
+  top: 27px;
+  left: 50%;
+  font-size: 18px;
+  color: rgba(83,145,244,1);
+  line-height: 0;
+}
+path:hover{
+  cursor: pointer;
+}
+/* 百度地图样式 ----------------------------------------------<<<<<<*/

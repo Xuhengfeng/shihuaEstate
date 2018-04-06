@@ -54,25 +54,44 @@
                     </li>
                 </ul>
                 <ul class="tools fr">
-                    <li>
-                        <i class="iconfont icon-location"></i>南宁                        
+                    <li v-if="metroNum == 1">
+                        <i class="iconfont icon-location"></i>地铁找房                        
                     </li>
-                    <li>
-                        <i class="iconfont icon-location"></i>南宁                        
+                    <li v-if="metroNum == 2">
+                        <i class="iconfont icon-location"></i>地铁找房                        
+                    </li>
+
+                    <li @click="beginDraw()" v-if="circleNum == 1">
+                        <i class="iconfont icon-location"></i>画圈找房                      
+                    </li>
+                    <li @click="exitDraw()" v-if="circleNum == 2" style="color:#ff4343">
+                        <i class="iconfont icon-location"></i>退出画圈找房                      
                     </li>
                 </ul>
             </div>
         </div> 
-        <div id="map"></div>
+        <div id="map">
+         
+        </div>
         <!-- 房源列表 -->
         <div class="side" ref="side">
             发呆发斯蒂芬
             <div class="showController" @click="isShowHouseList">></div>
         </div>
+        <div class="changeZoom">
+            <button id="zoom_in">+</button>
+            <button id="zoom_out">-</button>
+        </div>
     </div>
 </template>
 
 <script>
+//自定义百度地图label样式
+import '../../common/css/mapSearch.css';
+
+// 引入d3库
+import * as d3 from "d3";
+
 export default {
   data() {
     return {
@@ -144,6 +163,9 @@ export default {
       ],
       inputKeyword: '',//输入关键词
       isShowSide: true,//是否显示side
+      path: '',//路径
+      circleNum: 1,//开始画圈找房 取消
+      metroNum: 1,//开始地铁找房 取消
     }
   },
   methods: {
@@ -253,7 +275,9 @@ export default {
             this.addLabel(point, item2);
           })
         }else if(currentZoom>14) { 
-          //show  左边 房源列表选项
+          //show 左边 房源列表选项
+          this.isShowSide=false;
+          this.$refs.side.style.left="0";
         }
       }) 
 
@@ -265,6 +289,45 @@ export default {
       this.map.enableDoubleClickZoom();
     },
     //这里百度地图end------------------------------------------------------------------<<<<<<<<<<
+
+    //画圈找房start----------------<<<
+		getMouse(e){//获取坐标
+      var e=e||window.event;
+			var mouse={x:0,y:0};
+			mouse.x=e.pageX;
+      mouse.y=e.pageY-111;
+			return mouse;
+    },
+    beginDraw() {//点击画图按钮 开始触发这个函数
+      this.circleNum = 2;
+      this.map.disableDragging();//设置地图禁止拖拽   
+      var str='';
+      var svgNode = document.querySelector('svg');
+      svgNode.onmousedown = (e)=>{//开始画圈圈
+        let mouse = this.getMouse(e);
+        var x1 = mouse.x;
+        var y1 = mouse.y;
+        str = "M "+x1+" "+y1+" L ";
+
+        svgNode.onmousemove = (e)=>{
+          let mouse = this.getMouse(e);
+          var x2 = mouse.x;
+          var y2 = mouse.y;
+          str += x2+" "+y2+" ";
+          this.path.attr("d", str);
+        }
+      }
+      svgNode.onmouseup = ()=>{//结束
+        svgNode.onmousemove = null;
+      }
+    },
+    exitDraw() {// 结束画圈
+      this.circleNum = 1;
+      this.map.enableDragging();//设置地图打开拖拽
+    }
+    
+    //画圈找房end----------------<<<
+
   },
   mounted() {
     //初始化百度地图
@@ -300,15 +363,37 @@ export default {
             })
           })
         }
-    })    
+    });
+
+    // 画圈找房start------------------------------------------------------<<<<<<<<<<<<<<< 
+    const width = 1200;
+    const height = 1200;
+    const style = "position:absolute;top:0;left:0;"
+    var svg = d3.select("#map>div>.BMap_mask+div>div:last-child")
+              .append("svg")
+              .attr("width", width)
+              .attr("style", style)
+              .attr("fill", 'rgba(0,0,0,.3)')
+              .attr("height", height);
+
+    this.path = svg.append("path")
+                  .attr("stroke", 'rgb(83,145,244)')
+                  .attr("stroke-width", '10');
+    // 画圈找房end------------------------------------------------------<<<<<<<<<<<<<<< 
   }
 };
 </script>
 
 <style scoped="scoped">
 /* 第一块 */
+.header {
+  position: relative;
+  z-index: 100;
+  background: #ffffff;
+}
 .header .header-hd {
   overflow: hidden;
+  width: 100%;
   height: 59px;
   border-bottom: 1px solid #eee;
 }
@@ -356,6 +441,7 @@ export default {
 
 /* 第二块 */
 .header .header-bd {
+  width: 100%;
   height: 50px;
   border-bottom: 1px solid #eee;
 }
@@ -363,6 +449,7 @@ export default {
   position: relative;
   vertical-align: middle;
   height: 100%;
+  width: 438px;
   border-right: 1px solid #eee;
 }
 .header .search-bar input {
@@ -398,6 +485,8 @@ export default {
 .header-bd .tools > li {
   float: right;
   height: 100%;
+  padding: 0 20px;
+  cursor: pointer;
 }
 .filters-content {
   position: absolute;
@@ -406,7 +495,7 @@ export default {
 }
 
 /* 房源列表 */
-.side{
+.side {
   position: fixed;
   left: -438px;
   top: 111px;
@@ -416,7 +505,7 @@ export default {
   transition: all 0.3s ease;
   z-index: 1000;
 }
-.side .showController{
+.side .showController {
   position: absolute;
   right: -40px;
   top: 50%;
@@ -428,93 +517,27 @@ export default {
   transform: translateY(-50%);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
-  box-shadow: 1px 0 0 rgba(0,0,0,0.3),
-              0 -1px 0 rgba(0,0,0,0.3), 
-              0 1px 0  rgba(0,0,0,0.3); 
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
+}
+
+/* 改变zoom控件 */
+.changeZoom {
+  position: fixed;
+  right: 20px;
+  bottom: 50px;
+}
+.changeZoom button {
+  background: #ffffff;
+  padding: 20px;
+  display: block;
+  border: 0;
+  outline: none;
+  margin-bottom: 10px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 </style>
 
-<style>
-/* 百度地图样式 ----------------------------------------------<<<<<<*/
-#map {
-  position: absolute;
-  min-width: 1200px;
-  top: 111px;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  overflow: hidden;
-}
-.BMapLabel{
-  width: auto!important;
-  height: auto!important;
-  overflow: visible!important;
-}
-.bubble:hover{
-  background: red;
-  border: 1px solid rgb(255,0,0);
-}
-.bubble-3:hover i{
-  color: red;
-}
-.bubble-2{
-  color:red;
-  position:absolute;
-  top:0;
-  left:0;
-  width:86px;
-  height:86px;
-  border-radius: 50%;
-  text-align:center;
-  background-size: cover;
-  color: #ffffff;
-  cursor: pointer;
-  border: 1px solid rgb(83,145,244);
-  background: rgba(83,145,244,1);
-}
-.bubble-2 .name,
-.bubble-2 .num,
-.bubble-2 .count{
-  font-size:10px;
-  margin-top:20px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  padding:0 10px
-}
-.bubble-2 .num{
-  font-size:10px;
-  margin-top:5px;
-}
-.bubble-2 .count{
-  font-size:10px;
-  margin-top:5px;
-}
-.bubble-3{
-  height: 24px;
-  line-height: 24px;
-  cursor: pointer;
-  text-align: center;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-  background: rgba(83,145,244,1);
-  position: relative;
-  color: #ffffff;
-}
-.bubble-3 .name{
-  font-size:10px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  padding:0 10px
-}
-.bubble-3 i{
-  position: absolute;
-  top: 27px;
-  left: 50%;
-  font-size: 18px;
-  color: rgba(83,145,244,1);
-  line-height: 0;
-}
-/* 百度地图样式 ----------------------------------------------<<<<<<*/
-</style>
+
+
