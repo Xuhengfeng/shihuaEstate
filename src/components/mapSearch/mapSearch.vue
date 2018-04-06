@@ -167,7 +167,7 @@ export default {
       path: '',//路径
       circleNum: 1,//开始画圈找房 取消
       metroNum: 1,//开始地铁找房 取消
-      pencil: '../../imgs/pencil.ico',
+      pencil: '../../../static/pencil.ico',
     }
   },
   methods: {
@@ -292,7 +292,7 @@ export default {
     },
     //这里百度地图end------------------------------------------------------------------<<<<<<<<<<
 
-    //画圈找房start----------------<<<
+    //画圈找房start--------------------------------------------------------------------<<<<<<<<<<
     createdSvg() {//创建svg
       const style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
       this.svg = d3.select("#map>div>.BMap_mask+div>div:last-child")
@@ -314,7 +314,8 @@ export default {
     beginDraw() {//点击画图按钮 开始触发这个函数
 
       //鼠标样式替换
-      this.style.cursor = 'url('+this.pencil+'),auto';
+     
+      document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
 
       this.path = this.svg.append("path")//重新添加path
                   .attr("stroke", 'rgb(83,145,244)')
@@ -349,13 +350,15 @@ export default {
         svgNode.onmousemove = null;
         svgNode.onmousedown = null;
         svgNode.onmouseup = null;
+        document.querySelector("svg").style.cursor = 'pointer';
       }
     },
     exitDraw() {// 结束画圈
       d3.select('path').remove();//移除path
       this.circleNum = 1;
+      document.querySelector("svg").style.cursor = 'pointer';
     }
-    //画圈找房end----------------<<<
+    //画圈找房end---------------------------------------------------------------------------<<<
 
   },
   mounted() {
