@@ -167,6 +167,7 @@ export default {
       path: '',//路径
       circleNum: 1,//开始画圈找房 取消
       metroNum: 1,//开始地铁找房 取消
+      pencil: '../../imgs/pencil.ico',
     }
   },
   methods: {
@@ -311,7 +312,10 @@ export default {
 			return mouse;
     },
     beginDraw() {//点击画图按钮 开始触发这个函数
-      
+
+      //鼠标样式替换
+      this.style.cursor = 'url('+this.pencil+'),auto';
+
       this.path = this.svg.append("path")//重新添加path
                   .attr("stroke", 'rgb(83,145,244)')
                   .attr("stroke-width", '5');
