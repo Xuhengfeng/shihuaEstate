@@ -163,6 +163,7 @@ export default {
       ],
       inputKeyword: '',//输入关键词
       isShowSide: true,//是否显示side
+      svg: '',//svg
       path: '',//路径
       circleNum: 1,//开始画圈找房 取消
       metroNum: 1,//开始地铁找房 取消
@@ -291,6 +292,16 @@ export default {
     //这里百度地图end------------------------------------------------------------------<<<<<<<<<<
 
     //画圈找房start----------------<<<
+    createdSvg() {//创建svg
+      const style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
+      this.svg = d3.select("#map>div>.BMap_mask+div>div:last-child")
+                .append("svg")
+                .attr("x", "2536px")
+                .attr("y", "1281px")
+                .attr("viewBox", "-500 -500 2536 1281")
+                .attr("style", style)
+                .attr("fill", "rgba(0,0,0,.3)");
+    },
 		getMouse(e){//获取坐标
       var e=e||window.event;
 			var mouse={x:0,y:0};
@@ -299,10 +310,15 @@ export default {
 			return mouse;
     },
     beginDraw() {//点击画图按钮 开始触发这个函数
+      
+      this.path = this.svg.append("path")//重新添加path
+                  .attr("stroke", 'rgb(83,145,244)')
+                  .attr("stroke-width", '10');
       this.circleNum = 2;
       this.map.disableDragging();//设置地图禁止拖拽   
-      var str='';
       var svgNode = document.querySelector('svg');
+      var str='';
+
       svgNode.onmousedown = (e)=>{//开始画圈圈
         let mouse = this.getMouse(e);
         var x1 = mouse.x;
@@ -319,19 +335,20 @@ export default {
       }
       svgNode.onmouseup = ()=>{//结束
         svgNode.onmousemove = null;
+        svgNode.onmousedown = null;
+        this.map.enableDragging();//设置地图打开拖拽
       }
     },
     exitDraw() {// 结束画圈
+      d3.select('path').remove();//移除path
       this.circleNum = 1;
-      this.map.enableDragging();//设置地图打开拖拽
     }
-    
     //画圈找房end----------------<<<
 
   },
   mounted() {
-    //初始化百度地图
-    this.initMap();
+    this.initMap();//初始化百度地图
+    this.createdSvg();//初始化svg
 
     this.map.addEventListener("zoomend", ()=>{
         //清空覆盖物
@@ -364,22 +381,10 @@ export default {
           })
         }
     });
-
-    // 画圈找房start------------------------------------------------------<<<<<<<<<<<<<<< 
-    const width = 1200;
-    const height = 1200;
-    const style = "position:absolute;top:0;left:0;"
-    var svg = d3.select("#map>div>.BMap_mask+div>div:last-child")
-              .append("svg")
-              .attr("width", width)
-              .attr("style", style)
-              .attr("fill", 'rgba(0,0,0,.3)')
-              .attr("height", height);
-
-    this.path = svg.append("path")
-                  .attr("stroke", 'rgb(83,145,244)')
-                  .attr("stroke-width", '10');
-    // 画圈找房end------------------------------------------------------<<<<<<<<<<<<<<< 
+    this.map.addEventListener("dragend", ()=>{//拖动结束  重新改变svg位置 使其和地图同步
+       console.log(document.querySelector(".BMap_mask").getAttribute("style"));
+       console.log(d3.select(".BMap_mask").attr("style"));
+    })
   }
 };
 </script>
