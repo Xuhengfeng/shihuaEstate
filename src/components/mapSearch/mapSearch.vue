@@ -298,6 +298,7 @@ export default {
                 .append("svg")
                 .attr("x", "2536px")
                 .attr("y", "1281px")
+                .attr("stroke-linecap", "round")
                 .attr("viewBox", "-500 -500 2536 1281")
                 .attr("style", style)
                 .attr("fill", "rgba(0,0,0,.3)");
@@ -313,30 +314,37 @@ export default {
       
       this.path = this.svg.append("path")//重新添加path
                   .attr("stroke", 'rgb(83,145,244)')
-                  .attr("stroke-width", '10');
+                  .attr("stroke-width", '5');
       this.circleNum = 2;
       this.map.disableDragging();//设置地图禁止拖拽   
       var svgNode = document.querySelector('svg');
       var str='';
+      var x1,y1;//起始点坐标
+      var x2,y2;//结束点坐标
 
       svgNode.onmousedown = (e)=>{//开始画圈圈
         let mouse = this.getMouse(e);
-        var x1 = mouse.x;
-        var y1 = mouse.y;
+            x1 = mouse.x;
+            y1 = mouse.y;
         str = "M "+x1+" "+y1+" L ";
 
         svgNode.onmousemove = (e)=>{
           let mouse = this.getMouse(e);
-          var x2 = mouse.x;
-          var y2 = mouse.y;
+              x2 = mouse.x;
+              y2 = mouse.y;
           str += x2+" "+y2+" ";
           this.path.attr("d", str);
         }
       }
       svgNode.onmouseup = ()=>{//结束
+
+        //闭合路径
+        str += x1+" "+y1;
+        this.path.attr("d", str);
+        this.map.enableDragging();//设置地图打开拖拽
         svgNode.onmousemove = null;
         svgNode.onmousedown = null;
-        this.map.enableDragging();//设置地图打开拖拽
+        svgNode.onmouseup = null;
       }
     },
     exitDraw() {// 结束画圈
