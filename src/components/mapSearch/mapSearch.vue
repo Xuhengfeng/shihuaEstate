@@ -306,16 +306,29 @@ export default {
     },
 		getMouse(e){//获取坐标
       var e=e||window.event;
-			var mouse={x:0,y:0};
-			mouse.x=e.pageX;
-      mouse.y=e.pageY-111;
+      var mouse={x:0,y:0};
+			mouse.x=e.pageX+this.amendment().newLeft;
+      mouse.y=e.pageY-111+this.amendment().newTop;
 			return mouse;
+    },
+    amendment() { //修正鼠标位置参数
+      let str1 = document.querySelector(".BMap_mask").getAttribute("style").split(";")[1];//left
+      let str2 = document.querySelector(".BMap_mask").getAttribute("style").split(';')[2];//top
+          str1 = str1.replace(/[^-?\d+]/ig," ");
+          str2 = str2.replace(/[^-?\d+]/ig," ");
+      let newLeft = parseInt(str1);
+      let newTop = parseInt(str2);
+      return {
+        newLeft: newLeft,
+        newTop: newTop
+      }
     },
     beginDraw() {//点击画图按钮 开始触发这个函数
 
       //鼠标样式替换
      
-      document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
+      // document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
+      // this.map.setDefaultCursor('url('+this.pencil+'),default');
 
       this.path = this.svg.append("path")//重新添加path
                   .attr("stroke", 'rgb(83,145,244)')
@@ -350,13 +363,14 @@ export default {
         svgNode.onmousemove = null;
         svgNode.onmousedown = null;
         svgNode.onmouseup = null;
-        document.querySelector("svg").style.cursor = 'pointer';
+        // document.querySelector("svg").style.cursor = 'pointer';
+        
       }
     },
     exitDraw() {// 结束画圈
       d3.select('path').remove();//移除path
       this.circleNum = 1;
-      document.querySelector("svg").style.cursor = 'pointer';
+      // document.querySelector("svg").style.cursor = 'pointer';
     }
     //画圈找房end---------------------------------------------------------------------------<<<
 
@@ -397,8 +411,12 @@ export default {
         }
     });
     this.map.addEventListener("dragend", ()=>{//拖动结束  重新改变svg位置 使其和地图同步
-       console.log(document.querySelector(".BMap_mask").getAttribute("style"));
-       console.log(d3.select(".BMap_mask").attr("style"));
+        // let newLeft = -500 + this.amendment().newLeft;
+        // let newTop = -500 + this.amendment().newTop;
+        //     document.querySelector("svg").style.left = newLeft;
+        //     document.querySelector("svg").style.top = newTop;
+        // let viewBoxCoordinate = newLeft+" "+newTop+" 2536 1281";
+        // this.svg.attr("viewBox", viewBoxCoordinate);
     })
   }
 };
