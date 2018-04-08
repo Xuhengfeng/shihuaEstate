@@ -96,71 +96,11 @@ export default {
   data() {
     return {
       map: null,//地图实例
-      areaList: [//地图找房
-        {px:109.136307,py:21.460197,value:'北海站(区域)',
-          districtList:[
-            {px:109.153374,py:21.495076,'value':'片区11',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道111'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道112'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道113'}
-            ]},
-            {px:109.147338,py:21.489527,'value':'片区12',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道111'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道112'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道113'}
-            ]},
-            {px:109.153374,py:21.48502,'value':'片区13',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道111'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道112'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道113'}
-            ]}
-        ]},
-        {px:109.175113,py:21.489796,'value':'南珠汽车站(区域)',
-          districtList:[
-            {px:109.09822473723126,py:21.463802752968178,'value':'片区21',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道221'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道222'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道223'}
-            ]},
-            {px:109.09822473723126,py:21.463802752968178,'value':'片区22',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道221'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道222'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道223'}
-            ]},
-            {px:109.09822473723126,py:21.463802752968178,'value':'片区23',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道221'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道222'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道223'}
-            ]}
-        ]},
-        {px:109.128545,py:21.450509,'value':'海洋之窗(区域)',
-          districtList:[
-            {px:109.122868,py:21.448356,'value':'片区31',
-              streetList:[
-                {px:109.1187,py:21.43944,'value':'街道331'},
-                {px:109.131707,py:21.436648,'value':'街道332'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道333'}
-            ]},
-            {px:109.152117,py:21.414441,'value':'片区32',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道331'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道332'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道333'}
-            ]},
-            {px:109.09822473723126,py:21.463802752968178,'value':'片区33',
-              streetList:[
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道331'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道332'},
-                {px:109.09822473723126,py:21.463802752968178,'value':'街道333'}
-            ]}
-        ]}
-      ],
+      areaList: {//地图找房
+        arerDetails: [],//区域
+        districtDetails: [],//片区
+        housingDetails: [],//小区
+      },
       inputKeyword: '',//输入关键词
       isShowSide: true,//是否显示side
       svg: '',//svg
@@ -170,6 +110,9 @@ export default {
       pencil: '../../../static/pencil.ico',
     }
   },
+  created() {
+    this.requestAllCityData();
+  },
   methods: {
     isShowHouseList() {
       this.isShowSide?this.$refs.side.style.left="0":this.$refs.side.style.left="-438px";
@@ -177,19 +120,26 @@ export default {
     },
     //区域级别房源
     requestAllCityData() {
-      if(!this.inputKeyword) {
-        this.$alert('输入关键词!')
-      }else{
+      // if(!this.inputKeyword) {
+      //   this.$alert('输入关键词!')
+      // }else{
         this.$http.post(this.$url.URL.MAPHOUSEALL, {
           scity: "beihai"
         })
         .then(res => {
-          console.log(res);
+          this.areaList = res.data.data;
+          console.log(this.areaList.arerDetails);
+          //初始化区域级别数据显示
+          this.areaList.arerDetails.forEach((item)=>{
+              let point = new BMap.Point(item.px, item.py);
+              this.addLabel(point, item);
+          })
+
         })
         .catch(error => {
           console.log(error);
         });
-      }
+      // }
     },
     //这里百度地图start------------------------------------------------------------------------<<<<<<<<<<
     initMap() {
@@ -197,21 +147,15 @@ export default {
       this.setMapEvent(); //设置地图事件
     },
     createMap() {//创建地图
-      //11 12     区域级别
+      //11 12      区域级别
       //13 14      片区级别
-      //15 16      街道级别
+      //15 16      小区级别
       this.map = new BMap.Map("map", {
         minZoom: 11,
         maxZoom: 18
       });
       let pt = new BMap.Point(109.134582,21.459389);//初始时候 首先获取到目的城市的坐标 例如: 北海站坐标
       this.map.centerAndZoom(pt, 12);//初始中心点和缩放比例
-     
-      //初始化区域级别数据显示
-      this.areaList.forEach((item)=>{
-          let point = new BMap.Point(item.px, item.py);
-          this.addLabel(point, item);
-      })
     },
     addLabel(point, obj){//创建label 
         //判断当前是处于什么zoom 级别的;
@@ -219,18 +163,27 @@ export default {
 
         //区域级别 和 片区级别 
         let html1=`<div class="bubble-2 bubble">
-                      <p class="name">${obj.value}</p>
-                      <p class="num">57万</p>
-                      <p class="count">5000套</p>
+                      <p class="name">${obj.areaName}</p>
+                      <p class="num">${obj.avgPrice}</p>
+                      <p class="count">${obj.formatAvgPrice}套</p>
+                    </div>`;
+        //片区级别
+        let html2=`<div class="bubble-2 bubble">
+                      <p class="name">${obj.districtName}</p>
+                      <p class="num">${obj.avgPrice}</p>
+                      <p class="count">${obj.formatAvgPrice}套</p>
                     </div>`;
 
-        //街道级别
-        let html2 = `<div class="bubble-3 bubble">
-                      <p class="name">${obj.value}</p>
+        //小区级别
+        let html3 = `<div class="bubble-3 bubble">
+                      <p class="name">${obj.buildName}</p>
                       <i class="iconfont icon-sanjiaoxing-down"></i>
                     </div>`;
+                    
         let content;
-        if(currentZoom == 16) {
+        if(currentZoom==15||currentZoom==16) {
+          content = html3;
+        }else if(currentZoom==13||currentZoom==14){
           content = html2;
         }else{
           content = html1;
@@ -261,21 +214,21 @@ export default {
           this.map.setZoom(14);
 
           //片区级别数据显示 这里的obj是区域级别的遍历对象
-          obj.districtList.forEach((item2)=>{
-            let point = new BMap.Point(item2.px, item2.py);
-            this.addLabel(point, item2);//递归 item2传给下一级别的obj
-          })
+          // this.areaList.districtDetails.forEach((item)=>{
+          //   let point = new BMap.Point(item.px, item.py);
+          //   this.addLabel(point, item);//递归 item传给下一级别的obj
+          // })
         }else if(currentZoom>12&&currentZoom<=14) {//片区级别
           //清空覆盖物
           this.map.clearOverlays();  
           this.map.setZoom(16);
 
-          //街道级别数据显示 这里的obj是片区级别的对象
-          obj.streetList.forEach((item2)=>{
-            console.log(item2)
-            let point = new BMap.Point(item2.px, item2.py);
-            this.addLabel(point, item2);
-          })
+          //小区级别数据显示 这里的obj是片区级别的对象
+          // this.areaList.housingDetails.forEach((item)=>{
+          //  console.log(item)
+          //   let point = new BMap.Point(item.px, item.py);
+          //   this.addLabel(point, item);
+          // })
         }else if(currentZoom>14) { 
           //show 左边 房源列表选项
           this.isShowSide=false;
@@ -342,6 +295,17 @@ export default {
 
       svgNode.onmousedown = (e)=>{//开始画圈圈
         let mouse = this.getMouse(e);
+
+          //像素坐标转地理坐标
+          // function pixel2Zuobiao(x,y){  
+            var p=new  BMap.Pixel(mouse.x,mouse.y);  
+            var point1=this.map.pixelToPoint(p);  
+          //   //返回一个数组  
+            var positionArray=new Array(point1.lng,point1.lat);  
+            console.log(positionArray)
+          //   return positionArray;  
+          // } 
+
             x1 = mouse.x;
             y1 = mouse.y;
         str = "M "+x1+" "+y1+" L ";
@@ -377,46 +341,42 @@ export default {
   },
   mounted() {
     this.initMap();//初始化百度地图
-    this.createdSvg();//初始化svg
+    this.createdSvg();//初始化svg  
 
     this.map.addEventListener("zoomend", ()=>{
         //清空覆盖物
         this.map.clearOverlays();    
 
         let currentZoom = this.map.getZoom();
+        console.log('123123')
+        console.log(currentZoom);
         if(currentZoom<=12) {//区域级别
           //区域级别数据显示
-          this.areaList.forEach((item)=>{
+         this.areaList.arerDetails.forEach((item)=>{
             let point = new BMap.Point(item.px, item.py);
             this.addLabel(point, item);
           })
         }else if(currentZoom>12&&currentZoom<=14) {//片区级别
           //片区级别数据显示
-          this.areaList.forEach((item)=>{
-            item.districtList.forEach((item2)=>{
-              let point = new BMap.Point(item2.px, item2.py);
-              this.addLabel(point, item2);
-            })
+          this.areaList.districtDetails.forEach((item)=>{
+            let point = new BMap.Point(item.px, item.py);
+            this.addLabel(point, item);
           })
-        }else if(currentZoom>15) {//街道级别
-          //街道级别数据显示
-          this.areaList.forEach((item)=>{
-            item.districtList.forEach((item2)=>{
-              item2.streetList.forEach((item3)=>{
-                let point = new BMap.Point(item3.px, item3.py);
-                this.addLabel(point, item3);
-              })
-            })
+        }else if(currentZoom>15) {//小区级别
+          //小区级别数据显示
+          this.areaList.housingDetails.forEach((item)=>{
+            let point = new BMap.Point(item.px, item.py);
+            this.addLabel(point, item);
           })
         }
     });
     this.map.addEventListener("dragend", ()=>{//拖动结束  重新改变svg位置 使其和地图同步
-        // let newLeft = -500 + this.amendment().newLeft;
-        // let newTop = -500 + this.amendment().newTop;
-        //     document.querySelector("svg").style.left = newLeft;
-        //     document.querySelector("svg").style.top = newTop;
-        // let viewBoxCoordinate = newLeft+" "+newTop+" 2536 1281";
-        // this.svg.attr("viewBox", viewBoxCoordinate);
+        let newLeft = -500 + this.amendment().newLeft;
+        let newTop = -500 + this.amendment().newTop;
+            document.querySelector("svg").style.left = newLeft;
+            document.querySelector("svg").style.top = newTop;
+        let viewBoxCoordinate = newLeft+" "+newTop+" 2536 1281";
+        this.svg.attr("viewBox", viewBoxCoordinate);
     })
   }
 };
