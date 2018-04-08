@@ -176,7 +176,7 @@ export default {
 
         //小区级别
         let html3 = `<div class="bubble-3 bubble">
-                      <p class="name">${obj.buildName}</p>
+                      <p class="name">${obj.buildName} <strong>${obj.formatAvgPrice}万</strong> ${obj.formatSaleCount}</p>
                       <i class="iconfont icon-sanjiaoxing-down"></i>
                     </div>`;
                     
@@ -207,28 +207,15 @@ export default {
         //重新设置中心位置 
         this.map.setCenter(e.point);
         
-        //进入下一级 改变 zoom 和 数据;
+        //改变zoom 进入下一级;
         if(currentZoom<=12) {//区域级别 
           //清空覆盖物
           this.map.clearOverlays();    
           this.map.setZoom(14);
-
-          //片区级别数据显示 这里的obj是区域级别的遍历对象
-          // this.areaList.districtDetails.forEach((item)=>{
-          //   let point = new BMap.Point(item.px, item.py);
-          //   this.addLabel(point, item);//递归 item传给下一级别的obj
-          // })
         }else if(currentZoom>12&&currentZoom<=14) {//片区级别
           //清空覆盖物
           this.map.clearOverlays();  
           this.map.setZoom(16);
-
-          //小区级别数据显示 这里的obj是片区级别的对象
-          // this.areaList.housingDetails.forEach((item)=>{
-          //  console.log(item)
-          //   let point = new BMap.Point(item.px, item.py);
-          //   this.addLabel(point, item);
-          // })
         }else if(currentZoom>14) { 
           //show 左边 房源列表选项
           this.isShowSide=false;
@@ -280,7 +267,7 @@ export default {
 
       //鼠标样式替换
      
-      // document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
+      document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
       // this.map.setDefaultCursor('url('+this.pencil+'),default');
 
       this.path = this.svg.append("path")//重新添加path
@@ -334,7 +321,7 @@ export default {
     exitDraw() {// 结束画圈
       d3.select('path').remove();//移除path
       this.circleNum = 1;
-      // document.querySelector("svg").style.cursor = 'pointer';
+      document.querySelector("svg").style.cursor = 'pointer';
     }
     //画圈找房end---------------------------------------------------------------------------<<<
 
@@ -348,8 +335,6 @@ export default {
         this.map.clearOverlays();    
 
         let currentZoom = this.map.getZoom();
-        console.log('123123')
-        console.log(currentZoom);
         if(currentZoom<=12) {//区域级别
           //区域级别数据显示
          this.areaList.arerDetails.forEach((item)=>{
