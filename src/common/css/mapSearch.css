@@ -78,10 +78,5 @@
   color: rgba(83,145,244,1);
   line-height: 0;
 }
-path{
-  cursor: pointer;
-}
-svg{
-  box-shadow: 0 0 2px rgba(0,0,0,0.3) inset;
-} 
+
 /* 百度地图样式 ----------------------------------------------<<<<<<*/

@@ -103,6 +103,7 @@ export default {
       },
       inputKeyword: '',//输入关键词
       isShowSide: true,//是否显示side
+      polygon: '',//
       svg: '',//svg
       path: '',//路径
       circleNum: 1,//开始画圈找房 取消
@@ -233,21 +234,23 @@ export default {
     //这里百度地图end------------------------------------------------------------------<<<<<<<<<<
 
     //画圈找房start--------------------------------------------------------------------<<<<<<<<<<
-    createdSvg() {//创建svg
+    changeSvg() {//修改svg
       const style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
       this.svg = d3.select("svg")
                 .attr("x", "2536px")
                 .attr("y", "1281px")
                 .attr("stroke-linecap", "round")
                 .attr("viewBox", "-500 -500 2536 1281")
-                // .attr("style", style)
+                .attr("style", style)
                 .attr("fill", "rgba(0,0,0,.3)");
     },
 		getMouse(e){//获取坐标
       var e=e||window.event;
       var mouse={x:0,y:0};
-			mouse.x=e.pageX+this.amendment().newLeft;
-      mouse.y=e.pageY-111+this.amendment().newTop;
+			// mouse.x=e.pageX+this.amendment().newLeft;
+      // mouse.y=e.pageY-111+this.amendment().newTop;
+      mouse.x=e.pageX;
+      mouse.y=e.pageY-111;
 			return mouse;
     },
     amendment() { //修正鼠标位置参数
@@ -263,14 +266,11 @@ export default {
       }
     },
     beginDraw() {//点击画图按钮 开始触发这个函数
-
+      this.polygon = new BMap.Polygon(); 
+      this.map.addOverlay(this.polygon);  
+    
       //鼠标样式替换
-      // document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
-      // this.map.setDefaultCursor('url('+this.pencil+'),default');
-
-      // this.path = this.svg.append("path")//重新添加path
-      //             .attr("stroke", 'rgb(83,145,244)')
-      //             .attr("stroke-width", '5');
+      document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
       this.circleNum = 2;
       this.map.disableDragging();//设置地图禁止拖拽   
       var mapNode = document.getElementById('map');
@@ -279,9 +279,9 @@ export default {
       var x2,y2;//结束点坐标
       var xyArr = '';//point数组
       mapNode.onmousedown = (e)=>{//开始画圈圈
-       
-            x1 =  this.getMouse(e).x;
-            y1 =  this.getMouse(e).y;
+        x1 =  this.getMouse(e).x;
+        y1 =  this.getMouse(e).y;
+        
         mapNode.onmousemove = (e)=>{
             x2 =  this.getMouse(e).x;
             y2 =  this.getMouse(e).y;
@@ -289,23 +289,22 @@ export default {
             var p=new BMap.Pixel(x2,y2);  
             var point1=this.map.pixelToPoint(p);  
             var positionArray=new Array(point1.lng,point1.lat);   
-            console.log(positionArray)
-            xyArr += positionArray[0]+", "+positionArray[1]+";"
-            var pl = new BMap.Polygon(xyArr, {strokeColor:"red", strokeWeight:2, strokeOpacity:0.5}); 
-            this.map.addOverlay(pl);
+                xyArr += positionArray[0]+", "+positionArray[1]+";"
+                this.polygon.setPath(xyArr);
         }
       }
       mapNode.onmouseup = ()=>{//结束
+        // this.map.setViewport(xyArr);    //调整视野
+        document.querySelector("svg").style.cursor = '';
         this.map.enableDragging();//设置地图打开拖拽
-        this.map.setViewport(xyArr);    //调整视野
         mapNode.onmousemove = null;
         mapNode.onmousedown = null;
         mapNode.onmouseup = null;
-        
       }
     },
+    
     exitDraw() {// 结束画圈
-      // d3.select('svg').remove();//移除path
+      this.map.clearOverlays();   
       this.circleNum = 1;
     }
     //画圈找房end---------------------------------------------------------------------------<<<
@@ -313,40 +312,51 @@ export default {
   },
   mounted() {
     this.initMap();//初始化百度地图
-    this.createdSvg();//初始化svg  
+    
+    // this.polygon = new BMap.Polygon(); 
+	  // this.map.addOverlay(this.polygon);  
+    this.changeSvg();  //初始化svg
+	
 
-    this.map.addEventListener("zoomend", ()=>{
-        //清空覆盖物
-        this.map.clearOverlays();    
+    // this.map.addEventListener("zoomend", ()=>{
+    //     //清空覆盖物
+    //     this.map.clearOverlays();    
 
-        let currentZoom = this.map.getZoom();
-        if(currentZoom<=12) {//区域级别
-          //区域级别数据显示
-         this.areaList.arerDetails.forEach((item)=>{
-            let point = new BMap.Point(item.px, item.py);
-            this.addLabel(point, item);
-          })
-        }else if(currentZoom>12&&currentZoom<=14) {//片区级别
-          //片区级别数据显示
-          this.areaList.districtDetails.forEach((item)=>{
-            let point = new BMap.Point(item.px, item.py);
-            this.addLabel(point, item);
-          })
-        }else if(currentZoom>15) {//小区级别
-          //小区级别数据显示
-          this.areaList.housingDetails.forEach((item)=>{
-            let point = new BMap.Point(item.px, item.py);
-            this.addLabel(point, item);
-          })
-        }
-    });
+    //     let currentZoom = this.map.getZoom();
+    //     if(currentZoom<=12) {//区域级别
+    //       //区域级别数据显示
+    //      this.areaList.arerDetails.forEach((item)=>{
+    //         let point = new BMap.Point(item.px, item.py);
+    //         this.addLabel(point, item);
+    //       })
+    //     }else if(currentZoom>12&&currentZoom<=14) {//片区级别
+    //       //片区级别数据显示
+    //       this.areaList.districtDetails.forEach((item)=>{
+    //         let point = new BMap.Point(item.px, item.py);
+    //         this.addLabel(point, item);
+    //       })
+    //     }else if(currentZoom>15) {//小区级别
+    //       //小区级别数据显示
+    //       this.areaList.housingDetails.forEach((item)=>{
+    //         let point = new BMap.Point(item.px, item.py);
+    //         this.addLabel(point, item);
+    //       })
+    //     }
+    // });
     this.map.addEventListener("dragend", ()=>{//拖动结束  重新改变svg位置 使其和地图同步
-        let newLeft = -500 + this.amendment().newLeft;
-        let newTop = -500 + this.amendment().newTop;
-            document.querySelector("svg").style.left = newLeft;
-            document.querySelector("svg").style.top = newTop;
-        let viewBoxCoordinate = newLeft+" "+newTop+" 2536 1281";
-        this.svg.attr("viewBox", viewBoxCoordinate);
+          // document.querySelector("path").style.d = '';
+
+          var bs = this.map.getBounds();   //获取可视区域
+          var bssw = bs.getSouthWest();   //可视区域左下角
+          var bsne = bs.getNorthEast();   //可视区域右上角
+          console.log(bssw, bsne)
+
+          // let newLeft = -500 + this.amendment().newLeft;
+          // let newTop = -500 + this.amendment().newTop;
+          //     document.querySelector("svg").style.left = newLeft;
+          //     document.querySelector("svg").style.top = newTop;
+          // let viewBoxCoordinate = newLeft+" "+newTop+" 2536 1281";
+          // this.svg.attr("viewBox", viewBoxCoordinate);
     })
   }
 };
