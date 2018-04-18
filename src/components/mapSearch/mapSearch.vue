@@ -109,6 +109,7 @@ export default {
       circleNum: 1,//开始画圈找房 取消
       metroNum: 1,//开始地铁找房 取消
       pencil: '../../../static/pencil.ico',
+      selectCity: JSON.parse(localStorage.selectCity),//当前选择的城市
     }
   },
   created() {
@@ -125,7 +126,7 @@ export default {
       if(this.$route.params.houseTypeId == 11) {
         //二手房区域级别房源
         this.$http.post(this.$url.URL.MAPHOUSEALLTREE, {
-          scity: "beihai"
+          scity: this.selectCity.value
         })
         .then(res=> {
           this.areaList = res.data.data.usedAreaDetails;

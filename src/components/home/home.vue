@@ -8,27 +8,38 @@
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
 					<el-button type="text" class="location" @click.native="changeCity()">
-						<i class="iconfont icon-location">{{address}}</i>
+						<span class="iconfont icon-location">{{address}}</span>
 					</el-button>
 					<div class="city-change " v-if="cityChange">
 						<!-- icon 关闭阴影层 -->
 						<span class="close" @click="cancelshadow()"></span>
 
-						<div v-for="item1 in city">
+						<div :key="index1" v-for="(item1,index1) in city">
 							<div class="title">选择城市
 								<span class="city-tab">
 								<span class="code1">{{item1.title}}</span>
-								<router-link  @click.native="changeAddress(item2)" tag="a" to="" v-for="item2 in item1.item">{{item2.name}}</router-link>
+								<router-link to=""
+											 tag="a" 
+											 :key="index2"
+											 v-for="(item2,index2) in item1.item">
+											 {{item2.name}}
+								</router-link>
 								</span>
 							</div>
 							<div class="title-line"></div>
 							<div class="fc-main clear">
 								<div class="fl citys-l">
 									<ul>
-										<li class="clear" v-for="item1 in city">
+										<li class="clear" :key="index1" v-for="(item1,index1) in city" >
 											<span class="code-title fl">{{item1.title}}</span>
 											<div class="city-enum fl">
-												<router-link @click.native="changeAddress(item2)" tag="a" to="/home" v-for="item2 in item1.item">{{item2.name}}</router-link>
+												<router-link  to="/home"  
+															  tag="a" 
+															  :key="index2"
+															  v-for="(item2,index2) in item1.item"
+															  @click.native="changeAddress(item2)">
+															  {{item2.name}}
+												</router-link>
 											</div>
 										</li>
 									</ul>
@@ -54,7 +65,6 @@
 							</ul>
 						</router-link>
 						<!--账号密码登陆-->
-						<!--<div class="shadowlay_login" v-if="cancel" @click="cancelShadow()"></div>-->
 						<div class="panel_login " id="dialog" v-if="loginshow == 1">
 							<div class="panel_info">
 								<i class="close_login" @click="cancelshadow()">×</i>
@@ -161,9 +171,9 @@
 				</div>
 				<div class="search-box-wrap">
 					<div class="search-hd">
-						<span @click="zuFang(1)">二手房</span>
-						<span @click="zuFang(2)">租房</span>
-						<span @click="zuFang(3)">小区</span>
+						<span @click="placeholderText(1)">二手房</span>
+						<span @click="placeholderText(2)">租房</span>
+						<span @click="placeholderText(3)">小区</span>
 					</div>
 					<div class="search-bd">
 						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
@@ -199,7 +209,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id" v-for="item in houseRecmdlist">
+						<router-link to="/buyhouse/twohandhousedetail/:id" tag="li" :key="index" v-for="(item,index) in houseRecmdlist">
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
@@ -336,31 +346,35 @@
 				souText: '请输入区域丶商圈或小区名开始找房',
 				city: [], //城市列表
 				defaultCity: "",
-				address: null,//获取默认城市
+				address: '定位中...',//获取默认城市
 				loginshow: null,
 				houseRecmdlist:[] , //二手房为你精选
 				rentHouseRecmdlist:[],  //时尚租房
 				hotBuilding:[],    //热门小区
 				houseUsed:"",  //房源统计
-				houseTypeId: 1
+				houseTypeId: 11
 			};
 		},
 		created() {
 			let that = this;
 			let geoc = new BMap.Geocoder(); 
 			let geolocation = new BMap.Geolocation();
-			geolocation.getCurrentPosition(function(r){
-				if(this.getStatus() == BMAP_STATUS_SUCCESS){
-					let point = new BMap.Point(r.point.lng,r.point.lat);
-					geoc.getLocation(point, function(rs){
-						that.address = (rs .address).slice(3,5)
-						window.localStorage.address = that.address
-					});    
-				}
-				else {
-					
-				}        
-			});
+			//首次进入 判断是否选择了指定地址
+			if(window.localStorage.selectCity) {
+				that.address = window.localStorage.selectCity?window.localStorage.selectCity.name:'北海';
+			}else{
+				geolocation.getCurrentPosition(function(r){
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){//定位逆地址解析成功
+						let point = new BMap.Point(r.point.lng,r.point.lat);
+						geoc.getLocation(point, function(rs){
+							that.address = (rs .address).slice(3,5)
+							window.localStorage.address = that.address
+						});    
+					}else{//定位逆地址解析不成功
+						that.address = window.localStorage.selectCity?window.localStorage.selectCity.name:'北海';
+					}    
+				});
+			}
 		},
 		methods: {
 			showBtn(type) {
@@ -370,33 +384,32 @@
 				this.toggleShow = true;
 				this.cityChange = true;
 			},
-			zuFang(num) { //替换搜索内容
+			placeholderText(num) {//搜索placeholder内容
 				if(num == 1) {
 					this.$refs.sanjiao.style.left = '0px';
-					this.souText = '请输入区域丶商圈或小区名开始找房';
-					//					
+					this.souText = '请输入区域丶商圈或小区名开始找房';					
 				} else if(num == 2) {
 					this.$refs.sanjiao.style.left = '120px';
-					this.souText = '请输区名开始租房';
-					//					
+					this.souText = '请输区名开始租房';				
 				} else if(num == 3) {
 					this.$refs.sanjiao.style.left = '220px';
-					this.souText = '请输入区域丶名开始找房';
-					//					
+					this.souText = '请输入区域丶名开始找房';				
 				}
 			},
 			login() { //点击登陆
 				this.toggleShow = true;
-				this.loginshow = 1; //
+				this.cityChange = false;
+				this.loginshow = 1; 
 			},
 			register() { //点击注册
 				this.toggleShow = true;
+				this.cityChange = false;				
 				this.loginshow = 2;
 			},
 			cancelshadow() { //取消悬浮窗口
 				this.toggleShow = false;
-				this.loginshow = null;
 				this.cityChange = false;
+				this.loginshow = null;
 			},
 			quckliyLogin() { //点击手机快捷登陆
 				this.loginshow = 3;
@@ -414,14 +427,10 @@
 					value: name,
 					name: this.address
 				}
-				
 				window.localStorage.selectCity = JSON.stringify(selectCity);	
 			}
 		},
 		mounted() {
-			
-				
-			
 			//请求城市列表
 			let hot_city = "热门";
 			let hot_city_len = 2;
@@ -479,7 +488,6 @@
 				
 
 			//获取首页二手房列表为你精选STATISTICS_HOUSEUSED
-
 				this.$http.get(this.$url.URL.HOUSE_RECMDLIST +JSON.parse(window.localStorage.selectCity).value)
 				.then((response)=>{
 					this.houseRecmdlist = response.data.data
@@ -543,7 +551,7 @@
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 		border-radius: 2px;
 		position: fixed;
-		z-index: 999;
+		z-index: 1001;
 		margin: auto;
 		left: 0;
 		right: 0;
@@ -686,8 +694,7 @@
 	
 	.header .location {
 		display: inline-block;
-		width: 69px;
-		height: 32px;
+		padding: 10px 8px;
 		line-height: 10px;
 		background: rgba(0, 0, 0, 0.2);
 		border-radius: 15px;
@@ -814,7 +821,7 @@
 	
 	.search-box-wrap .search-bd .search-box-btn {
 		height: 100%;
-		line-height: 86px;
+		line-height: 70px;
 		background: #fe0000;
 		width: 146px;
 		font-size: 18px;
