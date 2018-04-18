@@ -114,6 +114,11 @@ export default {
   },
   created() {
     this.requestAllCityData();
+    //创建地址解析器实例
+    let myGeo = new BMap.Geocoder();
+        myGeo.getPoint(this.selectCity.name, (point)=> {
+          this.initMap(point.lng, point.lat);//初始化百度地图
+        })
   },
   methods: {
     isShowHouseList() {
@@ -149,7 +154,7 @@ export default {
       this.createMap(px, py); //创建地图
       this.setMapEvent(); //设置地图事件
     },
-    createMap(firstLng, firstLat) {//创建地图
+    createMap(lng, lat) {//创建地图
       //11 12      区域级别
       //13 14      片区级别
       //15 16      小区级别
@@ -157,8 +162,7 @@ export default {
         minZoom: 11,
         maxZoom: 18
       });
-
-      let pt = new BMap.Point(firstLng, firstLat);//初始时候 首先获取到目的城市的坐标 例如: 北海站坐标109.134582,21.459389
+      let pt = new BMap.Point(lng, lat);//初始时候 首先获取到目的城市的坐标 例如: 北海站坐标109.134582,21.459389
       this.map.centerAndZoom(pt, 12);//初始中心点和缩放比例
     },
     addLabel(point, obj){//创建label 
@@ -315,10 +319,9 @@ export default {
 
   },
   mounted() {
-    this.initMap(109.134582, 21.459389);//初始化百度地图
     this.changeSvg();  //修改svg
-
-    this.map.addEventListener("zoomend", ()=>{
+    setTimeout(()=> {
+      this.map.addEventListener("zoomend", ()=>{
         //清空覆盖物
         this.map.clearOverlays();    
 
@@ -342,22 +345,15 @@ export default {
             this.addLabel(point, item);
           })
         }
-    });
-    this.map.addEventListener("dragend", ()=>{//拖动结束  重新改变svg位置 使其和地图同步
-          // document.querySelector("path").style.d = '';
-
-          var bs = this.map.getBounds();   //获取可视区域
-          var bssw = bs.getSouthWest();   //可视区域左下角
-          var bsne = bs.getNorthEast();   //可视区域右上角
-          console.log(bssw, bsne)
-
-          // let newLeft = -500 + this.amendment().newLeft;
-          // let newTop = -500 + this.amendment().newTop;
-          //     document.querySelector("svg").style.left = newLeft;
-          //     document.querySelector("svg").style.top = newTop;
-          // let viewBoxCoordinate = newLeft+" "+newTop+" 2536 1281";
-          // this.svg.attr("viewBox", viewBoxCoordinate);
-    })
+      });
+      this.map.addEventListener("dragend", ()=>{//拖动结束  重新改变svg位置 使其和地图同步
+        var bs = this.map.getBounds();   //获取可视区域
+        var bssw = bs.getSouthWest();   //可视区域左下角
+        var bsne = bs.getNorthEast();   //可视区域右上角
+        console.log(bssw, bsne)
+      })
+    },1000)
+   
   }
 };
 </script>
