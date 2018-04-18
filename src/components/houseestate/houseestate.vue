@@ -1,12 +1,15 @@
 <template>
 	<div class="houseestate">
+		<o-header></o-header>
 		小区
 		<b-map></b-map>
+		
 	</div>
 </template>
 
 <script>
 	import BMap  from "../../base/BMap/BMap";
+	import oHeader from "../../base/header/header";
 	export default {
 		data() {
 			return {
@@ -19,7 +22,9 @@
 			};
 		},
 		components: {
-			BMap
+			BMap,
+			oHeader
+			
 		},
 		methods:{
 			

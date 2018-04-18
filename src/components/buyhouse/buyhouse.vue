@@ -1,203 +1,58 @@
 <template>
 	<div>
-		<div class="navmenu">
-			<div class="container">
-				<ul class="item1">
-					<ol class="banner_right fr">
-						<li style="height: 70px;margin-top: -2px;">
-							<i class="iconfont icon-yonghu" v-if="rightnow" style="font-size: 14px;">
-							<span class="login" @click="loginResize()">登录</span>/
-							<span class="logout" @click="rightResize()">立即注册</span>
-						</i>
-							<i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout">退出</span></i>
-						</li>
-
-						<li style="font-size: 14px;">热线电话0779-3837272</li>
-					</ol>
-
-					<ol class="fl">
-						<router-link tag="li" to="/buyhouseguide">购房指南</router-link>
-						<router-link tag="li" to="/broker">经纪人</router-link>
-						<router-link tag="li" to="/houseestate">小区</router-link>
-						<router-link tag="li" to="/sellrent">我要售/租</router-link>
-						<router-link tag="li" to="/renthouse">我要租房</router-link>
-						<router-link tag="li" to="/buyhouse">我要买房</router-link>
-						<router-link tag="li" to="/home">首页</router-link>
-					</ol>
-				</ul>
-				<!--账号密码登陆-->
-				<div class="shadowlay_login" v-if="cancel" @click="cancelShadow()"></div>
-				<div class="panel_login " id="dialog" v-if="loginshow == 1">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">账号密码登录</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<input type="text" placeholder="请输入登录密码" maxlength="20">
-							</div>
-							<div class="forget" @click="findPassword()">忘记密码</div>
-							<button class="org_btn">登录</button>
-							<div class="dl_login" @click="quckliyLogin()">手机快捷登录</div>
-							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="shadowlay_login" v-if="cancel" @click="cancelShadow()"></div>
-				<div class="panel_login " id="dialog" style="height: 462px;" v-if="loginshow == 2">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">手机号码注册</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-								<input type="text" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
-								<input type="text" placeholder="请再次输入密码" maxlength="11">
-							</div>
-							<label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label>
-							<button class="org_btn">注册</button>
-							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="loginResize()">去登陆</span></div>
-						</div>
-					</div>
-				</div>
-				<div class="shadowlay_login" v-if="cancel" @click="cancelShadow()"></div>
-				<div class="panel_login " id="dialog" v-if="loginshow == 3">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">手机快捷登陆</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-							</div>
-							<button class="org_btn">修改密码</button>
-							<div class="dl_login" @click="loginResize()">账号密码登录</div>
-							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="shadowlay_login" v-if="cancel" @click="cancelShadow()"></div>
-				<div class="panel_login " id="dialog" style="height: 462px;" v-if="loginshow == 4">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">找回密码</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-							</div>
-							<button class="org_btn">注册</button>
-							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
-						</div>
-					</div>
-				</div>
-
-			</div>
-		</div>
-		<div class="header">
-			<div class="container">
-				<div class="logo fl">
-					<img src="../../imgs/buyhouse/logored.png" />
-				</div>
-				<div class="searchBox fl">
-					<input type="text" placeholder="请输入区域商圈开始找房" />
-					<img src="../../imgs/buyhouse/sousuo.png" alt="" />
-				</div>
-				<div class="menu fr">
-					<ul class="menuright fl">
-						<li>在售</li>
-						<li>成交</li>
-						<li>小区</li>
-						<li>地图找房</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+		<o-header></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl">位置: 区域</ol>
+							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
-								<li>清秀区</li>
-								<li>西乡塘区</li>
-								<li>江南区</li>
-								<li>兴宁 区</li>
-								<li>良庆区区</li>
+								<li v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl">售价:</ol>
-							<ol class="fl">
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
+							<ol class="fl quyu">售价:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
+								<li><input type="text"/><span>-</span><input type="text" /> <span>万</span></li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl">面积:</ol>
-							<ol class="fl">
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
+							<ol class="fl quyu">面积:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="mianji(item, index)">{{item.name}}</li>
+								<li><input type="text"/><span>-</span><input type="text" />   <span>平</span></li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl">房型:</ol>
-							<ol class="fl">
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
+							<ol class="fl quyu">房型:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listfour"  :class="{querybtn:queryfour==index }" @click="fangxing(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl">装修:</ol>
-							<ol class="fl">
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
+							<ol class="fl quyu">装修:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listfive"  :class="{querybtn:queryfive==index }" @click="zhuangxiu(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl">楼龄:</ol>
-							<ol class="fl">
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
+							<ol class="fl quyu">楼龄:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listsix"  :class="{querybtn:querysix==index }" @click="louling(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl">朝向:</ol>
-							<ol class="fl">
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
-								<li>清秀区</li>
+							<ol class="fl quyu">朝向:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listseven"  :class="{querybtn:queryseven==index }" @click="chaoxiang(item, index)">{{item.name}}</li>
+							</ol>
+						</li>
+						<li>
+							<ol class="fl quyu">特色:</ol>
+							<ol class="fl quyu_kind">
+								<li v-for="(item, index) in listeight"  :class="{querybtn:queryeight==index }" @click="teshe(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 					</ul>
@@ -210,9 +65,6 @@
 			<div class="container">
 				<!--右侧部分-->
 				<div class="sidebar fr">
-					<div class="advertisement"></div>
-					<div class="advertisement" style="margin-top:  20px;"></div>
-					<div class="adverTisementLine"></div>
 					<div style="margin-top: 34px;"><span style="font-size: 16px;">购房指南</span><span class="fr" style="font-size: 12px;color: rgba(0,0,0,0.7);">更多</span></div>
 					<ul>
 						<li class="zhinan">外地人可以在南宁买房吗？</li>
@@ -231,89 +83,36 @@
 					<div class="orderFilter">
 						<div class="orderTag">
 							<ul>
-								<li class="selected"><h3><a>默认排序</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
+								<li v-for="(item, index) in list"><h3><a>{{item}}</a></h3></li>
 							</ul>
 						</div>
 						<div class="filterAgain">
-							<div class="title">筛选</div>
+							<div class="title">筛选:</div>
 							<ul>
-								<li><h3><a>默认排</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
-								<li><h3><a>默认排</a></h3></li>
+								<li v-for="(item, index) in listnine"><h3><a>{{item}}</a></h3></li>
 							</ul>
 						</div>
 					</div>
-					<div class="resultDes">
-						<h2 class="total">共找到<span> 27114 </span>套南宁二手房</h2>
-					</div>
+						<div class="resultDes">
+							<h2 class="total">共找到<span style="color: red;"> 27114 </span>套南宁二手房</h2>
+							<div class="listContentLine"></div>
+						</div>
+					
 					<div class="item">
 						<ul>
-							<li>
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
+							<li v-for="item in buyhouse">
+								<div class="image fl" @click="toSkip()">
+									<img :src=item.housePic  alt="" />
 								</div>
 								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr">200万</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
+									<div class="introduce intrdex " @click="toSkip()" >{{item.houseTitle}}<span class="fr "style="font-size: 16px;color:rgba(0,0,0,0.5); ">收藏</span></div>
+									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span>
+										<span class="fr prices">{{item.saleTotal}}<span class="wan">万</span></span></div>
+									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
 									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
-								</div>
-								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr">200万</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
-									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
-								</div>
-								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr">200万</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
-									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
-								</div>
-								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr">200万</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
-									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
+										<span class="intrspan one">{{item.houseFeature}}</span>
+										<span class="intrspan two">{{item.areaName}}</span>
+										<span class="intrspan three">随时看房</span>
 									</div>
 								</div>
 							</li>
@@ -330,68 +129,89 @@
 				</div>
 			</div>
 		</div>
-		<!--推荐小区-->
-		<div class="push">
-		<div class="container">
-			<div class="newHousePush">
-				<div class="tilte">
-					<div class="fl" style="font-weight: bold;font-size: 24px;color: rgba(1,1,1,0.8);">推荐小区</div>
-					<div class="fr">更多小区</div>
-				</div>
-				<ul class="newHousePushContainer">
-					<li>
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		</div>
 	</div>
 </template>
 
 <script>
+	import oHeader from "../../base/header/header";
 	export default {
 		data() {
 			return {
+				list:["默认排序", "最新", "总价", "房屋单价", "面积"],
+				listone:[],
+				listtwo:[],
+				listthree:[],
+				listfour:[],
+				listfive:[],
+				listsix:[],
+				listseven:[],
+				listeight:[],
+				listnine:["随时看房", "新上", "满五年", "世华独家"],
 				datas: "",
 				num: 0,
 				dialogVisible: false,
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
+				buyhouse: null , //二手房列表
+				queryone: null,   //二手房区域
+				querytwo: null,   //二手房售价
+				querythree: null,   //二手面积域
+				queryfour: null,   //二手房房型
+				queryfive: null,   //二手房装修
+				querysix: null,   //二手房楼龄
+				queryseven:null,  //二手房朝向
+				queryeight:null   //二手房特色
 			};
+		},
+		created() {	
+			//请求二手的列表
+			this.$http.post(this.$url.URL.HOUSE_QUERY, {  
+				         scity: JSON.parse(window.localStorage.selectCity).value,
+				         pageNo :1
+  
+			})
+			.then((response)=>{
+				this.buyhouse = response.data.data
+			})
+			
+			//请求搜索条件
+			this.$http.get(this.$url.URL.AREA_DISTRICTS +JSON.parse(window.localStorage.selectCity).value) //区域
+			.then((response)=>{
+				this.listone = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "SELL_PRICE") //房源售价
+			.then((response)=>{
+				this.listtwo = response.data.data
+			}) 	
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_AREA") //面积
+			.then((response)=>{
+				this.listthree = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_HUXING") //房型
+			.then((response)=>{
+				this.listfour = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_DECORATION") //装修
+			.then((response)=>{
+				this.listfive = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_AGE") //房源售价
+			.then((response)=>{
+				this.listsix = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_DIRECTION") //朝向
+			.then((response)=>{
+				this.listseven = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_FEATURE") //特色
+			.then((response)=>{
+				this.listeight = response.data.data
+			})
+			
+			
+			
+			
 		},
 		methods: {
 
@@ -413,7 +233,38 @@
 			},
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
-			}
+			},
+			toSkip() {
+				this.$router.push({path:"/buyhouse/twohandhousedetail/:id"});
+			},
+			address(item, index) {   //点击区域条件
+				this.queryone = index;  
+			},
+			shoujia(item, index) {
+				this.querytwo = index;
+			},
+			mianji(item, index){
+				this.querythree = index;
+			},
+			fangxing(item, index){
+				this.queryfour = index;
+			},
+			zhuangxiu(item, index){
+				this.queryfive= index;
+			},
+			louling(item, index){
+				this.querysix= index;
+			},
+			chaoxiang(item, index){
+				this.queryseven = index;
+			},
+			teshe(item, index){
+				this.queryeight= index;
+			},
+		}, 
+		components: {
+			oHeader
+			
 		},
 
 	}
@@ -429,66 +280,6 @@
 		background: rgba(0, 0, 0, .5);
 		z-index: 995;
 	}
-	
-	.navmenu {
-		background: #394043;
-		font-size: 18px;
-	}
-	
-	.container {
-		width: 1170px;
-		margin: 0 auto;
-	}
-	
-	.navmenu .item1 {
-		line-height: 70px;
-		overflow: hidden;
-	}
-	
-	.navmenu .item1 li {
-		float: right;
-		margin-left: 26px;
-		cursor: pointer;
-		color: #FFFFFF;
-		font-size: 18px;
-	}
-	
-	.header {
-		background-color: #f5f5f6;
-		width: 100%;
-		padding: 50px 0;
-	}
-	
-	.container.logo>img {
-		width: 154px;
-		height: 43px;
-	}
-	
-	.menuright {
-		overflow: hidden;
-		font-size: 18px;
-	}
-	
-	.menuright>li {
-		float: left;
-		margin-right: 26px;
-	}
-	
-	.searchBox input {
-		position: absolute;
-		padding: 20px;
-		width: 514px;
-		height: 46px;
-		box-sizing: border-box;
-		margin-left: 46px;
-	}
-	
-	.searchBox img {
-		position: relative;
-		left: 514px;
-		top: 10px;
-	}
-	
 	.filter{
 	width: 1150px;
     margin-top: 26px;
@@ -501,17 +292,21 @@
     font-size: 14px;
 		
 	}
+	
 	.filter>ul>li{
 		margin-top: 24px;
 		display: block;
 		overflow: hidden;
+		line-height: 24px;
 	}
 	.filter ol li{
-		margin-left: 30px;
+		cursor: pointer;
 		float: left;
+		text-align: left;
+		width: 100px;
+		white-space: nowrap;
 	}
 	.filter>ul>li:nth-of-type(1)>ol:nth-of-type(2) {
-		
 		margin-left: 68px;
 	}
 	.filter>ul>li>ol:nth-of-type(2) {
@@ -524,8 +319,18 @@
 	 width: 12px;
    	 height: 12px;
 	}
-	
-	
+	.quyu{
+		font-size: 14px;
+		font-weight: bold;
+	}
+	.quyu_kind{
+		cursor: pointer;
+		font-size: 12px;
+	}
+	.quyu_kind>li>input{
+		height: 20px;
+		width: 37px;
+	}
 	/*登陆注册*/
 	
 	.panel_login {
@@ -666,6 +471,7 @@
 	.sidebar{
 		width: 180px;
 		margin-left: 60px;
+		margin-top: -20px;
 	}
 	.content .leftContent .orderFilter .orderTag {
 	    border-bottom: 2px solid red;
@@ -676,9 +482,6 @@
 	    width: 90%;
 	    line-height: 47.5px;
 	}
-	.content .leftContent .orderFilter .orderTag ul li.selected {
-   		 background-color: red;
-	}
 
 	.content .leftContent .orderFilter .orderTag ul li {
    		 display: inline-block;
@@ -688,7 +491,8 @@
 	    line-height: 1;
 	    vertical-align: middle;
 	    padding: 0 25px;
-	    font-size: 15px;
+	    font-size: 14px;
+	    font-weight: bold;
 	    color: #394043;
 	    text-decoration: none;
 	}
@@ -715,13 +519,11 @@
 	    display: inline-block;
 	    margin-right: 20px;
 	}
-	.content .leftContent .resultDes {
-	    line-height: 55px;
-	}
 	.content .leftContent .resultDes .total {
 	    font-weight: bold;
 	    font-size: 22px;
 	    color: #394043;
+	    margin-top: 50px;
 	}
 	.listContentLine{
 		border-bottom: 1px solid #f1f1f1;
@@ -730,18 +532,31 @@
 		
 		margin-left: 215px;
 		height: 19px;
-		margin-top: 17px;
+		margin-top: 29px;
+	}
+	.intrdex{
+		font-size: 22px;
+		color: rgba(0,0,0,0.85);
+		font-weight: bold;
 	}
 	.introduce span{
 		font-size: 14px;
 	}
 	.direciton{
+		margin-top: -30px;
 		margin-left: 50px;
 	}
 	.introduce .word{
 		vertical-align: top;
 		margin-left: 10px;
 		color: rgba(0,0,0,0.7);
+	}
+	.prices{
+		font-size: 24px;
+		color: rgba(239,31,31,0.85);
+	}
+	.wan{
+		font-size: 14px;
 	}
 	.intrspan{
 		
@@ -750,6 +565,15 @@
 		height: 30px;
 		line-height: 30px;
 		text-align: center;
+	}
+	.one{
+		background-color: #e5f2ff;color: rgba(0,85,164,0.85);
+	}
+	.two{
+		background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;
+	}
+	.three{
+		
 	}
 	.sidebar .advertisement{
 		width: 180px;
@@ -775,7 +599,22 @@
 		overflow: hidden;
 	}
 	.item ul li{
-		margin-top: 60px;
+		padding: 30px 0;
+		/*border-bottom: 1px solid #f1f1f1;*/
+	}
+	.image>img{
+		width: 100%;
+		height: 100%;
+		
+	}
+	.image{
+		width: 232px;
+		height: 175px;
+		background: deepskyblue;
+	}
+	.querybtn{
+  	 	color: #ff4343;
+  	 	font-weight:bold;
 	}
 	
 	/*推荐小区*/
@@ -809,3 +648,53 @@
 		background: white;
 	}
 </style>
+
+
+<!--推荐小区-->
+		<!--<div class="push">
+		<div class="container">
+			<div class="newHousePush">
+				<div class="tilte">
+					<div class="fl" style="font-weight: bold;font-size: 24px;color: rgba(1,1,1,0.8);">推荐小区</div>
+					<div class="fr">更多小区</div>
+				</div>
+				<ul class="newHousePushContainer">
+					<li>
+						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
+						<div class="newHousePushPrice">
+							<div class="fl">500元/平</div>
+							<div class="fr">2001建设</div>
+						</div>
+					</li>
+					<li class="newHousePushContainer_i">
+						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
+						<div class="newHousePushPrice">
+							<div class="fl">500元/平</div>
+							<div class="fr">2001建设</div>
+						</div>
+					</li>
+					<li class="newHousePushContainer_i">
+						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
+						<div class="newHousePushPrice">
+							<div class="fl">500元/平</div>
+							<div class="fr">2001建设</div>
+						</div>
+					</li>
+					<li class="newHousePushContainer_i">
+						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
+						<div class="newHousePushPrice">
+							<div class="fl">500元/平</div>
+							<div class="fr">2001建设</div>
+						</div>
+					</li>
+					<li class="newHousePushContainer_i">
+						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
+						<div class="newHousePushPrice">
+							<div class="fl">500元/平</div>
+							<div class="fr">2001建设</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		</div>-->

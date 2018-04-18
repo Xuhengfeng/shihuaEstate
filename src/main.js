@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import axios from './common/js/axios.js';
 import store from './store'//共享数据
+import $ from 'jquery'
 //url路径
 import URL from './common/js/url.js'
 Vue.prototype.$url = URL;

@@ -9,7 +9,7 @@ const forget = resolve => require(['components/home/forget'], resolve)//忘记
 
 const mapSearch = resolve => require(['components/mapSearch/mapSearch'], resolve)//地图找房
 const searchlist = resolve => require(['components/searchlist/searchlist'], resolve)//搜索
-const buyhouse = resolve => require(['components/buyhouse/buyhouse'], resolve)//我要买房
+const buyhouse = resolve => require(['components/buyhouse/buyhouse'], resolve)//二手房
 const twohandhousedetail = resolve => require(['components/buyhouse/twohandhousedetail'], resolve)//我要买房详情
 const renthouse = resolve => require(['components/renthouse/renthouse'], resolve)//我要租房
 const renthousedetail = resolve => require(['components/renthouse/renthousedetail'], resolve)//我要租房详情
@@ -89,8 +89,8 @@ export default new Router({
 		{path:"*",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
 		{path:"/home",component:home,meta:{KeepAlive:false}},//首页
 		{path:"/login",component:login,meta:{KeepAlive:false}},//登录
-		{path:"/mapSearch",component:mapSearch,meta:{KeepAlive:false}},//地图找房
 		{path:"/register",component:register,meta:{KeepAlive:false}},//注册
+		{path:"/mapSearch/:houseTypeId",component:mapSearch,meta:{KeepAlive:false}},//地图找房
 		{path:"/forget",component:forget,meta:{KeepAlive:false}},//忘记
 		{path:"/searchlist",component:searchlist,meta:{KeepAlive:false}},//搜索列表
 		{path:"/buyhouse",component:buyhouse,meta:{KeepAlive:false}},//我要买房
