@@ -13,7 +13,8 @@ const buyhouse = resolve => require(['components/buyhouse/buyhouse'], resolve)//
 const twohandhousedetail = resolve => require(['components/buyhouse/twohandhousedetail'], resolve)//我要买房详情
 const renthouse = resolve => require(['components/renthouse/renthouse'], resolve)//我要租房
 const renthousedetail = resolve => require(['components/renthouse/renthousedetail'], resolve)//我要租房详情
-const sellrent = resolve => require(['components/sellrent/sellrent'], resolve)//我要售租
+const sellrent = resolve => require(['components/sellrent/sellrent'], resolve)//租房
+const sellrentdetail = resolve => require(['components/sellrent/sellrentdetail'], resolve)//租房详情
 const houseestate = resolve => require(['components/houseestate/houseestate'], resolve)//小区
 const estatedetail = resolve => require(['components/houseestate/estatedetail'], resolve)//小区详情
 const broker = resolve => require(['components/broker/broker.vue'], resolve)//经纪人
@@ -96,8 +97,9 @@ export default new Router({
 		{path:"/buyhouse",component:buyhouse,meta:{KeepAlive:false}},//我要买房
 		{path:"/buyhouse/twohandhousedetail/:id",component:twohandhousedetail,meta:{KeepAlive:false}},//二手房详情		
 		{path:"/renthouse",component:renthouse,meta:{KeepAlive:false}},//我要租房
-		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//租房详情
-		{path:"/sellrent",component:sellrent,meta:{KeepAlive:false}},//我要售租
+		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//我要租房详情
+		{path:"/sellrent",component:sellrent,meta:{KeepAlive:false}},//租房
+		{path:"/sellrentdetail/:id",component:sellrentdetail,meta:{KeepAlive:false}},//租房详情
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//经纪人

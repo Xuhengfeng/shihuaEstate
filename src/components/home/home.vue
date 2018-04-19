@@ -177,8 +177,8 @@
 					</div>
 					<div class="search-bd">
 						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
-						<input class="search-box" :placeholder="souText"></input>
-						<div class="search-box-btn fr">开始找房</div>
+						<input class="search-box" :placeholder="souText" v-model="searchinput"></input>
+						<div class="search-box-btn fr" @click="searchBuyHouse()">开始找房</div>
 					</div>
 					<!-- :to="{name:'mapSearch',params:{houseType:'二手房'}}" -->
 					<router-link tag="div" :to="/mapSearch/+houseTypeId"  class="mapSearchHouse">
@@ -352,10 +352,29 @@
 				rentHouseRecmdlist:[],  //时尚租房
 				hotBuilding:[],    //热门小区
 				houseUsed:"",  //房源统计
-				houseTypeId: 11
+				houseTypeId: 11,
+				searchinput:'',
+				params: {
+				  "areaId": null,
+				  "districtId": null,
+				  "houseDecor": "",
+				  "houseDirec": "",
+				  "houseFeature": "",
+				  "houseForm": "",
+				  "keyword": "",
+				  "maxBuildArea": null,
+				  "maxPrice": null,
+				  "minBuildArea": null,
+				  "minPrice": null,
+				  "pageNo": 1,
+				  "pageSize": null,
+				  "roomsNum": null,
+				  "scity": null
+				}
 			};
 		},
 		created() {
+			this.params.scity = JSON.parse(window.localStorage.selectCity).value;
 			let that = this;
 			let geoc = new BMap.Geocoder(); 
 			let geolocation = new BMap.Geolocation();
@@ -428,6 +447,10 @@
 					name: this.address
 				}
 				window.localStorage.selectCity = JSON.stringify(selectCity);	
+			},
+			searchBuyHouse() {
+				console.log(this.searchinput)
+			 this.$router.push({path:"/buyhouse", params: this.searchinput});
 			}
 		},
 		mounted() {

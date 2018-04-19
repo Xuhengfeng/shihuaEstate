@@ -6,35 +6,25 @@
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置:  <span style="color: rgba(239,31,31,0.85);">区域</span></ol>
+							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
-								<li>清秀区</li>
-								<li>西乡塘区</li>
-								<li>江南区</li>
-								<li>兴宁 区</li>
-								<li>良庆区区</li>
+								<li v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">售价:  <span style="color: rgba(239,31,31,0.85);">全部</span></ol>
+							<ol class="fl quyu">价格:</ol>
 							<ol class="fl quyu_kind">
-								<li>50万以下</li>
-								<li>50-100万</li>
-								<li>100-150万</li>
-								<li>150-200万</li>
-								<li>200万以上</li>
-								<li><input type="text"/><span>-</span><input type="text" /> <span>万</span></li>
+								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
+								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
+									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>元</span>
+									<button @click="okbtnone" v-if="showBtn">确定</button>
+								</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">房型:  <span style="color: rgba(239,31,31,0.85);">全部</span> </ol>
+							<ol class="fl quyu">房型:</ol>
 							<ol class="fl quyu_kind">
-								<li>一室</li>
-								<li>二室</li>
-								<li>三室</li>
-								<li>四室</li>
-								<li>五室</li>
-								<li>五室以上 </li>
+								<li v-for="(item, index) in listthree"  :class="{querybtn:querythree==index }" @click="fangxing(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 					</ul>
@@ -47,10 +37,7 @@
 			<div class="container">
 				<!--右侧部分-->
 				<div class="sidebar fr">
-					<!--<div class="advertisement"></div>
-					<div class="advertisement" style="margin-top:  20px;"></div>-->
-				<!--	<div class="adverTisementLine"></div>-->
-					<div style="margin-top: 34px;"><span style="font-size: 16px;">购房指南</span><span class="fr" style="font-size: 12px;color: rgba(0,0,0,0.7);">更多</span></div>
+					<div style="margin-top: 100px;"><span style="font-size: 16px;">购房指南</span><span class="fr" style="font-size: 12px;color: rgba(0,0,0,0.7);">更多</span></div>
 					<ul>
 						<li class="zhinan">外地人可以在南宁买房吗？</li>
 						<li class="zhinan_date">2018-039-02</li>
@@ -66,94 +53,41 @@
 				<!--左侧内容-->
 				<div class="leftContent">
 					<div class="orderFilter">
-						<div class="orderTag">
+						<!-- <div class="orderTag">
 							<ul>
-								<li class="selected"><h3><a>默认排序</a></h3></li>
-								<li><h3><a>最新</a></h3></li>
-								<li><h3><a>总价</a></h3></li>
-								<li><h3><a>房屋单价</a></h3></li>
-								<li><h3><a>面积</a></h3></li>
+								<li v-for="(item, index) in list"><h3><a>{{item}}</a></h3></li>
 							</ul>
 						</div>
 						<div class="filterAgain">
-							<div class="title">筛选</div>
+							<div class="title">筛选:</div>
 							<ul>
-								<li><h3><a>随时看房</a></h3></li>
-								<li><h3><a>新上</a></h3></li>
-								<li><h3><a>满五年</a></h3></li>
-								<li><h3><a>世华独家</a></h3></li>
+								<li v-for="(item, index) in listnine"><h3><a>{{item}}</a></h3></li>
 							</ul>
+						</div> -->
+					</div>
+						<div class="resultDes">
+							<h2 class="total">共找到<span style="color: red;"> {{queryRentcount.count}} </span>套{{this.city}}二手房</h2>
+							<div class="listContentLine"></div>
 						</div>
-					</div>
-					<div class="resultDes">
-						<h2 class="total">共找到<span style="color: red;"> 27114 </span>套南宁二手房</h2>
-					</div>
+					
 					<div class="item">
 						<ul>
-							<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
+							<li v-for="item in renthouse">
+								<div class="image fl" @click="toSkip()">
+									<img :src=item.housePic  alt="" />
 								</div>
 								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr"style="font-size: 16px;color: ">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
+									<div class="introduce intrdex " @click="toSkip()" >{{item.houseTitle}}<span class="fr "style="font-size: 16px;color:rgba(0,0,0,0.5); ">收藏</span></div>
+									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.houseTag}}</span>
+										<span class="fr prices">{{item.rentPrice}}<span class="wan">元/月</span></span></div>
+									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span></div>
 									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
+										<span class="intrspan one">{{item.houseFeature}}</span>
+										<span class="intrspan two">{{item.areaName}}</span>
+										<span class="intrspan three">随时看房</span>
 									</div>
 								</div>
-							</router-link>
-							<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
-								</div>
-								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr" style="font-size: 16px;">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
-									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
-									</div>
-								</div>
-							</router-link>
-							<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
-								</div>
-								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr"style="font-size: 16px;">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
-									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
-									</div>
-								</div>
-							</router-link>
-							<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
-								<div class="image fl">
-									<img src="../../imgs/buyhouse/tu1.png" alt="" />
-								</div>
-								<div class="direciton">
-									<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路片区 梵谷水郡 两居室 满五唯一 <span class="fr"style="font-size: 16px;">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
-									<div class="introduce ">
-										<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-										<span class="intrspan"  style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-										<span class="intrspan"  style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
-									</div>
-								</div>
-							</router-link>
+							</li>
 						</ul>
 					</div>
 					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
@@ -167,54 +101,6 @@
 				</div>
 			</div>
 		</div>
-		<!--推荐小区-->
-		<!--<div class="push">
-		<div class="container">
-			<div class="newHousePush">
-				<div class="tilte">
-					<div class="fl" style="font-weight: bold;font-size: 24px;color: rgba(1,1,1,0.8);">推荐小区</div>
-					<div class="fr">更多小区</div>
-				</div>
-				<ul class="newHousePushContainer">
-					<li>
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		</div>-->
 	</div>
 </template>
 
@@ -223,13 +109,81 @@
 	export default {
 		data() {
 			return {
+				// list:["默认排序", "最新", "总价", "房屋单价", "面积"],
+				listone:[],
+				listtwo:[],
+				listthree:[],
+				// listnine:["随时看房", "新上", "满五年", "世华独家"],
 				datas: "",
 				num: 0,
+				showBtn: false,
+				showBtnone:false,
 				dialogVisible: false,
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
+				renthouse: null , //租房房列表
+				queryone: null,   //二手房区域
+				querytwo: null,   //二手房售价
+				querythree: null,   //二手面积域
+				queryRentcount: null, //租房总数量
+				inputresult:null,
+				inputresulttwo:null,
+				inputone:'',
+				inputtwo:'',
+				params: {
+				  "areaId": null,
+				  "districtId": null,
+				  "keyword": "",
+				  "maxBuildArea": null,
+				  "maxRentPrice": null,
+				  "minBuildArea": null,
+				  "minRentPrice ": null,
+				  "pageNo": 1,
+				  "pageSize": null,
+				  "roomsNum": null,
+				  "scity": null
+				}
 			};
+		},
+		created() {	
+			this.params.scity = JSON.parse(window.localStorage.selectCity).value;
+			this.city =JSON.parse(window.localStorage.selectCity).name
+			//请求二手的列表
+			this.$http.post(this.$url.URL.RENTHOUSE_QUERY, {  
+				         scity: this.params.scity,
+				         pageNo :1
+  
+			})
+			.then((response)=>{
+				this.renthouse = response.data.data
+				console.log(this.renthouse)
+			})
+
+			//获取搜索租房总数量
+			this.$http.post(this.$url.URL.RENTHOUSE_QUERYCOUNT, {  
+				         scity: this.params.scity,
+				         pageNo :1
+  
+			})
+			.then((response)=>{
+				console.log(response)
+				this.queryRentcount = response.data.data
+			})
+			
+			//请求搜索条件
+			this.$http.get(this.$url.URL.AREA_DISTRICTS +JSON.parse(window.localStorage.selectCity).value) //区域
+			.then((response)=>{
+				this.listone = response.data.data
+			})
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_RENTAL") //房源售价
+			.then((response)=>{
+				this.listtwo = response.data.data
+			}) 	
+			this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_HUXING") //房型
+			.then((response)=>{
+				this.listthree = response.data.data
+			})
 		},
 		methods: {
 
@@ -251,8 +205,60 @@
 			},
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
-			}
-		},
+			},
+			toSkip() {
+				this.$router.push({path:"/sellrentdetail/:id"});
+			},
+			address(item, index) {   //点击区域条件
+				this.queryone = index;
+				this.params.areaId = item.id;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);		
+			
+			},
+			shoujia(item, index) { 
+				                    //价格
+				this.querytwo = index;
+				this.params.minRentPrice = item.value.split('-')[0];
+				this.params.maxRentPrice = item.value.split('-')[1];
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);			
+			},
+			fangxing(item, index){         //房型
+				this.querythree = index;
+				this.params.roomsNum = item.value;
+				this.requestServerData(this.params);	
+				this.requestCountData(this.params);			
+			},
+			requestServerData(params) {  //请求过滤搜索条件数据
+				this.$http.post(this.$url.URL.RENTHOUSE_QUERY , params)
+				.then((response)=>{
+					this.renthouse = response.data.data
+				})
+			},
+			requestCountData(params) {   //请求租房房源数量
+				this.$http.post(this.$url.URL.RENTHOUSE_QUERYCOUNT , params)
+				.then((response)=>{
+					this.queryRentcount = response.data.data
+				})
+			},
+			changeshow() {
+				console.log(1111)
+				this.showBtn = true;
+			},
+			changeshowone() {
+				this.showBtnone = true;
+			},
+			okbtnone() {
+				this.params.minRentPrice = this.inputone;
+				this.params.maxRentPrice = this.inputtwo; 
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);	
+				console.log(this.params.minRentPrice)	
+				console.log(this.params.maxRentPrice)	
+			},
+			
+		}, 
 		components: {
 			oHeader
 			
@@ -291,10 +297,15 @@
 		line-height: 24px;
 	}
 	.filter ol li{
-		margin-left: 30px;
+		cursor: pointer;
 		float: left;
+		text-align: left;
+		width: 99px;
+		white-space: nowrap;
 	}
-
+	.filter>ul>li:nth-of-type(1)>ol:nth-of-type(2) {
+		margin-left: 68px;
+	}
 	.filter>ul>li>ol:nth-of-type(2) {
 		margin-left: 100px;
 	}
@@ -310,6 +321,7 @@
 		font-weight: bold;
 	}
 	.quyu_kind{
+		cursor: pointer;
 		font-size: 12px;
 	}
 	.quyu_kind>li>input{
@@ -444,7 +456,6 @@
 		font-size: 13px;
 	}
 	
-	
 	/*content部分css*/
 	
 	.content{
@@ -466,9 +477,6 @@
 	    display: inline-block;
 	    width: 90%;
 	    line-height: 47.5px;
-	}
-	.content .leftContent .orderFilter .orderTag ul li.selected {
-   		 background-color: red;
 	}
 
 	.content .leftContent .orderFilter .orderTag ul li {
@@ -507,13 +515,11 @@
 	    display: inline-block;
 	    margin-right: 20px;
 	}
-	.content .leftContent .resultDes {
-	    line-height: 55px;
-	}
 	.content .leftContent .resultDes .total {
 	    font-weight: bold;
 	    font-size: 22px;
 	    color: #394043;
+	    margin-top: 50px;
 	}
 	.listContentLine{
 		border-bottom: 1px solid #f1f1f1;
@@ -522,18 +528,31 @@
 		
 		margin-left: 215px;
 		height: 19px;
-		margin-top: 17px;
+		margin-top: 29px;
+	}
+	.intrdex{
+		font-size: 22px;
+		color: rgba(0,0,0,0.85);
+		font-weight: bold;
 	}
 	.introduce span{
 		font-size: 14px;
 	}
 	.direciton{
+		margin-top: -30px;
 		margin-left: 50px;
 	}
 	.introduce .word{
 		vertical-align: top;
 		margin-left: 10px;
 		color: rgba(0,0,0,0.7);
+	}
+	.prices{
+		font-size: 24px;
+		color: rgba(239,31,31,0.85);
+	}
+	.wan{
+		font-size: 14px;
 	}
 	.intrspan{
 		
@@ -542,6 +561,15 @@
 		height: 30px;
 		line-height: 30px;
 		text-align: center;
+	}
+	.one{
+		background-color: #e5f2ff;color: rgba(0,85,164,0.85);
+	}
+	.two{
+		background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;
+	}
+	.three{
+		    background: #e1f5ed; color: #33BE85;
 	}
 	.sidebar .advertisement{
 		width: 180px;
@@ -567,8 +595,22 @@
 		overflow: hidden;
 	}
 	.item ul li{
-		cursor: pointer;
-		margin-top: 60px;
+		padding: 30px 0;
+		/*border-bottom: 1px solid #f1f1f1;*/
+	}
+	.image>img{
+		width: 100%;
+		height: 100%;
+		
+	}
+	.image{
+		width: 232px;
+		height: 175px;
+		background: deepskyblue;
+	}
+	.querybtn{
+  	 	color: #ff4343;
+  	 	font-weight:bold;
 	}
 	
 	/*推荐小区*/

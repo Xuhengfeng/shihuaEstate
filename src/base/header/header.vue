@@ -145,7 +145,7 @@
 				<div class="menu fr">
 					<ul class="menuright fl">
 						<li><img src="../../imgs/buyhouse/diwei.png" /></li>
-						<li>地图找房</li>
+						<router-link tag="li" :to="/mapSearch/+houseTypeId"  class="mapSearchHouse">地图找房</router-link>
 					</ul>
 				</div>
 			</div>

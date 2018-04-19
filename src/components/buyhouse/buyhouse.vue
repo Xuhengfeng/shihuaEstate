@@ -15,14 +15,20 @@
 							<ol class="fl quyu">售价:</ol>
 							<ol class="fl quyu_kind">
 								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
-								<li><input type="text"/><span>-</span><input type="text" /> <span>万</span></li>
+								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
+									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>万</span>
+									<button @click="okbtnone(1)" v-if="showBtn">确定</button>
+								</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">面积:</ol>
 							<ol class="fl quyu_kind">
 								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="mianji(item, index)">{{item.name}}</li>
-								<li><input type="text"/><span>-</span><input type="text" />   <span>平</span></li>
+								<li><input type="text" value="" v-model="inputthree" @focus="changeshowone"  /><span>-</span>
+									<input type="text" value="" v-model="inputfour" @focus="changeshowone" />   <span>平</span>
+									<button @click="okbtnone(2)" 	v-if="showBtnone">确定</button>
+								</li>
 							</ol>
 						</li>
 						<li>
@@ -65,7 +71,7 @@
 			<div class="container">
 				<!--右侧部分-->
 				<div class="sidebar fr">
-					<div style="margin-top: 34px;"><span style="font-size: 16px;">购房指南</span><span class="fr" style="font-size: 12px;color: rgba(0,0,0,0.7);">更多</span></div>
+					<div style="margin-top: 100px;"><span style="font-size: 16px;">购房指南</span><span class="fr" style="font-size: 12px;color: rgba(0,0,0,0.7);">更多</span></div>
 					<ul>
 						<li class="zhinan">外地人可以在南宁买房吗？</li>
 						<li class="zhinan_date">2018-039-02</li>
@@ -81,7 +87,7 @@
 				<!--左侧内容-->
 				<div class="leftContent">
 					<div class="orderFilter">
-						<div class="orderTag">
+						<!-- <div class="orderTag">
 							<ul>
 								<li v-for="(item, index) in list"><h3><a>{{item}}</a></h3></li>
 							</ul>
@@ -91,10 +97,10 @@
 							<ul>
 								<li v-for="(item, index) in listnine"><h3><a>{{item}}</a></h3></li>
 							</ul>
-						</div>
+						</div> -->
 					</div>
 						<div class="resultDes">
-							<h2 class="total">共找到<span style="color: red;"> 27114 </span>套南宁二手房</h2>
+							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>套{{this.city}}二手房</h2>
 							<div class="listContentLine"></div>
 						</div>
 					
@@ -137,7 +143,7 @@
 	export default {
 		data() {
 			return {
-				list:["默认排序", "最新", "总价", "房屋单价", "面积"],
+				// list:["默认排序", "最新", "总价", "房屋单价", "面积"],
 				listone:[],
 				listtwo:[],
 				listthree:[],
@@ -146,14 +152,17 @@
 				listsix:[],
 				listseven:[],
 				listeight:[],
-				listnine:["随时看房", "新上", "满五年", "世华独家"],
+				// listnine:["随时看房", "新上", "满五年", "世华独家"],
 				datas: "",
 				num: 0,
+				showBtn: false,
+				showBtnone:false,
 				dialogVisible: false,
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
 				buyhouse: null , //二手房列表
+				querycount:null,//二手房总数量
 				queryone: null,   //二手房区域
 				querytwo: null,   //二手房售价
 				querythree: null,   //二手面积域
@@ -161,19 +170,57 @@
 				queryfive: null,   //二手房装修
 				querysix: null,   //二手房楼龄
 				queryseven:null,  //二手房朝向
-				queryeight:null   //二手房特色
+				queryeight:null ,  //二手房特色
+				inputresult:null,
+				inputresulttwo:null,
+				inputone: '',
+				inputtwo: '',
+				inputthree:'',
+				inputfour:'',
+				params: {
+				  "areaId": null,
+				  "districtId": null,
+				  "houseDecor": "",
+				  "houseDirec": "",
+				  "houseFeature": "",
+				  "houseForm": "",
+				  "keyword": "",
+				  "maxBuildArea": null,
+				  "maxPrice": null,
+				  "minBuildArea": null,
+				  "minPrice": null,
+				  "pageNo": 1,
+				  "pageSize": null,
+				  "roomsNum": null,
+				  "scity": null
+				}
 			};
 		},
 		created() {	
+			
+
+			this.params.scity = JSON.parse(window.localStorage.selectCity).value;
+			this.city =JSON.parse(window.localStorage.selectCity).name
 			//请求二手的列表
 			this.$http.post(this.$url.URL.HOUSE_QUERY, {  
-				         scity: JSON.parse(window.localStorage.selectCity).value,
+				         scity: this.params.scity,
 				         pageNo :1
   
 			})
 			.then((response)=>{
 				this.buyhouse = response.data.data
 			})
+			//获取搜索二手房总数量
+			this.$http.post(this.$url.URL.HOUSE_QUERYCOUNT, {  
+				         scity: this.params.scity,
+				         pageNo :1
+  
+			})
+			.then((response)=>{
+				console.log(response)
+				this.querycount = response.data.data
+			})
+			
 			
 			//请求搜索条件
 			this.$http.get(this.$url.URL.AREA_DISTRICTS +JSON.parse(window.localStorage.selectCity).value) //区域
@@ -213,6 +260,7 @@
 			
 			
 		},
+
 		methods: {
 
 			loginResize() { //点击登陆
@@ -238,29 +286,91 @@
 				this.$router.push({path:"/buyhouse/twohandhousedetail/:id"});
 			},
 			address(item, index) {   //点击区域条件
-				this.queryone = index;  
+				this.queryone = index;
+				this.params.areaId = item.id;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);
+			
 			},
-			shoujia(item, index) {
+			shoujia(item, index) {          //售价   
 				this.querytwo = index;
+				this.params.minPrice = item.value.split('-')[0];
+				this.params.maxPrice = item.value.split('-')[1];
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);	
 			},
-			mianji(item, index){
+			mianji(item, index){       //面积
 				this.querythree = index;
+				this.params.minBuildArea = item.value.split('-')[0];
+				this.params.maxBuildArea = item.value.split('-')[1];
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);	
 			},
-			fangxing(item, index){
+			fangxing(item, index){         //房型
 				this.queryfour = index;
+				this.params.roomsNum = item.value;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);				
 			},
-			zhuangxiu(item, index){
+			zhuangxiu(item, index){       //装修
 				this.queryfive= index;
+				this.params.houseDecor = item.value;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);
+					
 			},
 			louling(item, index){
-				this.querysix= index;
+				this.querysix= index;       //楼龄
+//				this.params.minBuildArea = item.value.split('-')[0];
+//				this.params.maxBuildArea = item.value.split('-')[1];
+//				this.requestServerData(this.params);
 			},
-			chaoxiang(item, index){
+			chaoxiang(item, index){        //朝向
 				this.queryseven = index;
+				this.params.houseDirec  = item.value;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);	
 			},
-			teshe(item, index){
+			teshe(item, index){           //特色
 				this.queryeight= index;
+				this.params.houseFeature  = item.value;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);
 			},
+			requestServerData(params) {  //请求过滤搜索条件数据
+				this.$http.post(this.$url.URL.HOUSE_QUERY , params)
+				.then((response)=>{
+					this.buyhouse = response.data.data
+				})
+			},
+			requestCountData(params) {   //请求二手房源数量
+				this.$http.post(this.$url.URL.HOUSE_QUERYCOUNT , params)
+				.then((response)=>{
+					this.querycount = response.data.data
+				})
+			},
+			changeshow() {
+				this.showBtn = true;
+			},
+			changeshowone() {
+				this.showBtnone = true;
+			},
+			okbtnone(num) {
+				if (num == 1){
+				this.params.minPrice = this.inputone;
+				this.params.maxPrice = this.inputtwo;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);
+				}
+				else{
+				this.params.minPrice = this.inputthree;
+				this.params.maxPrice = this.inputfour;
+				this.requestServerData(this.params);
+				this.requestCountData(this.params);
+				}
+					
+			},
+			
 		}, 
 		components: {
 			oHeader
@@ -459,7 +569,6 @@
 		font-size: 13px;
 	}
 	
-	
 	/*content部分css*/
 	
 	.content{
@@ -573,7 +682,7 @@
 		background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;
 	}
 	.three{
-		
+		background: #e1f5ed; color: #33BE85;
 	}
 	.sidebar .advertisement{
 		width: 180px;

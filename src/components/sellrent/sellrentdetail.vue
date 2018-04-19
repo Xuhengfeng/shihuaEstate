@@ -231,7 +231,6 @@
 	import BMap from "../../base/BMap/BMap";
 	import '../../../static/js/jquery-3.2.1.min.js';
 	import '../../../static/js/swiper-3.3.1.min.js'
-	
 	export default {
 		data() {
 			return {
