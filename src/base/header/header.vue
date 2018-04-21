@@ -23,9 +23,9 @@
 					</ol>
 
 					<ol class="fl">
-						<router-link tag="li" to="/buyhouseguide">更多
+						<router-link tag="li" to="">更多
 							<ul class="item2">
-								<router-link tag="li" to="">小区找房</router-link>
+								<router-link tag="li" to="/houseestate">小区找房</router-link>
 								<router-link tag="li" to="">代办贷款</router-link>
 								<router-link tag="li" to="">异地服务</router-link>
 								<router-link tag="li" to="">房屋托管</router-link>
@@ -38,11 +38,12 @@
 						</router-link>
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/buyhouseguide">海外置业</router-link>
-						<router-link tag="li" to="/broker">找门店</router-link>
-						<router-link tag="li" to="/houseestate">业主委托
+						<router-link tag="li" to="/shoper">找门店</router-link>
+						<router-link tag="li" to="/broker">找经纪人</router-link>
+						<router-link tag="li" to="">业主委托
 							<ul class="item2">
-								<router-link tag="li" to="">我要租房</router-link>
-								<router-link tag="li" to="">我要出售</router-link>
+								<router-link tag="li" to="/entrustmentsell">我要租房</router-link>
+								<router-link tag="li" to="/entrustmentrent">我要出售</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/sellrent">租房</router-link>

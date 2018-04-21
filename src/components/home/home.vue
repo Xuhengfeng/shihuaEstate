@@ -2,8 +2,8 @@
 	<div class="home">
 		<div class="header">
 			<div class="shadowlay" v-if="toggleShow" @click="cancelshadow()"></div>
-			<div class="container">
-				<div class="fl">
+			<div class="container" style="position:relative">
+				<div style="position:absolute;top:0px;left:0;">
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
@@ -157,10 +157,11 @@
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/broker">海外置业</router-link>
 						<router-link tag="li" to="/houseestate">找门店</router-link>
-						<router-link tag="li" to="/sellrent">业主委托
+						<router-link tag="li" to="/broker">找经纪人</router-link>
+						<router-link tag="li" to="">业主委托
 							<ul>
-								<router-link tag="li" to="">我要租房</router-link>
-								<router-link tag="li" to="">我要出售</router-link>
+								<router-link tag="li" to="/entrustmentrent">我要租房</router-link>
+								<router-link tag="li" to="/entrustmentrent">我要出售</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/sellrent">租房</router-link>
@@ -450,7 +451,7 @@
 			},
 			searchBuyHouse() {
 				console.log(this.searchinput)
-			 this.$router.push({path:"/buyhouse", params: this.searchinput});
+			//  this.$router.push({path:"/buyhouse", params:{this.searchinput} });
 			}
 		},
 		mounted() {
