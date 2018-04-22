@@ -1,7 +1,7 @@
 <template>
     <!-- 地图找房 -->
     <div class="mapSearch">
-        <div class="header">
+        <div class="header" ref="header">
             <div class="header-hd">
                 <router-link to="" tag="div" class="logo"></router-link>
                 <div class="sign fr">
@@ -24,32 +24,32 @@
             </div>    
             <div class="header-bd">
                 <div class="search-bar fl">
-                    <input v-model="inputKeyword" type="text" placeholder="输入小区或地铁附站开始找房">
+                    <input v-model="inputKeyword" type="span" placeholder="输入小区或地铁附站开始找房">
                     <img src="../../imgs/home/search.png" style="width:15px;height:15px;" @click="requestAllCityData()">
                 </div>
                 <ul class="filters fl">
                     <li> 
                         <span>售价<i class="iconfont icon-location"></i>  </span>
                         <div class="filters-content">
-                            <li>111</li>
+                            <li></li>
                         </div>
                     </li>
                     <li>
                         <span>户型<i class="iconfont icon-location"></i>  </span>
                         <div class="filters-content">
-                            <li>111</li>
+                            <li></li>
                         </div>
                     </li>
                     <li>
                         <span>面积<i class="iconfont icon-location"></i>  </span>
                         <div class="filters-content">
-                            <li>111</li>
+                            <li></li>
                         </div>
                     </li>
                     <li>
                         <span>更多选项<i class="iconfont icon-location"></i>  </span>
                         <div class="filters-content">
-                            <li>111</li>
+                            <li></li>
                         </div>
                     </li>
                 </ul>
@@ -75,7 +75,31 @@
         </div>
         <!-- 房源列表 -->
         <div class="side" ref="side">
-            发呆发斯蒂芬
+            <div>1</div>
+            <div>2</div>
+            <ul>
+              <li :key="index" v-for="(item,index) in smallArea">
+                <div class="image fl"><img :src="item.housePic"></div>
+                <div class="item-content">
+                    <div class="item-title">{{item.houseTitle}}</div>
+                    <div class="description">{{item.areaName}} {{item.districtName}} {{item.houseDirection}}</div>                        
+                    <div  class="houseTypeInfo">
+                      <span>{{item.houseType}}</span>{{item.builtArea}}m²
+                    </div>
+
+                    <div class="houseLabel">
+                      
+                    </div>
+
+                  <div v-if="flagPrice" class="housePrice">{{item.saleTotal}}万
+                      <span>{{item.salePrice}}元/平米</span>
+                  </div>
+                  <div v-if="!flagPrice" class="housePrice">{{item.rentPrice}}
+                      <span>元/月</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
             <div class="showController" @click="isShowHouseList">></div>
         </div>
         <div class="changeZoom">
@@ -88,26 +112,30 @@
 <script>
 //自定义百度地图label样式
 import '../../common/css/mapSearch.css';
-
-// 引入d3库
 import * as d3 from "d3";
 
 export default {
   data() {
     return {
-      map: null,//地图实例
+      map: null,          //地图实例
       usedAreaDetails: [],//使用房源(区域 片区 小区)tree数据
       rentAreaDetails: [],//租房房源
-
-      inputKeyword: '',//输入关键词
-      isShowSide: true,//是否显示side
-      polygon: '',//绘图
-      circleNum: 1,//开始画圈找房1 取消画圈找房2
-      metroNum: 1,//开始地铁找房1 取消地铁找房2
-      pencil: '../imgs/home/pencil.ico',
+      smallArea: [],      //小区列表
+      inputKeyword: '',   //输入关键词
+      isShowSide: true,   //是否显示side
+      polygon: '',        //绘图
+      svg: '',            //svg对象
+      circleNum: 1,       //开始画圈找房1 取消画圈找房2
+      metroNum: 1,        //开始地铁找房1 取消地铁找房2
+      flagPrice: true,    //是否显示价格
+      num: 0,             //修正ip
+      pencil: '../../../static/pencil.ico',
       selectCity: JSON.parse(localStorage.selectCity),
-      //二手房 租房 小区
-      IPS: [this.$url.URL.MAPHOUSEALLTREE, this.$url.URL.MAPHOUSEALLTREE, this.$url.URL.MAPHOUSEALLTREE],
+      
+      //二手房 租房 小区区域所有数据
+      IPS: [this.$url.URL.MAPHOUSEALL_TREE, this.$url.URL.MAPHOUSEALL_TREE, this.$url.URL.MAPHOUSEALL_TREE],
+      //同小区二手房列表
+      IPS2: [this.$url.URL.MAPHOUSEALL_USED_LIST],
     }
   },
   created() {
@@ -128,25 +156,34 @@ export default {
     //区域级别房源 二手房 租房 小区
     requestAllCityData() {
       let houseType = this.$route.params.houseTypeId;
-      let num;
       if(houseType == 11) {
-        num = 0;
+        this.num = 0;
       }else if(houseType == 22) {
-        num = 1;
+        this.num = 1;
       }else if(houseType == 33) {
-        num = 2;
+        this.num = 2;
       }
-      this.$http.post(this.IPS[num], {
+      this.$http.post(this.IPS[this.num], {
         scity: this.selectCity.value
       })
       .then(res=> {
         this.usedAreaDetails = res.data.data.usedAreaDetails;
         this.rentAreaDetails = res.data.data.rentAreaDetails;
+        console.log(this.usedAreaDetails)
         //初始化区域级别数据显示
         this.usedAreaDetails.forEach((item)=>{
             let point = new BMap.Point(item.px, item.py);
             this.addLabel(point, item);
         })
+      })
+    },
+    //小区级别数据
+    smallAreaRequest(sdid) {
+      this.$http.get(this.IPS2[this.num]+this.selectCity.value+"/"+sdid+"?pageNo="+1)
+      .then(res=> {
+        this.smallArea=res.data.data;
+        console.log(res)
+        console.log(res.data)
       })
     },
     //这里百度地图start------------------------------------------------------------------------<<<<<<<<<<
@@ -186,10 +223,7 @@ export default {
                     </div>`;
 
         //小区级别
-        let html3 = `<div class="bubble-3 bubble">
-                      <p class="name">${obj.buildName} <strong>${obj.formatAvgPrice}万</strong> ${obj.formatSaleCount}</p>
-                      <i class="iconfont icon-sanjiaoxing-down"></i>
-                    </div>`;
+        let html3 = `<div class="bubble-3 bubble"><p class="name" data-id=${obj.buildSdid}>${obj.buildName} <strong>${obj.formatAvgPrice}万</strong> ${obj.formatSaleCount}</p><i class="iconfont icon-sanjiaoxing-down"></i></div>`;
                     
         let content;
         if(currentZoom==15||currentZoom==16) {
@@ -214,8 +248,9 @@ export default {
           })
       this.map.addOverlay(label); //将标注添加到地图中
       
-      label.addEventListener('click',(e)=>{
+      label.addEventListener('click',(e, item)=>{
         //重新设置中心位置 
+        
         this.map.setCenter(e.point);
         
         //改变zoom 进入下一级;
@@ -223,14 +258,19 @@ export default {
           //清空覆盖物
           this.map.clearOverlays();    
           this.map.setZoom(14);
-        }else if(currentZoom>12&&currentZoom<=14) {//片区级别
+        }else if(currentZoom>12&&currentZoom<=15) {//片区级别
           //清空覆盖物
           this.map.clearOverlays();  
           this.map.setZoom(16);
-        }else if(currentZoom>14) { 
+        }else if(currentZoom>=15) { 
           //show 左边 房源列表选项
+          let reg = /\d{5,}/ig;
+          let str = e.target.content;
+          let str2 = parseInt(str.match(reg)[0]);
           this.isShowSide=false;
           this.$refs.side.style.left="0";
+          console.log(str2)
+          this.smallAreaRequest(str2);
         }
       }) 
     },
@@ -246,15 +286,16 @@ export default {
     //画圈找房start--------------------------------------------------------------------<<<<<<<<<<
     //修改svg
     changeSvg() {
-      const style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
-      this.svg = d3.select("svg")
-                .attr("x", "2536px")
-                .attr("y", "1281px")
-                .attr("fill", "none")
-                .attr("stroke-linecap", "round")
-                .attr("viewBox", "-500 -500 2536 1281")
-                .attr("style", style)
-                .attr("fill", "rgba(0,0,0,.3)");
+      let style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
+      d3.select("svg")
+        .attr("ref", "svg")
+        .attr("x", "2536px")
+        .attr("y", "1281px")
+        .attr("fill", "none")
+        .attr("stroke-linecap", "round")
+        .attr("divBox", "-500 -500 2536 1281")
+        .attr("style", style)
+        .attr("fill", "rgba(0,0,0,.3)");
     },
     //获取坐标
 		getMouse(e){
@@ -287,12 +328,14 @@ export default {
       this.polygon = new BMap.Polygon(); 
       this.map.addOverlay(this.polygon);
     
-      //鼠标样式替换
-      console.log(document.querySelector("svg"))
+      //修改 头部 鼠标 样式
+      //设置地图禁止拖拽   
+      //修改svg
+      //this.changeSvg(); 
+      this.$refs.header.style.boxShadow="0 2px 10px rgba(0, 0, 0, .3)";
       document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
       this.circleNum = 2;
-      this.map.disableDragging();//设置地图禁止拖拽   
-
+      this.map.disableDragging();
       let mapNode = document.getElementById('map');
       let str='';
       let x1,y1;//起始点坐标
@@ -313,7 +356,7 @@ export default {
         }
       }
       mapNode.onmouseup = ()=>{//结束
-        // this.map.setViewport(xyArr);//调整视野
+        // this.map.setdivport(xyArr);//调整视野
         this.map.enableDragging();//设置地图打开拖拽
         mapNode.onmousemove = null;
         mapNode.onmousedown = null;
@@ -321,17 +364,16 @@ export default {
         document.querySelector("svg").style.cursor = '';
       }
     },
-    
     exitDraw() {// 结束画圈
       this.map.clearOverlays();   
       this.circleNum = 1;
-      this.renderViewArea();
+      this.renderdivArea();
+      this.$refs.header.style.boxShadow="none";
     },
-
     //画圈找房end---------------------------------------------------------------------------<<<
 
     //地图可视区域的房源数据
-    viewArea() {
+    divArea() {
       this.map.addEventListener("dragend", ()=>{//拖动结束
         var bs = this.map.getBounds();   //获取可视区域
         var bssw = bs.getSouthWest();   //可视区域左下角
@@ -340,7 +382,7 @@ export default {
         //tode 请求区域数据
       })
     },
-    renderViewArea() {
+    renderdivArea() {
       //清空覆盖物
       this.map.clearOverlays();    
       let currentZoom = this.map.getZoom();
@@ -372,7 +414,7 @@ export default {
     }
   },
   mounted() {
-    this.changeSvg();  //修改svg
+    
     setTimeout(()=> {
       this.map.addEventListener("zoomend", ()=>{
         if(this.circleNum == 2){
@@ -380,7 +422,7 @@ export default {
 
         }else if(this.circleNum == 1){
           //未绘图状态
-          this.renderViewArea();
+          this.renderdivArea();
         }
       });
     },1000)
@@ -415,7 +457,7 @@ export default {
   overflow: hidden;
   height: 60px;
   line-height: 60px;
-  text-align: center;
+  span-align: center;
 }
 .header-hd ul li {
   float: right;
@@ -434,7 +476,7 @@ export default {
   color: #666;
   height: 60px;
   line-height: 60px;
-  text-align: center;
+  span-align: center;
   margin-right: 12px;
   margin-left: 40px;
 }
@@ -484,7 +526,7 @@ export default {
   height: 100%;
   width: 80px;
   border-right: 1px solid #eee;
-  text-align: center;
+  span-align: center;
   position: relative;
 }
 .header-bd .tools > li {
@@ -509,6 +551,7 @@ export default {
   bottom: 0;
   transition: all 0.3s ease;
   z-index: 1000;
+ 
 }
 .side .showController {
   position: absolute;
@@ -518,7 +561,7 @@ export default {
   height: 60px;
   line-height: 60px;
   background: #ffffff;
-  text-align: center;
+  span-align: center;
   transform: translateY(-50%);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -526,6 +569,31 @@ export default {
     0 1px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
+.side ul{
+  margin-top: 200px;
+  width: 420px;
+  height: 100%;
+  overflow-y: scroll;
+}
+.side ul li{
+  overflow: hidden;
+}
+.side ul li .image{
+  width: 200px;
+  height: 200px;
+} 
+.side .image img{
+  width: 100%;
+  height: 100%;
+}
+.side ul li .item-content{
+  overflow: hidden;
+} 
+::-webkit-scrollbar  
+{  
+  width: 2px;  
+  background-color: #F5F5F5;  
+}  
 
 /* 改变zoom控件 */
 .changeZoom {
