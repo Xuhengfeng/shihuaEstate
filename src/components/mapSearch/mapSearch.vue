@@ -75,32 +75,36 @@
         </div>
         <!-- 房源列表 -->
         <div class="side" ref="side">
-            <div>1</div>
-            <div>2</div>
-            <ul>
-              <li :key="index" v-for="(item,index) in smallArea">
-                <div class="image fl"><img :src="item.housePic"></div>
-                <div class="item-content">
-                    <div class="item-title">{{item.houseTitle}}</div>
-                    <div class="description">{{item.areaName}} {{item.districtName}} {{item.houseDirection}}</div>                        
-                    <div  class="houseTypeInfo">
-                      <span>{{item.houseType}}</span>{{item.builtArea}}m²
-                    </div>
+            <div class="agent-info">1</div>
+            <div class="r-content">
+              <div class="houselist-top">2</div>
+              <ul>
+                <li :key="index" v-for="(item,index) in smallArea">
+                  <div class="image fl"><img :src="item.housePic"></div>
+                  <div class="item-content">
+                      <div class="item-title">{{item.houseTitle}}</div>
+                      <div class="description">{{item.areaName}} {{item.districtName}} {{item.houseDirection}}</div>                        
+                      <div  class="houseTypeInfo">
+                        <span>{{item.houseType}}</span>{{item.builtArea}}m²
+                      </div>
 
-                    <div class="houseLabel">
-                      
-                    </div>
+                      <div class="houseLabel">
+                        
+                      </div>
 
-                  <div v-if="flagPrice" class="housePrice">{{item.saleTotal}}万
-                      <span>{{item.salePrice}}元/平米</span>
+                    <div v-if="flagPrice" class="housePrice">{{item.saleTotal}}万
+                        <span>{{item.salePrice}}元/平米</span>
+                    </div>
+                    <div v-if="!flagPrice" class="housePrice">{{item.rentPrice}}
+                        <span>元/月</span>
+                    </div>
                   </div>
-                  <div v-if="!flagPrice" class="housePrice">{{item.rentPrice}}
-                      <span>元/月</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <div class="showController" @click="isShowHouseList">></div>
+                </li>
+              </ul>
+            </div>
+            <div class="showController" @click="isShowHouseList">
+              <i class="map_icon icon_close_houselist"></i>
+            </div>
         </div>
         <div class="changeZoom">
             <button id="zoom_in">+</button>
@@ -111,6 +115,7 @@
 
 <script>
 //自定义百度地图label样式
+// import '../../assets/sprite.svg';
 import '../../common/css/mapSearch.css';
 import * as d3 from "d3";
 
@@ -223,7 +228,7 @@ export default {
                     </div>`;
 
         //小区级别
-        let html3 = `<div class="bubble-3 bubble"><p class="name" data-id=${obj.buildSdid}>${obj.buildName} <strong>${obj.formatAvgPrice}万</strong> ${obj.formatSaleCount}</p><i class="iconfont icon-sanjiaoxing-down"></i></div>`;
+        let html3 = `<div class="bubble-3 bubble"><p class="name" data-id=${obj.buildSdid}>${obj.buildName} <strong>${obj.formatAvgPrice}万</strong> ${obj.formatSaleCount}</p><i class="triangle"></i></div>`;
                     
         let content;
         if(currentZoom==15||currentZoom==16) {
@@ -457,7 +462,7 @@ export default {
   overflow: hidden;
   height: 60px;
   line-height: 60px;
-  span-align: center;
+  text-align: center;
 }
 .header-hd ul li {
   float: right;
@@ -476,7 +481,7 @@ export default {
   color: #666;
   height: 60px;
   line-height: 60px;
-  span-align: center;
+  text-align: center;
   margin-right: 12px;
   margin-left: 40px;
 }
@@ -526,7 +531,7 @@ export default {
   height: 100%;
   width: 80px;
   border-right: 1px solid #eee;
-  span-align: center;
+  text-align: center;
   position: relative;
 }
 .header-bd .tools > li {
@@ -561,7 +566,7 @@ export default {
   height: 60px;
   line-height: 60px;
   background: #ffffff;
-  span-align: center;
+  text-align: center;
   transform: translateY(-50%);
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
@@ -569,18 +574,30 @@ export default {
     0 1px 0 rgba(0, 0, 0, 0.3);
   cursor: pointer;
 }
+.side .agent-info{
+  height: 112px;
+  padding-left: 24px;
+}
+.side .r-content{
+  height: 100%;
+  padding-left: 24px;
+  border-top: 1px solid #cacaca;
+}
 .side ul{
-  margin-top: 200px;
-  width: 420px;
+  width: 400px;
   height: 100%;
   overflow-y: scroll;
 }
 .side ul li{
+  padding: 10px 0;
   overflow: hidden;
+  border-bottom: 1px solid #cacaca;
+  margin: 0 10px;
 }
 .side ul li .image{
-  width: 200px;
-  height: 200px;
+  width: 120px;
+  height: 100px;
+  margin-right: 10px;
 } 
 .side .image img{
   width: 100%;
@@ -591,9 +608,21 @@ export default {
 } 
 ::-webkit-scrollbar  
 {  
-  width: 2px;  
-  background-color: #F5F5F5;  
+  width: 1px;  
+  background-color: #cacaca;  
 }  
+.map_icon{
+  width: 10px;
+  height: 16px;
+  display: inline-block;
+  background-image: url(../../assets/sprite.svg);
+  background-repeat: no-repeat;
+  position: relative;
+  cursor: pointer;
+}
+.icon_close_houselist{
+  background-position: -180px 0;
+}
 
 /* 改变zoom控件 */
 .changeZoom {
