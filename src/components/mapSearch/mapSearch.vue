@@ -75,7 +75,9 @@
         </div>
         <!-- 房源列表 -->
         <div class="side" ref="side">
-            <div class="agent-info">1</div>
+            <div class="agent-info">
+              <div class="title">{{agentInfo.buildname}}</div>
+            </div>
             <div class="r-content">
               <div class="houselist-top">2</div>
               <ul>
@@ -115,7 +117,7 @@
 
 <script>
 //自定义百度地图label样式
-// import '../../assets/sprite.svg';
+
 import '../../common/css/mapSearch.css';
 import * as d3 from "d3";
 
@@ -134,6 +136,7 @@ export default {
       metroNum: 1,        //开始地铁找房1 取消地铁找房2
       flagPrice: true,    //是否显示价格
       num: 0,             //修正ip
+      agentInfo: '',      //side的info 
       pencil: '../../../static/pencil.ico',
       selectCity: JSON.parse(localStorage.selectCity),
       
@@ -187,8 +190,6 @@ export default {
       this.$http.get(this.IPS2[this.num]+this.selectCity.value+"/"+sdid+"?pageNo="+1)
       .then(res=> {
         this.smallArea=res.data.data;
-        console.log(res)
-        console.log(res.data)
       })
     },
     //这里百度地图start------------------------------------------------------------------------<<<<<<<<<<
@@ -228,7 +229,19 @@ export default {
                     </div>`;
 
         //小区级别
-        let html3 = `<div class="bubble-3 bubble"><p class="name" data-id=${obj.buildSdid}>${obj.buildName} <strong>${obj.formatAvgPrice}万</strong> ${obj.formatSaleCount}</p><i class="triangle"></i></div>`;
+        let html3 = `<div class="bubble-3 bubble">
+                        <p class="name" 
+                            data-areaName=${obj.areaName}
+                            data-avgPrice=${obj.avgPrice}
+                            data-buildName=${obj.buildName}
+                            data-districtName=${obj.districtName}
+                            data-formatAvgPrice=${obj.formatAvgPrice}
+                            data-formatSaleCount=${obj.formatSaleCount}
+                            data-buildSdid=${obj.buildSdid}>
+                          <i class="num">${obj.buildName}<b> ${obj.formatAvgPrice}万</b> ${obj.formatSaleCount}</i>
+                          <i class="num triangle"></i>
+                        </p>
+                    </div>`;
                     
         let content;
         if(currentZoom==15||currentZoom==16) {
@@ -242,7 +255,7 @@ export default {
 
         let label = new BMap.Label(content, {
             offset: new BMap.Size(-40,-40),
-            position: point //指定文本标注所在的地理位置               
+            position: point, //指定文本标注所在的地理位置 
           })
           label.setStyle({
             border: 0,
@@ -253,9 +266,9 @@ export default {
           })
       this.map.addOverlay(label); //将标注添加到地图中
       
-      label.addEventListener('click',(e, item)=>{
-        //重新设置中心位置 
+      label.addEventListener('click',(e)=>{
         
+        //重新设置中心位置         
         this.map.setCenter(e.point);
         
         //改变zoom 进入下一级;
@@ -268,14 +281,19 @@ export default {
           this.map.clearOverlays();  
           this.map.setZoom(16);
         }else if(currentZoom>=15) { 
-          //show 左边 房源列表选项
-          let reg = /\d{5,}/ig;
-          let str = e.target.content;
-          let str2 = parseInt(str.match(reg)[0]);
+           //show 左边 房源列表选项
+          let str;
+          let domTarget = e.domEvent.target.classList.contains('num');
+          if(domTarget) {
+            str = e.domEvent.target.parentNode.dataset;
+          }else{
+            str = e.domEvent.target.parentNode.parentNode.dataset;
+          }
+          let sdid = str.buildsdid;
+          this.agentInfo=str;
           this.isShowSide=false;
           this.$refs.side.style.left="0";
-          console.log(str2)
-          this.smallAreaRequest(str2);
+          this.smallAreaRequest(sdid);
         }
       }) 
     },
@@ -437,6 +455,7 @@ export default {
 </script>
 
 <style scoped="scoped">
+/* @import 'src/assets/sprite.svg'; */
 /* 第一块 */
 .header {
   position: relative;
@@ -615,13 +634,14 @@ export default {
   width: 10px;
   height: 16px;
   display: inline-block;
-  background-image: url(../../assets/sprite.svg);
+  /* background-image: url(../../assets/sprite.svg); */
+  background-image: url(~@/assets/sprite.svg);
   background-repeat: no-repeat;
   position: relative;
   cursor: pointer;
 }
 .icon_close_houselist{
-  background-position: -180px 0;
+  background-position: 0 0;
 }
 
 /* 改变zoom控件 */

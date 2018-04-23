@@ -70,10 +70,15 @@
   white-space:nowrap;
   padding:0 10px
 }
+.bubble-3 i{
+  display: block;
+  font-style: normal;
+}
 .triangle{
   width: 0;
   height: 0;
-  border-width: 10px;
+  margin-left: 50%;
+  border-width: 8px;
   border-style: solid;
   border-color: rgb(83,145,244) transparent transparent transparent;
 }
