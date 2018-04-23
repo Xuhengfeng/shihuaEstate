@@ -12,7 +12,8 @@ let URL = {
 	DICTIONARY_DEFAULTCITY:_host + '/dictionary/defaultCity',   //获取默认城市	
 	HOUSE_QUERYCOUNT:_host + '/house/queryCount ',              //获取搜索二手房总数量
    	DICTIONARY_DICTYPE:_host + '/dictionary/',  				//获取二手房搜索条件字段
-   	HOUSE_QUERY:_host + '/house/query',							//获取二手房列表全部数据
+	HOUSE_QUERY:_host + '/house/query',							//获取二手房列表全部数据
+	HOUSE_GETDETAILINFO:_host + '/house/getDetailInFo/',		//获取二手房详情
    	AREA_DISTRICTS:_host + '/area/areaDistricts/', 				//获取二手房搜索条件区域字段
 	RENTHOUSE_QUERY:_host + '/rentHouse/query',                 //查询租房列表全部数据
 	RENTHOUSE_QUERYCOUNT:_host + '/rentHouse/queryCount',       //获取租房总数量

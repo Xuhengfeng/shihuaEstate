@@ -6,8 +6,8 @@
 					<ol class="banner_right fr">
 						<li style="height: 70px;margin-top: -2px;">
 							<i class="iconfont icon-yonghu" v-if="rightnow" style="font-size: 14px;">
-							<span class="login" @click="loginResize()">登录</span>/
-							<span class="logout" @click="rightResize()">立即注册</span>
+							<span class="login" @click="login()">登录</span>/
+							<span class="logout" @click="register()">立即注册</span>
 						</i>
 							<i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout">退出</span></i>
 							<ul class="item4">
@@ -22,10 +22,10 @@
 						<li style="font-size: 14px;">热线电话0779-3837272</li>
 					</ol>
 
-					<ol class="fl">
-						<router-link tag="li" to="/buyhouseguide">更多
+					<ol class="navlist fl">
+						<router-link tag="li" to="">更多
 							<ul class="item2">
-								<router-link tag="li" to="">小区找房</router-link>
+								<router-link tag="li" to="/houseestate">小区找房</router-link>
 								<router-link tag="li" to="">代办贷款</router-link>
 								<router-link tag="li" to="">异地服务</router-link>
 								<router-link tag="li" to="">房屋托管</router-link>
@@ -39,10 +39,11 @@
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/buyhouseguide">海外置业</router-link>
 						<router-link tag="li" to="/broker">找门店</router-link>
-						<router-link tag="li" to="/houseestate">业主委托
+						<router-link tag="li" to="/broker">找经纪人</router-link>
+						<router-link tag="li" to="">业主委托
 							<ul class="item2">
-								<router-link tag="li" to="">我要租房</router-link>
-								<router-link tag="li" to="">我要出售</router-link>
+								<router-link tag="li" to="/entrustmentrent">我要租房</router-link>
+								<router-link tag="li" to="/entrustmentrent">我要出售</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/sellrent">租房</router-link>
@@ -67,7 +68,7 @@
 							<div class="forget" @click="findPassword()">忘记密码</div>
 							<button class="org_btn">登录</button>
 							<div class="dl_login" @click="quckliyLogin()">手机快捷登录</div>
-							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
+							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 						</div>
 					</div>
 				</div>
@@ -88,7 +89,7 @@
 							</div>
 							<label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label>
 							<button class="org_btn">注册</button>
-							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="loginResize()">去登陆</span></div>
+							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="login()">去登陆</span></div>
 						</div>
 					</div>
 				</div>
@@ -105,8 +106,8 @@
 								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
 							</div>
 							<button class="org_btn">修改密码</button>
-							<div class="dl_login" @click="loginResize()">账号密码登录</div>
-							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
+							<div class="dl_login" @click="login()">账号密码登录</div>
+							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 						</div>
 					</div>
 				</div>
@@ -126,7 +127,7 @@
 								<input type="text" placeholder="请输入手机号" maxlength="11">
 							</div>
 							<button class="org_btn">注册</button>
-							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
+							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 						</div>
 					</div>
 				</div>
@@ -163,15 +164,16 @@
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
+				houseTypeId: 11
 			};
 		},
 		methods: {
 
-			loginResize() { //点击登陆
+			login() { //点击登陆
 				this.cancel = true; //阴影部分
 				this.loginshow = 1; //
 			},
-			rightResize() { //点击注册
+			register() { //点击注册
 				this.cancel = true;
 				this.loginshow = 2;
 			},
@@ -259,6 +261,9 @@
 	.navmenu .item1 li .logout:hover{
 		color: red;
 	}
+	.navlist{
+		font-size: 16px;
+	}
 	
 	.header {
 		background-color: #F9F9F9;;
@@ -323,6 +328,7 @@
 	    right: 15px;
 	    top: 15px;
 	    padding: 4px;
+		color: black;
 	}
 	.panel_login .panel_tab .title .fl {
 	    font-size: 20px;
@@ -369,14 +375,15 @@
 		margin-left: 29px;
 	    font-size: 14px;
 	    color: #FFFFFF;
+		border: 0px;
 	}
 	.forget{
-	position: absolute;
-	left:295px ;
-	color: #000000;
-	font-size: 14px;
-	margin-top: 10px;
-	cursor: pointer;
+		position: absolute;
+		left:285px ;
+		color: #000000;
+		font-size: 14px;
+		margin-top: 10px;
+		cursor: pointer;
 	
 		
 	}
@@ -400,6 +407,7 @@
 	    font-size: 16px;
 	    margin-top: 40px;
 	    margin-left: 38px;
+		border: 0px;
 	    
 	}
 	.come_login{
@@ -408,6 +416,7 @@
 		font-size: 16px;
 		margin-top: 46px;
 		margin-left: 115px;
+		color: black;
 	}
 	.check{
 		position: absolute;
@@ -415,7 +424,8 @@
 		margin-left: 40px;
 		height: 18px;
 		line-height: 18px;
-		
+		font-size: 12px;
+		color: black;
 	}
 
 

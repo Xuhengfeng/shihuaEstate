@@ -3,7 +3,7 @@
 		<o-header></o-header>
 		<div class="title container">
 			<div class="tit fl">
-				<p>西乡塘区大学路片区<span>500万</span></p>
+				<p>{{twohandhousedetail.houseTitle}}</p>
 				<div>世华易居真房源 <span>更多房源信息请联系经纪人</span></div>
 				<div class="fl">
 					<div class="pc-slide">
@@ -72,27 +72,27 @@
 				</div>
 				<div class="content fr">
 					<div class="price ">
-						<span class="total">400</span>
+						<span class="total">{{twohandhousedetail.saleTotal}}</span>
 						<span class="unit"><span>万</span>
 						</span>
 						<div class="text">
-							<div class="unitPrice"><span class="unitPriceValue">63382<i>元/平米</i></span></div>
+							<div class="unitPrice"><span class="unitPriceValue">{{twohandhousedetail.saleprice }}<i>元/平米</i></span></div>
 							<div class="tax" id="tax-text">首付及贷款情况请咨询经纪人</div>
 						</div>
 						<div class="removeIcon"></div>
 					</div>
 					<div class="houseInfo">
 						<div class="room">
-							<div class="mainInfo">2室2厅</div>
-							<div class="subInfo">中楼层/共27层</div>
+							<div class="mainInfo">{{twohandhousedetail.houseType}}</div>
+							<div class="subInfo">{{twohandhousedetail.houseForm }}</div>
 						</div>
 						<div class="type">
-							<div class="mainInfo" title="南">南</div>
-							<div class="subInfo">平层/简装</div>
+							<div class="mainInfo" title="南">{{twohandhousedetail.houseDirection }}</div>
+							<div class="subInfo">{{twohandhousedetail.houseForm }}/{{twohandhousedetail.houseDecoration }}</div>
 						</div>
 						<div class="area">
-							<div class="mainInfo">63.11平米</div>
-							<div class="subInfo">2003年建/塔楼</div>
+							<div class="mainInfo">{{twohandhousedetail.builtArea }}平米</div>
+							<div class="subInfo">{{twohandhousedetail.buildAge }}年建/塔楼</div>
 						</div>
 					</div>
 					<div class="aroundInfo">
@@ -104,11 +104,24 @@
 							<a href="" class="supplement" title="" style="color:#394043;"></a>
 						</div>
 						<div class="visitTime"><i></i><span class="label">看房时间</span><span class="info">提前预约随时可看</span></div>
-						<div class="houseRecord"><span class="label">链家编号</span><span class="info">105101284704<span class="jubao"><a href="javascript:;" class="report">举报</a><a href="//www.lianjia.com/zhuanti/pfgz" target="blank" class="detail"></a></span></span>
-						</div>
+					</div>
+					<div class="duibi">
+							<div class="duibi_a">加入对比</div>
+							<div class="duibi_a">分享房源</div>
+					</div>
+					<div class="callpeople">联系经纪人</div>
+					<div class="fl peopleintrode">
+							<div class="fl">111</div>
+							<div class="fr">
+								<ul>
+									<li>{{twohandhousedetail.broker.emplName}}</li>
+									<li>1344444444444</li>
+									<li>亲自勘察，真实房源，竭诚为您服务</li>
+								</ul>
+							</div>
 					</div>
 				</div>
-
+				
 			</div>
 		</div>
 		<div class="container">
@@ -117,7 +130,7 @@
 				<b-map></b-map>
 				<!--房源信息-->
 				<div class="" style="width:700px;">
-						<div class="headtitle">房源位置</div>
+						<div class="headtitle">房源信息</div>
 					<div class="introContent">
 						<div class="base" style="border-bottom: 0;">
 							<div class="name">基本属性</div>
@@ -142,7 +155,7 @@
 				</div>
 
 				<div class="" style="width:200px;">
-					<div class="headtitle">房源位置</div>
+					<div class="headtitle">房源动态</div>
 					<div class="introContent">
 						<div class="base" style="border-bottom: 0;">
 							<div class="name">近日带看7(次)</div>
@@ -165,7 +178,7 @@
 						<div>带看记录</div>
 					</div>
 				</div>
-					<div class="headtitle">房源位置</div>
+					<div class="headtitle">关联小区</div>
 				<div class="item">
 					<ul>
 						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
@@ -174,7 +187,7 @@
 							</div>
 							<div class="direciton">
 								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
 								<div class="introduce ">
@@ -184,14 +197,14 @@
 								</div>
 							</div>
 						</router-link>
-							<div class="headtitle">房源位置</div>
+							<div class="headtitle">同小区房源</div>
 						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
 							<div class="image fl">
 								<img src="../../imgs/buyhouse/tu1.png" alt="" />
 							</div>
 							<div class="direciton">
 								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
 								<div class="introduce ">
@@ -201,14 +214,14 @@
 								</div>
 							</div>
 						</router-link>
-						<div class="headtitle">房源位置</div>
+						<div class="headtitle">周边房源</div>
 						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
 							<div class="image fl">
 								<img src="../../imgs/buyhouse/tu1.png" alt="" />
 							</div>
 							<div class="direciton">
 								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<sapn style="font-size: 14px;">万</sapn></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
 								<div class="introduce ">
@@ -241,6 +254,7 @@
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
+				twohandhousedetail:'' //二手房详情
 			};
 		},
 		methods: {
@@ -269,12 +283,27 @@
 			oHeader,
 			BMap
 		},
+		created() {
+			let sdid = this.$route.params.id;
+			let scity = JSON.parse(window.localStorage.selectCity).value
+
+			
+			this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + scity + '/'+ sdid) 
+			.then((response)=>{
+				this.twohandhousedetail = response.data.data
+				console.log(this.twohandhousedetail)
+			})
+
+			
+		},
 		mounted() {
 			var viewSwiper = new Swiper('.view .swiper-container', {
 				onSlideChangeStart: function() {
 					updateNavPosition()
 				}
 			})
+
+			
 
 			$('.view .arrow-left,.preview .arrow-left').on('click', function(e) {
 
@@ -343,6 +372,16 @@
 	
 	.collect_s {
 		margin-left: 120px;
+	}
+	.duibi{
+		margin-top: 30px;
+		margin-left: 20px;
+	}
+	.duibi .duibi_a{
+		float: left;
+		padding: 13px 27px;
+		border: 1px solid gainsboro;
+		margin-left: 50px;
 	}
 	
 	.collect .collect_a {
@@ -571,6 +610,41 @@
 	    font-size: 20px;
 	    line-height: 50px;
 	    padding: 20px 10px;
+	}
+	.callpeople{
+		width: 380px;
+		float: left;
+		line-height: 42px;
+		text-align: center;
+		height: 42px;
+		background: red;
+		color: white;
+		margin-top: 25px;
+	}
+	.peopleintrode{
+		width: 385px;
+		margin-top:10px;
+	}
+	.peopleintrode>div{
+		font-size: 18px;
+	}
+	.peopleintrode >:nth-child(1){
+		width: 72px;
+		height: 80px;
+		border: 1px solid red;
+	}
+	.peopleintrode >:nth-child(2)>ul{
+		height: 80px;
+	}
+	.peopleintrode >:nth-child(2)>ul>:nth-child(2){
+		color: red;
+		margin-top: 15px;
+	}
+	.peopleintrode >:nth-child(2)>ul>:nth-child(3){
+		font-size: 12px;
+	}
+	.peopleintrode >:nth-child(2)>ul>li{
+		margin-top: 15px;
 	}
 	
 	

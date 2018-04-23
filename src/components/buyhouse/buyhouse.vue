@@ -107,11 +107,11 @@
 					<div class="item">
 						<ul>
 							<li v-for="item in buyhouse">
-								<div class="image fl" @click="toSkip()">
+								<div class="image fl" @click="toSkip(item)">
 									<img :src=item.housePic  alt="" />
 								</div>
 								<div class="direciton">
-									<div class="introduce intrdex " @click="toSkip()" >{{item.houseTitle}}<span class="fr "style="font-size: 16px;color:rgba(0,0,0,0.5); ">收藏</span></div>
+									<div class="introduce intrdex " @click="toSkip(item)" >{{item.houseTitle}}<span class="fr "style="font-size: 16px;color:rgba(0,0,0,0.5); ">收藏</span></div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span>
 										<span class="fr prices">{{item.saleTotal}}<span class="wan">万</span></span></div>
 									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
@@ -162,7 +162,9 @@
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
 				buyhouse: null , //二手房列表
-				querycount:null,//二手房总数量
+				querycount:{   //二手房总数量
+					count: ''
+				},
 				queryone: null,   //二手房区域
 				querytwo: null,   //二手房售价
 				querythree: null,   //二手面积域
@@ -217,7 +219,6 @@
   
 			})
 			.then((response)=>{
-				console.log(response)
 				this.querycount = response.data.data
 			})
 			
@@ -282,8 +283,9 @@
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
 			},
-			toSkip() {
-				this.$router.push({path:"/buyhouse/twohandhousedetail/:id"});
+			toSkip(item) {
+				let path = "/buyhouse/twohandhousedetail/"+item.sdid;
+				this.$router.push({path:path});
 			},
 			address(item, index) {   //点击区域条件
 				this.queryone = index;

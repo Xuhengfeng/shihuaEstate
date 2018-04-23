@@ -2,14 +2,12 @@
 	<div class="home">
 		<div class="header">
 			<div class="shadowlay" v-if="toggleShow" @click="cancelshadow()"></div>
-			<div class="container">
-				<div class="fl">
+			<div class="container"  style="position:relative">
+				<div style="position:absolute;top:0px;left:0;">
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
-					<el-button type="text" class="location" @click.native="changeCity()">
-						<span class="iconfont icon-location">{{selectCity}}</span>
-					</el-button>
+					<span class="iconfont icon-location location" @click="changeCity()">{{selectCity}}</span>
 					<div class="city-change " v-if="cityChange">
 						<!-- icon 关闭阴影层 -->
 						<span class="close" @click="cancelshadow()"></span>
@@ -43,7 +41,7 @@
 				</div>
 				<div class="navmenu fr">
 					<ul class="item1">
-						<router-link tag="li" to="">
+						<li class="loginregize">
 							<i class="iconfont icon-yonghu" v-if="userLoginFlag">
 								<span class="login" @click="login()">登录</span>/
 								<span class="logout" @click="register()">立即注册</span>
@@ -56,7 +54,7 @@
 								<router-link tag="li" to="">我的收藏</router-link>
 								<router-link tag="li" to="">我的委托</router-link>
 							</ul>
-						</router-link>
+						</li>
 						<!--账号密码登陆-->
 						<div class="panel_login " id="dialog" v-if="loginshow == 1">
 							<div class="panel_info">
@@ -72,7 +70,7 @@
 									<div class="forget" @click="findPassword()">忘记密码</div>
 									<button class="org_btn">登录</button>
 									<div class="dl_login" @click="quckliyLogin()">手机快捷登录</div>
-									<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
+									<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 								</div>
 							</div>
 						</div>
@@ -92,7 +90,7 @@
 									</div>
 									<label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label>
 									<button class="org_btn">注册</button>
-									<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="loginResize()">去登陆</span></div>
+									<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="login()">去登陆</span></div>
 								</div>
 							</div>
 						</div>
@@ -109,8 +107,8 @@
 										<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
 									</div>
 									<button class="org_btn">修改密码</button>
-									<div class="dl_login" @click="loginResize()">账号密码登录</div>
-									<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
+									<div class="dl_login" @click="login()">账号密码登录</div>
+									<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 								</div>
 							</div>
 						</div>
@@ -129,14 +127,14 @@
 										<input type="text" placeholder="请输入手机号" maxlength="11">
 									</div>
 									<button class="org_btn">注册</button>
-									<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="rightResize()">去注册</span></div>
+									<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 								</div>
 							</div>
 						</div>
 
 						<router-link tag="li" to="/more">更多
 							<ul>
-								<router-link tag="li" to="">小区找房</router-link>
+								<router-link tag="li" to="/houseestate">小区找房</router-link>
 								<router-link tag="li" to="">代办贷款</router-link>
 								<router-link tag="li" to="">异地服务</router-link>
 								<router-link tag="li" to="">房屋托管</router-link>
@@ -149,11 +147,12 @@
 						</router-link>
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/broker">海外置业</router-link>
-						<router-link tag="li" to="/houseestate">找门店</router-link>
-						<router-link tag="li" to="/sellrent">业主委托
+						<router-link tag="li" to="/broker">找门店</router-link>
+						<router-link tag="li" to="/broker">找经纪人</router-link>
+						<router-link tag="li" to="/">业主委托
 							<ul>
-								<router-link tag="li" to="">我要租房</router-link>
-								<router-link tag="li" to="">我要出售</router-link>
+								<router-link tag="li" to="/entrustment">我要租房</router-link>
+								<router-link tag="li" to="/entrustment">我要出售</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/sellrent">租房</router-link>
@@ -677,14 +676,14 @@
 		background-position: center 0;
 		background-attachment: fixed;
 		background-size: 1920px 717px;
-		padding-top: 50px;
+		padding-top: 40px;
 		box-sizing: border-box;
 	}
 	
 	.header .logo {
-		display: inline-block;
-		width: 188px;
-		height: 52px;
+	    display: inline-block;
+		width: 154px;
+		height: 43px;
 		vertical-align: middle;
 	}
 	
@@ -695,24 +694,24 @@
 	
 	.header .location {
 		display: inline-block;
-		padding: 10px 8px;
-		line-height: 10px;
+		width: 57px;
+		height: 28px;
+		font-size: 12px;
 		background: rgba(0, 0, 0, 0.2);
 		border-radius: 15px;
 		text-align: center;
 		color: #fff;
-		font-size: 15px;
-		vertical-align: middle;
-		margin-left: 16px;
+		line-height: 28px;
+		margin-left: 15px;
 	}
 	
 	.navmenu {
 		position: relative;
+		top:7px;
 	}
-	
 	.navmenu .item1>li {
 		float: right;
-		margin-left: 26px;
+		margin-left: 20px;
 		cursor: pointer;
 		color: #FFFFFF;
 		font-size: 18px;
@@ -720,7 +719,10 @@
 		z-index: 9999999;
 		padding-bottom: 20px;
 	}
-	
+	.loginregize{
+		margin-left: 20px;
+		font-size: 16px;
+	}
 	.navmenu .item1>li ul {
 		position: absolute;
 		left: 0;
@@ -1111,11 +1113,12 @@
 		margin-left: 29px;
 		font-size: 14px;
 		color: #FFFFFF;
+		border: 0px;
 	}
 	
 	.forget {
 		position: absolute;
-		left: 295px;
+		left: 285px;
 		color: #000000;
 		font-size: 14px;
 		margin-top: 10px;
@@ -1141,6 +1144,7 @@
 		font-size: 16px;
 		margin-top: 40px;
 		margin-left: 38px;
+		border: 0px;
 	}
 	
 	.come_login {
