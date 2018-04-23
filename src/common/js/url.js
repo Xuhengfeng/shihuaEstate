@@ -16,8 +16,9 @@ let URL = {
    	AREA_DISTRICTS:_host + '/area/areaDistricts/', 				//获取二手房搜索条件区域字段
 	RENTHOUSE_QUERY:_host + '/rentHouse/query',                 //查询租房列表全部数据
 	RENTHOUSE_QUERYCOUNT:_host + '/rentHouse/queryCount',       //获取租房总数量
-   	MAPHOUSEALLTREE:_host+'/map-house/all-tree',					//地图找房
-   	
+   	MAPHOUSEALL_TREE:_host+'/map-house/all-tree',				//地图找房
+   	MAPHOUSEALL_USED_LIST:_host+'/build/same-used/',			//同小区二手房房源
+
       
 };
 export default {URL}

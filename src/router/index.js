@@ -17,12 +17,8 @@ const sellrent = resolve => require(['components/sellrent/sellrent'], resolve)//
 const sellrentdetail = resolve => require(['components/sellrent/sellrentdetail'], resolve)//租房详情
 const houseestate = resolve => require(['components/houseestate/houseestate'], resolve)//小区
 const estatedetail = resolve => require(['components/houseestate/estatedetail'], resolve)//小区详情
-const entrustmentrent = resolve => require(['components/entrustment/entrustmentrent'], resolve)//业主委托我要出租
-const entrustmentsell = resolve => require(['components/entrustment/entrustmentsell'], resolve)//业主委托我要出租
-const broker = resolve => require(['components/broker/broker.vue'], resolve)//找经纪人
-const brokerdetail = resolve => require(['components/broker/brokerdetail'], resolve)//找经纪人详情
-const shoper = resolve => require(['components/shoper/shoper.vue'], resolve)//找门店
-const shoperdetail = resolve => require(['components/shoper/shoperdetail'], resolve)//找门店详情
+const broker = resolve => require(['components/broker/broker.vue'], resolve)//经纪人
+const brokerdetail = resolve => require(['components/broker/brokerdetail'], resolve)//经纪人详情
 const buyhouseguide = resolve => require(['components/buyhouseguide/buyhouseguide'], resolve)//购房指南
 const guidedetail = resolve => require(['components/buyhouseguide/guidedetail'], resolve)//指南详情
 const mine = resolve => require(['components/mine/mine'], resolve)//我的个人账户
@@ -100,18 +96,14 @@ export default new Router({
 		{path:"/searchlist",component:searchlist,meta:{KeepAlive:false}},//搜索列表
 		{path:"/buyhouse",component:buyhouse,meta:{KeepAlive:false}},//我要买房
 		{path:"/buyhouse/twohandhousedetail/:id",component:twohandhousedetail,meta:{KeepAlive:false}},//二手房详情		
-		{path:"/renthouse",component:renthouse,meta:{KeepAlive:false}},//新房
-		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//新房详情
+		{path:"/renthouse",component:renthouse,meta:{KeepAlive:false}},//我要租房
+		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//我要租房详情
 		{path:"/sellrent",component:sellrent,meta:{KeepAlive:false}},//租房
 		{path:"/sellrentdetail/:id",component:sellrentdetail,meta:{KeepAlive:false}},//租房详情
-		{path:"/entrustmentsell",component:entrustmentsell,meta:{KeepAlive:false}},//业主委托我要出售
-		{path:"/entrustmentrent",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出租
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
-		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
-		{path:"/brokerdetail",component:brokerdetail,meta:{KeepAlive:false}},//找经纪人详情
-		{path:"/shoper",component:shoper,meta:{KeepAlive:false}},//找门店
-		{path:"/shoperdetail",component:shoperdetail,meta:{KeepAlive:false}},//找门店详情
+		{path:"/broker",component:broker,meta:{KeepAlive:false}},//经纪人
+		{path:"/brokerdetail",component:brokerdetail,meta:{KeepAlive:false}},//经纪人详情
 		{path:"/buyhouseguide",component:buyhouseguide,children:[{//购房指南
 				path:"/guidedetail",component:guidedetail},//指南详情
 			]},

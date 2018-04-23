@@ -10,12 +10,13 @@
 		<div v-if="isShowFooter == 1">
 			<o-footer></o-footer>
 		</div>
-		
+		<!-- <my-svg></my-svg> -->
   </div>
 </template>
 
 <script>
 import oFooter from "./base/footer/footer";
+// import mySvg from "./base/mySvg/mySvg";
 export default {
   data() {
     return {
@@ -23,7 +24,8 @@ export default {
     };
   },
   components: {
-    oFooter
+    oFooter,
+    // mySvg
   },
   watch: {
     $route(to, from) {

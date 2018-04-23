@@ -2,48 +2,41 @@
 	<div class="home">
 		<div class="header">
 			<div class="shadowlay" v-if="toggleShow" @click="cancelshadow()"></div>
-			<div class="container" style="position:relative">
-				<div style="position:absolute;top:0px;left:0;">
+			<div class="container">
+				<div class="fl">
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
 					<el-button type="text" class="location" @click.native="changeCity()">
-						<span class="iconfont icon-location">{{address}}</span>
+						<span class="iconfont icon-location">{{selectCity}}</span>
 					</el-button>
 					<div class="city-change " v-if="cityChange">
 						<!-- icon 关闭阴影层 -->
 						<span class="close" @click="cancelshadow()"></span>
-
-						<div :key="index1" v-for="(item1,index1) in city">
-							<div class="title">选择城市
-								<span class="city-tab">
-								<span class="code1">{{item1.title}}</span>
-								<router-link to=""
-											 tag="a" 
-											 :key="index2"
-											 v-for="(item2,index2) in item1.item">
-											 {{item2.name}}
-								</router-link>
-								</span>
+						<div class="title">选择城市
+							<div class="city-tab">
+								<span class="code1">热门</span>
+								<a :key="index" v-for="(item1,index) in city[0].item"
+									@click="changeAddress(item1.name)">
+									{{item1.name}}
+								</a>
 							</div>
-							<div class="title-line"></div>
-							<div class="fc-main clear">
-								<div class="fl citys-l">
-									<ul>
-										<li class="clear" :key="index1" v-for="(item1,index1) in city" >
-											<span class="code-title fl">{{item1.title}}</span>
-											<div class="city-enum fl">
-												<router-link  to="/home"  
-															  tag="a" 
-															  :key="index2"
-															  v-for="(item2,index2) in item1.item"
-															  @click.native="changeAddress(item2)">
-															  {{item2.name}}
-												</router-link>
-											</div>
-										</li>
-									</ul>
-								</div>
+						</div>
+						<div class="title-line"></div>
+						<div class="fc-main clear">
+							<div class="fl citys-l">
+								<ul>
+									<li class="clear" :key="index1" v-for="(item1,index1) in city" >
+										<span class="code-title fl">{{item1.title}}</span>
+										<div class="city-enum fl">
+											<a :key="index2"
+												v-for="(item2,index2) in item1.item"
+												@click="changeAddress(item2.name)">
+												{{item2.name}}
+											</a>
+										</div>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div>
@@ -157,11 +150,10 @@
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/broker">海外置业</router-link>
 						<router-link tag="li" to="/houseestate">找门店</router-link>
-						<router-link tag="li" to="/broker">找经纪人</router-link>
-						<router-link tag="li" to="">业主委托
+						<router-link tag="li" to="/sellrent">业主委托
 							<ul>
-								<router-link tag="li" to="/entrustmentrent">我要租房</router-link>
-								<router-link tag="li" to="/entrustmentrent">我要出售</router-link>
+								<router-link tag="li" to="">我要租房</router-link>
+								<router-link tag="li" to="">我要出售</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/sellrent">租房</router-link>
@@ -335,7 +327,7 @@
 </template>
 
 <script>
-	
+	let pinyin = require("chinese-to-pinyin");
 	export default {
 		data() {
 			return {
@@ -347,7 +339,8 @@
 				souText: '请输入区域丶商圈或小区名开始找房',
 				city: [], //城市列表
 				defaultCity: "",
-				address: '定位中...',//获取默认城市
+				address: '',//定位
+				selectCity: '定位中...',//用户选择的城市
 				loginshow: null,
 				houseRecmdlist:[] , //二手房为你精选
 				rentHouseRecmdlist:[],  //时尚租房
@@ -375,28 +368,100 @@
 			};
 		},
 		created() {
-			this.params.scity = JSON.parse(window.localStorage.selectCity).value;
 			let that = this;
 			let geoc = new BMap.Geocoder(); 
 			let geolocation = new BMap.Geolocation();
+			let city = localStorage.selectCity?JSON.parse(localStorage.selectCity): null;
 			//首次进入 判断是否选择了指定地址
-			if(window.localStorage.selectCity) {
-				that.address = window.localStorage.selectCity?window.localStorage.selectCity.name:'北海';
+			if(city) {
+				that.selectCity = city.name;
+				this.renderRequest(city.value);
 			}else{
-				geolocation.getCurrentPosition(function(r){
-					if(this.getStatus() == BMAP_STATUS_SUCCESS){//定位逆地址解析成功
+				//定位 初始城市
+				geolocation.getCurrentPosition(function(r) {
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
 						let point = new BMap.Point(r.point.lng,r.point.lat);
-						geoc.getLocation(point, function(rs){
-							that.address = (rs .address).slice(3,5)
-							window.localStorage.address = that.address
+						geoc.getLocation(point, function(rs) {
+							that.address = rs.addressComponents.city.slice(0, -1);
+							that.changeAddress(that.address);
+							localStorage.address = that.address;
 						});    
-					}else{//定位逆地址解析不成功
-						that.address = window.localStorage.selectCity?window.localStorage.selectCity.name:'北海';
+					}else{//逆地址解析不成功
+						that.selectCity = city.name?city.name:'北海';
 					}    
 				});
 			}
 		},
 		methods: {
+			renderRequest(cityCode) {
+				//请求城市列表
+				let hot_city = "热门";
+				let hot_city_len = 2;
+				let map = {
+					"hot": {title: hot_city,item: []}
+				}
+				this.$http.get(this.$url.URL.DICTIONARY_CITYS)
+				.then((response) => {
+					response.data.data.forEach((obj, index) => {//城市数据 重新map排列
+						if(index < hot_city_len) {
+							map['hot'].item.push({
+								'name': obj.name,
+								'key': obj.value.slice(0, 1).toUpperCase(),
+								'value': obj.value
+							})
+						}
+						const type = obj.value.slice(0, 1).toUpperCase();
+						if(!map[type]) {
+							map[type] = {
+								title: type,
+								item: []
+							}
+						}
+						map[type].item.push({
+							'name': obj.name,
+							'key': obj.value.slice(0, 1).toUpperCase(),
+							'value': obj.value
+						})
+						let hot = [],
+							ret = [];
+						for(let key in map) {
+							let val = map[key];
+							if(val.title.match(/[a-zA-Z]/)) {
+								ret.push(val)
+							} else if(val.title === hot_city) {
+								hot.push(val)
+							}
+						}
+						ret.sort((a, b) => {
+							return a.title.charCodeAt() - b.title.charCodeAt()
+						})
+						this.city = hot.concat(ret);
+					})
+				})
+				//获取首页房源统计	
+				this.$http.get(this.$url.URL.STATISTICS_HOUSEUSED + cityCode)
+				.then((response)=>{
+					this.houseUsed = response.data.data
+					console.log(this.houseUsed)
+				})
+				//获取首页二手房列表为你精选STATISTICS_HOUSEUSED
+				this.$http.get(this.$url.URL.HOUSE_RECMDLIST + cityCode)
+				.then((response)=>{
+					this.houseRecmdlist = response.data.data
+				})		
+				//获取首页热门小区
+				this.$http.get(this.$url.URL.HOTBUILDING+ cityCode , {  
+					params:{pageNo :1,pageSize:3}
+				})
+				.then((response)=>{
+					this.hotBuilding = response.data.data
+				})	
+				//获取首页时尚租房
+				this.$http.get(this.$url.URL.RENTHOUSE_RECMDLIST + cityCode)
+				.then((response)=>{
+					this.rentHouseRecmdlist = response.data.data
+				})
+			},
 			showBtn(type) {
 				this.num = type;
 			},
@@ -438,107 +503,19 @@
 				this.loginshow = 4;
 			},
 			changeAddress(item) {
+				//item是中文, name是拼音
+				let name = pinyin(item, {noTone: true}).replace(/\s+/g,"");	
+				let selectCity = {value: name,name: item};
 				this.cancelshadow();
-				this.address=item.name;
-				var pinyin = require("chinese-to-pinyin");
-				var name = pinyin(item.name, {noTone: true})	
-					name = name.replace(/\s+/g,"");			
-				let selectCity = {
-					value: name,
-					name: this.address
-				}
-				window.localStorage.selectCity = JSON.stringify(selectCity);	
+				this.selectCity=item;
+				//刷新首页
+				this.renderRequest(name);
+				localStorage.selectCity = JSON.stringify(selectCity);	
 			},
 			searchBuyHouse() {
 				console.log(this.searchinput)
-			//  this.$router.push({path:"/buyhouse", params:{this.searchinput} });
+			 	this.$router.push({path:"/buyhouse", params: this.searchinput});
 			}
-		},
-		mounted() {
-			//请求城市列表
-			let hot_city = "热门";
-			let hot_city_len = 2;
-			let map = {
-				"hot": {
-					title: hot_city,
-					item: []
-				}
-			}
-			this.$http.get(this.$url.URL.DICTIONARY_CITYS)
-				.then((response) => {
-					response.data.data.forEach((obj, index) => { //城市数据 重新map排列
-						if(index < hot_city_len) {
-							map['hot'].item.push({
-								'name': obj.name,
-								'key': obj.value.slice(0, 1).toUpperCase(),
-								'value': obj.value
-							})
-						}
-						const type = obj.value.slice(0, 1).toUpperCase();
-						if(!map[type]) {
-							map[type] = {
-								title: type,
-								item: []
-							}
-						}
-						map[type].item.push({
-							'name': obj.name,
-							'key': obj.value.slice(0, 1).toUpperCase(),
-							'value': obj.value
-						})
-						let hot = [],
-							ret = [];
-						for(let key in map) {
-							let val = map[key];
-							if(val.title.match(/[a-zA-Z]/)) {
-								ret.push(val)
-							} else if(val.title === hot_city) {
-								hot.push(val)
-							}
-						}
-						ret.sort((a, b) => {
-							return a.title.charCodeAt() - b.title.charCodeAt()
-						})
-						this.city = hot.concat(ret);
-					})
-				})
-				//获取首页房源统计
-				
-				this.$http.get(this.$url.URL.STATISTICS_HOUSEUSED +JSON.parse(window.localStorage.selectCity).value)
-				.then((response)=>{
-					this.houseUsed = response.data.data
-					console.log(this.houseUsed)
-				})
-				
-
-			//获取首页二手房列表为你精选STATISTICS_HOUSEUSED
-				this.$http.get(this.$url.URL.HOUSE_RECMDLIST +JSON.parse(window.localStorage.selectCity).value)
-				.then((response)=>{
-					this.houseRecmdlist = response.data.data
-				})
-				
-					
-			//获取首页热门小区
-			
-				this.$http.get(this.$url.URL.HOTBUILDING+JSON.parse(window.localStorage.selectCity).value , {  
-						params:{
-							pageNo :1,
-							pageSize:3							                 
-						}
-				})
-				.then((response)=>{
-					this.hotBuilding = response.data.data
-					
-				})
-			
-				
-			//获取首页时尚租房
-			
-				this.$http.get(this.$url.URL.RENTHOUSE_RECMDLIST +JSON.parse(window.localStorage.selectCity).value)
-				.then((response)=>{
-					this.rentHouseRecmdlist = response.data.data
-				})
-			
 		}
 	}
 </script>
