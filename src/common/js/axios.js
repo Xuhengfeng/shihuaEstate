@@ -53,7 +53,7 @@ axios.interceptors.response.use(response => {
           MessageBox.alert('请求超时')
           break;
         case 500:
-          // MessageBox.alert('服务器端出错')
+          MessageBox.alert('服务器端出错')
           break;
         case 501:
           MessageBox.alert('网络未实现')

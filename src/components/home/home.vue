@@ -1,16 +1,17 @@
 <template>
+
 	<div class="home">
 		<div class="header">
-			<div class="shadowlay" v-if="cityChange" @click="cancelDialog()"></div>
+			<div class="shadowlay" v-if="cityChange" @click="closeCity()"></div>
 			<div class="container"  style="position:relative">
 				<div style="position:absolute;top:0px;left:0;">
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
-					<span class="iconfont icon-location location" @click="changeCity()">{{selectCity}}</span>
+					<span class="iconfont icon-location location" @click="openCity()">{{selectCity}}</span>
 					<div class="city-change " v-if="cityChange">
 						<!-- icon 关闭阴影层 -->
-						<span class="close" @click="cancelDialog()"></span>
+						<span class="close" @click="closeCity()"></span>
 						<div class="title">选择城市
 							<div class="city-tab">
 								<span class="code1">热门</span>
@@ -42,7 +43,7 @@
 				<div class="navmenu fr">
 					<ul class="item1">
 						<li class="loginregize">
-							<i class="iconfont icon-yonghu" v-if="userLoginFlag">
+							<i class="iconfont icon-yonghu" v-if="true">
 								<span class="login" @click="login()">登录</span>/
 								<span class="logout" @click="register()">立即注册</span>
 							</i>
@@ -96,7 +97,6 @@
 						<input class="search-box" :placeholder="souText" v-model="searchinput"></input>
 						<div class="search-box-btn fr" @click="searchBuyHouse()">开始找房</div>
 					</div>
-					<!-- :to="{name:'mapSearch',params:{houseType:'二手房'}}" -->
 					<router-link tag="div" :to="/mapSearch/+houseTypeId"  class="mapSearchHouse">
 						<i class="iconfont icon-location"></i>
 						<span>地图找房</span>
@@ -247,7 +247,7 @@
 			</div>
 		</div>
 		<!-- 对话框 登录 注册 修改密码  -->
-		<o-dialog :toggleShow="toggleShow" :showbox="showbox" @cancelDialog="cancelDialog"></o-dialog>	
+		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
@@ -257,12 +257,10 @@
 	export default {
 		data() {
 			return {
-				userLoginFlag: true, //用户登录状态
 				cityChange: false, //城市阴影
 				souText: '请输入区域丶商圈或小区名开始找房',
 				city: [], //城市列表
-				toggleShow: true, //取消对话框的阴影
-				showbox: 0, //显示对应的对话框
+				showbox: 0, //显示对应的dialog
 				address: '',//定位城市
 				selectCity: '定位中...',//用户选择城市
 				houseRecmdlist:[] , //二手房为你精选
@@ -291,10 +289,16 @@
 
 			};
 		},
+		computed:{
+			userLoginFlag(){
+				return this.$store.state.userLoginFlag
+			} 
+		},
 		components:{
 			oDialog,
 		},
 		created() {
+			console.log(this.$store);
 			// let that = this;
 			// let geoc = new BMap.Geocoder(); 
 			// let geolocation = new BMap.Geolocation();
@@ -392,22 +396,24 @@
 					this.rentHouseRecmdlist = response.data.data
 				})
 			},
-			cancelDialog(num) {//取消对话框
-				this.showbox = num;
-				this.cityChange = false;
+			changeDialog(num) {//显示对应的对话框
+				this.showbox = num; 
 			},
 			login() {//点击登陆
 				this.showbox = 1; 
-				this.toggleShow = true;
+				this.$refs.odialog.show();
 				this.cityChange = false;
 			},
 			register() {//点击注册
 				this.showbox = 2;
-				this.toggleShow = true;
 				this.cityChange = false;				
+				this.$refs.odialog.show();
 			},
-			changeCity() {//打开城市列表
+			openCity() {//打开城市列表
 				this.cityChange = true;
+			},
+			closeCity() {//关闭城市列表
+				this.cityChange = false;
 			},
 			placeholderText(num) {//搜索placeholder内容
 				if(num == 1) {
@@ -431,7 +437,7 @@
 				let name = pinyin(item, {noTone: true}).replace(/\s+/g,"");	
 				let selectCity = {value: name,name: item};
 				this.selectCity=item;
-				this.cancelDialog(0);
+				this.closeCity();
 				//刷新首页
 				this.renderRequest(name);
 				localStorage.selectCity = JSON.stringify(selectCity);	

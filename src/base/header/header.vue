@@ -5,10 +5,10 @@
 				<ul class="item1">
 					<ol class="banner_right fr">
 						<li style="height: 70px;margin-top: -2px;">
-							<i class="iconfont icon-yonghu" v-if="rightnow" style="font-size: 14px;">
-							<span class="login" @click="login()">登录</span>/
-							<span class="logout" @click="register()">立即注册</span>
-						</i>
+							<i class="iconfont icon-yonghu" v-if="true" style="font-size: 14px;">
+								<span class="login" @click="login()">登录</span>/
+								<span class="logout" @click="register()">立即注册</span>
+							</i>
 							<i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout">退出</span></i>
 							<ul class="item4">
 								<router-link tag="li" to="">消息</router-link>
@@ -52,86 +52,6 @@
 						<router-link tag="li" to="/home">首页</router-link>
 					</ol>
 				</ul>
-				<!--账号密码登陆-->
-				<div class="shadowlay_login" v-if="cancel" @click="cancelShadow()"></div>
-				<div class="panel_login " id="dialog" v-if="loginshow == 1">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">账号密码登录</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<input type="text" placeholder="请输入登录密码" maxlength="20">
-							</div>
-							<div class="forget" @click="findPassword()">忘记密码</div>
-							<button class="org_btn">登录</button>
-							<div class="dl_login" @click="quckliyLogin()">手机快捷登录</div>
-							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
-						</div>
-					</div>
-				</div>
-
-	
-				<div class="panel_login " id="dialog" style="height: 462px;" v-if="loginshow == 2">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">手机号码注册</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-								<input type="text" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
-								<input type="text" placeholder="请再次输入密码" maxlength="11">
-							</div>
-							<label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label>
-							<button class="org_btn">注册</button>
-							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="login()">去登陆</span></div>
-						</div>
-					</div>
-				</div>
-		
-				<div class="panel_login " id="dialog" v-if="loginshow == 3">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">手机快捷登陆</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-							</div>
-							<button class="org_btn">修改密码</button>
-							<div class="dl_login" @click="login()">账号密码登录</div>
-							<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
-						</div>
-					</div>
-				</div>
-
-				
-				<div class="panel_login " id="dialog" style="height: 462px;" v-if="loginshow == 4">
-					<div class="panel_info">
-						<i class="close_login" @click="cancelShadow()">×</i>
-						<div class="panel_tab">
-							<div class="title">
-								<div class="fl">找回密码</div>
-							</div>
-							<div class="login_input">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-								<input type="text" placeholder="请输入手机号" maxlength="11">
-							</div>
-							<button class="org_btn">注册</button>
-							<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
-						</div>
-					</div>
-				</div>
-
 			</div>
 		</div>
 		<div class="header">
@@ -151,42 +71,34 @@
 				</div>
 			</div>
 		</div>
+		<!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>	
 </template>
 
 <script>
+	import oDialog from "../../base/dialog/dialog";
 	export default {
 		data() {
 			return {
-				datas: "",
-				num: 0,
-				dialogVisible: false,
-				loginshow: null, //登陆注册阴影层
-				rightnow: true, //登陆注册判断条件
-				cancel: false, //取消登陆阴影
+				showbox: 0,
 				houseTypeId: 11
 			};
 		},
+		components:{
+			oDialog,
+		},
 		methods: {
-
-			login() { //点击登陆
-				this.cancel = true; //阴影部分
-				this.loginshow = 1; //
+			changeDialog(num) {//显示对应的对话框
+				this.showbox = num; 
 			},
-			register() { //点击注册
-				this.cancel = true;
-				this.loginshow = 2;
+			login() {//点击登陆
+				this.showbox = 1; 
+				this.$refs.odialog.show();
 			},
-			cancelShadow() { //点击取消 阴影
-				this.cancel = false
-				this.loginshow = null;
-
-			},
-			quckliyLogin() { //点击手机快捷登陆
-				this.loginshow = 3;
-			},
-			findPassword() { //点击找回密码
-				this.loginshow = 4;
+			register() {//点击注册
+				this.showbox = 2;
+				this.$refs.odialog.show();
 			}
 		},
 
