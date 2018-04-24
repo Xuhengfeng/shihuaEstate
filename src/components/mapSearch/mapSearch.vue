@@ -106,13 +106,13 @@
             </div>
             <div class="showController" @click="isShowHouseList">
               <i class="map_icon">
-                <icon class="icon_close_houselist" name ="sprite" :w="24" :h="24"></icon>
+                <icon class="icon_close_houselist" ref="icon_close_houselist" :style="{left: sideLeft}" name ="sprite" :w="24" :h="24"></icon>
               </i>
             </div>
         </div>
         <div class="changeZoom">
-            <button id="zoom_in">+</button>
-            <button id="zoom_out">-</button>
+            <button id="zoom_in" @click="mapZoom(1)">+</button>
+            <button id="zoom_out" @click="mapZoom(2)">-</button>
         </div>
     </div>
 </template>
@@ -132,6 +132,7 @@ export default {
       smallArea: [],      //小区列表
       inputKeyword: '',   //输入关键词
       isShowSide: true,   //是否显示side
+      sideLeft: '-171px', //默认
       polygon: '',        //绘图
       svg: '',            //svg对象
       circleNum: 1,       //开始画圈找房1 取消画圈找房2
@@ -160,7 +161,13 @@ export default {
   methods: {
     //显示房源列表
     isShowHouseList() {
-      this.isShowSide?this.$refs.side.style.left="0":this.$refs.side.style.left="-438px";
+      if(this.isShowSide){
+        this.$refs.side.style.left="0"
+        this.sideLeft = '-180px';
+      }else{
+        this.sideLeft = '-171px';
+        this.$refs.side.style.left="-438px";
+      }
       this.isShowSide = !this.isShowSide
     },
     //区域级别房源 二手房 租房 小区
@@ -311,16 +318,16 @@ export default {
     //画圈找房start--------------------------------------------------------------------<<<<<<<<<<
     //修改svg
     changeSvg() {
-      let style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
-      d3.select("svg")
-        .attr("ref", "svg")
-        .attr("x", "2536px")
-        .attr("y", "1281px")
-        .attr("fill", "none")
-        .attr("stroke-linecap", "round")
-        .attr("divBox", "-500 -500 2536 1281")
-        .attr("style", style)
-        .attr("fill", "rgba(0,0,0,.3)");
+      // let style = "position:absolute;top:-500px;left:-500px;width:2536px;height:1281px";
+      // d3.select("svg")
+      //   .attr("ref", "svg")
+      //   .attr("x", "2536px")
+      //   .attr("y", "1281px")
+      //   .attr("fill", "none")
+      //   .attr("stroke-linecap", "round")
+      //   .attr("divBox", "-500 -500 2536 1281")
+      //   .attr("style", style)
+      //   .attr("fill", "rgba(0,0,0,.3)");
     },
     //获取坐标
 		getMouse(e){
@@ -436,6 +443,9 @@ export default {
           })
         })
       }
+    },
+    mapZoom(num) {
+      num==1?this.map.zoomIn():this.map.zoomOut();
     }
   },
   mounted() {
@@ -634,6 +644,7 @@ export default {
 .map_icon{
   width: 10px;
   height: 16px;
+  top: 3px;
   position: relative;
   cursor: pointer;
   display: inline-block;
@@ -641,7 +652,6 @@ export default {
 }
 .icon_close_houselist {
   position: absolute;
-  left: -171px;
   top: 0;
   display: block;
 }
