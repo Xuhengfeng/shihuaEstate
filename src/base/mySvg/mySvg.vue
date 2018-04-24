@@ -1,5 +1,5 @@
 <template>
-<svg style="display:none" width="301px" height="47px" viewBox="0 0 301 47" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="301px" height="47px" viewBox="0 0 301 47" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 46.1 (44463) - http://www.bohemiancoding.com/sketch -->
     <title>最终SVG</title>
     <desc>Created with Sketch.</desc>

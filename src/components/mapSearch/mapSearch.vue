@@ -105,7 +105,9 @@
               </ul>
             </div>
             <div class="showController" @click="isShowHouseList">
-              <i class="map_icon icon_close_houselist"></i>
+              <i class="map_icon">
+                <icon class="icon_close_houselist" name ="sprite" :w="24" :h="24"></icon>
+              </i>
             </div>
         </div>
         <div class="changeZoom">
@@ -455,7 +457,6 @@ export default {
 </script>
 
 <style scoped="scoped">
-/* @import 'src/assets/sprite.svg'; */
 /* 第一块 */
 .header {
   position: relative;
@@ -633,17 +634,17 @@ export default {
 .map_icon{
   width: 10px;
   height: 16px;
-  display: inline-block;
-  /* background-image: url(../../assets/sprite.svg); */
-  background-image: url(~@/assets/sprite.svg);
-  background-repeat: no-repeat;
   position: relative;
   cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
 }
-.icon_close_houselist{
-  background-position: 0 0;
+.icon_close_houselist {
+  position: absolute;
+  left: -171px;
+  top: 0;
+  display: block;
 }
-
 /* 改变zoom控件 */
 .changeZoom {
   position: fixed;

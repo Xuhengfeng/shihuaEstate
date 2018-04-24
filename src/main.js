@@ -5,7 +5,10 @@ import App from './App'
 import router from './router'
 import axios from './common/js/axios.js';
 import store from './store'//共享数据
+import Icon from './base/mySvg/mySvg'
 import $ from 'jquery'
+Vue.component('icon', Icon)
+
 //url路径
 import URL from './common/js/url.js'
 Vue.prototype.$url = URL;
