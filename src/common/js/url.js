@@ -21,5 +21,6 @@ let URL = {
 	BULIDINFO:_host+'/build/buildInfo/',                        //关联小区
    	MAPHOUSEALL_USED_LIST:_host+'/build/same-used/',			//同小区二手房房源
 	HOUSE_RIMHOUSING:_host+'/house/rimHousing',                 //二手房周边房源
+	USER_LOGIN:_host+'/member/login',                           //用户登陆
 };
 export default {URL}
