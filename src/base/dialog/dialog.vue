@@ -5,59 +5,51 @@
 			<div class="panel_info">
 				<i class="close_login" @click="cancel()">×</i>
 				<div class="panel_tab" v-if="showbox == 1">
-					<div class="title">
-						<div class="fl">账号密码登录</div>
-					</div>
-					<div class="login_input">
+					<div class="title">账号密码登录</div>
+					<div class="content">
 						<input type="text" v-model="phonenum" placeholder="请输入手机号" maxlength="11">
 						<input type="password" v-model="password" placeholder="请输入登录密码" maxlength="20">
+                        <div class="fr" style="margin-top:10px" @click="findPassword()">忘记密码</div>
+                        <button @click="login()">登录</button>
+                        <div class="fl" style="margin-top:10px" @click="quckliyLogin()">手机快捷登录</div>
+                        <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 					</div>
-					<div class="forget" @click="findPassword()">忘记密码</div>
-					<button class="org_btn" @click="loginRequest()">登录</button>
-					<div class="dl_login" @click="quckliyLogin()">手机快捷登录</div>
-					<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 				</div>
 				
 				<div class="panel_tab" v-if="showbox == 2">
-					<div class="title">
-						<div class="fl">手机号码注册</div>
-					</div>
-					<div class="login_input">
+                    <div class="title">手机号码注册</div>
+					<div class="content">
 						<input type="text" placeholder="请输入手机号" maxlength="11">
 						<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
-						<input type="text" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
-						<input type="text" placeholder="请再次输入密码" maxlength="11">
+						<input type="password" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
+						<input type="password" placeholder="请再次输入密码" maxlength="11">
+                        <div style="padding-top:10px"><label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
+                        <button>注册</button>
+                        <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="goLogin()">去登陆</span></div>
 					</div>
-					<label class="check"><input type="checkbox" style="float: left;margin-top: 4px;"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label>
-					<button class="org_btn">注册</button>
-					<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="login()">去登陆</span></div>
 				</div>
 
 				<div class="panel_tab" v-if="showbox == 3">
-					<div class="title">
-						<div class="fl">手机快捷登陆</div>
-					</div>
-					<div class="login_input">
+                    <div class="title">手机快捷登陆</div>
+					<div class="content">
 						<input type="text" placeholder="请输入手机号" maxlength="11">
 						<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
+                        <button>修改密码</button>
+                        <div class="dl_login" @click="login()">账号密码登录</div>
+                        <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 					</div>
-					<button class="org_btn">修改密码</button>
-					<div class="dl_login" @click="login()">账号密码登录</div>
-					<div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 				</div>
 
 				<div class="panel_tab" v-if="showbox == 4">
-					<div class="title">
-						<div class="fl">找回密码</div>
-					</div>
-					<div class="login_input">
+                    <div class="title">找回密码</div>
+					<div class="content">
 						<input type="text" placeholder="请输入手机号" maxlength="11">
 						<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button>获取验证码</button></div>
 						<input type="text" placeholder="请输入密码(最少六位,数字加字母)" maxlength="11">
 						<input type="text" placeholder="再次输入密码" maxlength="11">
+                        <button>注册</button>
+                        <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 					</div>
-					<button class="org_btn">注册</button>
-					<div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="register()">去注册</span></div>
 				</div>
 			</div>
 		</div>
@@ -68,51 +60,50 @@
 <script>
     export default {
         props: {
-            toggleShow: {
+            toggleShow: {//阴影
                 type: Boolean,
                 value: false
             },
-            showbox: {
+            showbox: {//对应的内容
                 type: Number,
                 value: ""
             }
         },
         data() {
             return {
-                showbox: 1,
                 phonenum: null,//手机号
 				password: null,//密码
             }
         },
         methods: {
             cancel() {
-                this.showbox = null;
-            },
-            
-			loginRequest() {//登录请求
+                this.$emit('cancelDialog', 0);
+            },  
+            login() {//登录请求
 				this.$http.post(this.$url.URL.USER_LOGIN,{
 					"deviceCode": "web",
 					"mobile": this.phonenum,
 					"password": this.password
 				})
 				.then((res)=>{
-					this.cancelshadow();
+                    this.cancel();
 					if(res.data.status=='500') {
 						this.$alert(res.data.msg);
 					}
-				});
+                });
+            },
+            goLogin() {//去登入
+                this.$emit('cancelDialog', 1);
+            },
+            quckliyLogin() {//点击手机快捷登入
+				this.$emit('cancelDialog', 3);
 			},
-			cancelshadow() { //取消悬浮窗口
-				this.toggleShow = false;
-				this.cityChange = false;
-				this.loginshow = null;
-			},
-			quckliyLogin() { //点击手机快捷登陆
-				this.loginshow = 3;
-			},
-			findPassword() { //点击找回密码
-				this.loginshow = 4;
-			}
+            findPassword() {//点击找回密码
+				this.$emit('cancelDialog', 4);
+            },
+            register() {//去注册
+                this.$emit('cancelDialog', 2);
+            }
         }
     }
 </script>
@@ -145,11 +136,9 @@
 		z-index: 10000;
 		border-radius: 2px;
 	}
-	
 	.panel_login .panel_info {
-		padding: 40px 0 20px;
+		padding: 40px 0 40px;
 	}
-	
 	.panel_login .panel_info .close_login {
 		cursor: pointer;
 		position: absolute;
@@ -157,38 +146,43 @@
 		top: 15px;
 		padding: 4px;
 	}
-	
-	.panel_login .panel_tab .title .fl {
+	.panel_login .panel_tab .title{
 		font-size: 20px;
 		color: #333;
 		font-weight: bold;
-		margin-left: 35%;
+		text-align: center;
 		cursor: pointer;
 	}
-	
-	.login_input {
-		margin-left: 10%;
-	}
-	
-	.login_input>input {
+	.content{
 		width: 282px;
+        margin: 0 auto;
+	}
+	.content input{
 		height: 43px;
+        width: 100%;
 		line-height: 43px;
 		color: #000000;
-		padding-left: 16px;
+		text-indent: 16px;
 		margin-top: 10px;
 		border-radius:3px;
 		border: 1px solid #999999;
 	}
+    .content button{
+        width: 100%;   
+        background: red;
+		height: 45px;
+		line-height: 43px;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 14px;
+		color: #FFFFFF;
+		border: 0px;
+        margin-top: 10px;
+    }
 	input::-webkit-input-placeholder{
 		color: #cacaca;
 	}
-	
-	.login_input_resgize {
-		width: 305px;
-		height: 60px;
-	}
-	
+		
 	.login_input_resgize>input {
 		width: 145px;
 		height: 43px;
@@ -199,18 +193,23 @@
 	}
 	
 	.login_input_resgize>button {
+        float: right;
 		background: red;
 		width: 108px;
 		height: 45px;
 		line-height: 43px;
 		border-radius: 5px;
 		cursor: pointer;
-		margin-left: 29px;
 		font-size: 14px;
 		color: #FFFFFF;
 		border: 0px;
+        margin-top: 10px;
 	}
-	
+	input[type="checkbox"]{
+        width: 20px;
+        height: 20px;
+        margin:0;
+    }
 	.forget {
 		position: absolute;
 		left: 285px;
@@ -229,34 +228,13 @@
 		cursor: pointer;
 	}
 	
-	.org_btn {
-		background: red;
-		height: 50px;
-		color: #fff;
-		width: 301px;
-		border-radius: 5px;
-		cursor: pointer;
-		font-size: 16px;
-		margin-top: 40px;
-		margin-left: 38px;
-		border: 0px;
-	}
-	
 	.come_login {
-		width: 128px;
 		height: 16px;
 		font-size: 16px;
 		margin-top: 46px;
-		margin-left: 115px;
+        text-align: center;
 	}
-	
-	.check {
-		position: absolute;
-		top: 305px;
-		margin-left: 40px;
-		height: 18px;
-		line-height: 18px;
-	}
+
 	/*底部*/
 	
 </style>

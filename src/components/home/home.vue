@@ -1,7 +1,7 @@
 <template>
 	<div class="home">
 		<div class="header">
-			<!-- <div class="shadowlay" v-if="toggleShow" @click="cancel()"></div> -->
+			<div class="shadowlay" v-if="cityChange" @click="cancelDialog()"></div>
 			<div class="container"  style="position:relative">
 				<div style="position:absolute;top:0px;left:0;">
 					<router-link to="" class="logo">
@@ -10,7 +10,7 @@
 					<span class="iconfont icon-location location" @click="changeCity()">{{selectCity}}</span>
 					<div class="city-change " v-if="cityChange">
 						<!-- icon 关闭阴影层 -->
-						<span class="close" @click="cancelshadow()"></span>
+						<span class="close" @click="cancelDialog()"></span>
 						<div class="title">选择城市
 							<div class="city-tab">
 								<span class="code1">热门</span>
@@ -246,7 +246,8 @@
 				</div>
 			</div>
 		</div>
-		<o-dialog :toggleShow="toggleShow" :showbox="showbox">fasdf</o-dialog>	
+		<!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog :toggleShow="toggleShow" :showbox="showbox" @cancelDialog="cancelDialog"></o-dialog>	
 	</div>
 </template>
 
@@ -256,17 +257,14 @@
 	export default {
 		data() {
 			return {
-				datas: "",
-				num: 0,
-				toggleShow: true, //取消定位阴影层5
 				userLoginFlag: true, //用户登录状态
-				cityChange: null, //显示地位
+				cityChange: false, //城市阴影
 				souText: '请输入区域丶商圈或小区名开始找房',
 				city: [], //城市列表
-				showbox: "", //
-				defaultCity: "",
-				address: '',//定位
-				selectCity: '定位中...',//用户选择的城市
+				toggleShow: true, //取消对话框的阴影
+				showbox: 0, //显示对应的对话框
+				address: '',//定位城市
+				selectCity: '定位中...',//用户选择城市
 				houseRecmdlist:[] , //二手房为你精选
 				rentHouseRecmdlist:[],  //时尚租房
 				hotBuilding:[],    //热门小区
@@ -394,21 +392,21 @@
 					this.rentHouseRecmdlist = response.data.data
 				})
 			},
-			showBtn(type) {
-				this.num = type;
+			cancelDialog(num) {//取消对话框
+				this.showbox = num;
+				this.cityChange = false;
 			},
-			login() { //点击登陆
+			login() {//点击登陆
+				this.showbox = 1; 
 				this.toggleShow = true;
 				this.cityChange = false;
-				this.showbox = 1; 
 			},
-			register() { //点击注册
+			register() {//点击注册
+				this.showbox = 2;
 				this.toggleShow = true;
 				this.cityChange = false;				
-				this.showbox = 2;
 			},
-			changeCity() { //打开城市定位
-				this.toggleShow = true;
+			changeCity() {//打开城市列表
 				this.cityChange = true;
 			},
 			placeholderText(num) {//搜索placeholder内容
@@ -432,8 +430,8 @@
 				//item是中文, name是拼音
 				let name = pinyin(item, {noTone: true}).replace(/\s+/g,"");	
 				let selectCity = {value: name,name: item};
-				this.cancelshadow();
 				this.selectCity=item;
+				this.cancelDialog(0);
 				//刷新首页
 				this.renderRequest(name);
 				localStorage.selectCity = JSON.stringify(selectCity);	
