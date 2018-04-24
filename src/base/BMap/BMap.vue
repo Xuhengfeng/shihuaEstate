@@ -1,6 +1,6 @@
 <template>
 	<div class="bmap-wrapper">
-		<div class="container">
+		<div class="container" style="position:relative">
 			<div class="bmap">
 				<ul>
 					<li @click="tabMap(1)">交通</li>
@@ -91,13 +91,16 @@
 	}
 </script>
 
-<style>
+<style scope="scope">
 	.bmap{
-		width: 714px;
-		border:  1px solid black;
+		width: 713px!important;		
+		height: 392px;
+		border: 1px solid black;
+		overflow: hidden;
+		position: relative;
 	}
 	.bmap-wrapper ul {
-		width: 713px;
+		width: 713px!important;
 		display: flex;
 		flex-flow: row nowrap;
 		justify-content: center;
@@ -105,7 +108,6 @@
 		height: 70px;
 		line-height: 70px;
 		text-align: center;
-		border-bottom: 1px solid black;
 	}
 	
 	.bmap-wrapper ul li {

@@ -367,29 +367,32 @@
 			};
 		},
 		created() {
-			let that = this;
-			let geoc = new BMap.Geocoder(); 
-			let geolocation = new BMap.Geolocation();
-			let city = localStorage.selectCity?JSON.parse(localStorage.selectCity): null;
-			//首次进入 判断是否选择了指定地址
-			if(city) {
-				that.selectCity = city.name;
-				this.renderRequest(city.value);
-			}else{
-				//定位 初始城市
-				geolocation.getCurrentPosition(function(r) {
-					if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
-						let point = new BMap.Point(r.point.lng,r.point.lat);
-						geoc.getLocation(point, function(rs) {
-							that.address = rs.addressComponents.city.slice(0, -1);
-							that.changeAddress(that.address);
-							localStorage.address = that.address;
-						});    
-					}else{//逆地址解析不成功
-						that.selectCity = city.name?city.name:'北海';
-					}    
-				});
-			}
+			// let that = this;
+			// let geoc = new BMap.Geocoder(); 
+			// let geolocation = new BMap.Geolocation();
+			// let city = localStorage.selectCity?JSON.parse(localStorage.selectCity): null;
+			// //首次进入 判断是否选择了指定地址
+			// if(city) {
+			// 	that.selectCity = city.name;
+			// 	this.renderRequest(city.value);
+			// }else{
+			// 	//定位 初始城市
+			// 	geolocation.getCurrentPosition(function(r) {
+			// 		if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
+			// 			let point = new BMap.Point(r.point.lng,r.point.lat);
+			// 			geoc.getLocation(point, function(rs) {
+			// 				that.address = rs.addressComponents.city.slice(0, -1);
+			// 				that.changeAddress(that.address);
+			// 				localStorage.address = that.address;
+			// 			});    
+			// 		}else{//逆地址解析不成功
+			// 			that.selectCity = city.name?city.name:'北海';
+			// 		}    
+			// 	});
+			// }
+			this.selectCity = "北海";
+			this.changeAddress('北海');
+			localStorage.address = '北海';
 		},
 		methods: {
 			renderRequest(cityCode) {
