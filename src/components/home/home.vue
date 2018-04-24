@@ -201,7 +201,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<router-link to="/buyhouse/twohandhousedetail/:id" tag="li" :key="index" v-for="(item,index) in houseRecmdlist">
+						<li  @click="toSkip(item)" :key="index" v-for="(item,index) in houseRecmdlist">
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
@@ -209,7 +209,7 @@
 								<p>{{item.houseTitle}}</p>
 								<p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
 							</div>
-						</router-link>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -500,6 +500,10 @@
 			},
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
+			},
+			toSkip(item) {  
+				let path = "/buyhouse/twohandhousedetail/"+item.sdid;
+				this.$router.push({path:path});
 			},
 			changeAddress(item) {
 				//item是中文, name是拼音

@@ -12,23 +12,8 @@
 								<a class="arrow-left" href="#"></a>
 								<a class="arrow-right" href="#"></a>
 								<div class="swiper-wrapper">
-									<div class="swiper-slide">
-										<a href=""><img src="../../imgs/buyhouse/datu.png" alt=""></a>
-									</div>
-									<div class="swiper-slide">
-										<a href=""><img src="../../imgs/buyhouse/datu.png" alt=""></a>
-									</div>
-									<div class="swiper-slide">
-										<a href=""><img src="../../imgs/buyhouse/datu.png" alt=""></a>
-									</div>
-									<div class="swiper-slide">
-										<a href=""><img src="../../imgs/buyhouse/datu.png" alt=""></a>
-									</div>
-									<div class="swiper-slide">
-										<a href=""><img src="../../imgs/buyhouse/datu.png" alt=""></a>
-									</div>
-									<div class="swiper-slide">
-										<a href=""><img src="../../imgs/buyhouse/datu.png" alt=""></a>
+									<div class="swiper-slide " v-for="item in twohandhousedetail.housePicList">
+											<img :src="item">
 									</div>
 								</div>
 							</div>
@@ -37,27 +22,10 @@
 							<a class="arrow-left" href="#"></a>
 							<a class="arrow-right" href="#"></a>
 							<div class="swiper-container">
+								 <!-- active-nav -->
 								<div class="swiper-wrapper">
-									<div class="swiper-slide active-nav">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
-									</div>
-									<div class="swiper-slide">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
-									</div>
-									<div class="swiper-slide">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
-									</div>
-									<div class="swiper-slide">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
-									</div>
-									<div class="swiper-slide">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
-									</div>
-									<div class="swiper-slide slide6">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
-									</div>
-									<div class="swiper-slide slide6">
-										<img src="../../imgs/buyhouse/xiaotu.png" alt="">
+									<div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in twohandhousedetail.housePicList">
+											<img :src="item">
 									</div>
 								</div>
 							</div>
@@ -111,11 +79,11 @@
 					</div>
 					<div class="callpeople">联系经纪人</div>
 					<div class="fl peopleintrode">
-							<div class="fl">111</div>
+							<div class="fl"><img :src="twohandhousedetail.broker.photo"></div>
 							<div class="fr">
 								<ul>
 									<li>{{twohandhousedetail.broker.emplName}}</li>
-									<li>1344444444444</li>
+									<li>{{twohandhousedetail.broker.phone}}</li>
 									<li>亲自勘察，真实房源，竭诚为您服务</li>
 								</ul>
 							</div>
@@ -136,18 +104,18 @@
 							<div class="name">基本属性</div>
 							<div class="contents">
 								<ul>
-									<li><span class="label">房屋户型</span>2室2厅1厨1卫</li>
-									<li><span class="label">所在楼层</span>中楼层 (共27层)</li>
-									<li><span class="label">建筑面积</span>63.11㎡</li>
-									<li><span class="label">户型结构</span>平层</li>
-									<li><span class="label">套内面积</span>暂无数据</li>
-									<li><span class="label">建筑类型</span>塔楼</li>
-									<li><span class="label">房屋朝向</span>南</li>
-									<li><span class="label">建筑结构</span>钢混结构</li>
-									<li><span class="label">装修情况</span>简装</li>
-									<li><span class="label">梯户比例</span>两梯十户</li>
-									<li><span class="label">配备电梯</span>有</li>
-									<li><span class="label">产权年限</span>70年</li>
+									<li><span class="label">房屋户型</span>{{twohandhousedetail.houseType}}</li>
+									<li><span class="label">所在楼层</span>{{twohandhousedetail.houseForm}} (共{{twohandhousedetail.floorNum}}层)</li>
+									<li><span class="label">建筑面积</span>{{twohandhousedetail.builtArea}}㎡</li>
+									<li><span class="label">户型结构</span>{{twohandhousedetail.houseForm}}</li>
+									<li><span class="label">套内面积</span></li>
+									<li><span class="label">建筑类型</span>{{twohandhousedetail.houseRight}}</li>
+									<li><span class="label">房屋朝向</span>{{twohandhousedetail.houseDirection}}</li>
+									<li><span class="label">建筑结构</span>{{twohandhousedetail.houseStruc}}</li>
+									<li><span class="label">装修情况</span>{{twohandhousedetail.houseDecoration}}</li>
+									<li><span class="label">梯户比例</span></li>
+									<li><span class="label">配备电梯</span>{{twohandhousedetail.elevator}}</li>
+									<li><span class="label">产权年限</span></li>
 								</ul>
 							</div>
 						</div>
@@ -158,20 +126,20 @@
 					<div class="headtitle">房源动态</div>
 					<div class="introContent">
 						<div class="base" style="border-bottom: 0;">
-							<div class="name">近日带看7(次)</div>
+							<div class="name">近7日带看(次)</div>
 							<div class="contents">
 								<ul>
-									<li>近日带看7(次)</li>
-									<li>近日带看7(次)</li>
+									<li>近30日带看(次)</li>
+									<li>收藏房源(人)</li>
 								</ul>
 							</div>
 						</div>
 						<div class="base" style="border: 0;">
-							<div class="name" style="font-size: 30px;color: #000000;">25</div>
+							<div class="name" style="font-size: 30px;color: #000000;">{{twohandhousedetail.day7Num }}</div>
 							<div class="contents">
 								<ul>
-									<li style="font-size: 30px;color: #000000;">25</li>
-									<li style="font-size: 30px;color: #000000;">25</li>
+									<li style="font-size: 30px;color: #000000;">{{twohandhousedetail.day30Num }}</li>
+									<li style="font-size: 30px;color: #000000;">{{twohandhousedetail.collectNum }}</li>
 								</ul>
 							</div>
 						</div>
@@ -183,7 +151,7 @@
 					<ul>
 						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
 							<div class="image fl">
-								<img src="../../imgs/buyhouse/tu1.png" alt="" />
+								<img :src="bulidinfo.housePic" alt="" />
 							</div>
 							<div class="direciton">
 								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
@@ -198,12 +166,12 @@
 							</div>
 						</router-link>
 							<div class="headtitle">同小区房源</div>
-						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
+						<li v-for="item in samehouseused">
 							<div class="image fl">
-								<img src="../../imgs/buyhouse/tu1.png" alt="" />
+								<img :src="item.housePic"  />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
 								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
@@ -213,7 +181,7 @@
 									<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
 								</div>
 							</div>
-						</router-link>
+						</li>
 						<div class="headtitle">周边房源</div>
 						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
 							<div class="image fl">
@@ -254,7 +222,15 @@
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				cancel: false, //取消登陆阴影
-				twohandhousedetail:'' //二手房详情
+				twohandhousedetail:{//二手房详情
+					broker: {
+						emplName: '',
+						photo:''
+					}
+				},
+				bulidinfo:'',//关联小区
+				samehouseused:[],//同小区房源列表
+				bulidsdid:''   //同小区sdid
 			};
 		},
 		methods: {
@@ -278,35 +254,66 @@
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
 			}
+
 		},
 		components: {
 			oHeader,
 			BMap
 		},
 		created() {
+			//二手房详情
 			let sdid = this.$route.params.id;
 			let scity = JSON.parse(window.localStorage.selectCity).value
-
-			
 			this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + scity + '/'+ sdid) 
 			.then((response)=>{
 				this.twohandhousedetail = response.data.data
-				console.log(this.twohandhousedetail)
-			})
-
+				this.bulidsdid =  response.data.data.buildSdid
+				this.px =  response.data.data.px
+				this.py =  response.data.data.px
 			
+				//二手房周边
+				// this.$http.get(this.$url.URL.HOUSE_RIMHOUSING + scity + '/'+ this.bulidsdid ,{
+				// 		pageNo:1,
+				// 		px:this.px,
+				// 		py:this.py,
+				// 		pageSize:10
+				// }) 
+				// .then((response)=>{
+				// 	this.rimhousing =  response.data.data
+				// 		console.log(this.rimhousing)
+				// })
+
+				//关联小区
+				this.$http.get(this.$url.URL.BULIDINFO + scity + '/'+ this.bulidsdid ) 
+				.then((response)=>{
+					this.bulidinfo =  response.data.data
+					
+				})	
+				
+				//同小区房源
+				this.$http.get(this.$url.URL.MAPHOUSEALL_USED_LIST + scity + '/'+ this.bulidsdid ,{
+						pageNo:1,
+						pageSize:10
+
+				}) 
+				.then((response)=>{
+					this.samehouseused =  response.data.data
+
+				})	
+			})
 		},
 		mounted() {
-			var viewSwiper = new Swiper('.view .swiper-container', {
-				onSlideChangeStart: function() {
-					updateNavPosition()
-				}
-			})
-
 			
-
+			
+			setTimeout(function(){
+				
+				var viewSwiper = new Swiper('.view .swiper-container', {
+					onSlideChangeStart: function() {
+						updateNavPosition()
+					}
+				})
+			
 			$('.view .arrow-left,.preview .arrow-left').on('click', function(e) {
-
 				e.preventDefault()
 				if(viewSwiper.activeIndex == 0) {
 					viewSwiper.slideTo(viewSwiper.slides.length - 1, 1000);
@@ -314,7 +321,7 @@
 				}
 				viewSwiper.slidePrev()
 			})
-			$('.view .arrow-right,.preview .arrow-right').on('click', function(e) {
+			$('.view .arrow-right,.preview .arrow-right').on('click', function(e) {	
 				e.preventDefault()
 				if(viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
 					viewSwiper.slideTo(0, 1000);
@@ -344,6 +351,7 @@
 					}
 				}
 			}
+			},1000)
 		}
 	}
 </script>
@@ -379,9 +387,9 @@
 	}
 	.duibi .duibi_a{
 		float: left;
-		padding: 13px 27px;
+		padding: 12px 27px;
 		border: 1px solid gainsboro;
-		margin-left: 50px;
+		margin-left: 30px;
 	}
 	
 	.collect .collect_a {
@@ -493,7 +501,7 @@
 	}
 	
 	.content .aroundInfo {
-		padding: 24px 0;
+		padding: 30px 0;
 		line-height: 18px;
 		border-bottom: 1px solid #eeeeee;
 		font-size: 14px;
@@ -578,6 +586,7 @@
 		overflow: hidden;
 	}
 	.item ul li{
+		margin-top: 50px;
 		cursor: pointer;
 	}
 	.introduce{
@@ -622,29 +631,37 @@
 		margin-top: 25px;
 	}
 	.peopleintrode{
-		width: 385px;
-		margin-top:10px;
+		width: 285px;
+		margin-top:20px;
 	}
 	.peopleintrode>div{
+		font-weight: bold;
 		font-size: 18px;
 	}
 	.peopleintrode >:nth-child(1){
 		width: 72px;
 		height: 80px;
-		border: 1px solid red;
 	}
-	.peopleintrode >:nth-child(2)>ul{
-		height: 80px;
+	.peopleintrode >:nth-child(1) img{
+		width: 100%;
+		height: 100%;
+	}
+	.peopleintrode ul{
+		line-height: 28px;
 	}
 	.peopleintrode >:nth-child(2)>ul>:nth-child(2){
 		color: red;
-		margin-top: 15px;
 	}
 	.peopleintrode >:nth-child(2)>ul>:nth-child(3){
 		font-size: 12px;
 	}
-	.peopleintrode >:nth-child(2)>ul>li{
-		margin-top: 15px;
+	.image{
+		width: 232px;
+		height: 175px;
+	}
+	.image img{
+		width: 100%;
+		height: 100%;
 	}
 	
 	
@@ -734,6 +751,13 @@
 	
 	.preview .active-nav img {
 		padding: 0;
-		border: 1px solid #F00;
+	}
+	.swiperimg{
+		width: 120px;
+		height: 81px;
+	}
+	.swiperimg img{
+		width: 100%;
+		height: 100%;
 	}
 </style>
