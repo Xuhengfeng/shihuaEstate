@@ -86,7 +86,7 @@ const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], reso
 Vue.use(Router)
 
 export default new Router({
-	mode: 'history', //历史模式, 取消地址栏"#"
+	// mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},

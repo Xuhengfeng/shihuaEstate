@@ -154,12 +154,11 @@
 								<img :src="bulidinfo.housePic" alt="" />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
+								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">90天成交{{bulidinfo.saleCount }}套|{{bulidinfo.rentCount }}套正在出租</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{bulidinfo.avgSalePrice }}<span style="font-size: 14px;">万</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{bulidinfo.areaName}}  {{bulidinfo.districtName}}/{{bulidinfo.buildAge}}建成</span><span class="fr">单价{{bulidinfo.avgRentPrice }}元/平米</span></div>
 								<div class="introduce ">
-									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
+									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">{{bulidinfo.buildType}}</span>
 									<span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
 									<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
 								</div>
@@ -172,9 +171,9 @@
 							</div>
 							<div class="direciton">
 								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
+								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 								<div class="introduce ">
 									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
 									<span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
@@ -185,13 +184,13 @@
 						<div class="headtitle">周边房源</div>
 						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
 							<div class="image fl">
-								<img src="../../imgs/buyhouse/tu1.png" alt="" />
+								<img :src="rimhousing.housePic" />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div>
+								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{rimhousing.areaName }} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{rimhousing.districtName }}|{{rimhousing.houseType}}|{{rimhousing.builtArea}}平|{{rimhousing.houseDirection }}|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{rimhousing.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价{{rimhousing.salePrice }}元/平米</span></div>
+								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 								<div class="introduce ">
 									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
 									<span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
@@ -230,6 +229,7 @@
 				},
 				bulidinfo:'',//关联小区
 				samehouseused:[],//同小区房源列表
+				rimhousing:'',//周边房源
 				bulidsdid:''   //同小区sdid
 			};
 		},
@@ -269,25 +269,26 @@
 				this.twohandhousedetail = response.data.data
 				this.bulidsdid =  response.data.data.buildSdid
 				this.px =  response.data.data.px
-				this.py =  response.data.data.px
+				this.py =  response.data.data.py
+				console.log(this.bulidsdid)
 			
 				//二手房周边
-				// this.$http.get(this.$url.URL.HOUSE_RIMHOUSING + scity + '/'+ this.bulidsdid ,{
-				// 		pageNo:1,
-				// 		px:this.px,
-				// 		py:this.py,
-				// 		pageSize:10
-				// }) 
-				// .then((response)=>{
-				// 	this.rimhousing =  response.data.data
-				// 		console.log(this.rimhousing)
-				// })
+				this.$http.post(this.$url.URL.HOUSE_RIMHOUSING  ,{
+						pageNo:1,
+						px:this.px,
+						py:this.py,
+						bulidsdid:this.bulidsdid,
+						scity: scity
+				}) 
+				.then((response)=>{
+					this.rimhousing =  response.data.data
+						console.log(this.rimhousing)
+				})
 
 				//关联小区
 				this.$http.get(this.$url.URL.BULIDINFO + scity + '/'+ this.bulidsdid ) 
 				.then((response)=>{
 					this.bulidinfo =  response.data.data
-					
 				})	
 				
 				//同小区房源
@@ -298,7 +299,6 @@
 				}) 
 				.then((response)=>{
 					this.samehouseused =  response.data.data
-
 				})	
 			})
 		},
@@ -593,7 +593,7 @@
 		
 		margin-left: 215px;
 		height: 19px;
-		margin-top: 17px;
+		margin-top: 29px;
 	}
 	.introduce span{
 		font-size: 14px;
