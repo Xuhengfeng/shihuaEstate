@@ -1,5 +1,4 @@
 <template>
-
 	<div class="home">
 		<div class="header">
 			<div class="shadowlay" v-if="cityChange" @click="closeCity()"></div>
@@ -42,7 +41,7 @@
 				</div>
 				<div class="navmenu fr">
 					<ul class="item1">
-						<li class="loginregize">
+						<router-link tag="li" to="" class="loginregize">
 							<i class="iconfont icon-yonghu" v-if="true">
 								<span class="login" @click="login()">登录</span>/
 								<span class="logout" @click="register()">立即注册</span>
@@ -55,7 +54,7 @@
 								<router-link tag="li" to="">我的收藏</router-link>
 								<router-link tag="li" to="">我的委托</router-link>
 							</ul>
-						</li>
+						</router-link>
 						
 						<router-link tag="li" to="/more">更多
 							<ul>
@@ -76,8 +75,8 @@
 						<router-link tag="li" to="/broker">找经纪人</router-link>
 						<router-link tag="li" to="/">业主委托
 							<ul>
-								<router-link tag="li" to="/entrustment">我要租房</router-link>
-								<router-link tag="li" to="/entrustment">我要出售</router-link>
+								<router-link tag="li" to="/entrustmentrent/renthouse">我要租房</router-link>
+								<router-link tag="li" to="/entrustmentrent/sellhouse">我要出售</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/sellrent">租房</router-link>
@@ -450,524 +449,524 @@
 	}
 </script>
 
-<style scoped="scoped">
-	/*城市切换*/
-	.shadowlay {
-		position: fixed;
-		top: 0;
-		right: 0;
-		left: 0;
-		bottom: 0;
-		background: rgba(0, 0, 0, .5);
-		z-index: 995;
-	}
-	
-	.city-change {
-		width: 640px;
-		height: 440px;
-		background: #ffffff;
-		-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-		-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-		border-radius: 2px;
-		position: fixed;
-		z-index: 1001;
-		margin: auto;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		padding-bottom: 20px;
-	}
-	
-	.city-change .close {
-		cursor: pointer;
-		display: inline-block;
-		width: 30px;
-		height: 30px;
-		overflow: hidden;
-		position: absolute;
-		right: -15px;
-		top: -15px;
-		background: url(../../imgs/home/cuo.png);
-		background-repeat: no-repeat;
-	}
-	
-	.city-change .title {
-		text-align: left;
-		margin: 30px 40px 0 40px;
-		font-size: 22px;
-		color: #394043;
-		font-weight: bold;
-		position: relative;
-	}
-	
-	.city-change .title .city-tab {
-		display: inline-block;
-		float: right;
-	}
-	
-	.city-change .title .city-tab span {
-		font-size: 14px;
-		font-weight: normal;
-		display: inline-block;
-		margin-right: 9px;
-		color: #999999;
-	}
-	
-	.city-change .title .city-tab a {
-		font-size: 14px;
-		font-weight: normal;
-		margin-left: 10px;
-		color: #394043;
-	}
-	
-	.city-change .title-line {
-		width: 590px;
-		height: 1px;
-		background-color: #eeeeee;
-		margin: 0 auto;
-		margin-bottom: 25px;
-		margin-top: 10px;
-	}
-	
-	.city-change .fc-main {
-		padding: 0 40px;
-		height: 335px;
-		overflow-y: auto;
-	}
-	
-	.clear:after {
-		content: '.';
-		clear: both;
-		display: block;
-		height: 0;
-		visibility: hidden;
-		font-size: 0;
-		line-height: 0;
-	}
-	
-	.city-change .fc-main .citys-l {
-		width: 50%;
-		height: 100%;
-	}
-	
-	.city-change .fc-main .citys-r {
-		width: 50%;
-		height: 100%;
-	}
-	
-	.city-change .fc-main ul {
-		display: inline-block;
-	}
-	
-	.city-change .fc-main li .code-title {
-		display: inline-block;
-		margin-right: 10px;
-		color: #999999;
-	}
-	
-	.city-change .fc-main li .city-enum {
-		height: 100%;
-		max-width: 250px;
-	}
-	
-	.city-change .fc-main li {
-		line-height: 40px;
-	}
-	
-	.city-change .fc-main li .city-enum a {
-		margin-left: 7px;
-		display: inline-block;
-		color: #333333;
-	}
-	
-	.city-change .fc-main li .city-enum {
-		height: 100%;
-		max-width: 250px;
-	}
-	
-	.header {
-		width: 100%;
-		height: 587px;
-		background-color: #F5F5F5;
-		background-image: url(../../imgs/home/sousditu.png);
-		background-repeat: no-repeat;
-		background-position: center 0;
-		background-attachment: fixed;
-		background-size: 1920px 717px;
-		padding-top: 40px;
-		box-sizing: border-box;
-	}
-	
-	.header .logo {
-	    display: inline-block;
-		width: 154px;
-		height: 43px;
-		vertical-align: middle;
-	}
-	
-	.header .logo img {
-		width: 100%;
-		height: 100%;
-	}
-	
-	.header .location {
-		display: inline-block;
-		width: 57px;
-		height: 28px;
-		font-size: 12px;
-		background: rgba(0, 0, 0, 0.2);
-		border-radius: 15px;
-		text-align: center;
-		color: #fff;
-		line-height: 28px;
-		margin-left: 15px;
-	}
-	
-	.navmenu {
-		margin-top: 7px;
-	}
-	.navmenu .item1>li {
-		float: right;
-		margin-left: 20px;
-		cursor: pointer;
-		color: #FFFFFF;
-		font-size: 18px;
-		position: relative;
-		padding-bottom: 20px;
-	}
-	.loginregize{
-		margin-left: 20px;
-		font-size: 16px;
-	}
-	.navmenu .item1>li ul {
-		position: absolute;
-		left: 0;
-		visibility: hidden;
-		width: 80px;
-		background: #FFFFFF;
-		margin-top: 15px;
-	}
-	
-	.navmenu .item1>li:hover ul {
-		visibility: visible;
-	}
-	
-	.navmenu .item1>li ul li {
-		color: black;
-		font-size: 14px;
-		height: 30px;
-		line-height: 30px;
-		text-indent: 10px;
-		border-bottom: 1px solid #a7a7a6;
-	}
-	
-	.navmenu .item1 li:hover {
-		color: red;
-	}
-	
-	.navmenu .item1 li .login:hover {
-		color: red;
-	}
-	
-	.navmenu .item1 li .logout:hover {
-		color: red;
-	}
-	
-	.icon-yonghu,
-	.login,
-	.logout {
-		font-size: 19 px;
-		color: #FFFFFF;
-	}
-	
-	.search-box-wrap{
-		position: relative;
-		margin: 245px auto 0;
-		width: 670px;
-	}
-		
-	.search-box-wrap .search-hd {
-		overflow: hidden;
-	}
-	/* 地图找房 */
-	.search-box-wrap .mapSearchHouse{
-		position: absolute;
-		right: -130px;
-		top: 63px;
-		width: 100px;
-		height: 50px;
-		line-height: 50px;
-		background: red;
-		font-size: 15px;
-		color: #ffffff;
-		text-align: center;
-		z-index: 1100;
-	}
-	.search-box-wrap .search-hd span {
-		display: inline-block;
-		margin-right: 50px;
-		font-size: 20px;
-		color: #FFFFFF;
-		cursor: pointer;
-	}
-	
-	.search-box-wrap .search-bd {
-		margin-top: 25px;
-		height: 70px;
-		background: #FFFFFF;
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: center;
-		text-align: center;
-		position: relative;
-	}
-	
-	.search-bd .tip {
-		position: absolute;
-		top: -18px;
-		left: 0px;
-		color: #FFFFFF;
-		font-size: 26px;
-		transition: all .3s ease;
-	}
-	
-	.search-box-wrap .search-bd .search-box {
-		flex: 1;
-		font-size: 18px;
-		text-indent: 30px;
-		outline: none;
-	}
-	
-	.search-box-wrap .search-bd .search-box-btn {
-		height: 100%;
-		line-height: 70px;
-		background: #fe0000;
-		width: 146px;
-		font-size: 18px;
-		color: #FFFFFF;
-		text-align: center;
-	}
-	
-	.statistics>div {
-		display: flex;
-		height: 248px;
-		flex-flow: row nowrap;
-		-webkit-justify-content: center;
-		justify-content: center;
-		text-align: center;
-		align-items: center;
-	}
-	
-	.statistics>div>div {
-		flex: 1;
-	}
-	
-	.statistics .price,
-	.statistics .number {
-		font-size: 49px;
-	}
-	
-	.statistics .price span,
-	.statistics .number span {
-		font-size: 28px;
-		color: #595757;
-	}
-	
-	.statistics .price+p,
-	.statistics .number+p {
-		margin-top: 22px;
-		margin-right: 80px;
-		font-size: 19px;
-		color: #000000;
-	}
-	/*内容片段*/
-	
-	.section {
-		overflow: hidden;
-		height: 532px;
-		box-sizing: border-box;
-	}
-	
-	.section .container {
-		height: 100%;
-		padding-top: 55px;
-	}
-	
-	.section .goods-hd {
-		padding-left: 10px;
-	}
-	
-	.section .goods-hd .twohandhouse {
-		font-weight: bold;
-		font-size: 28px;
-		color: #010101;
-	}
-	
-	.section .goods-hd .foryouselect {
-		font-size: 29px;
-		color: #595757;
-		margin-left: 5px;
-	}
-	
-	.section .morehouse li {
-		cursor: pointer;
-		font-size: 20px;
-		color: #717171;
-		margin-top: 10px;
-	}
-	
-	.section .goods-bd {
-		margin-top: 46px;
-	}
-	
-	.section .goods-bd ul {
-		margin-right: -30px;
-	}
-	
-	.section .goods-bd li {
-		cursor: pointer;
-		width: 272px;
-		height: 305px;
-		margin-right: 27px;
-		float: left;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-		box-sizing: border-box;
-	}
-	
-	.section .goods-bd .image {
-		width: 272px;
-		height: 213px;
-	}
-	
-	.section .image img {
-		width: 100%;
-		height: 100%;
-		vertical-align: top;
-	}
-	
-	.section .description {
-		padding: 20px;
-		height: 95px;
-		overflow: hidden;
-		box-sizing: border-box;
-		background: #FFFFFF;
-		line-height: 30px;
-	}
-	
-	.section .description p:first-of-type {
-		/*margin-bottom: 10px;*/
-		font-size: 16px;
-		color: #000000;
-		font-weight: bold;
-		line-height: 25px;
-	}
-	/*购房指南*/
-	
-	#purchaseGuide .goods-bd ul {
-		margin-right: -60px;
-	}
-	
-	#purchaseGuide .goods-bd li {
-		width: 358px;
-		margin-right: 50px;
-	}
-	
-	#purchaseGuide .goods-bd li .image {
-		width: 100%;
-		overflow: hidden;
-	}
-	
-	#purchaseGuide .goods-bd li .image:hover img {
-		animation: pulse 1s .2s ease both;
-	}
-	/*bgColor*/
-	
-	.bgColor1,
-	.bgColor3 {
-		background: #FFFFFF;
-	}
-	
-	.bgColor2,
-	.bgColor4 {
-		background: #F9F9F9;
-	}
-	/*ad广告*/
-	
-	.advertisement {
-		width: 100%;
-		height: 485px;
-		background-color: #F5F5F5;
-		background-image: url(../../imgs/home/APP.png);
-		background-repeat: no-repeat;
-		background-position: center 0;
-		background-size: 1920px auto;
-		padding-top: 50px;
-		box-sizing: border-box;
-	}
-	
-	.advertisement .title {
-		font-size: 60px;
-		color: #000000;
-	}
-	
-	.advertisement .description {
-		font-size: 29px;
-		color: #000000;
-		font-family: "microsoft yahei light";
-		margin-top: 5px;
-	}
-	
-	.advertisement .description+p {
-		margin-top: 5px;
-		font-size: 15px;
-		color: #595757;
-	}
-	
-	.advertisement .btngroup {
-		margin-top: 50px;
-		float: left;
-	}
-	
-	.advertisement .btngroup div {
-		margin-top: 12px;
-	}
-	
-	.advertisement .QRcode {
-		margin-top: 30px;
-		margin-left: 15px;
-		float: left;
-	}
-	
-	.QRcode .image {
-		width: 135px;
-		height: 132px;
-	}
-	
-	.QRcode .image+div {
-		color: #FFFFFF;
-	}
-	
-	.QRcode .image img {
-		width: 100%;
-	}
-	
-	.content {
-		width: 470px;
-		height: 167px;
-	}
-	/*动画*/
-	
-	@-webkit-keyframes pulse {
-		0% {
-			-webkit-transform: scale(1)
-		}
-		50% {
-			-webkit-transform: scale(1.2)
-		}
-		100% {
-			-webkit-transform: scale(1)
-		}
-	}
+<style scoped>
+/*城市切换*/
+.shadowlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, .5);
+	z-index: 995;
+}
+
+.city-change {
+	width: 640px;
+	height: 440px;
+	background: #ffffff;
+	-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	border-radius: 2px;
+	position: fixed;
+	z-index: 1001;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	padding-bottom: 20px;
+}
+
+.city-change .close {
+	cursor: pointer;
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	overflow: hidden;
+	position: absolute;
+	right: -15px;
+	top: -15px;
+	background: url(../../imgs/home/cuo.png);
+	background-repeat: no-repeat;
+}
+
+.city-change .title {
+	text-align: left;
+	margin: 30px 40px 0 40px;
+	font-size: 22px;
+	color: #394043;
+	font-weight: bold;
+	position: relative;
+}
+
+.city-change .title .city-tab {
+	display: inline-block;
+	float: right;
+}
+
+.city-change .title .city-tab span {
+	font-size: 14px;
+	font-weight: normal;
+	display: inline-block;
+	margin-right: 9px;
+	color: #999999;
+}
+
+.city-change .title .city-tab a {
+	font-size: 14px;
+	font-weight: normal;
+	margin-left: 10px;
+	color: #394043;
+}
+
+.city-change .title-line {
+	width: 590px;
+	height: 1px;
+	background-color: #eeeeee;
+	margin: 0 auto;
+	margin-bottom: 25px;
+	margin-top: 10px;
+}
+
+.city-change .fc-main {
+	padding: 0 40px;
+	height: 335px;
+	overflow-y: auto;
+}
+
+.clear:after {
+	content: '.';
+	clear: both;
+	display: block;
+	height: 0;
+	visibility: hidden;
+	font-size: 0;
+	line-height: 0;
+}
+
+.city-change .fc-main .citys-l {
+	width: 50%;
+	height: 100%;
+}
+
+.city-change .fc-main .citys-r {
+	width: 50%;
+	height: 100%;
+}
+
+.city-change .fc-main ul {
+	display: inline-block;
+}
+
+.city-change .fc-main li .code-title {
+	display: inline-block;
+	margin-right: 10px;
+	color: #999999;
+}
+
+.city-change .fc-main li .city-enum {
+	height: 100%;
+	max-width: 250px;
+}
+
+.city-change .fc-main li {
+	line-height: 40px;
+}
+
+.city-change .fc-main li .city-enum a {
+	margin-left: 7px;
+	display: inline-block;
+	color: #333333;
+}
+
+.city-change .fc-main li .city-enum {
+	height: 100%;
+	max-width: 250px;
+}
+
+.header {
+	width: 100%;
+	height: 587px;
+	background-color: #F5F5F5;
+	background-image: url(../../imgs/home/sousditu.png);
+	background-repeat: no-repeat;
+	background-position: center 0;
+	background-attachment: fixed;
+	background-size: 1920px 717px;
+	padding-top: 40px;
+	box-sizing: border-box;
+}
+
+.header .logo {
+	display: inline-block;
+	width: 154px;
+	height: 43px;
+	vertical-align: middle;
+}
+
+.header .logo img {
+	width: 100%;
+	height: 100%;
+}
+
+.header .location {
+	display: inline-block;
+	width: 57px;
+	height: 28px;
+	font-size: 12px;
+	background: rgba(0, 0, 0, 0.2);
+	border-radius: 15px;
+	text-align: center;
+	color: #fff;
+	line-height: 28px;
+	margin-left: 15px;
+}
+
+.navmenu {
+	margin-top: 7px;
+}
+.navmenu .item1>li {
+	float: right;
+	margin-left: 20px;
+	cursor: pointer;
+	color: #FFFFFF;
+	font-size: 18px;
+	position: relative;
+	padding-bottom: 20px;
+}
+.loginregize{
+	margin-left: 20px;
+	font-size: 16px;
+}
+.navmenu .item1>li ul {
+	position: absolute;
+	left: 0;
+	visibility: hidden;
+	width: 80px;
+	background: #FFFFFF;
+	margin-top: 15px;
+}
+
+.navmenu .item1>li:hover ul {
+	visibility: visible;
+}
+
+.navmenu .item1>li ul li {
+	color: black;
+	font-size: 14px;
+	height: 30px;
+	line-height: 30px;
+	text-indent: 10px;
+	border-bottom: 1px solid #a7a7a6;
+}
+
+.navmenu .item1 li:hover {
+	color: red;
+}
+
+.navmenu .item1 li .login:hover {
+	color: red;
+}
+
+.navmenu .item1 li .logout:hover {
+	color: red;
+}
+
+.icon-yonghu,
+.login,
+.logout {
+	font-size: 19 px;
+	color: #FFFFFF;
+}
+
+.search-box-wrap{
+	position: relative;
+	margin: 245px auto 0;
+	width: 670px;
+}
+	
+.search-box-wrap .search-hd {
+	overflow: hidden;
+}
+/* 地图找房 */
+.search-box-wrap .mapSearchHouse{
+	position: absolute;
+	right: -130px;
+	top: 63px;
+	width: 100px;
+	height: 50px;
+	line-height: 50px;
+	background: red;
+	font-size: 15px;
+	color: #ffffff;
+	text-align: center;
+	z-index: 1100;
+}
+.search-box-wrap .search-hd span {
+	display: inline-block;
+	margin-right: 50px;
+	font-size: 20px;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+
+.search-box-wrap .search-bd {
+	margin-top: 25px;
+	height: 70px;
+	background: #FFFFFF;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	text-align: center;
+	position: relative;
+}
+
+.search-bd .tip {
+	position: absolute;
+	top: -18px;
+	left: 0px;
+	color: #FFFFFF;
+	font-size: 26px;
+	transition: all .3s ease;
+}
+
+.search-box-wrap .search-bd .search-box {
+	flex: 1;
+	font-size: 18px;
+	text-indent: 30px;
+	outline: none;
+}
+
+.search-box-wrap .search-bd .search-box-btn {
+	height: 100%;
+	line-height: 70px;
+	background: #fe0000;
+	width: 146px;
+	font-size: 18px;
+	color: #FFFFFF;
+	text-align: center;
+}
+
+.statistics>div {
+	display: flex;
+	height: 248px;
+	flex-flow: row nowrap;
+	-webkit-justify-content: center;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+}
+
+.statistics>div>div {
+	flex: 1;
+}
+
+.statistics .price,
+.statistics .number {
+	font-size: 49px;
+}
+
+.statistics .price span,
+.statistics .number span {
+	font-size: 28px;
+	color: #595757;
+}
+
+.statistics .price+p,
+.statistics .number+p {
+	margin-top: 22px;
+	margin-right: 80px;
+	font-size: 19px;
+	color: #000000;
+}
+/*内容片段*/
+
+.section {
+	overflow: hidden;
+	height: 532px;
+	box-sizing: border-box;
+}
+
+.section .container {
+	height: 100%;
+	padding-top: 55px;
+}
+
+.section .goods-hd {
+	padding-left: 10px;
+}
+
+.section .goods-hd .twohandhouse {
+	font-weight: bold;
+	font-size: 28px;
+	color: #010101;
+}
+
+.section .goods-hd .foryouselect {
+	font-size: 29px;
+	color: #595757;
+	margin-left: 5px;
+}
+
+.section .morehouse li {
+	cursor: pointer;
+	font-size: 20px;
+	color: #717171;
+	margin-top: 10px;
+}
+
+.section .goods-bd {
+	margin-top: 46px;
+}
+
+.section .goods-bd ul {
+	margin-right: -30px;
+}
+
+.section .goods-bd li {
+	cursor: pointer;
+	width: 272px;
+	height: 305px;
+	margin-right: 27px;
+	float: left;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	box-sizing: border-box;
+}
+
+.section .goods-bd .image {
+	width: 272px;
+	height: 213px;
+}
+
+.section .image img {
+	width: 100%;
+	height: 100%;
+	vertical-align: top;
+}
+
+.section .description {
+	padding: 20px;
+	height: 95px;
+	overflow: hidden;
+	box-sizing: border-box;
+	background: #FFFFFF;
+	line-height: 30px;
+}
+
+.section .description p:first-of-type {
+	/*margin-bottom: 10px;*/
+	font-size: 16px;
+	color: #000000;
+	font-weight: bold;
+	line-height: 25px;
+}
+/*购房指南*/
+
+#purchaseGuide .goods-bd ul {
+	margin-right: -60px;
+}
+
+#purchaseGuide .goods-bd li {
+	width: 358px;
+	margin-right: 50px;
+}
+
+#purchaseGuide .goods-bd li .image {
+	width: 100%;
+	overflow: hidden;
+}
+
+#purchaseGuide .goods-bd li .image:hover img {
+	animation: pulse 1s .2s ease both;
+}
+/*bgColor*/
+
+.bgColor1,
+.bgColor3 {
+	background: #FFFFFF;
+}
+
+.bgColor2,
+.bgColor4 {
+	background: #F9F9F9;
+}
+/*ad广告*/
+
+.advertisement {
+	width: 100%;
+	height: 485px;
+	background-color: #F5F5F5;
+	background-image: url(../../imgs/home/APP.png);
+	background-repeat: no-repeat;
+	background-position: center 0;
+	background-size: 1920px auto;
+	padding-top: 50px;
+	box-sizing: border-box;
+}
+
+.advertisement .title {
+	font-size: 60px;
+	color: #000000;
+}
+
+.advertisement .description {
+	font-size: 29px;
+	color: #000000;
+	font-family: "microsoft yahei light";
+	margin-top: 5px;
+}
+
+.advertisement .description+p {
+	margin-top: 5px;
+	font-size: 15px;
+	color: #595757;
+}
+
+.advertisement .btngroup {
+	margin-top: 50px;
+	float: left;
+}
+
+.advertisement .btngroup div {
+	margin-top: 12px;
+}
+
+.advertisement .QRcode {
+	margin-top: 30px;
+	margin-left: 15px;
+	float: left;
+}
+
+.QRcode .image {
+	width: 135px;
+	height: 132px;
+}
+
+.QRcode .image+div {
+	color: #FFFFFF;
+}
+
+.QRcode .image img {
+	width: 100%;
+}
+
+.content {
+	width: 470px;
+	height: 167px;
+}
+/*动画*/
+
+@-webkit-keyframes pulse {
+	0% {
+		-webkit-transform: scale(1)
+	}
+	50% {
+		-webkit-transform: scale(1.2)
+	}
+	100% {
+		-webkit-transform: scale(1)
+	}
+}
 </style>

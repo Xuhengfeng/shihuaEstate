@@ -103,7 +103,7 @@ export default new Router({
 		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//新房详情
 		{path:"/sellrent",component:sellrent,meta:{KeepAlive:false}},//租房
 		{path:"/sellrentdetail/:id",component:sellrentdetail,meta:{KeepAlive:false}},//租房详情
-		{path:"/entrustmentrent",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
+		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
