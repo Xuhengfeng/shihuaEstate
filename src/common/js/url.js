@@ -29,5 +29,8 @@ let URL = {
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
+	BROKERS_LIST:_host + '/broker/brokers',  					//经纪人
+	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
+	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
 };
 export default {URL}
