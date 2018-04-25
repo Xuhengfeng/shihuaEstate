@@ -44,9 +44,18 @@ export default {
 };
 </script>
 
-<style scoped="scoped">
-#app {
-  width: 100%;
-  height: 100%;
+<style lang="less">
+@import "common/css/reset.css";/*重置样式*/
+@import 'common/css/base.less';/*base和iconfont样式*/
+@import "common/css/variable.less";/*颜色和字体样式*/
+html,body{
+  width:100%;
+  height:100%;
+  #app{
+    color:@color-theme;
+    width:100%;
+    height:100%;
+    font-size:@font-size-medium-x;
+  }			
 }
 </style>

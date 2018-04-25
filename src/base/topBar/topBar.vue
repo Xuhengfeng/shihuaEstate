@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-25 15:42:11
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-25 22:34:57
  */
 <template>
     <div class="navmenu">
@@ -90,8 +90,7 @@ export default {
   
 }
 </script>
-<style lang="less" scoped>
-@import "../../common/css/theme.less";
+<style scoped>
 .header {
 	background-color: #F9F9F9;;
 	width: 100%;

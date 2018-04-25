@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-25 18:24:55
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-25 22:36:30
  */
 <template>
   <div class="sellRent">
@@ -164,8 +164,7 @@ export default {
 
 }
 </script>
-<style lang="less" scoped>
-@import "../../common/css/theme.less";
+<style scoped>
 .sellRent .main{
 	height: 797px;
 	background:#F5F5F5 url(../../imgs/home/sousditu.png) no-repeat center center;

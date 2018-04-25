@@ -118,9 +118,7 @@
 </template>
 
 <script>
-//自定义百度地图label样式
 
-import '../../common/css/mapSearch.css';
 import * as d3 from "d3";
 
 export default {
@@ -467,6 +465,7 @@ export default {
 </script>
 
 <style scoped="scoped">
+@import 'mapSearch.css';
 /* 第一块 */
 .header {
   position: relative;
