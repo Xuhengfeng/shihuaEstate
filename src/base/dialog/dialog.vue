@@ -1,4 +1,9 @@
-
+/*
+ * @Author: 徐横峰 
+ * @Date: 2018-04-25 11:09:29 
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-25 13:37:55
+ */
 
 <template>
   <!-- 用户登入 、注册dialog组件 -->
@@ -12,9 +17,9 @@
 					<div class="inputGroup">
 						<input type="text" v-model="phonenum1" placeholder="请输入手机号" maxlength="11">
 						<input type="password" v-model="password1" placeholder="请输入登录密码" maxlength="20">
-                        <div class="fr" style="margin-top:10px" @click="jump(4)">忘记密码</div>
+                        <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                         <button @click="login()">登录</button>
-                        <div class="fl" style="margin-top:10px" @click="jump(3)">手机快捷登录</div>
+                        <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
                         <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
 					</div>
 				</div>
@@ -26,7 +31,7 @@
 						<div class="login_input_resgize"><input type="text" v-model="msgcode1" placeholder="请输入验证码"><button @click="sendMsgCode(1)">获取验证码</button></div>
 						<input type="password" v-model="password2" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
 						<input type="password" v-model="password3" placeholder="请再次输入密码" maxlength="11">
-                        <div style="padding-top:10px"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
+                        <div class="fontColor"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
                         <button @click="register()">注册</button>
                         <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
 					</div>
@@ -61,7 +66,7 @@
   </div>
 </template>
 <script>
-import md5 from 'js-md5';
+import md5 from "js-md5";
 export default {
   props: {
     showbox: {
@@ -79,18 +84,18 @@ export default {
       //2去注册
       phonenum2: null,
       password2: null,
-	  password3: null,
-	  msgcode1: null, //验证码
+      password3: null,
+      msgcode1: null, //验证码
 
       //3点击手机快捷登录
       phonenum3: null,
-      msgcode2: null, 
+      msgcode2: null,
 
       //4点击找回密码
       phonenum4: null,
       password4: null,
-	  password5: null,
-	  msgcode3: null, 
+      password5: null,
+      msgcode3: null,
 
       showFlag: false
     };
@@ -109,9 +114,9 @@ export default {
       //登录
       this.$http
         .post(this.$url.URL.USER_LOGIN, {
-          "deviceCode": "web",
-          "mobile": this.phonenum1,
-          "password": this.password1
+          deviceCode: "web",
+          mobile: this.phonenum1,
+          password: this.password1
         })
         .then(res => {
           this.cancel();
@@ -121,33 +126,38 @@ export default {
         });
     },
     register() {
-		if(!this.phonenum2||!this.password2||!this.password3||this.password2!==this.password3){
-		   this.cancel();
-		   return this.$alert('填写信息不完整!');
-		}
-	  //注册
+      if (
+        !this.phonenum2 ||
+        !this.password2 ||
+        !this.password3 ||
+        this.password2 !== this.password3
+      ) {
+        this.cancel();
+        return this.$alert("填写信息不完整!");
+      }
+      //注册
       this.$http
         .post(this.$url.URL.USER_REGISTER, {
-          "deviceCode": "web",
-          "mobile": this.phonenum2,
-		  "password": this.password2,
-		  "smsCode": this.msgcode1,
+          deviceCode: "web",
+          mobile: this.phonenum2,
+          password: this.password2,
+          smsCode: this.msgcode1
         })
         .then(res => {
-		  this.cancel();
-		  if (res.data.status == "500") {
+          this.cancel();
+          if (res.data.status == "500") {
             this.$alert(res.data.msg);
           }
         });
     },
     rapid() {
-	  //快捷登录 接口有问题
-	  this.$http
+      //快捷登录 接口有问题
+      this.$http
         .post(this.$url.URL.SMSCODE_LOGIN, {
-			"deviceCode": "web",
-			"mobile": this.phonenum3,
-			"password": "string",///??????
-			"smsCode": this.msgcode2
+          deviceCode: "web",
+          mobile: this.phonenum3,
+          password: "string", ///??????
+          smsCode: this.msgcode2
         })
         .then(res => {
           if (res.data.status == "500") {
@@ -156,48 +166,48 @@ export default {
         });
     },
     findPassword() {
-	  //找回密码
-	  this.$http
+      //找回密码
+      this.$http
         .post(this.$url.URL.SMSCODE_RESETLOGIN, {
-			"confirmPassword": this.password4,
-			"mobile": this.phonenum4,
-			"newPassword": this.password5,
-			"smsCode": this.msgcode3
+          confirmPassword: this.password4,
+          mobile: this.phonenum4,
+          newPassword: this.password5,
+          smsCode: this.msgcode3
         })
         .then(res => {
           if (res.data.status == "500") {
             this.$alert(res.data.msg);
           }
         });
-	},
-	sendMsgCode(num) {
-		console.log(num)
-		let mobile,operateType;
-		if(num == 1) {
-			mobile = this.phonenum2;
-			operateType = "REGISTER";
-		}else if(num == 2) {
-			mobile = this.phonenum3;
-			operateType = "LOGIN";			
-		}else if(num == 3) {
-			mobile = this.phonenum4;
-			operateType = "RESET_PASSWORD";	
-		}
-		let key = mobile + "29e94f94-8664-48f2-a4ff-7a5807e13b68";
-	  //获取验证码
-	  this.$http
+    },
+    sendMsgCode(num) {
+      console.log(num);
+      let mobile, operateType;
+      if (num == 1) {
+        mobile = this.phonenum2;
+        operateType = "REGISTER";
+      } else if (num == 2) {
+        mobile = this.phonenum3;
+        operateType = "LOGIN";
+      } else if (num == 3) {
+        mobile = this.phonenum4;
+        operateType = "RESET_PASSWORD";
+      }
+      let key = mobile + "29e94f94-8664-48f2-a4ff-7a5807e13b68";
+      //获取验证码
+      this.$http
         .post(this.$url.URL.FETCHSMSCODE, {
-			"deviceCode": "web",
-			"mobile": mobile,
-			"operateType": operateType,
-			"sign": md5(key.toUpperCase())
+          deviceCode: "web",
+          mobile: mobile,
+          operateType: operateType,
+          sign: md5(key.toUpperCase())
         })
         .then(res => {
           if (res.data.status == "500") {
             this.$alert(res.data.msg);
           }
         });
-	},
+    },
     /**
      *num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
      */
@@ -207,7 +217,7 @@ export default {
   }
 };
 </script>
-<style scope="scope">
+<style scoped>
 .shadowlay {
   position: fixed;
   top: 0;
@@ -228,12 +238,10 @@ export default {
   top: 50%;
   margin-left: -190px;
   margin-top: -205px;
-  /*    padding-left: 20px;*/
   box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -o-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
   border-radius: 2px;
 }
 .panel_login .panel_info {
@@ -245,6 +253,7 @@ export default {
   right: 15px;
   top: 15px;
   padding: 4px;
+  color: #000000;
 }
 .panel_login .panel_tab .title {
   font-size: 20px;
@@ -324,8 +333,12 @@ input[type="checkbox"] {
   font-size: 16px;
   margin-top: 46px;
   text-align: center;
+  color: #000000;
 }
-
+.fontColor {
+  margin-top: 10px;
+  color: #000000;
+}
 /*底部*/
 </style>
 
