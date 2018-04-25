@@ -17,8 +17,7 @@ const sellrent = resolve => require(['components/sellrent/sellrent'], resolve)//
 const sellrentdetail = resolve => require(['components/sellrent/sellrentdetail'], resolve)//租房详情
 const houseestate = resolve => require(['components/houseestate/houseestate'], resolve)//小区
 const estatedetail = resolve => require(['components/houseestate/estatedetail'], resolve)//小区详情
-const entrustmentrent = resolve => require(['components/entrustment/entrustmentrent'], resolve)//业主委托我要出租
-const entrustmentsell = resolve => require(['components/entrustment/entrustmentsell'], resolve)//业主委托我要出租
+const entrustmentrent = resolve => require(['components/entrustment/entrustmentrent'], resolve)//业主委托我要出售 出租 
 const broker = resolve => require(['components/broker/broker.vue'], resolve)//找经纪人
 const brokerdetail = resolve => require(['components/broker/brokerdetail'], resolve)//找经纪人详情
 const shoper = resolve => require(['components/shoper/shoper.vue'], resolve)//找门店
@@ -104,8 +103,7 @@ export default new Router({
 		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//新房详情
 		{path:"/sellrent",component:sellrent,meta:{KeepAlive:false}},//租房
 		{path:"/sellrentdetail/:id",component:sellrentdetail,meta:{KeepAlive:false}},//租房详情
-		{path:"/entrustmentsell",component:entrustmentsell,meta:{KeepAlive:false}},//业主委托我要出售
-		{path:"/entrustmentrent",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出租
+		{path:"/entrustmentrent",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人

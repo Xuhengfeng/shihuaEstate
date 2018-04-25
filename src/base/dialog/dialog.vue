@@ -228,12 +228,10 @@ export default {
   top: 50%;
   margin-left: -190px;
   margin-top: -205px;
-  /*    padding-left: 20px;*/
   box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -o-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
   border-radius: 2px;
 }
 .panel_login .panel_info {
