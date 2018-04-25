@@ -73,11 +73,11 @@
 					<div class="item">
 						<ul>
 							<li v-for="item in renthouse">
-								<div class="image fl" @click="toSkip()">
+								<div class="image fl" @click="toSkip(item)">
 									<img :src=item.housePic  alt="" />
 								</div>
 								<div class="direciton">
-									<div class="introduce intrdex " @click="toSkip()" >{{item.houseTitle}}<span class="fr "style="font-size: 16px;color:rgba(0,0,0,0.5); ">收藏</span></div>
+									<div class="introduce intrdex " @click="toSkip(item)" >{{item.houseTitle}}<span class="fr "style="font-size: 16px;color:rgba(0,0,0,0.5); ">收藏</span></div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.houseTag}}</span>
 										<span class="fr prices">{{item.rentPrice}}<span class="wan">元/月</span></span></div>
 									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span></div>
@@ -126,7 +126,9 @@
 				queryone: null,   //二手房区域
 				querytwo: null,   //二手房售价
 				querythree: null,   //二手面积域
-				queryRentcount: null, //租房总数量
+				queryRentcount: {
+					count:''
+					}, //租房总数量
 				inputresult:null,
 				inputresulttwo:null,
 				inputone:'',
@@ -157,7 +159,6 @@
 			})
 			.then((response)=>{
 				this.renthouse = response.data.data
-				console.log(this.renthouse)
 			})
 
 			//获取搜索租房总数量
@@ -167,7 +168,6 @@
   
 			})
 			.then((response)=>{
-				console.log(response)
 				this.queryRentcount = response.data.data
 			})
 			
@@ -206,8 +206,9 @@
 			findPassword() { //点击找回密码
 				this.loginshow = 4;
 			},
-			toSkip() {
-				this.$router.push({path:"/sellrentdetail/:id"});
+			toSkip(item) {
+				let path = "/sellrentdetail/"+item.sdid;
+				this.$router.push({path:path});
 			},
 			address(item, index) {   //点击区域条件
 				this.queryone = index;

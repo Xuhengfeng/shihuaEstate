@@ -166,7 +166,7 @@
 						</router-link>
 							<div class="headtitle">同小区房源</div>
 						<li v-for="item in samehouseused">
-							<div class="image fl">
+							<div class="image fl" @click="toSkip(item)">
 								<img :src="item.housePic"  />
 							</div>
 							<div class="direciton">
@@ -207,557 +207,554 @@
 </template>
 
 <script>
-	import oHeader from "../../base/header/header";
-	import BMap from "../../base/BMap/BMap";
-	import '../../../static/js/jquery-3.2.1.min.js';
-	import '../../../static/js/swiper-3.3.1.min.js'
-	
-	export default {
-		data() {
-			return {
-				datas: "",
-				num: 0,
-				dialogVisible: false,
-				loginshow: null, //登陆注册阴影层
-				rightnow: true, //登陆注册判断条件
-				cancel: false, //取消登陆阴影
-				twohandhousedetail:{//二手房详情
-					broker: {
-						emplName: '',
-						photo:''
-					}
-				},
-				bulidinfo:'',//关联小区
-				samehouseused:[],//同小区房源列表
-				rimhousing:'',//周边房源
-				bulidsdid:''   //同小区sdid
-			};
-		},
-		methods: {
+import oHeader from "../../base/header/header";
+import BMap from "../../base/BMap/BMap";
+import "../../../static/js/jquery-3.2.1.min.js";
+import "../../../static/js/swiper-3.3.1.min.js";
 
-			loginResize() { //点击登陆
-				this.cancel = true; //阴影部分
-				this.loginshow = 1; //
-			},
-			rightResize() { //点击注册
-				this.cancel = true;
-				this.loginshow = 2;
-			},
-			cancelShadow() { //点击取消 阴影
-				this.cancel = false
-				this.loginshow = null;
-
-			},
-			quckliyLogin() { //点击手机快捷登陆
-				this.loginshow = 3;
-			},
-			findPassword() { //点击找回密码
-				this.loginshow = 4;
-			}
-
-		},
-		components: {
-			oHeader,
-			BMap
-		},
-		created() {
-			//二手房详情
-			let sdid = this.$route.params.id;
-			let scity = JSON.parse(window.localStorage.selectCity).value
-			this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + scity + '/'+ sdid) 
-			.then((response)=>{
-				this.twohandhousedetail = response.data.data
-				this.bulidsdid =  response.data.data.buildSdid
-				this.px =  response.data.data.px
-				this.py =  response.data.data.py
-				console.log(this.bulidsdid)
-			
-				//二手房周边
-				this.$http.post(this.$url.URL.HOUSE_RIMHOUSING  ,{
-						pageNo:1,
-						px:this.px,
-						py:this.py,
-						bulidsdid:this.bulidsdid,
-						scity: scity
-				}) 
-				.then((response)=>{
-					this.rimhousing =  response.data.data
-						console.log(this.rimhousing)
-				})
-
-				//关联小区
-				this.$http.get(this.$url.URL.BULIDINFO + scity + '/'+ this.bulidsdid ) 
-				.then((response)=>{
-					this.bulidinfo =  response.data.data
-				})	
-				
-				//同小区房源
-				this.$http.get(this.$url.URL.MAPHOUSEALL_USED_LIST + scity + '/'+ this.bulidsdid ,{
-						pageNo:1,
-						pageSize:10
-
-				}) 
-				.then((response)=>{
-					this.samehouseused =  response.data.data
-				})	
-			})
-		},
-		mounted() {
-			
-			
-			setTimeout(function(){
-				
-				var viewSwiper = new Swiper('.view .swiper-container', {
-					onSlideChangeStart: function() {
-						updateNavPosition()
-					}
-				})
-			
-			$('.view .arrow-left,.preview .arrow-left').on('click', function(e) {
-				e.preventDefault()
-				if(viewSwiper.activeIndex == 0) {
-					viewSwiper.slideTo(viewSwiper.slides.length - 1, 1000);
-					return
-				}
-				viewSwiper.slidePrev()
-			})
-			$('.view .arrow-right,.preview .arrow-right').on('click', function(e) {	
-				e.preventDefault()
-				if(viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
-					viewSwiper.slideTo(0, 1000);
-					return
-				}
-				viewSwiper.slideNext()
-			})
-
-			var previewSwiper = new Swiper('.preview .swiper-container', {
-				//visibilityFullFit: true,
-				slidesPerView: 'auto',
-				allowTouchMove: false,
-				onTap: function() {
-					viewSwiper.slideTo(previewSwiper.clickedIndex)
-				}
-			})
-
-			function updateNavPosition() {
-				$('.preview .active-nav').removeClass('active-nav')
-				var activeNav = $('.preview .swiper-slide').eq(viewSwiper.activeIndex).addClass('active-nav')
-				if(!activeNav.hasClass('swiper-slide-visible')) {
-					if(activeNav.index() > previewSwiper.activeIndex) {
-						var thumbsPerNav = Math.floor(previewSwiper.width / activeNav.width()) - 1
-						previewSwiper.slideTo(activeNav.index() - thumbsPerNav)
-					} else {
-						previewSwiper.slideTo(activeNav.index())
-					}
-				}
-			}
-			},1000)
-		}
+export default {
+  data() {
+    return {
+      datas: "",
+      num: 0,
+      dialogVisible: false,
+      loginshow: null, //登陆注册阴影层
+      rightnow: true, //登陆注册判断条件
+      cancel: false, //取消登陆阴影
+      twohandhousedetail: {
+        //二手房详情
+        broker: {
+          emplName: "",
+          photo: ""
+        }
+      },
+      bulidinfo: "", //关联小区
+      samehouseused: [], //同小区房源列表
+      rimhousing: "", //周边房源
+      bulidsdid: "", //同小区sdid
+	  scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
+    };
+  },
+  watch: {
+    $route() {
+		this.render();
 	}
+  },
+  components: {
+    oHeader,
+    BMap
+  },
+  created() {
+	  this.render();
+  },
+  methods: {
+	toSkip(item) {
+      let path = "/buyhouse/twohandhousedetail/" + item.sdid;
+      this.$router.push({ path: path });
+    },
+    render() {
+      //二手房详情
+      let sdid = this.$route.params.id;
+      let city = this.scity.value;
+      this.$http
+        .get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
+        .then(response => {
+          this.twohandhousedetail = response.data.data;
+          this.bulidsdid = response.data.data.buildSdid;
+          this.px = response.data.data.px;
+          this.py = response.data.data.py;
+          console.log(this.bulidsdid);
+
+          //二手房周边
+          this.$http
+            .post(this.$url.URL.HOUSE_RIMHOUSING, {
+              pageNo: 1,
+              px: this.px,
+              py: this.py,
+              bulidsdid: this.bulidsdid,
+              scity: city
+            })
+            .then(response => {
+              this.rimhousing = response.data.data;
+            });
+
+          //关联小区
+          this.$http
+            .get(this.$url.URL.BULIDINFO + city + "/" + this.bulidsdid)
+            .then(response => {
+              this.bulidinfo = response.data.data;
+            });
+
+          //同小区房源
+          this.$http
+            .get(
+              this.$url.URL.MAPHOUSEALL_USED_LIST +
+                city +
+                "/" +
+                this.bulidsdid,
+              {
+                pageNo: 1,
+                pageSize: 10
+              }
+            )
+            .then(response => {
+              this.samehouseused = response.data.data;
+              console.log(this.samehouseused);
+            });
+        });
+    }
+  },
+  mounted() {
+    setTimeout(function() {
+      var viewSwiper = new Swiper(".view .swiper-container", {
+        onSlideChangeStart: function() {
+          updateNavPosition();
+        }
+      });
+
+      $(".view .arrow-left,.preview .arrow-left").on("click", function(e) {
+        e.preventDefault();
+        if (viewSwiper.activeIndex == 0) {
+          viewSwiper.slideTo(viewSwiper.slides.length - 1, 1000);
+          return;
+        }
+        viewSwiper.slidePrev();
+      });
+      $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
+        e.preventDefault();
+        if (viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
+          viewSwiper.slideTo(0, 1000);
+          return;
+        }
+        viewSwiper.slideNext();
+      });
+
+      var previewSwiper = new Swiper(".preview .swiper-container", {
+        //visibilityFullFit: true,
+        slidesPerView: "auto",
+        allowTouchMove: false,
+        onTap: function() {
+          viewSwiper.slideTo(previewSwiper.clickedIndex);
+        }
+      });
+
+      function updateNavPosition() {
+        $(".preview .active-nav").removeClass("active-nav");
+        var activeNav = $(".preview .swiper-slide")
+          .eq(viewSwiper.activeIndex)
+          .addClass("active-nav");
+        if (!activeNav.hasClass("swiper-slide-visible")) {
+          if (activeNav.index() > previewSwiper.activeIndex) {
+            var thumbsPerNav =
+              Math.floor(previewSwiper.width / activeNav.width()) - 1;
+            previewSwiper.slideTo(activeNav.index() - thumbsPerNav);
+          } else {
+            previewSwiper.slideTo(activeNav.index());
+          }
+        }
+      }
+    }, 1000);
+  }
+};
 </script>
 
 <style scoped="scoped">
-	@import '../../../static/css/swiper-3.4.2.min.css';
-	.title {
-		padding: 24px;
-	}
-	
-	.tit p {
-		font-size: 24px;
-		font-weight: bold;
-		color: rgba(0, 0, 0, 0.85);
-	}
-	
-	.tit p span {
-		margin-left: 15px;
-	}
-	
-	.tit div {
-		margin-top: 10px;
-		font-size: 14px;
-		color: rgba(0, 0, 0, 0.6);
-	}
-	
-	.collect_s {
-		margin-left: 120px;
-	}
-	.duibi{
-		margin-top: 30px;
-		margin-left: 20px;
-	}
-	.duibi .duibi_a{
-		float: left;
-		padding: 12px 27px;
-		border: 1px solid gainsboro;
-		margin-left: 30px;
-	}
-	
-	.collect .collect_a {
-		float: left;
-		padding: 13px 27px;
-		border: 1px solid gainsboro;
-		margin-left: 14px;
-	}
-	
-	.content {
-		width: 380px;
-		line-height: 1;
-		margin-top: 70px;
-	}
-	
-	.content .price {
-		position: relative;
-		height: 49px;
-	}
-	
-	.content .price .total {
-		display: inline-block;
-		font-family: Tahoma;
-		font-size: 46px;
-		line-height: 46px;
-		color: #e4393c;
-		font-weight: bold;
-		letter-spacing: -1px;
-		max-width: 165px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	
-	.content .price .unit {
-		display: inline-block;
-		font-size: 16px;
-		color: #e4393c;
-		height: 37px;
-		vertical-align: 6px;
-	}
-	
-	.content .price .unit span {
-		display: block;
-		margin-top: 9px;
-	}
-	
-	.content .price .text {
-		font-size: 12px;
-		color: #333333;
-		display: inline-block;
-		margin-left: 15px;
-		vertical-align: 6px;
-	}
-	
-	.content .price .text .unitPrice {
-		font-size: 16px;
-		color: #394043;
-	}
-	
-	.price .text .unitPrice .unitPriceValue {
-		font-weight: bold;
-		color: #394043;
-	}
-	
-	.content .price .text .tax {
-		margin-top: 11px;
-		color: #394043;
-		font-size: 12px;
-	}
-	
-	.content .houseInfo {
-		box-sizing: border-box;
-		margin-top: 22px;
-		width: 100%;
-		border-top: 1px solid #eeeeee;
-		border-bottom: 1px solid #eeeeee;
-		padding: 30px 0;
-	}
-	
-	.content .houseInfo .room {
-		float: left;
-		width: 33%;
-	}
-	
-	.content .houseInfo .mainInfo {
-		font-size: 20px;
-		font-weight: bold;
-		color: #333333;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		-o-text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	
-	.content .houseInfo .subInfo {
-		margin-top: 8px;
-		font-size: 12px;
-		color: #394043;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		-o-text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-	
-	.content .houseInfo .type {
-		float: left;
-		width: 33%;
-	}
-	
-	.content .aroundInfo {
-		padding: 30px 0;
-		line-height: 18px;
-		border-bottom: 1px solid #eeeeee;
-		font-size: 14px;
-	}
-	
-	.content .aroundInfo .areaName {
-		margin-top: 14px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	
-	.content .aroundInfo .visitTime {
-		margin-top: 14px;
-	}
-	
-	.content .aroundInfo .houseRecord {
-		margin-top: 14px;
-	}
-	
-	.brokerInfo {
-		font-size: 0;
-		padding-top: 40px;
-		padding-bottom: 35px;
-		border-bottom: 1px solid #eeeeee;
-	}
-	
-	.newwrap .title {
-		margin-bottom: 25px;
-		font-weight: bold;
-		font-size: 23px;
-		line-height: 23px;
-	}
-	
-	.introContent {
-		text-align: justify;
-	}
-	
-	.introContent .base {
-		display: inline-block;
-		width: 710px;
-		vertical-align: top;
-		border-top: 1px solid #eeeeee;
-		border-bottom: 1px solid #eeeeee;
-		line-height: 22px;
-		padding: 20px 0;
-	}
-	
-	.introContent .name {
-		float: left;
-		width: 188px;
-		text-align: left;
-		color: #999999;
-		line-height: 23px;
-	}
-	
-	.introContent .contents {
-		width: 522px;
-		float: left;
-	}
-	
-	.introContent .contents ul {
-		font-size: 0;
-	}
-	
-	.introContent .contents ul li {
-		display: inline-block;
-		width: 50%;
-		line-height: 24px;
-		font-size: 14px;
-		color: #394043;
-	}
-	
-	.introContent .contents ul li .label {
-		color: #999999;
-		margin-right: 30px;
-	}
-	
-	.item{
-		width: 830px;
-		margin-bottom: 80px;
-		overflow: hidden;
-	}
-	.item ul li{
-		margin-top: 50px;
-		cursor: pointer;
-	}
-	.introduce{
-		
-		margin-left: 215px;
-		height: 19px;
-		margin-top: 29px;
-	}
-	.introduce span{
-		font-size: 14px;
-	}
-	.direciton{
-		margin-left: 50px;
-	}
-	.introduce .word{
-		vertical-align: top;
-		margin-left: 10px;
-		color: rgba(0,0,0,0.7);
-	}
-	.intrspan{
-		
-		width: 70px;
-		display: inline-block;
-		height: 30px;
-		line-height: 30px;
-		text-align: center;
-	}
-	.headtitle{
-		 height: 25px;
-	    font-size: 20px;
-	    line-height: 50px;
-	    padding: 20px 10px;
-	}
-	.callpeople{
-		width: 380px;
-		float: left;
-		line-height: 42px;
-		text-align: center;
-		height: 42px;
-		background: red;
-		color: white;
-		margin-top: 25px;
-	}
-	.peopleintrode{
-		width: 285px;
-		margin-top:20px;
-	}
-	.peopleintrode>div{
-		font-weight: bold;
-		font-size: 18px;
-	}
-	.peopleintrode >:nth-child(1){
-		width: 72px;
-		height: 80px;
-	}
-	.peopleintrode >:nth-child(1) img{
-		width: 100%;
-		height: 100%;
-	}
-	.peopleintrode ul{
-		line-height: 28px;
-	}
-	.peopleintrode >:nth-child(2)>ul>:nth-child(2){
-		color: red;
-	}
-	.peopleintrode >:nth-child(2)>ul>:nth-child(3){
-		font-size: 12px;
-	}
-	.image{
-		width: 232px;
-		height: 175px;
-	}
-	.image img{
-		width: 100%;
-		height: 100%;
-	}
-	
-	
-	
-	
-	/*轮播切换*/
-	
-	.pc-slide {
-		width: 714px;
-		margin: 0 auto;
-	}
-	
-	.view .swiper-container {
-		width: 714px;
-		height: 500px;
-	}
-	
-	.view .arrow-left {
-		background: url(../../imgs/buyhouse/index_tab_l.png) no-repeat left top;
-		position: absolute;
-		left: 10px;
-		top: 50%;
-		margin-top: -25px;
-		width: 28px;
-		height: 51px;
-		z-index: 10;
-	}
-	
-	.view .arrow-right {
-		background: url(../../imgs/buyhouse/index_tab_r.png) no-repeat left bottom;
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		margin-top: -25px;
-		width: 28px;
-		height: 51px;
-		z-index: 10;
-	}
-	
-	.preview {
-		width: 100%;
-		margin-top: 10px;
-		position: relative;
-	}
-	
-	.preview .swiper-container {
-		width: 645px;
-		height: 82px;
-		margin-left: 35px;
-	}
-	
-	.preview .swiper-slide {
-		width: 87px;
-		height: 82px;
-		cursor: pointer;
-	}
-	
-	.preview .slide6 {
-		width: 82px;
-	}
-	
-	.preview .arrow-left {
-		background: url(../../imgs/buyhouse/feel3.png) no-repeat left top;
-		position: absolute;
-		left: 10px;
-		top: 50%;
-		margin-top: -9px;
-		width: 9px;
-		height: 18px;
-		z-index: 10;
-	}
-	
-	.preview .arrow-right {
-		background: url(../../imgs/buyhouse/feel4.png) no-repeat left bottom;
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		margin-top: -9px;
-		width: 9px;
-		height: 18px;
-		z-index: 10;
-	}
-	
-	.preview img {
-		padding: 1px;
-	}
-	
-	.preview .active-nav img {
-		padding: 0;
-	}
-	.swiperimg{
-		width: 120px;
-		height: 81px;
-	}
-	.swiperimg img{
-		width: 100%;
-		height: 100%;
-	}
+@import "../../../static/css/swiper-3.4.2.min.css";
+.title {
+  padding: 24px;
+}
+
+.tit p {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.tit p span {
+  margin-left: 15px;
+}
+
+.tit div {
+  margin-top: 10px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.collect_s {
+  margin-left: 120px;
+}
+.duibi {
+  margin-top: 30px;
+  margin-left: 20px;
+}
+.duibi .duibi_a {
+  float: left;
+  padding: 12px 27px;
+  border: 1px solid gainsboro;
+  margin-left: 30px;
+}
+
+.collect .collect_a {
+  float: left;
+  padding: 13px 27px;
+  border: 1px solid gainsboro;
+  margin-left: 14px;
+}
+
+.content {
+  width: 380px;
+  line-height: 1;
+  margin-top: 70px;
+}
+
+.content .price {
+  position: relative;
+  height: 49px;
+}
+
+.content .price .total {
+  display: inline-block;
+  font-family: Tahoma;
+  font-size: 46px;
+  line-height: 46px;
+  color: #e4393c;
+  font-weight: bold;
+  letter-spacing: -1px;
+  max-width: 165px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content .price .unit {
+  display: inline-block;
+  font-size: 16px;
+  color: #e4393c;
+  height: 37px;
+  vertical-align: 6px;
+}
+
+.content .price .unit span {
+  display: block;
+  margin-top: 9px;
+}
+
+.content .price .text {
+  font-size: 12px;
+  color: #333333;
+  display: inline-block;
+  margin-left: 15px;
+  vertical-align: 6px;
+}
+
+.content .price .text .unitPrice {
+  font-size: 16px;
+  color: #394043;
+}
+
+.price .text .unitPrice .unitPriceValue {
+  font-weight: bold;
+  color: #394043;
+}
+
+.content .price .text .tax {
+  margin-top: 11px;
+  color: #394043;
+  font-size: 12px;
+}
+
+.content .houseInfo {
+  box-sizing: border-box;
+  margin-top: 22px;
+  width: 100%;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+  padding: 30px 0;
+}
+
+.content .houseInfo .room {
+  float: left;
+  width: 33%;
+}
+
+.content .houseInfo .mainInfo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content .houseInfo .subInfo {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #394043;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content .houseInfo .type {
+  float: left;
+  width: 33%;
+}
+
+.content .aroundInfo {
+  padding: 30px 0;
+  line-height: 18px;
+  border-bottom: 1px solid #eeeeee;
+  font-size: 14px;
+}
+
+.content .aroundInfo .areaName {
+  margin-top: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content .aroundInfo .visitTime {
+  margin-top: 14px;
+}
+
+.content .aroundInfo .houseRecord {
+  margin-top: 14px;
+}
+
+.brokerInfo {
+  font-size: 0;
+  padding-top: 40px;
+  padding-bottom: 35px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.newwrap .title {
+  margin-bottom: 25px;
+  font-weight: bold;
+  font-size: 23px;
+  line-height: 23px;
+}
+
+.introContent {
+  text-align: justify;
+}
+
+.introContent .base {
+  display: inline-block;
+  width: 710px;
+  vertical-align: top;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #eeeeee;
+  line-height: 22px;
+  padding: 20px 0;
+}
+
+.introContent .name {
+  float: left;
+  width: 188px;
+  text-align: left;
+  color: #999999;
+  line-height: 23px;
+}
+
+.introContent .contents {
+  width: 522px;
+  float: left;
+}
+
+.introContent .contents ul {
+  font-size: 0;
+}
+
+.introContent .contents ul li {
+  display: inline-block;
+  width: 50%;
+  line-height: 24px;
+  font-size: 14px;
+  color: #394043;
+}
+
+.introContent .contents ul li .label {
+  color: #999999;
+  margin-right: 30px;
+}
+
+.item {
+  width: 830px;
+  margin-bottom: 80px;
+  overflow: hidden;
+}
+.item ul li {
+  margin-top: 50px;
+  cursor: pointer;
+}
+.introduce {
+  margin-left: 215px;
+  height: 19px;
+  margin-top: 29px;
+}
+.introduce span {
+  font-size: 14px;
+}
+.direciton {
+  margin-left: 50px;
+}
+.introduce .word {
+  vertical-align: top;
+  margin-left: 10px;
+  color: rgba(0, 0, 0, 0.7);
+}
+.intrspan {
+  width: 70px;
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+.headtitle {
+  height: 25px;
+  font-size: 20px;
+  line-height: 50px;
+  padding: 20px 10px;
+}
+.callpeople {
+  width: 380px;
+  float: left;
+  line-height: 42px;
+  text-align: center;
+  height: 42px;
+  background: red;
+  color: white;
+  margin-top: 25px;
+}
+.peopleintrode {
+  width: 285px;
+  margin-top: 20px;
+}
+.peopleintrode > div {
+  font-weight: bold;
+  font-size: 18px;
+}
+.peopleintrode > :nth-child(1) {
+  width: 72px;
+  height: 80px;
+}
+.peopleintrode > :nth-child(1) img {
+  width: 100%;
+  height: 100%;
+}
+.peopleintrode ul {
+  line-height: 28px;
+}
+.peopleintrode > :nth-child(2) > ul > :nth-child(2) {
+  color: red;
+}
+.peopleintrode > :nth-child(2) > ul > :nth-child(3) {
+  font-size: 12px;
+}
+.image {
+  width: 232px;
+  height: 175px;
+}
+.image img {
+  width: 100%;
+  height: 100%;
+}
+
+/*轮播切换*/
+
+.pc-slide {
+  width: 714px;
+  margin: 0 auto;
+}
+
+.view .swiper-container {
+  width: 714px;
+  height: 500px;
+}
+
+.view .arrow-left {
+  background: url(../../imgs/buyhouse/index_tab_l.png) no-repeat left top;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  margin-top: -25px;
+  width: 28px;
+  height: 51px;
+  z-index: 10;
+}
+
+.view .arrow-right {
+  background: url(../../imgs/buyhouse/index_tab_r.png) no-repeat left bottom;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -25px;
+  width: 28px;
+  height: 51px;
+  z-index: 10;
+}
+
+.preview {
+  width: 100%;
+  margin-top: 10px;
+  position: relative;
+}
+
+.preview .swiper-container {
+  width: 645px;
+  height: 82px;
+  margin-left: 35px;
+}
+
+.preview .swiper-slide {
+  width: 87px;
+  height: 82px;
+  cursor: pointer;
+}
+
+.preview .slide6 {
+  width: 82px;
+}
+
+.preview .arrow-left {
+  background: url(../../imgs/buyhouse/feel3.png) no-repeat left top;
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  margin-top: -9px;
+  width: 9px;
+  height: 18px;
+  z-index: 10;
+}
+
+.preview .arrow-right {
+  background: url(../../imgs/buyhouse/feel4.png) no-repeat left bottom;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -9px;
+  width: 9px;
+  height: 18px;
+  z-index: 10;
+}
+
+.preview img {
+  padding: 1px;
+}
+
+.preview .active-nav img {
+  padding: 0;
+}
+.swiperimg {
+  width: 120px;
+  height: 81px;
+}
+.swiperimg img {
+  width: 100%;
+  height: 100%;
+}
 </style>
