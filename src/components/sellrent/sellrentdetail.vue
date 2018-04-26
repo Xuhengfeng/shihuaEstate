@@ -146,15 +146,14 @@
 					<ul>
 						<li>
 							<div class="image fl">
-								<img src="../../imgs/buyhouse/tu1.png" alt="" />
+								<img :src="bulidinfo.housePic" alt="" />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
-								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
+								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">90天成交{{bulidinfo.saleCount }}套|{{bulidinfo.rentCount }}套正在出租</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{bulidinfo.avgSalePrice }}<span style="font-size: 14px;">万</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{bulidinfo.areaName}}  {{bulidinfo.districtName}}/{{bulidinfo.buildAge}}建成</span><span class="fr">单价{{bulidinfo.avgRentPrice }}元/平米</span></div>
 								<div class="introduce ">
-									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
+									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">{{bulidinfo.buildType}}</span>
 									<span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
 									<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
 								</div>
@@ -162,13 +161,13 @@
 						</li>
 							<div class="headtitle">同小区房源</div>
 						<li v-for="item in samehouserent">
-							<div class="image fl">
+							<div class="image fl"  @click="toSkip(item)">
 								<img :src="item.housePic"  />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}}</div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.areaName }}|{{item.districtName}}</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.houseType}} |{{item.builtArea}}平</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice }}<span style="font-size: 14px;">元/月</span></span></div>
+							<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice }}<span style="font-size: 14px;">元/月</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
 								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 								<div class="introduce ">
 									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
@@ -178,14 +177,14 @@
 							</div>
 						</li>
 						<div class="headtitle">周边房源</div>
-						<li>
-							<div class="image fl">
-								<img src="../../imgs/buyhouse/tu1.png" alt="" />
+						<li v-for="item in rentrimhousing">
+							<div class="image fl"  @click="toSkip(item)">
+								<img :src="item.housePic" />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">西乡塘区大学路 <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">森雅谷润筑园|2室2厅|90平|东北朝向|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">200<span style="font-size: 14px;">万</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价120000元/平米</span></div>
+								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;"  @click="toSkip(item)">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName }}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice}}<span style="font-size: 14px;">元/月</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
 								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 								<div class="introduce ">
 									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
@@ -222,17 +221,29 @@
 					photo: ""
 					}
 				},
-				bulidsdid: "", //同小区sdid
+				buildsdid: "", //同小区sdid
 				cancel: false, //取消登陆阴影
 				samehouserent: [], //同小区房源列表
 				rentrimhousing:"",//周边房源
+			  bulidinfo: "", //关联小区
 				scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
 			};
+		},
+		 watch: {
+			$route() {
+			this.render();
+		}
 		},
 		 created() {
 			this.render();
 		},
 		methods: {
+				toSkip(item) {
+				document.body.scrollTop = 0
+				document.documentElement.scrollTop = 0
+				let path = "/sellrentdetail/" + item.sdid;
+				this.$router.push({ path: path });
+			},
 			render() {
 				//租房详情
 				let sdid = this.$route.params.id;
@@ -240,36 +251,41 @@
 				this.$http.get(this.$url.URL.RENTHOUSE_GETDATAILINFO + city + "/" + sdid)
 				.then(response => {
 					this.sellrentdetail = response.data.data;
-					this.bulidsdid = response.data.data.buildSdid;
+					this.buildsdid = response.data.data.buildSdid;
 					this.px = response.data.data.px;
 					this.py = response.data.data.py;
+							//租房周边
+          	this.$http
+            .post(this.$url.URL.RENTHOUSE_RIMHOUSING, {
+              pageNo: 1,
+              px: this.px,
+              py: this.py,
+              buildSdid: this.buildsdid,
+              scity: city
+            })
+            .then(response => {
+              this.rentrimhousing = response.data.data;
+            });
+					 //关联小区
+        	  this.$http
+            .get(this.$url.URL.BULIDINFO + city + "/" + this.buildsdid)
+            .then(response => {
+              this.bulidinfo = response.data.data;
+            });
 
-					  //二手房周边
-					this.$http.post(this.$url.URL.RENTHOUSE_RIMHOUSING,
-							  {
-								pageNo: 1,
-								px: this.px,
-								py: this.py,
-								bulidsdid: this.bulidsdid,
-								scity: city
-								}
+
+					//同小区房源
+					this.$http.get(this.$url.URL.MAPHOURENT_USED_LIST +city + "/" + this.buildsdid,
+										{
+											pageNo: 1,
+											pageSize: 10
+										}
 						)
 						.then(response => {
-						this.rentrimhousing = response.data.data;
+							this.samehouserent= response.data.data;
+							console.log(this.samehouserent)
+
 						});
-
-				//同小区房源
-				this.$http.get(this.$url.URL.MAPHOURENT_USED_LIST +city + "/" + this.bulidsdid,
-									{
-										pageNo: 1,
-										pageSize: 10
-									}
-					)
-					.then(response => {
-						this.samehouserent= response.data.data;
-						console.log(this.samehouserent)
-
-					});
 				}); 
 			}
 		},

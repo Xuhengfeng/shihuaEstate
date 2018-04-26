@@ -68,7 +68,7 @@
 							<a href="/xiaoqu/2411048689454/" target="_blank" class="info ">帝港海湾豪园</a>
 							<a href="#around" class="map">地图</a>
 						</div>
-						<div class="areaName"><i></i><span class="label">所在区域</span><span class="info"><a href="/ershoufang/futianqu/" target="_blank">福田区</a>&nbsp;<a href="/ershoufang/futianbaoshuiqu/" target="_blank">福田保税区</a>&nbsp;</span>
+						<div class="areaName"><i></i><span class="label">所在区域</span><span class="info">&nbsp;<a>{{twohandhousedetail.areaName }}</a></span>
 							<a href="" class="supplement" title="" style="color:#394043;"></a>
 						</div>
 						<div class="visitTime"><i></i><span class="label">看房时间</span><span class="info">提前预约随时可看</span></div>
@@ -149,7 +149,7 @@
 					<div class="headtitle">关联小区</div>
 				<div class="item">
 					<ul>
-						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
+						<li>
 							<div class="image fl">
 								<img :src="bulidinfo.housePic" alt="" />
 							</div>
@@ -163,7 +163,7 @@
 									<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
 								</div>
 							</div>
-						</router-link>
+						</lik>
 							<div class="headtitle">同小区房源</div>
 						<li v-for="item in samehouseused">
 							<div class="image fl" @click="toSkip(item)">
@@ -182,14 +182,14 @@
 							</div>
 						</li>
 						<div class="headtitle">周边房源</div>
-						<router-link tag="li" to="/buyhouse/twohandhousedetail/:id">
-							<div class="image fl">
-								<img :src="rimhousing.housePic" />
+						<li v-for="item in rimhousing">
+							<div class="image fl"  @click="toSkip(item)">
+								<img src="item.housePic" />
 							</div>
 							<div class="direciton">
-								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{rimhousing.areaName }} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{rimhousing.districtName }}|{{rimhousing.houseType}}|{{rimhousing.builtArea}}平|{{rimhousing.houseDirection }}|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{rimhousing.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价{{rimhousing.salePrice }}元/平米</span></div>
+								<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle }} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName }}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
+								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
 								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 								<div class="introduce ">
 									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
@@ -197,7 +197,7 @@
 									<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
 								</div>
 							</div>
-						</router-link>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -231,8 +231,8 @@ export default {
       bulidinfo: "", //关联小区
       samehouseused: [], //同小区房源列表
       rimhousing: "", //周边房源
-      bulidsdid: "", //同小区sdid
-	  scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
+      buildsdid: "", //同小区sdid
+	    scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
     };
   },
   watch: {
@@ -260,38 +260,40 @@ export default {
         .get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
         .then(response => {
           this.twohandhousedetail = response.data.data;
-          this.bulidsdid = response.data.data.buildSdid;
+          this.buildsdid =  response.data.data.buildSdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
-          console.log(this.bulidsdid);
+       
 
           //二手房周边
           this.$http
             .post(this.$url.URL.HOUSE_RIMHOUSING, {
               pageNo: 1,
+              pageSize: 10,
               px: this.px,
               py: this.py,
-              bulidsdid: this.bulidsdid,
+              buildSdid: this.buildsdid,
               scity: city
             })
             .then(response => {
               this.rimhousing = response.data.data;
+                 console.log(this.rimhousing);
             });
 
           //关联小区
           this.$http
-            .get(this.$url.URL.BULIDINFO + city + "/" + this.bulidsdid)
+            .get(this.$url.URL.BULIDINFO + city + "/" + this.buildsdid)
             .then(response => {
               this.bulidinfo = response.data.data;
             });
 
-          //同小区房源
+          // //同小区房源
           this.$http
             .get(
               this.$url.URL.MAPHOUSEALL_USED_LIST +
                 city +
                 "/" +
-                this.bulidsdid,
+                this.buildsdid,
               {
                 pageNo: 1,
                 pageSize: 10
@@ -299,7 +301,6 @@ export default {
             )
             .then(response => {
               this.samehouseused = response.data.data;
-              console.log(this.samehouseused);
             });
         });
     }

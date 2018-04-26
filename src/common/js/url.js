@@ -23,7 +23,7 @@ let URL = {
 	MAPHOUSEALL_USED_LIST:_host+'/build/same-used/',			//同小区二手房房源
 	MAPHOURENT_USED_LIST:_host+'/build/same-rent/',			    //同小区租房房源
 	HOUSE_RIMHOUSING:_host+'/house/rimHousing',                 //二手房周边房源
-	RENTHOUSE_RIMHOUSING:_host+'/rentHouse/rimHousing',         //租房周边房源
+	RENTHOUSE_RIMHOUSING:_host+'/rentHouse/rimHousing',         //租房周边房源/
 	USER_LOGIN:_host+'/member/login',                           //用户登录
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码
