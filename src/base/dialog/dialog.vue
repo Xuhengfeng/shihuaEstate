@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:29 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-25 13:37:55
+ * @Last Modified time: 2018-04-26 13:55:28
  */
 
 <template>
@@ -16,7 +16,7 @@
 					<div class="title">账号密码登录</div>
 					<div class="inputGroup">
 						<input type="text" v-model="phonenum1" placeholder="请输入手机号" maxlength="11">
-						<input type="password" v-model="password1" placeholder="请输入登录密码" maxlength="20">
+						<input :type="setpassword" v-model="password1" placeholder="请输入登录密码" maxlength="20" @focus="setPsd()">
                         <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                         <button @click="login()">登录</button>
                         <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
@@ -77,6 +77,7 @@ export default {
   },
   data() {
     return {
+      setpassword: 'text',//文本域
       //1去登入
       phonenum1: null, //手机号
       password1: null, //密码
@@ -101,6 +102,9 @@ export default {
     };
   },
   methods: {
+    setPsd(e) {
+      this.setpassword='password';
+    },
     show() {
       this.showFlag = true;
     },

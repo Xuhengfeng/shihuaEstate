@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<o-top-bar></o-top-bar>
 		<o-header></o-header>
 		<div class="m-filter">
 			<div class="container">
@@ -140,7 +139,6 @@
 </template>
 
 <script>
-import oTopBar from "../../base/topBar/topBar";
 import oHeader from "../../base/header/header";
 export default {
 	data() {
