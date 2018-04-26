@@ -6,6 +6,7 @@ import router from './router'
 import axios from './common/js/axios.js';
 import store from './store'//共享数据
 import Icon from './base/mySvg/mySvg'
+import "babel-polyfill";//兼容ie
 import $ from 'jquery'
 Vue.component('icon', Icon)
 

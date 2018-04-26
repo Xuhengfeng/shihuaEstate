@@ -1,5 +1,5 @@
 <template>
-<div>我的委托</div>
+<div>看房报告</div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-<div>我的委托</div>
+<div>待看日程</div>
 </template>
 
 <script>

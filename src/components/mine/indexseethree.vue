@@ -1,5 +1,5 @@
 <template>
-<div>我的委托</div>
+<div>已看记录</div>
 </template>
 
 <script>
