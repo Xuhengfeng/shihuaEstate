@@ -1,5 +1,5 @@
 <template>
-    <div>账户首页</div>
+<div>已看记录</div>
 </template>
 
 <script>

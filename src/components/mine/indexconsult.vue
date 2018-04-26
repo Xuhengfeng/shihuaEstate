@@ -1,5 +1,5 @@
 <template>
-    <div>账户首页</div>
+<div>我的咨询</div>
 </template>
 
 <script>

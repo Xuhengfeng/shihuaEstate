@@ -1,5 +1,5 @@
 <template>
-    <div>账户首页</div>
+<div>看房报告</div>
 </template>
 
 <script>

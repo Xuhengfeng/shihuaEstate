@@ -1,5 +1,5 @@
 <template>
-    <div>账户首页</div>
+<div>待看日程</div>
 </template>
 
 <script>

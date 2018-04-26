@@ -375,8 +375,7 @@ export default {
 		
 	}, 
 	components: {
-		oHeader,
-		oTopBar
+		oHeader
 	}
 }
 </script>

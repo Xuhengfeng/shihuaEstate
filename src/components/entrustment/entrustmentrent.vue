@@ -2,11 +2,10 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-26 11:09:48
+ * @Last Modified time: 2018-04-26 14:48:45
  */
 <template>
   <div class="sellRent">
-	  	<o-top-bar></o-top-bar>
 		<div class="main">
 			<div class="container">
 				<div class="form-box" v-show="!brokerFlag">
@@ -115,7 +114,6 @@
   </div>
 </template>
 <script>
-import oTopBar from "../../base/topBar/topBar";
 export default {
   data() {
     return {
@@ -251,9 +249,6 @@ export default {
         });
       }
     }
-  },
-  components: {
-    oTopBar
   }
 };
 </script>
