@@ -1,6 +1,7 @@
 <template>
 	<div class="home">
 		<div class="header">
+			<div @click="test()">test1</div>
 			<div class="shadowlay" v-if="cityChange" @click="closeCity()"></div>
 			<div class="container"  style="position:relative">
 				<div style="position:absolute;top:0px;left:0;">
@@ -444,6 +445,10 @@
 			searchBuyHouse() {
 				console.log(this.searchinput)
 			 	this.$router.push({path:"/buyhouse", params: this.searchinput});
+			},
+
+			test() {
+				this.$router.push('/mine')
 			}
 		}
 	}

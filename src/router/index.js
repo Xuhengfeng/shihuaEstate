@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by:   564297479@qq.com 
- * @Last Modified time: 2018-04-26 16:05:45 
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-26 17:38:41
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -74,7 +74,7 @@ export default new Router({
 		{path:"/buyhouseguide",component:buyhouseguide,children:[{//购房指南
 				path:"guidedetail",component:guidedetail},//指南详情
 			]},
-		{path:"/mine",component:mine,children:[{//我的个人账户
+		{path:"/mine",redirect:'/mine/indexhome',component:mine,children:[{//我的个人账户
 				path:"indexhome",component:indexhome,meta:{KeepAlive:false}},{//账户首页
 				path:"indexseeone",component:indexseeone,meta:{KeepAlive:false}},{//待看列表
 				path:"indexseetwo",component:indexseetwo,meta:{KeepAlive:false}},{//待看日程

@@ -2,28 +2,30 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 14:05:54 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-26 16:14:01
+ * @Last Modified time: 2018-04-26 18:19:35
  */
 <template>
 	<!-- 我的 -->
 	<div class="mine">
 		<div class="container">
-			<div class="side">
-				<div class="image">
-					<img src="" alt="">
+			<div>
+				<div class="side">
+					<div class="image">
+						<img src="" alt="">
+					</div>
+					<ul>
+						<li :key="index" :class="index==num?'bgColor':''" v-for="(item,index) in list" @click="routerLink(item,index)">{{item}}</li>
+					</ul>
 				</div>
-				<ul>
-					<li :key="index" :class="index==num?'bgColor':''" v-for="(item,index) in list" @click="routerLink(item,index)">{{item}}</li>
-				</ul>
-			</div>
-			<div class="content">
-				<!-- 缓存组件 -->
-				<keep-alive>
-					<router-view v-if="$route.meta.keepAlive"></router-view>
-				</keep-alive>
+				<div class="content">
+					<!-- 缓存组件 -->
+					<keep-alive>
+						<router-view v-if="$route.meta.keepAlive"></router-view>
+					</keep-alive>
 
-				<!-- 设置不缓存的页面 -->
-				<router-view v-if="!$route.meta.keepAlive"></router-view>
+					<!-- 设置不缓存的页面 -->
+					<router-view v-if="!$route.meta.keepAlive"></router-view>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -64,7 +66,7 @@ export default {
 .mine{
 	margin-top: 20px;
 }
-.mine>div{
+.mine>div>div{
 	display: flex;
 	flex-flow: row nowrap;
 }
@@ -96,8 +98,8 @@ export default {
 }
 .content{
 	flex: 1;
+	min-height: 500px;
 	overflow: hidden;
-	background: red;
 }
 .bgColor{
 	background: red;
