@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-26 17:38:41
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-27 00:24:48
  */
 import Vue from 'vue'
 import Router from 'vue-router'

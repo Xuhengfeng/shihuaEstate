@@ -199,8 +199,6 @@ export default {
 		};
 	},
 	created() {	
-		
-
 		this.params.scity = JSON.parse(window.localStorage.selectCity).value;
 		this.city =JSON.parse(window.localStorage.selectCity).name
 		//请求二手的列表

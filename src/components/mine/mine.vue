@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 14:05:54 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-26 18:19:35
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-27 00:30:43
  */
 <template>
 	<!-- 我的 -->
@@ -62,39 +62,39 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .mine{
 	margin-top: 20px;
 }
 .mine>div>div{
 	display: flex;
 	flex-flow: row nowrap;
-}
-.side{
-	flex: 187px 0 0;
-	width: 187px; 
-	margin-right: 30px;
-}
-.side .image{
-	width: 100%;
-	height: 164px;
-	background: red;
-	display: block;
-	margin-bottom: 10px;
-}
-.side .image+ul{
-	width: 100%;
-	display: block;
-}
-.side ul li {
-	text-align: center;
-	height: 53px;
-	line-height: 53px;
-	background: #e5e5e5;
-	border-bottom: 1px solid #ffffff;
-}
-.side ul li:hover{
-	background: red;
+	.side{
+		flex: 187px 0 0;
+		width: 187px; 
+		margin-right: 30px;
+		.image{
+			width: 100%;
+			height: 164px;
+			background: red;
+			display: block;
+			margin-bottom: 10px;
+		}
+		ul{
+			width: 100%;
+			display: block;
+			li{
+				text-align: center;
+				height: 53px;
+				line-height: 53px;
+				background: #e5e5e5;
+				border-bottom: 1px solid #ffffff;
+				&:hover{
+					background: red;
+				}
+			}
+		}
+	}
 }
 .content{
 	flex: 1;
@@ -102,6 +102,6 @@ export default {
 	overflow: hidden;
 }
 .bgColor{
-	background: red;
+	background: red!important;
 }
 </style>

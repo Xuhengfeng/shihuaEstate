@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-26 14:48:45
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-27 00:38:54
  */
 <template>
   <div class="sellRent">
@@ -141,8 +141,8 @@ export default {
       checked: 0,
       IPSnum: 0,
       cityCode: "", //城市编码
-	  currentCity: JSON.parse(localStorage.selectCity),
-	  pageSize: 0
+      currentCity: JSON.parse(localStorage.selectCity),
+      pageSize: 0
     };
   },
   created() {
@@ -150,10 +150,10 @@ export default {
     this.brokerListRequest(1);
   },
   methods: {
-	handleCurrentChange(val) {
-		console.log(`当前页: ${val}`);
-    	this.brokerListRequest(val);		
-	},
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+        this.brokerListRequest(val);		
+    },
     changeItem(num) {
       this.checked = num;
       this.IPSnum = num;
@@ -252,7 +252,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
 .main {
   height: 797px;
   background: #f5f5f5 url(../../imgs/home/sousditu.png) no-repeat center center;
@@ -260,50 +260,56 @@ export default {
   background-size: auto 797px;
   box-sizing: border-box;
   position: relative;
-}
-.form-box {
-  position: absolute;
-  top: 100px;
-  left: 50%;
-  width: 614px;
-  height: 642px;
-  transform: translateX(-50%);
-  background: #ffffff;
+  .form-box {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    width: 614px;
+    height: 642px;
+    transform: translateX(-50%);
+    background: #ffffff;
+  }
 }
 .city {
   flex: 1;
   position: relative;
+  >input{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 10px;
+    font-size: 14px;
+    color: #000000;
+    border: 1px solid #cacaca;
+    box-sizing: border-box;
+  }
+  >ul{
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: #ffffff;
+    border: 1px solid #cacaca;
+    box-sizing: border-box;
+    text-indent: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 1000;
+    li{
+      ol{
+        width: 100%;
+        li{
+          border-bottom: 1px solid #cacaca;
+          &:hover{
+            background: red;
+          }
+        }
+      }
+    }
+  }
 }
-.city > input {
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  text-indent: 10px;
-  font-size: 14px;
-  color: #000000;
-  border: 1px solid #cacaca;
-  box-sizing: border-box;
-}
-.city > ul {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  width: 100%;
-  height: 200px;
-  background: #ffffff;
-  border: 1px solid #cacaca;
-  box-sizing: border-box;
-  text-indent: 10px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  z-index: 1000;
-}
-.city ol li {
-  border-bottom: 1px solid #cacaca;
-}
-.city ol li:hover {
-  background: red;
-}
+
 /* form 头部 */
 .form-hd {
   display: flex;
@@ -312,107 +318,111 @@ export default {
   height: 105px;
   line-height: 105px;
   font-size: 20px;
-}
-.form-hd > div {
-  flex: 1;
-}
-.form-hd > div:nth-of-type(1) input,
-.form-hd > div:nth-of-type(2) input {
-  cursor: pointer;
-}
-.form-hd > div:nth-of-type(1) > div {
-  float: right;
-  margin-right: 22px;
-  cursor: pointer;
-}
-.form-hd > div:nth-of-type(2) > div {
-  float: left;
-  margin-left: 22px;
-  cursor: pointer;
+  >div{
+    flex: 1;
+    &:nth-of-type(1) input,
+    &:nth-of-type(2) input{
+      cursor: pointer;
+    }
+    &:nth-of-type(1)>div{
+      float: right;
+      margin-right: 22px;
+      cursor: pointer;
+    }
+    &:nth-of-type(2)>div{
+      float: left;
+      margin-left: 22px;
+      cursor: pointer;
+    }
+  }
 }
 
 /* form 身体 */
 .form-bd {
   margin: 0 114px 0 74px;
+  >ul{
+    >li{
+      height: 40px;
+      line-height: 40px;
+      display: flex;
+      flex-flow: row nowrap;
+      margin-bottom: 18px;
+      >div:nth-of-type(1){
+        margin-right: 22px;
+        text-align: right;
+        width: 110px;
+        font-size: 20px;
+        color: #000000;
+      }
+      >input{
+        flex: 1;
+        text-indent: 10px;
+        font-size: 14px;
+        color: #000000;
+        border: 1px solid #cacaca;
+        box-sizing: border-box;
+      }
+    }
+  }
 }
-.form-bd > ul > li {
-  height: 40px;
-  line-height: 40px;
-}
-.form-bd > ul > li {
-  display: flex;
-  flex-flow: row nowrap;
-  margin-bottom: 18px;
-}
-.form-bd > ul > li > div:nth-of-type(1) {
-  margin-right: 22px;
-  text-align: right;
-  width: 110px;
-  font-size: 20px;
-  color: #000000;
-}
-.form-bd > ul > li > input {
-  flex: 1;
-  text-indent: 10px;
-  font-size: 14px;
-  color: #000000;
-  border: 1px solid #cacaca;
-  box-sizing: border-box;
-}
+
 .houseNum {
   flex: 1;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  input{
+    height: 40px;
+    width: 90px;
+    line-height: 40px;
+    text-indent: 10px;
+    font-size: 14px;
+    color: #000000;
+    border: 1px solid #cacaca;
+    box-sizing: border-box;
+  }
 }
-.houseNum input {
-  height: 40px;
-  width: 90px;
-  line-height: 40px;
-  text-indent: 10px;
-  font-size: 14px;
-  color: #000000;
-  border: 1px solid #cacaca;
-  box-sizing: border-box;
-}
+
 input::-webkit-input-placeholder {
   color: #cacaca;
   font-size: 14px;
 }
 /* form 脚步 */
-.form-ft button {
-  display: block;
-  width: 280px;
-  height: 40px;
-  line-height: 40px;
-  background: red;
-  border: 0;
-  margin: 0 auto;
-  font-size: 18px;
-  color: #ffffff;
-}
-.form-ft p {
-  text-align: center;
-  font-size: 14px;
-  color: #272c30;
-  opacity: 0.6;
-  margin-top: 17px;
+.form-ft{
+  button{
+    display: block;
+    width: 280px;
+    height: 40px;
+    line-height: 40px;
+    background: red;
+    border: 0;
+    margin: 0 auto;
+    font-size: 18px;
+    color: #ffffff;
+  }
+  p{
+    text-align: center;
+    font-size: 14px;
+    color: #272c30;
+    opacity: 0.6;
+    margin-top: 17px;
+  }
 }
 
 /* 经纪人 */
-.broker {
+.broker{
   flex: 1;
   position: relative;
-}
-.broker input {
-  width: 100%;
-  height: 40px;
-  line-height: 40px;
-  text-indent: 10px;
-  font-size: 14px;
-  color: #000000;
-  border: 1px solid #cacaca;
-  box-sizing: border-box;
+  input{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 10px;
+    font-size: 14px;
+    color: #000000;
+    border: 1px solid #cacaca;
+    box-sizing: border-box;
+  }
 }
 .brokerList {
   position: absolute;
@@ -422,108 +432,113 @@ input::-webkit-input-placeholder {
   height: 642px;
   transform: translateX(-50%);
   background: #efefef;
+  h3{
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    color: #ffffff;
+    background: red;
+  }
+  ul{
+    max-height: 530px;
+    overflow: auto;
+    >li{
+      overflow: hidden;
+      cursor: pointer;
+      height: 124px;
+      position: relative;
+      >div{
+        margin: 0 10px;
+        height: 124px;
+        padding: 28px 0;
+        box-sizing: border-box;
+        border-bottom: 1px solid #cacaca;
+        .image {
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
+          background: red;
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          overflow: hidden;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .content {
+          overflow: hidden;
+          margin-left: 120px;
+          display: flex;
+          flex-flow: row nowrap;
+          >div{
+            flex: 1;
+          }
+          .one{
+            .name{
+              font-size: 16px;
+              margin-bottom: 10px;
+              span{
+                font-size: 24px;
+                color: rgba(0, 0, 0, 0.8);
+                margin-right: 10px;
+              }
+            }
+            .decription{
+              margin: 0 15px 10px 0;
+              span{
+                font-size: 14px;
+              }
+            }
+            .tag{
+              display: flex;
+              flex-flow: row nowrap;
+              white-space: nowrap;
+              span{
+                font-size: 12px;
+                margin-right: 10px;
+                padding: 5px;
+                &:nth-of-type(1){
+                    background: #edf9ff;
+                    color: #00a8ff;
+                }
+                &:nth-of-type(2){
+                    background: #fff2ed;
+                    color: #ff7f50;
+                }
+                &:nth-of-type(3){
+                    background: #ebfff3;
+                    color: #00b969;
+                }
+              }
+            }
+          }
+          .two{
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            span{
+              font-size: 24px;
+              color: #ff0000;
+            }
+          }
+          .three{
+            div{
+              font-size: 16px;
+              &:nth-of-type(1) {
+                margin-bottom: 10px;
+              }
+            }
+          }
+        }
+      }
+      &:hover{
+        background: #ffffff;
+      }
+    }
+  }
 }
-.brokerList h3 {
-  text-align: center;
-  line-height: 50px;
-  font-size: 20px;
-  color: #ffffff;
-  background: red;
-}
-.brokerList .image {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: red;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  overflow: hidden;
-}
-.brokerList .image img {
-  width: 100%;
-  height: 100%;
-}
-.brokerList .content {
-  overflow: hidden;
-  margin-left: 120px;
-  display: flex;
-  flex-flow: row nowrap;
-}
-.brokerList .content > div {
-  flex: 1;
-}
-.brokerList ul {
-  max-height: 530px;
-  overflow: auto;
-}
-.brokerList ul li {
-  overflow: hidden;
-  cursor: pointer;
-  height: 124px;
-  position: relative;
-}
-.brokerList ul li:hover {
-  background: #ffffff;
-}
-.brokerList ul li > div {
-  margin: 0 10px;
-  height: 124px;
-  padding: 28px 0;
-  box-sizing: border-box;
-  border-bottom: 1px solid #cacaca;
-}
-.one .name {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-.one .name span {
-  font-size: 24px;
-  color: rgba(0, 0, 0, 0.8);
-  margin-right: 10px;
-}
-.one .decription {
-  margin: 0 15px 10px 0;
-}
-.one .decription span {
-  font-size: 14px;
-}
-.one .tag {
-  display: flex;
-  flex-flow: row nowrap;
-  white-space: nowrap;
-}
-.one .tag span {
-  font-size: 12px;
-  margin-right: 10px;
-  padding: 5px;
-}
-.one .tag span:nth-of-type(1) {
-  background: #edf9ff;
-  color: #00a8ff;
-}
-.one .tag span:nth-of-type(2) {
-  background: #fff2ed;
-  color: #ff7f50;
-}
-.one .tag span:nth-of-type(3) {
-  background: #ebfff3;
-  color: #00b969;
-}
-.two {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
-}
-.two span {
-  font-size: 24px;
-  color: #ff0000;
-}
-.three div {
-  font-size: 16px;
-}
-.three div:nth-of-type(1) {
-  margin-bottom: 10px;
-}
+
 .pagination{
 	width: 360px;
 	margin-top: 20px;

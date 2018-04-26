@@ -34,5 +34,6 @@ let URL = {
 	BROKERS_LIST:_host + '/broker/brokers',  					//经纪人
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
+	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
 };
 export default {URL}
