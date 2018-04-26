@@ -526,22 +526,20 @@
 		border-bottom: 1px solid #f1f1f1;
 	}
 	.introduce{
-		
-		margin-left: 215px;
-		height: 19px;
-		margin-top: 29px;
+		line-height: 48px;
+		margin-left: 30px;
 	}
 	.intrdex{
 		font-size: 22px;
 		color: rgba(0,0,0,0.85);
 		font-weight: bold;
+		margin-top: -10px;
 	}
 	.introduce span{
 		font-size: 14px;
 	}
 	.direciton{
-		margin-top: -30px;
-		margin-left: 50px;
+		overflow: hidden;
 	}
 	.introduce .word{
 		vertical-align: top;
@@ -570,7 +568,7 @@
 		background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;
 	}
 	.three{
-		    background: #e1f5ed; color: #33BE85;
+		background: #e1f5ed; color: #33BE85;
 	}
 	.sidebar .advertisement{
 		width: 180px;
@@ -596,7 +594,8 @@
 		overflow: hidden;
 	}
 	.item ul li{
-		padding: 30px 0;
+		margin-top: 65px;
+		overflow: hidden;
 		/*border-bottom: 1px solid #f1f1f1;*/
 	}
 	.image>img{

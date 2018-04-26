@@ -244,7 +244,7 @@ export default {
 		.then((response)=>{
 			this.listfive = response.data.data
 		})
-		this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_AGE") //房源售价
+		this.$http.get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_AGE") //房源楼龄
 		.then((response)=>{
 			this.listsix = response.data.data
 		})
@@ -376,7 +376,6 @@ export default {
 	}, 
 	components: {
 		oHeader,
-		oTopBar
 	}
 }
 </script>
@@ -631,22 +630,20 @@ h1, h2, h3, h4, h5, h6 {
 	border-bottom: 1px solid #f1f1f1;
 }
 .introduce{
-	
-	margin-left: 215px;
-	height: 19px;
-	margin-top: 29px;
+	line-height: 48px;
+	margin-left: 30px;
 }
 .intrdex{
 	font-size: 22px;
 	color: rgba(0,0,0,0.85);
 	font-weight: bold;
+	margin-top: -10px;
 }
 .introduce span{
 	font-size: 14px;
 }
 .direciton{
-	margin-top: -30px;
-	margin-left: 50px;
+	overflow: hidden;
 }
 .introduce .word{
 	vertical-align: top;
@@ -701,7 +698,8 @@ h1, h2, h3, h4, h5, h6 {
 	overflow: hidden;
 }
 .item ul li{
-	padding: 30px 0;
+	margin-top: 65px;
+	overflow: hidden;
 	/*border-bottom: 1px solid #f1f1f1;*/
 }
 .image>img{
