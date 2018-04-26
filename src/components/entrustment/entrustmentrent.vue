@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-26 01:52:01
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-26 11:09:48
  */
 <template>
   <div class="sellRent">
@@ -99,6 +99,16 @@
 							</div>
 						</li>
 					</ul>
+
+					<!--分页器-->
+					<el-pagination class="pagination"
+      					@current-change="handleCurrentChange"
+						background
+						layout="prev,pager, next"
+						prev-text="上一页"
+						next-text="下一页"
+						:total="1000">
+					</el-pagination>
 				</div>
 			</div>
 		</div>
@@ -133,14 +143,19 @@ export default {
       checked: 0,
       IPSnum: 0,
       cityCode: "", //城市编码
-      currentCity: JSON.parse(localStorage.selectCity)
+	  currentCity: JSON.parse(localStorage.selectCity),
+	  pageSize: 0
     };
   },
   created() {
     this.cityListRequest();
-    this.brokerListRequest();
+    this.brokerListRequest(1);
   },
   methods: {
+	handleCurrentChange(val) {
+		console.log(`当前页: ${val}`);
+    	this.brokerListRequest(val);		
+	},
     changeItem(num) {
       this.checked = num;
       this.IPSnum = num;
@@ -184,13 +199,13 @@ export default {
         });
       });
     },
-    brokerListRequest() {
+    brokerListRequest(num) {
       let scity = this.cityCode ? this.cityCode : this.currentCity.value;
       //经纪人
       this.$http
         .post(this.$url.URL.BROKERS_LIST, {
           scity: scity,
-          pageNo: 1
+          pageNo: num
         })
         .then(response => {
           console.log(response.data.data);
@@ -513,6 +528,11 @@ input::-webkit-input-placeholder {
 }
 .three div:nth-of-type(1) {
   margin-bottom: 10px;
+}
+.pagination{
+	width: 360px;
+	margin-top: 20px;
+	margin-left: 15%;
 }
 </style>
 

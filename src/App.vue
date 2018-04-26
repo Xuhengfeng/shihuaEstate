@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <!-- 头部 -->
+    <div v-if="isShowTop == 1">
+			<o-top-bar></o-top-bar>
+		</div>
+
   	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
     		<router-view v-if="$route.meta.keepAlive"></router-view>
@@ -7,6 +12,8 @@
 
 		<!-- 设置不缓存的页面 -->
 		<router-view v-if="!$route.meta.keepAlive"></router-view>
+
+    <!-- 脚步 -->
 		<div v-if="isShowFooter == 1">
 			<o-footer></o-footer>
 		</div>
@@ -14,15 +21,18 @@
 </template>
 
 <script>
+import oTopBar from "./base/topBar/topBar";
 import oFooter from "./base/footer/footer";
 export default {
   data() {
     return {
-      isShowFooter: 0 //隐藏
+      isShowTop:  0, //显示1 隐藏0
+      isShowFooter: 0 //显示1 隐藏0
     };
   },
   components: {
-    oFooter,
+    oTopBar,
+    oFooter
     // mySvg
   },
   watch: {
@@ -33,10 +43,14 @@ export default {
         path == "/mapSearch/12" ||
         path == "/mapSearch/13"
       ) {
-        sessionStorage.isShowFooter = 0;
         this.isShowFooter = 0;
-      } else {
-        sessionStorage.isShowFooter = 1;
+      } 
+      else if(path == "/home"){
+        this.isShowTop = 0;
+        this.isShowFooter = 1;
+      } 
+      else {
+        this.isShowTop = 1;        
         this.isShowFooter = 1;
       }
     }
