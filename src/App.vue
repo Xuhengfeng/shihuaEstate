@@ -1,11 +1,18 @@
 <template>
   <div id="app">
-    <!-- 头部 -->
+    <!-- 头部start -->
     <div v-if="isShowTop == 1">
 			<o-top-bar></o-top-bar>
 		</div>
+    <!-- 头部end -->
+    
+    <!-- 侧边栏start -->
+    <div>
+      <o-side-bar></o-side-bar>
+    </div>
+    <!-- 侧边栏end -->
 
-  	<!-- 缓存组件,created只触发一次啦 -->
+   	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
     		<router-view v-if="$route.meta.keepAlive"></router-view>
 		</keep-alive>
@@ -13,16 +20,18 @@
 		<!-- 设置不缓存的页面 -->
 		<router-view v-if="!$route.meta.keepAlive"></router-view>
 
-    <!-- 脚步 -->
+    <!-- 脚步start -->
 		<div v-if="isShowFooter == 1">
 			<o-footer></o-footer>
 		</div>
+    <!-- 脚步end -->
   </div>
 </template>
 
 <script>
 import oTopBar from "./base/topBar/topBar";
 import oFooter from "./base/footer/footer";
+import oSideBar from "./base/sideBar/sidebar";
 export default {
   data() {
     return {
@@ -32,7 +41,8 @@ export default {
   },
   components: {
     oTopBar,
-    oFooter
+    oSideBar,
+    oFooter,
     // mySvg
   },
   watch: {

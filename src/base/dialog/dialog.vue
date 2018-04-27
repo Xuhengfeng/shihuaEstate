@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:29 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-26 13:55:28
+ * @Last Modified time: 2018-04-27 18:26:52
  */
 
 <template>
@@ -52,10 +52,10 @@
                     <div class="title">找回密码</div>
 					<div class="inputGroup">
 						<input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
-						<div class="login_input_resgize"><input type="text" placeholder="请输入验证码"><button @click="sendMsgCode(3)">获取验证码</button></div>
-						<input type="text" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)" maxlength="11">
-						<input type="text" v-model="password5" placeholder="再次输入密码" maxlength="11">
-                        <button @click="findPassword()">注册</button>
+						<div class="login_input_resgize"><input type="text" autocomplete="off" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled?'sendCode':''" ref="sendCode" @click="sendMsgCode(3)">获取验证码</button></div>
+						<input type="password" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)">
+						<input type="password" v-model="password5" placeholder="再次输入密码">
+                        <button @click="findPassword()">确定</button>
                         <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
 					</div>
 				</div>
@@ -98,7 +98,9 @@ export default {
       password5: null,
       msgcode3: null,
 
-      showFlag: false
+      //状态判断
+      showFlag: false,
+      disabled: false
     };
   },
   methods: {
@@ -123,13 +125,19 @@ export default {
           password: this.password1
         })
         .then(res => {
-          this.cancel();
-          if (res.data.status == "500") {
+          if(res.status == 200) {
+            this.cancel();
+            this.$message({
+              message: "登录成功",
+              type: 'success'
+            });
+            localStorage.token=res.data.data;
+          }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    register() {
+    register() {//注册
       if (
         !this.phonenum2 ||
         !this.password2 ||
@@ -139,7 +147,6 @@ export default {
         this.cancel();
         return this.$alert("填写信息不完整!");
       }
-      //注册
       this.$http
         .post(this.$url.URL.USER_REGISTER, {
           deviceCode: "web",
@@ -148,14 +155,19 @@ export default {
           smsCode: this.msgcode1
         })
         .then(res => {
-          this.cancel();
-          if (res.data.status == "500") {
+          console.log(res)
+          console.log(res.status)
+          if(res.status == 200) {
+            this.cancel();
+            this.$alert("注册成功!");
+            localStorage.token=res.data.data;
+            console.log(res.data)
+          }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    rapid() {
-      //快捷登录 接口有问题
+    rapid() {//快捷登录 接口有问题
       this.$http
         .post(this.$url.URL.SMSCODE_LOGIN, {
           deviceCode: "web",
@@ -169,8 +181,7 @@ export default {
           }
         });
     },
-    findPassword() {
-      //找回密码
+    findPassword() {//找回密码 (设置密码登录)
       this.$http
         .post(this.$url.URL.SMSCODE_RESETLOGIN, {
           confirmPassword: this.password4,
@@ -179,28 +190,58 @@ export default {
           smsCode: this.msgcode3
         })
         .then(res => {
-          if (res.data.status == "500") {
+          if(res.status == 200) {
+            this.$alert('修改成功！', {
+              confirmButtonText: '确定',
+              callback: () => {
+                this.jump(1);
+              }
+            })
+          }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    sendMsgCode(num) {
-      console.log(num);
-      let mobile, operateType;
-      if (num == 1) {
-        mobile = this.phonenum2;
-        operateType = "REGISTER";
-      } else if (num == 2) {
-        mobile = this.phonenum3;
-        operateType = "LOGIN";
-      } else if (num == 3) {
-        mobile = this.phonenum4;
-        operateType = "RESET_PASSWORD";
-      }
-      let key = mobile + "29e94f94-8664-48f2-a4ff-7a5807e13b68";
-      //获取验证码
-      this.$http
-        .post(this.$url.URL.FETCHSMSCODE, {
+    countDown() {//验证码倒计时
+      let timer,times=60;
+      timer = setInterval(()=> {
+        times--;
+        if (times <= 0) {
+            times = 0; 
+            clearInterval(timer);
+            this.disabled=false;
+            this.$refs.sendCode.innerHTML = '获取验证码';
+        } else {
+            this.disabled=true;
+            this.$refs.sendCode.innerHTML = times + '秒后重试';
+        }
+      }, 1000);
+    },
+    sendMsgCode(num) {//发送验证码
+      if(!this.disabled) {
+        let mobile, operateType;
+        if (num == 1) {
+          mobile = this.phonenum2;
+          operateType = "REGISTER";
+        } else if (num == 2) {
+          mobile = this.phonenum3;
+          operateType = "LOGIN";
+        } else if (num == 3) {
+          mobile = this.phonenum4;
+          operateType = "RESET_PASSWORD";
+        }
+        //非空校验 正则校验
+        if(mobile == undefined) {
+          return this.$alert('手机不能为空!');
+        }else if(!(/^1[34578]\d{9}$/).test(mobile)) {
+          return this.$alert('手机格式不对!');
+        }else{
+          this.countDown();
+        }
+
+        //手机号签名
+        let key = mobile + "29e94f94-8664-48f2-a4ff-7a5807e13b68";
+        this.$http.post(this.$url.URL.FETCHSMSCODE, {
           deviceCode: "web",
           mobile: mobile,
           operateType: operateType,
@@ -211,7 +252,12 @@ export default {
             this.$alert(res.data.msg);
           }
         });
+      } 
     },
+    // if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/.test(this.password)) {
+    //     this.$alert("必须是8~16位含字母和数字的密码");
+    //     this.password = "";
+    //   }
     /**
      *num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
      */
@@ -221,7 +267,7 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
 .shadowlay {
   position: fixed;
   top: 0;
@@ -343,6 +389,13 @@ input[type="checkbox"] {
   margin-top: 10px;
   color: #000000;
 }
+
+/* 发送验证码 */
+.sendCode{
+  background: rgba(0, 0, 0, 0.3)!important;
+}
+
+
 /*底部*/
 </style>
 

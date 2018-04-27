@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-25 22:34:57
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-27 20:06:54
  */
 <template>
     <div class="navmenu">
@@ -10,7 +10,7 @@
             <ul class="item1">
                 <ol class="banner_right fr">
                     <li style="height: 70px;margin-top: -2px;">
-                        <i class="iconfont icon-yonghu" v-if="true" style="font-size: 14px;">
+                        <i class="iconfont icon-yonghu" v-if="token" style="font-size: 14px;">
                             <span class="login" @click="login()">登录</span>/
                             <span class="logout" @click="register()">立即注册</span>
                         </i>
@@ -68,7 +68,8 @@ export default {
     data() {
 		return {
 			showbox: 0,
-			houseTypeId: 11
+            houseTypeId: 11,
+            token:window.localStorage.token?false:true
 		};
 	},
 	methods: {

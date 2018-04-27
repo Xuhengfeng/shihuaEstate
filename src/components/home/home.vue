@@ -42,7 +42,7 @@
 				<div class="navmenu fr">
 					<ul class="item1">
 						<router-link tag="li" to="" class="loginregize">
-							<i class="iconfont icon-yonghu" v-if="true">
+							<i class="iconfont icon-yonghu" v-if="token">
 								<span class="login" @click="login()">登录</span>/
 								<span class="logout" @click="register()">立即注册</span>
 							</i>
@@ -256,6 +256,7 @@
 	export default {
 		data() {
 			return {
+				token:window.localStorage.token?false:true,
 				cityChange: false, //城市阴影
 				souText: '请输入区域丶商圈或小区名开始找房',
 				city: [], //城市列表
@@ -287,11 +288,6 @@
 				}
 
 			};
-		},
-		computed:{
-			userLoginFlag(){
-				return this.$store.state.userLoginFlag
-			} 
 		},
 		components:{
 			oDialog,

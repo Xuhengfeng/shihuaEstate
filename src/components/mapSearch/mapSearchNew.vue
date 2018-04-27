@@ -1,9 +1,8 @@
 /*
- * 备份文件 误删
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-27 20:25:24
+ * @Last Modified time: 2018-04-27 20:59:59
  */
 <template>
     <!-- 地图找房 -->
@@ -146,68 +145,25 @@ export default {
       num: 0,             //修正ip
       agentInfo: '',      //side的info 
       pencil: '../../../static/pencil.ico',
-      moveFlag: '',       //移动标识
       selectCity: JSON.parse(localStorage.selectCity),
       
       //二手房 租房 小区区域所有数据
       IPS: [this.$url.URL.HOUSE_SECONDHOUSE, this.$url.URL.HOUSE_RENTHOUSE, this.$url.URL.MAPHOUSEALL_TREE],
       //同小区二手房列表
       IPS2: [this.$url.URL.MAPHOUSEALL_USED_LIST],
+      moveFlag: '1',       //移动标识
+      mapname: '北海',
+
+      scity: 'beihai'
     }
   },
-  created() {
-    //创建地址解析器实例
-    let myGeo = new BMap.Geocoder();
-    myGeo.getPoint(this.selectCity.name, (point)=> {
-      this.initMap(point.lng, point.lat);//初始化地图(中心) 
-    })
-    //请求所有数据
-    this.requestAllCityData();
-  },
   methods: {
-    //显示房源列表
     isShowHouseList() {
-      if(this.isShowSide){
-        this.$refs.side.style.left="0"
-        this.sideLeft = '-180px';
-      }else{
-        this.sideLeft = '-171px';
-        this.$refs.side.style.left="-438px";
-      }
-      this.isShowSide = !this.isShowSide
+
     },
-    //区域级别房源 二手房 租房 小区
-    requestAllCityData() {
-      let houseType = this.$route.params.houseTypeId;
-      if(houseType == 11) {
-        this.num = 0;
-      }else if(houseType == 22) {
-        this.num = 1;
-      }else if(houseType == 33) {
-        this.num = 2;
-      }
-      this.$http.post(this.IPS[this.num], {
-        scity: this.selectCity.value
-      })
-      .then(res=> {
-        this.usedAreaDetails = res.data.data.usedAreaDetails;
-        this.rentAreaDetails = res.data.data.rentAreaDetails;
-        console.log(this.usedAreaDetails)
-        //初始化区域级别数据显示
-        this.usedAreaDetails.forEach((item)=>{
-            let point = new BMap.Point(item.px, item.py);
-            this.addLabel(point, item);
-        })
-      })
-    },
-    //小区级别数据
-    smallAreaRequest(sdid) {
-      this.$http.get(this.IPS2[this.num]+this.selectCity.value+"/"+sdid+"?pageNo="+1)
-      .then(res=> {
-        this.smallArea=res.data.data;
-      })
-    },
-    //这里百度地图start------------------------------------------------------------------------<<<<<<<<<<
+    beginDraw() {},
+    exitDraw() {},
+    requestAllCityData() {},
     //初始化地图
     initMap(px, py) {
       this.createMap(px, py);
@@ -222,53 +178,122 @@ export default {
         minZoom: 11,
         maxZoom: 18
       });
+      this.map.enableScrollWheelZoom(true)//启动滚轮放大缩小
       let pt = new BMap.Point(lng, lat);//初始时候 首先获取到目的城市的坐标 例如: 北海站坐标109.134582,21.459389
-      this.map.centerAndZoom(pt, 12);//初始中心点和缩放比例
+      this.map.centerAndZoom(pt, 12);//初始中心点和缩放比例 
+      let DiTu = this.map.getZoom();
+      // 获取经纬度范围参数
+      let bs = this.map.getBounds();   //获取可视区域
+      let bssw = bs.getSouthWest();   //可视区域左下角
+      let bsne = bs.getNorthEast();   //可视区域右上角
+      this.coordRequestData(DiTu,bsne.lng,bssw.lng,bsne.lat,bssw.lat)
     },
-    //创建地图label 
+    //设置地图事件
+    setMapEvent() {
+      this.onMoveEvent();//移动事件
+      this.onScaleEvent();//放大缩小事件
+    },
+    //移动事件
+    onMoveEvent(){
+      this.map.addEventListener("dragend", (e)=>{
+        this.moveFlag="2"
+        let DiTu = this.map.getZoom();
+         // 获取经纬度范围参数
+        let bs = this.map.getBounds();   //获取可视区域
+        let bssw = bs.getSouthWest();   //可视区域左下角
+        let bsne = bs.getNorthEast();   //可视区域右上角
+        this.coordRequestData(DiTu,bsne.lng,bssw.lng,bsne.lat,bssw.lat)
+      })
+    },
+    //放大缩小事件
+    onScaleEvent(){
+      this.map.addEventListener("zoomend", () => {
+        this.moveFlag="1"
+        let DiTu = this.map.getZoom();
+        // 获取经纬度范围参数
+        let bs = this.map.getBounds();   //获取可视区域
+        let bssw = bs.getSouthWest();   //可视区域左下角
+        let bsne = bs.getNorthEast();   //可视区域右上角
+        this.coordRequestData(DiTu,bsne.lng,bssw.lng,bsne.lat,bssw.lat)
+      })
+    },
+    mapbox() {
+        let myGeo = new BMap.Geocoder();
+        myGeo.getPoint(this.mapname, (point)=> {
+          this.initMap(point.lng, point.lat);//初始化地图(中心) 
+        })
+    },
     addLabel(point, obj){
         //判断当前是处于什么zoom 级别的;
         let currentZoom = this.map.getZoom();
-
-        //区域级别 和 片区级别 
-        let html1=`<div class="bubble-2 bubble">
-                      <p class="name">${obj.areaName}</p>
-                      <p class="num">${obj.avgPrice}</p>
+        if(this.titlenumber=='0'){
+          //区域级别
+          let html1=`<div class="bubble-2 bubble">
+                      <p class="name">${obj.name}</p>
                       <p class="count">${obj.formatAvgPrice}套</p>
                     </div>`;
-        //片区级别
-        let html2=`<div class="bubble-2 bubble">
-                      <p class="name">${obj.districtName}</p>
-                      <p class="num">${obj.avgPrice}</p>
-                      <p class="count">${obj.formatAvgPrice}套</p>
-                    </div>`;
+          //片区级别
+          let html2=`<div class="bubble-2 bubble">
+                        <p class="name">${obj.name}</p>
+                        <p class="count">${obj.formatAvgPrice}套</p>
+                      </div>`;
 
-        //小区级别
-        let html3 = `<div class="bubble-3 bubble">
-                        <p class="name" 
-                            data-areaName=${obj.areaName}
-                            data-avgPrice=${obj.avgPrice}
-                            data-buildName=${obj.buildName}
-                            data-districtName=${obj.districtName}
-                            data-formatAvgPrice=${obj.formatAvgPrice}
-                            data-formatSaleCount=${obj.formatSaleCount}
-                            data-buildSdid=${obj.buildSdid}>
-                          <i class="num">${obj.buildName}<b> ${obj.formatAvgPrice}万</b> ${obj.formatSaleCount}</i>
-                          <i class="num triangle"></i>
-                        </p>
+          //小区级别
+          let html3 = `<div class="bubble-3 bubble">
+                          <p class="name" 
+                              data-areaName=${obj.name}
+                              data-avgPrice=${obj.avgPrice}
+                              data-buildName=${obj.buildName}
+                              data-districtName=${obj.districtName}
+                              data-formatAvgPrice=${obj.formatAvgPrice}
+                              data-formatSaleCount=${obj.formatSaleCount}
+                              data-buildSdid=${obj.buildSdid}>
+                            <i class="num">${obj.buildName}<b> ${obj.formatAvgPrice}万</b> ${obj.formatSaleCount}</i>
+                            <i class="num triangle"></i>
+                          </p>
+                      </div>`;
+        }else{
+           //区域级别
+            let html1=`<div class="bubble-2 bubble">
+                      <p class="name">${obj.name}</p>
+                      <p class="count">${obj.formatRentCount}</p>
                     </div>`;
+            //片区级别
+            let html2=`<div class="bubble-2 bubble">
+                          <p class="name">${obj.name}</p>
+                          <p class="count">${obj.formatRentCount}</p>
+                        </div>`;
+
+            //小区级别
+            let html3 = `<div class="bubble-3 bubble">
+                            <p class="name" 
+                                data-areaName=${obj.name}
+                                data-avgPrice=${obj.avgPrice}
+                                data-buildName=${obj.buildName}
+                                data-districtName=${obj.districtName}
+                                data-formatAvgPrice=${obj.formatAvgPrice}
+                                data-formatSaleCount=${obj.formatSaleCount}
+                                data-buildSdid=${obj.buildSdid}>
+                              <i class="num">${obj.buildName}<b> ${obj.formatRentCount}</i>
+                              <i class="num triangle"></i>
+                            </p>
+                        </div>`;
+        }
+       
                     
         let content;
-        if(currentZoom==15||currentZoom==16) {
+        //13 15     区域级别
+        //15 16     片区级别
+        //17        小区级别
+      
+        if(currentZoom>16) {
           content = html3;
-        }else if(currentZoom==13||currentZoom==14){
+        }else if(currentZoom>14&&currentZoom<=16){
           content = html2;
         }else{
           content = html1;
         }
-        
-
-        let label = new BMap.Label(content, {
+        let label = new BMap.Label(content,{
             offset: new BMap.Size(-40,-40),
             position: point, //指定文本标注所在的地理位置 
           })
@@ -279,185 +304,60 @@ export default {
             width: '86px',
             height: '86px'
           })
-      this.map.addOverlay(label); //将标注添加到地图中
-      
-      label.addEventListener('click',(e)=>{
-        
-        //重新设置中心位置         
-        this.map.setCenter(e.point);
-        
-        //改变zoom 进入下一级;
-        if(currentZoom<=12) {//区域级别 
-          //清空覆盖物
-          this.map.clearOverlays();    
-          this.map.setZoom(14);
-        }else if(currentZoom>12&&currentZoom<=15) {//片区级别
-          //清空覆盖物
-          this.map.clearOverlays();  
-          this.map.setZoom(16);
-        }else if(currentZoom>=15) { 
-           //show 左边 房源列表选项
-          let str;
-          let domTarget = e.domEvent.target.classList.contains('num');
-          if(domTarget) {
-            str = e.domEvent.target.parentNode.dataset;
-          }else{
-            str = e.domEvent.target.parentNode.parentNode.dataset;
-          }
-          let sdid = str.buildsdid;
-          this.agentInfo=str;
-          this.isShowSide=false;
-          this.$refs.side.style.left="0";
-          this.smallAreaRequest(sdid);
+        this.map.addOverlay(label);
+        label.addEventListener("click",this.attribute);//海量点添加点击事件
+    },
+    attribute(e){//给海量点添加点击事件
+      this.moveFlag="1"
+        let p = e.target.point;
+        let currentZoom = this.map.getZoom();
+        if(currentZoom>16) {
+            this.map.centerAndZoom(p, 18)
+            this.itembtn(p);
+        }else if(currentZoom>14&&currentZoom<=16){
+            this.map.centerAndZoom(p, 17)
+        }else{
+            this.map.centerAndZoom(p, 15)
         }
-      }) 
     },
-    //设置地图事件
-    setMapEvent() {
-      this.map.enableScrollWheelZoom();
-      this.map.enableKeyboard();
-      this.map.enableDragging();
-      this.map.enableDoubleClickZoom();
-    },
-    //这里百度地图end------------------------------------------------------------------<<<<<<<<<<
-
-    //画圈找房start--------------------------------------------------------------------<<<<<<<<<<
-    //修改svg
-    //获取坐标
-		getMouse(e){
-      var e=e||window.event;
-      var mouse={x:0,y:0};
-			// mouse.x=e.pageX+this.amendment().newLeft;
-      // mouse.y=e.pageY-111+this.amendment().newTop;
-      mouse.x=e.pageX;
-      mouse.y=e.pageY-111;
-			return mouse;
-    },
-    //修正鼠标位置参数
-    amendment() { 
-      let str1 = document.querySelector(".BMap_mask").getAttribute("style").split(";")[1];//left
-      let str2 = document.querySelector(".BMap_mask").getAttribute("style").split(';')[2];//top
-          str1 = str1.replace(/[^-?\d+]/ig," ");
-          str2 = str2.replace(/[^-?\d+]/ig," ");
-      let newLeft = parseInt(str1);
-      let newTop = parseInt(str2);
-      return {
-        newLeft: newLeft,
-        newTop: newTop
-      }
-    },
-    //点击画图按钮进入绘图
-    beginDraw() {
-      //初始化绘图
-      //清空覆盖物
-      this.map.clearOverlays(); 
-      this.polygon = new BMap.Polygon(); 
-      this.map.addOverlay(this.polygon);
-    
-      //修改 头部 鼠标 样式
-      //设置地图禁止拖拽   
-      //修改svg
-      //this.changeSvg(); 
-      this.$refs.header.style.boxShadow="0 2px 10px rgba(0, 0, 0, .3)";
-      document.querySelector("svg").style.cursor = 'url('+this.pencil+'),default';
-      this.circleNum = 2;
-      this.map.disableDragging();
-      let mapNode = document.getElementById('map');
-      let str='';
-      let x1,y1;//起始点坐标
-      let x2,y2;//结束点坐标
-      let xyArr = '';//point数组
-      mapNode.onmousedown = (e)=>{//开始画圈圈
-        x1 =  this.getMouse(e).x;
-        y1 =  this.getMouse(e).y;
-        mapNode.onmousemove = (e)=>{
-            x2 =  this.getMouse(e).x;
-            y2 =  this.getMouse(e).y;
-            //像素坐标转地理坐标(坐标同步)
-            let p=new BMap.Pixel(x2,y2);  
-            let point1=this.map.pixelToPoint(p);  
-            let positionArray=new Array(point1.lng,point1.lat);   
-                xyArr += positionArray[0]+", "+positionArray[1]+";"
-                this.polygon.setPath(xyArr);
-        }
-      }
-      mapNode.onmouseup = ()=>{//结束
-        // this.map.setdivport(xyArr);//调整视野
-        this.map.enableDragging();//设置地图打开拖拽
-        mapNode.onmousemove = null;
-        mapNode.onmousedown = null;
-        mapNode.onmouseup = null;
-        document.querySelector("svg").style.cursor = '';
-      }
-    },
-    exitDraw() {// 结束画圈
-      this.map.clearOverlays();   
-      this.circleNum = 1;
-      this.renderdivArea();
-      this.$refs.header.style.boxShadow="none";
-    },
-    //画圈找房end---------------------------------------------------------------------------<<<
-
-    //地图可视区域的房源数据
-    divArea() {
-      this.map.addEventListener("dragend", ()=>{//拖动结束
-        var bs = this.map.getBounds();   //获取可视区域
-        var bssw = bs.getSouthWest();   //可视区域左下角
-        var bsne = bs.getNorthEast();   //可视区域右上角
-        console.log(bssw, bsne)
-        //tode 请求区域数据
+    coordRequestData(levels,x1,x2,y1,y2){//根据坐标请求接口
+    console.log(this.IPS)
+      this.$http.post(this.IPS[this.num],{
+        level:levels,
+        scity:this.scity,
+        x1:x1,
+        x2:x2,
+        y1:y1,
+        y2:y2
       })
-    },
-    renderdivArea() {
-      //清空覆盖物
-      this.map.clearOverlays();    
-      let currentZoom = this.map.getZoom();
-      if(currentZoom<=12) {//区域级别
-        //区域级别数据显示
-        this.usedAreaDetails.forEach((item)=>{
+      .then(res=>{
+        if(this.moveFlag=='2'){
+          let list=[]
+          for(let i=0;i<res.data.data.length;i++){
+            if(JSON.stringify(this.mapdata).indexOf(JSON.stringify(res.data.data[i]))==-1){
+              list.push(res.data.data[i])
+              this.mapdata.push(res.data.data[i])
+            }
+          }
+          list.forEach((item)=>{
           let point = new BMap.Point(item.px, item.py);
           this.addLabel(point, item);
         })
-      }else if(currentZoom>12&&currentZoom<=14) {//片区级别
-        //片区级别数据显示
-        this.usedAreaDetails.forEach((item)=>{
-          item.usedDistrictDetails.forEach((item2)=>{
-            let point = new BMap.Point(item2.px, item2.py);
-            this.addLabel(point, item2);
+        }else{
+          this.mapdata=res.data.data
+          this.map.clearOverlays(); //清空所有标注this.map.clearOverlays(); //清空所有标注
+          this.mapdata.forEach((item)=>{
+            let point = new BMap.Point(item.px, item.py);
+            this.addLabel(point, item);
           })
-        })
-      }else if(currentZoom>=15) {//小区级别
-        //小区级别数据显示
-        this.usedAreaDetails.forEach((item)=>{
-          item.usedDistrictDetails.forEach((item2)=>{
-            item2.usedHousingDetails.forEach((item3)=>{
-              let point = new BMap.Point(item3.px, item3.py);
-              this.addLabel(point, item3);
-            })
-          })
-        })
-      }
-    },
-    mapZoom(num) {
-      num==1?this.map.zoomIn():this.map.zoomOut();
+        }
+      })
     }
   },
   mounted() {
-    
-    setTimeout(()=> {
-      this.map.addEventListener("zoomend", ()=>{
-        if(this.circleNum == 2){
-          //绘图状态
-
-        }else if(this.circleNum == 1){
-          //未绘图状态
-          this.renderdivArea();
-        }
-      });
-    },1000)
-   
+    this.mapbox();
   }
-};
+}
 </script>
 
 <style scoped="scoped">

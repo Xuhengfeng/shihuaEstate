@@ -2,10 +2,11 @@
 import Vue from 'vue'
 import axios from 'axios'
 
-import { MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
+import {Message, MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框
 Vue.prototype.$confirm = MessageBox.confirm//弹出框
+Vue.prototype.$message = Message//消息提示
 
 Vue.component(Button.name, Button);
 Vue.component(Dialog.name, Dialog);
