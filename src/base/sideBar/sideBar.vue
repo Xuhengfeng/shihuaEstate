@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by:   564297479@qq.com 
- * @Last Modified time: 2018-04-27 14:34:13 
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-28 00:04:07
  */
 <template>
   <div class="sideBar">
@@ -73,6 +73,7 @@ export default {
     width: 40px;
     background: #ffffff;
     box-shadow: 0 0 2px rgba(0,0,0,.3);
+    z-index: 1000;
     >ul{
         width: 100%;
         height: auto;

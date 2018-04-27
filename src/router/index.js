@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-27 23:49:12
+ * @Last Modified time: 2018-04-28 00:18:04
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -45,7 +45,8 @@ const indexmessage = resolve => require(['components/mine/indexmessage'], resolv
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
 
 Vue.use(Router)
-export default new Router({
+
+const router = new Router({
 	// mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {
 		return {x: 0, y: 0}//页面切换滚动顶部
@@ -89,4 +90,5 @@ export default new Router({
 			]},
   	]
 })
- 
+
+export default router;

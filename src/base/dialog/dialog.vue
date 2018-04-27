@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:29 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-27 18:26:52
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-28 00:57:48
  */
 
 <template>
@@ -131,7 +131,8 @@ export default {
               message: "登录成功",
               type: 'success'
             });
-            localStorage.token=res.data.data;
+            sessionStorage.token=res.data.data;
+            this.$store.dispatch('login');
           }else{
             this.$alert(res.data.msg);
           }

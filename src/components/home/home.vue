@@ -42,11 +42,13 @@
 				<div class="navmenu fr">
 					<ul class="item1">
 						<router-link tag="li" to="" class="loginregize">
-							<i class="iconfont icon-yonghu" v-if="token">
+							<i class="iconfont icon-yonghu" v-if="!isLogin">
 								<span class="login" @click="login()">登录</span>/
 								<span class="logout" @click="register()">立即注册</span>
 							</i>
-							<i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout">退出</span></i>
+							<i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/
+								<span class="logout"  @click="logout()">退出</span>
+							</i>
 							<ul class="item4">
 								<router-link tag="li" to="">消息</router-link>
 								<router-link tag="li" to="">个人账户</router-link>
@@ -289,6 +291,12 @@
 
 			};
 		},
+		computed: {
+			isLogin() {
+				console.log(this.$store.state.logined)
+				return this.$store.state.logined;
+			}
+		},
 		components:{
 			oDialog,
 		},
@@ -394,17 +402,21 @@
 			changeDialog(num) {//显示对应的对话框
 				this.showbox = num; 
 			},
-			login() {//点击登陆
+			login() {//登陆
 				this.showbox = 1; 
 				this.$refs.odialog.show();
 				this.cityChange = false;
 			},
-			register() {//点击注册
+			register() {//注册
 				this.showbox = 2;
 				this.cityChange = false;				
 				this.$refs.odialog.show();
 			},
-			openCity() {//打开城市列表
+			logout() {//退出
+				sessionStorage.token = "";
+				this.$store.dispatch('logout');
+			},
+ 			openCity() {//打开城市列表
 				this.cityChange = true;
 			},
 			closeCity() {//关闭城市列表
