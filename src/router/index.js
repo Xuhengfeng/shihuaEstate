@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-27 20:45:03
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-27 23:49:12
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -13,8 +13,7 @@ const login = resolve => require(['components/home/login'], resolve)//登录
 const register = resolve => require(['components/home/register'], resolve)//注册
 const forget = resolve => require(['components/home/forget'], resolve)//忘记
 
-const mapSearch = resolve => require(['components/mapSearch/mapSearchNew'], resolve)//地图找房
-// const mapSearch = resolve => require(['components/mapSearch/mapSearch'], resolve)//地图找房
+const mapSearch = resolve => require(['components/mapSearch/mapSearch'], resolve)//地图找房
 const searchlist = resolve => require(['components/searchlist/searchlist'], resolve)//搜索
 const buyhouse = resolve => require(['components/buyhouse/buyhouse'], resolve)//二手房
 const twohandhousedetail = resolve => require(['components/buyhouse/twohandhousedetail'], resolve)//我要买房详情
@@ -56,7 +55,6 @@ export default new Router({
 		{path:"/home",component:home,meta:{KeepAlive:false}},//首页
 		{path:"/login",component:login,meta:{KeepAlive:false}},//登录
 		{path:"/register",component:register,meta:{KeepAlive:false}},//注册
-		// {path:"/mapSearch/:houseTypeId",component:mapSearch,meta:{KeepAlive:false}},//地图找房
 		{path:"/mapSearch/:houseTypeId",component:mapSearch,meta:{KeepAlive:false}},//地图找房
 		{path:"/forget",component:forget,meta:{KeepAlive:false}},//忘记
 		{path:"/searchlist",component:searchlist,meta:{KeepAlive:false}},//搜索列表
