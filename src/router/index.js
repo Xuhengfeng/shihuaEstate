@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-28 00:18:04
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-28 10:23:29
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -16,6 +16,7 @@ const forget = resolve => require(['components/home/forget'], resolve)//忘记
 const mapSearch = resolve => require(['components/mapSearch/mapSearch'], resolve)//地图找房
 const searchlist = resolve => require(['components/searchlist/searchlist'], resolve)//搜索
 const buyhouse = resolve => require(['components/buyhouse/buyhouse'], resolve)//二手房
+const contrast = resolve => require(['components/buyhouse/contrast'], resolve)//房源对比
 const twohandhousedetail = resolve => require(['components/buyhouse/twohandhousedetail'], resolve)//我要买房详情
 const renthouse = resolve => require(['components/renthouse/renthouse'], resolve)//我要租房
 const renthousedetail = resolve => require(['components/renthouse/renthousedetail'], resolve)//我要租房详情
@@ -60,6 +61,7 @@ const router = new Router({
 		{path:"/forget",component:forget,meta:{KeepAlive:false}},//忘记
 		{path:"/searchlist",component:searchlist,meta:{KeepAlive:false}},//搜索列表
 		{path:"/buyhouse",component:buyhouse,meta:{KeepAlive:false}},//我要买房
+		{path:"/contrast",component:contrast,meta:{KeepAlive:false}},//房源对比
 		{path:"/buyhouse/twohandhousedetail/:id",component:twohandhousedetail,meta:{KeepAlive:false}},//二手房详情		
 		{path:"/renthouse",component:renthouse,meta:{KeepAlive:false}},//新房
 		{path:"/renthousedetail/:id",component:renthousedetail,meta:{KeepAlive:false}},//新房详情

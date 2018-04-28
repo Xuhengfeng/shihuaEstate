@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-28 00:04:07
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-28 10:28:40
  */
 <template>
   <div class="sideBar">
@@ -27,7 +27,7 @@
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button>立即对比</button>
+                        <button @click="contranst()">立即对比</button>
                     </div>
               </div>
           </li>
@@ -61,7 +61,16 @@
 </template>
 <script>
 export default {
-  
+    data() {
+        return {
+
+        }
+    },
+    methods: {
+        contranst() {
+           this.$router.push({path:'/contrast'})
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
