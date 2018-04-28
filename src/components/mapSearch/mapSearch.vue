@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-27 23:51:23
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-28 11:59:39
  */
 <template>
     <!-- 地图找房 -->
@@ -150,7 +150,7 @@ export default {
       //二手房 租房 小区所有数据
       //同小区二手房套数列表
       IPS: [this.$url.URL.HOUSE_SECONDHOUSE, this.$url.URL.HOUSE_RENTHOUSE, this.$url.URL.MAPHOUSEALL_TREE],
-      IPS2: [this.$url.URL.MAPHOUSEALL_USED_LIST],
+      IPS2: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
       moveFlag: '1',       //手势标识 2表示移动 1表示放缩
       titlenumber: '0',    //显示文本类型
     }

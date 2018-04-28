@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-27 20:06:54
+ * @Last Modified time: 2018-04-28 14:10:26
  */
 <template>
     <div class="navmenu">
@@ -10,11 +10,11 @@
             <ul class="item1">
                 <ol class="banner_right fr">
                     <li style="height: 70px;margin-top: -2px;">
-                        <i class="iconfont icon-yonghu" v-if="token" style="font-size: 14px;">
+                        <i class="iconfont icon-yonghu" v-if="!isLogin" style="font-size: 14px;">
                             <span class="login" @click="login()">登录</span>/
                             <span class="logout" @click="register()">立即注册</span>
                         </i>
-                        <i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout">退出</span></i>
+                        <i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout" @click="logout()">退出</span></i>
                         <ul class="item4">
                             <router-link tag="li" to="">消息</router-link>
                             <router-link tag="li" to="">个人账户</router-link>
@@ -69,21 +69,29 @@ export default {
 		return {
 			showbox: 0,
             houseTypeId: 11,
-            token:window.localStorage.token?false:true
 		};
-	},
+    },
+    computed: {
+        isLogin() {
+            return this.$store.state.logined;
+        }
+    },
 	methods: {
 		changeDialog(num) {//显示对应的对话框
 			this.showbox = num; 
 		},
-		login() {//点击登陆
+		login() {//登陆
 			this.showbox = 1; 
 			this.$refs.odialog.show();
 		},
-		register() {//点击注册
+		register() {//注册
 			this.showbox = 2;
 			this.$refs.odialog.show();
-		}
+        },
+        logout() {
+            this.$store.dispatch('logout');
+        }
+        
 	},
     components: {
         oDialog,

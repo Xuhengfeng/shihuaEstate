@@ -2,12 +2,12 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-28 10:28:40
+ * @Last Modified time: 2018-04-28 17:14:20
  */
 <template>
   <div class="sideBar">
       <ul>
-          <li><img src="../../imgs/home/list.png">
+          <li @click="test($event)"><img src="../../imgs/home/list.png">
               <div class="screenOuter one">
                     <div class="content-hd title">
                         <span class="fl">对比清单</span>   
@@ -67,6 +67,9 @@ export default {
         }
     },
     methods: {
+        test(e) {
+            console.log(e);
+        },
         contranst() {
            this.$router.push({path:'/contrast'})
         }

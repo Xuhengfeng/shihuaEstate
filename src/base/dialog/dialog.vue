@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:29 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-28 00:57:48
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-04-28 14:44:28
  */
 
 <template>
@@ -16,7 +16,7 @@
 					<div class="title">账号密码登录</div>
 					<div class="inputGroup">
 						<input type="text" v-model="phonenum1" placeholder="请输入手机号" maxlength="11">
-						<input :type="setpassword" v-model="password1" placeholder="请输入登录密码" maxlength="20" @focus="setPsd()">
+						<input autocomplete="off" :type="setpassword" v-model="password1" placeholder="请输入登录密码" maxlength="20" @focus="setPsd()">
                         <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                         <button @click="login()">登录</button>
                         <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
@@ -52,7 +52,9 @@
                     <div class="title">找回密码</div>
 					<div class="inputGroup">
 						<input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
-						<div class="login_input_resgize"><input type="text" autocomplete="off" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled?'sendCode':''" ref="sendCode" @click="sendMsgCode(3)">获取验证码</button></div>
+						<div class="login_input_resgize">
+              <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled?'sendCode':''" ref="sendCode" @click="sendMsgCode(3)">获取验证码</button>
+            </div>
 						<input type="password" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)">
 						<input type="password" v-model="password5" placeholder="再次输入密码">
                         <button @click="findPassword()">确定</button>
@@ -342,6 +344,7 @@ export default {
 }
 input::-webkit-input-placeholder {
   color: #cacaca;
+  font-size: 15px;
 }
 
 .login_input_resgize > input {

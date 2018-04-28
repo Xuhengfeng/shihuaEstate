@@ -39,6 +39,12 @@ export default {
       isShowFooter: 0 //显示1 隐藏0
     };
   },
+  created() {
+    // 初始化 state
+    if(sessionStorage.logined) {
+      this.$store.state.logined=true;
+    }
+  },
   components: {
     oTopBar,
     oSideBar,

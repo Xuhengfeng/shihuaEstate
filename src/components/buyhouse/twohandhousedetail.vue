@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<o-header></o-header>
+   
 		<div class="title container">
 			<div class="tit fl">
 				<p>{{twohandhousedetail.houseTitle}}</p>
@@ -35,9 +36,12 @@
 			</div>
 			<div class="collect fr">
 				<div class="collect_s">
-					<div class="collect_a">收藏房源</div>
-					<div class="collect_a">预约看房</div>
+					<div class="collect_a" @click="addCollection($event)">收藏房源</div>
+					<div class="collect_a">预约看房</div> 
+          <!-- 飞入的物体 -->
+          <o-fly class="fly" ref="fly"></o-fly>
 				</div>
+
 				<div class="content fr">
 					<div class="price ">
 						<span class="total">{{twohandhousedetail.saleTotal}}</span>
@@ -220,6 +224,7 @@
 <script>
 import oHeader from "../../base/header/header";
 import BMap from "../../base/BMap/BMap";
+import oFly from "../../base/fly/fly";
 import "../../../static/js/jquery-3.2.1.min.js";
 import "../../../static/js/swiper-3.3.1.min.js";
 
@@ -248,30 +253,31 @@ export default {
 	    scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
     };
   },
-  watch: {
-    $route() {
-		this.render();
-	}
-  },
   components: {
     oHeader,
-    BMap
+    BMap,
+    oFly
   },
   created() {
 	  this.render();
   },
   methods: {
-	toSkip(item) {
+    //收藏房源
+    addCollection(e) {
+      console.log(e)
+      this.$refs.fly.drop(e.target)
+    },
+    //切换房源
+	  toSkip(item) {
       let path = "/buyhouse/twohandhousedetail/" + item.sdid;
       this.$router.push({ path: path });
+      this.render();
     },
+    //二手房详情
     render() {
-      //二手房详情
       let sdid = this.$route.params.id;
       let city = this.scity.value;
-      console.log(city)
-      this.$http
-        .get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
+      this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
         .then(response => {
           this.twohandhousedetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
@@ -279,23 +285,22 @@ export default {
           this.py = response.data.data.py;
           this.id = response.data.data.id
            
-          //带看记录
-        this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id ,{
-                 headers: {
-                    "scity": city
-                },
-                params: {
-                  pageNo: 1
-                }
-        })
-         .then(response =>{
-               this.housesee =  response.data.data
-         })
+            //带看记录
+            this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id ,{
+              headers: {
+                  "scity": city
+              },
+              params: {
+                pageNo: 1
+              }
+            })
+            .then(response =>{
+                  this.housesee =  response.data.data
+            })
        
 
-          //二手房周边
-          this.$http
-            .post(this.$url.URL.HOUSE_RIMHOUSING, {
+            //二手房周边
+            this.$http.post(this.$url.URL.HOUSE_RIMHOUSING, {
               pageNo: 1,
               pageSize: 10,
               px: this.px,
@@ -792,5 +797,11 @@ export default {
 .swiperimg img {
   width: 100%;
   height: 100%;
+}
+
+
+/* 飞出的物体 */
+.fly{
+  
 }
 </style>
