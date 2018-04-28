@@ -144,6 +144,17 @@
 							</div>
 						</div>
 						<div>带看记录</div>
+            <ul class="daikan">
+              <li> 看房日期 </li>
+              <li> 带看人 </li>
+              <li> 联系经纪人</li>
+            </ul>
+             <ul class="daikan"  v-for="item in housesee">
+              <li> {{item.seeDate}} </li>
+              <li> {{item.emplName}} </li>
+              <li> {{item.phone}}</li>
+            </ul>
+            
 					</div>
 				</div>
 					<div class="headtitle">关联小区</div>
@@ -232,6 +243,8 @@ export default {
       samehouseused: [], //同小区房源列表
       rimhousing: "", //周边房源
       buildsdid: "", //同小区sdid
+      housesee:[],   //约看
+      id:"",//带看id
 	    scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
     };
   },
@@ -256,6 +269,7 @@ export default {
       //二手房详情
       let sdid = this.$route.params.id;
       let city = this.scity.value;
+      console.log(city)
       this.$http
         .get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
         .then(response => {
@@ -263,6 +277,20 @@ export default {
           this.buildsdid =  response.data.data.buildSdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
+          this.id = response.data.data.id
+           
+          //带看记录
+        this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id ,{
+                 headers: {
+                    "scity": city
+                },
+                params: {
+                  pageNo: 1
+                }
+        })
+         .then(response =>{
+               this.housesee =  response.data.data
+         })
        
 
           //二手房周边
@@ -277,7 +305,6 @@ export default {
             })
             .then(response => {
               this.rimhousing = response.data.data;
-                 console.log(this.rimhousing);
             });
 
           //关联小区
@@ -616,10 +643,9 @@ export default {
   text-align: center;
 }
 .headtitle {
-  height: 25px;
   font-size: 20px;
-  line-height: 50px;
-  padding: 20px 10px;
+  line-height: 30px;
+  margin-top: 60px;
 }
 .callpeople {
   width: 380px;
@@ -664,7 +690,16 @@ export default {
   width: 100%;
   height: 100%;
 }
-
+.daikan{
+  width: 550px;
+  margin-top: 20px;
+  display: flex;
+  vertical-align: middle;
+   justify-content: space-between;
+}
+/* .daikan li{
+  width: 150px;
+} */
 /*轮播切换*/
 
 .pc-slide {

@@ -139,6 +139,16 @@
 							</div>
 						</div>
 						<div>带看记录</div>
+						 <ul class="daikan">
+              <li> 看房日期 </li>
+              <li> 带看人 </li>
+              <li> 联系经纪人</li>
+            </ul>
+             <ul class="daikan"  v-for="item in renthousesee">
+              <li> {{item.seeDate}} </li>
+              <li> {{item.emplName}} </li>
+              <li> {{item.phone}}</li>
+            </ul>
 					</div>
 				</div>
 					<div class="headtitle">关联小区</div>
@@ -225,7 +235,9 @@
 				cancel: false, //取消登陆阴影
 				samehouserent: [], //同小区房源列表
 				rentrimhousing:"",//周边房源
-			  bulidinfo: "", //关联小区
+				bulidinfo: "", //关联小区
+				renthousesee:[],//租房带看记录
+				 id:"",//带看id
 				scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
 			};
 		},
@@ -245,15 +257,30 @@
 				this.$router.push({ path: path });
 			},
 			render() {
-				//租房详情
-				let sdid = this.$route.params.id;
-				let city = this.scity.value;
-				this.$http.get(this.$url.URL.RENTHOUSE_GETDATAILINFO + city + "/" + sdid)
-				.then(response => {
-					this.sellrentdetail = response.data.data;
-					this.buildsdid = response.data.data.buildSdid;
-					this.px = response.data.data.px;
-					this.py = response.data.data.py;
+							//租房详情
+							let sdid = this.$route.params.id;
+							let city = this.scity.value;
+							this.$http.get(this.$url.URL.RENTHOUSE_GETDATAILINFO + city + "/" + sdid)
+							.then(response => {
+								this.sellrentdetail = response.data.data;
+								this.buildsdid = response.data.data.buildSdid;
+								this.px = response.data.data.px;
+								this.py = response.data.data.py;
+								this.id = response.data.data.id
+
+							//带看记录
+						this.$http.get(this.$url.URL.HOUSE_RENTHOUSESEE  + this.id ,{
+										headers: {
+												"scity": city
+										},
+										params: {
+											pageNo: 1
+										}
+						})
+						.then(response =>{
+									this.renthousesee =  response.data.data
+									console.log(this.renthousesee)
+						})
 							//租房周边
           	this.$http
             .post(this.$url.URL.RENTHOUSE_RIMHOUSING, {
@@ -283,7 +310,7 @@
 						)
 						.then(response => {
 							this.samehouserent= response.data.data;
-							console.log(this.samehouserent)
+							
 
 						});
 				}); 
@@ -347,7 +374,6 @@
 
 <style scoped="scoped">
 	@import '../../../static/css/swiper-3.4.2.min.css';
-	@import "../../../static/css/swiper-3.4.2.min.css";
 .title {
   padding: 24px;
 }
@@ -603,10 +629,9 @@
   text-align: center;
 }
 .headtitle {
-  height: 25px;
   font-size: 20px;
-  line-height: 50px;
-  padding: 20px 10px;
+  line-height: 30px;
+  margin-top: 60px;
 }
 .callpeople {
   width: 380px;
@@ -651,7 +676,16 @@
   width: 100%;
   height: 100%;
 }
-
+.daikan{
+  width: 550px;
+  margin-top: 20px;
+  display: flex;
+  vertical-align: middle;
+   justify-content: space-between;
+}
+/* .daikan li{
+  width: 150px;
+} */
 /*轮播切换*/
 
 .pc-slide {
