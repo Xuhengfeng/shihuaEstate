@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:29 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-29 18:26:44
+ * @Last Modified time: 2018-04-30 01:52:18
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -422,6 +422,9 @@ input[type="checkbox"] {
 @keyframes bounce-in {
   0% {
     transform: scale(0);
+  }
+  90%{
+    transform: scale(1.1);
   }
   100% {
     transform: scale(1);
