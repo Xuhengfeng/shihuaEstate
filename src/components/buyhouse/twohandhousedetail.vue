@@ -38,8 +38,7 @@
 				<div class="collect_s">
 					<div class="collect_a" @click="addCollection($event)">收藏房源</div>
 					<div class="collect_a">预约看房</div> 
-          <!-- 飞入的物体 -->
-          <o-fly class="fly" ref="fly"></o-fly>
+          
 				</div>
 
 				<div class="content fr">
@@ -217,6 +216,8 @@
 				</div>
 			</div>
 		</div>
+    <!-- 飞入的物体 -->
+    <o-fly class="fly" ref="fly"></o-fly>
 	</div>
 
 </template>

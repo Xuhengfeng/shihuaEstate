@@ -1,70 +1,67 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:29 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-28 14:44:28
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-29 18:26:44
  */
-
 <template>
-  <!-- 用户登入 、注册dialog组件 -->
+  <!-- 用户登录 、注册dialog组件 -->
   <div class="dialog">
-       <!-- 用户登入start -->
-		<div class="panel_login " id="dialog"  v-show="showFlag">
-			<div class="panel_info">
-				<i class="close_login" @click.stop="cancel()">×</i>
-				<div class="panel_tab" v-if="showbox == 1">
-					<div class="title">账号密码登录</div>
-					<div class="inputGroup">
-						<input type="text" v-model="phonenum1" placeholder="请输入手机号" maxlength="11">
-						<input autocomplete="off" :type="setpassword" v-model="password1" placeholder="请输入登录密码" maxlength="20" @focus="setPsd()">
-                        <div class="fr fontColor" @click="jump(4)">忘记密码</div>
-                        <button @click="login()">登录</button>
-                        <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
-                        <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-					</div>
-				</div>
-				
-				<div class="panel_tab" v-if="showbox == 2">
-                    <div class="title">手机号码注册</div>
-					<div class="inputGroup">
-						<input type="text" v-model="phonenum2" placeholder="请输入手机号" maxlength="11">
-						<div class="login_input_resgize"><input type="text" v-model="msgcode1" placeholder="请输入验证码"><button @click="sendMsgCode(1)">获取验证码</button></div>
-						<input type="password" v-model="password2" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
-						<input type="password" v-model="password3" placeholder="请再次输入密码" maxlength="11">
-                        <div class="fontColor"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
-                        <button @click="register()">注册</button>
-                        <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
-					</div>
-				</div>
-
-				<div class="panel_tab" v-if="showbox == 3">
-                    <div class="title">手机快捷登陆</div>
-					<div class="inputGroup">
-						<input type="text" v-model="phonenum3" placeholder="请输入手机号" maxlength="11">
-						<div class="login_input_resgize"><input type="text" v-model="msgcode2" placeholder="请输入验证码"><button @click="sendMsgCode(2)">获取验证码</button></div>
-                        <button @click="rapid()">登录</button>
-                        <div class="dl_login"  @click="login()">账号密码登录</div>
-                        <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-					</div>
-				</div>
-
-				<div class="panel_tab" v-if="showbox == 4">
-                    <div class="title">找回密码</div>
-					<div class="inputGroup">
-						<input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
-						<div class="login_input_resgize">
-              <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled?'sendCode':''" ref="sendCode" @click="sendMsgCode(3)">获取验证码</button>
+    <transition name="bounce">
+        <div class="panel_login " v-show="showFlag">
+            <i class="close_login" @click.stop="cancel()">×</i>
+            <div class="panel_tab" v-if="showbox == 1">
+              <div class="title">账号密码登录</div>
+              <div class="inputGroup">
+                <input type="text" v-model="phonenum1" placeholder="请输入手机号" maxlength="11">
+                <input autocomplete="off" :type="setpassword" v-model="password1" placeholder="请输入登录密码" maxlength="20" @focus="setPsd()">
+                            <div class="fr fontColor" @click="jump(4)">忘记密码</div>
+                            <button @click="login()">登录</button>
+                            <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
+                            <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
+              </div>
             </div>
-						<input type="password" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)">
-						<input type="password" v-model="password5" placeholder="再次输入密码">
-                        <button @click="findPassword()">确定</button>
-                        <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 用户登入end -->
-        <div class="shadowlay" v-if="showFlag" @click="cancel()"></div>
+            
+            <div class="panel_tab" v-if="showbox == 2">
+                        <div class="title">手机号码注册</div>
+              <div class="inputGroup">
+                <input type="text" v-model="phonenum2" placeholder="请输入手机号" maxlength="11">
+                <div class="AuthCode"><input type="text" v-model="msgcode1" placeholder="请输入验证码"><button @click="sendMsgCode(1)">获取验证码</button></div>
+                <input type="password" v-model="password2" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
+                <input type="password" v-model="password3" placeholder="请再次输入密码" maxlength="11">
+                            <div class="fontColor"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
+                            <button @click="register()">注册</button>
+                            <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
+              </div>
+            </div>
+
+            <div class="panel_tab" v-if="showbox == 3">
+                        <div class="title">手机快捷登陆</div>
+              <div class="inputGroup">
+                <input type="text" v-model="phonenum3" placeholder="请输入手机号" maxlength="11">
+                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码"><button @click="sendMsgCode(2)">获取验证码</button></div>
+                            <button @click="rapid()">登录</button>
+                            <div class="dl_login"  @click="login()">账号密码登录</div>
+                            <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
+              </div>
+            </div>
+
+            <div class="panel_tab" v-if="showbox == 4">
+                        <div class="title">找回密码</div>
+              <div class="inputGroup">
+                <input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
+                <div class="AuthCode">
+                  <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled?'sendCode':''" ref="sendCode" @click="sendMsgCode(3)">获取验证码</button>
+                </div>
+                <input type="password" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)">
+                <input type="password" v-model="password5" placeholder="再次输入密码">
+                            <button @click="findPassword()">确定</button>
+                            <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
+              </div>
+            </div>
+        </div>
+    </transition>
+    <div class="shadowlay" v-if="showFlag" @click="cancel()"></div>
   </div>
 </template>
 <script>
@@ -118,8 +115,8 @@ export default {
     cancel() {
       this.hide();
     },
+    //登录
     login() {
-      //登录
       this.$http
         .post(this.$url.URL.USER_LOGIN, {
           deviceCode: "web",
@@ -127,25 +124,38 @@ export default {
           password: this.password1
         })
         .then(res => {
-          if(res.status == 200) {
-            this.cancel();
-            this.$message({
-              message: "登录成功",
-              type: 'success'
-            });
-            sessionStorage.token=res.data.data;
-            this.$store.dispatch('login');
+          if(res.data.status == 1) {
+            let code = res.data.data;
+            this.phonenum1 = '';
+            this.password1 = '';
+            this.userDetailInfo(code);
           }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    register() {//注册
-      if (
-        !this.phonenum2 ||
-        !this.password2 ||
-        !this.password3 ||
-        this.password2 !== this.password3
+    // 获取用户详细信息
+    userDetailInfo(code) {
+      this.$http
+        .post(this.$url.URL.USER_DETAILINFO,{},{
+          headers: {'unique-code': code}
+        })
+        .then(res => {
+          if(res.data.status == 1) {
+            sessionStorage.token = code;
+            sessionStorage.userInfo = JSON.stringify(res.data.data);
+            this.cancel();
+            this.$store.dispatch('login');
+            this.$message({message: "登录成功",type: 'success'});
+          }
+        });
+    },
+    //注册
+    register() {
+      if (!this.phonenum2 ||
+          !this.password2 ||
+          !this.password3 ||
+          this.password2 !== this.password3
       ) {
         this.cancel();
         return this.$alert("填写信息不完整!");
@@ -160,7 +170,7 @@ export default {
         .then(res => {
           console.log(res)
           console.log(res.status)
-          if(res.status == 200) {
+          if(res.data.status == 1) {
             this.cancel();
             this.$alert("注册成功!");
             localStorage.token=res.data.data;
@@ -170,7 +180,8 @@ export default {
           }
         });
     },
-    rapid() {//快捷登录 接口有问题
+    //快捷登录 接口有问题
+    rapid() {
       this.$http
         .post(this.$url.URL.SMSCODE_LOGIN, {
           deviceCode: "web",
@@ -179,12 +190,18 @@ export default {
           smsCode: this.msgcode2
         })
         .then(res => {
-          if (res.data.status == "500") {
+          if (res.data.status == 1) {
+            this.$message({
+              message: "登录成功",
+              type: 'success'
+            });
+          }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    findPassword() {//找回密码 (设置密码登录)
+    //找回密码 (设置密码登录)
+    findPassword() {
       this.$http
         .post(this.$url.URL.SMSCODE_RESETLOGIN, {
           confirmPassword: this.password4,
@@ -205,7 +222,8 @@ export default {
           }
         });
     },
-    countDown() {//验证码倒计时
+    //验证码倒计时
+    countDown() {
       let timer,times=60;
       timer = setInterval(()=> {
         times--;
@@ -220,7 +238,8 @@ export default {
         }
       }, 1000);
     },
-    sendMsgCode(num) {//发送验证码
+    //发送验证码
+    sendMsgCode(num) {
       if(!this.disabled) {
         let mobile, operateType;
         if (num == 1) {
@@ -261,9 +280,8 @@ export default {
     //     this.$alert("必须是8~16位含字母和数字的密码");
     //     this.password = "";
     //   }
-    /**
-     *num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
-     */
+    
+    //num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
     jump(num) {
       this.$emit("changeDialog", num);
     }
@@ -281,8 +299,8 @@ export default {
   z-index: 995;
 }
 
-/*登陆注册*/
-.panel_login {
+//登陆注册
+.panel_login{
   width: 381px;
   background-color: #fff;
   position: fixed;
@@ -296,11 +314,9 @@ export default {
   -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   -o-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
-}
-.panel_login .panel_info {
   padding: 40px 0 40px;
 }
-.panel_login .panel_info .close_login {
+.panel_login .close_login{
   cursor: pointer;
   position: absolute;
   right: 15px;
@@ -347,7 +363,7 @@ input::-webkit-input-placeholder {
   font-size: 15px;
 }
 
-.login_input_resgize > input {
+.AuthCode > input {
   width: 160px;
   height: 43px;
   line-height: 43px;
@@ -355,7 +371,7 @@ input::-webkit-input-placeholder {
   margin-top: 10px;
 }
 
-.login_input_resgize > button {
+.AuthCode > button {
   float: right;
   background: red;
   width: 108px;
@@ -394,13 +410,23 @@ input[type="checkbox"] {
   color: #000000;
 }
 
-/* 发送验证码 */
+// 发送验证码
 .sendCode{
   background: rgba(0, 0, 0, 0.3)!important;
 }
 
-
-/*底部*/
+// 动画
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>
 
 

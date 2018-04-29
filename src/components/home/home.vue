@@ -8,47 +8,55 @@
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
 					<span class="iconfont icon-location location" @click="openCity()">{{selectCity}}</span>
-					<div class="city-change " v-if="cityChange">
-						<!-- icon 关闭阴影层 -->
-						<span class="close" @click="closeCity()"></span>
-						<div class="title">选择城市
-							<div class="city-tab">
-								<span class="code1">热门</span>
-								<a :key="index" v-for="(item1,index) in city[0].item"
-									@click="changeAddress(item1.name)">
-									{{item1.name}}
-								</a>
+					<transition name="bounce">
+						<div class="city-change " v-if="cityChange">
+							<span class="close" @click="closeCity()"></span>
+							<div class="title">选择城市
+								<div class="city-tab">
+									<span class="code1">热门</span>
+									<a :key="index" v-for="(item1,index) in city[0].item"
+										@click="changeAddress(item1.name)">
+										{{item1.name}}
+									</a>
+								</div>
+							</div>
+							<div class="title-line"></div>
+							<div class="fc-main clear">
+								<div class="fl citys-l">
+									<ul>
+										<li class="clear" :key="index1" v-for="(item1,index1) in city" >
+											<span class="code-title fl">{{item1.title}}</span>
+											<div class="city-enum fl">
+												<a :key="index2"
+													v-for="(item2,index2) in item1.item"
+													@click="changeAddress(item2.name)">
+													{{item2.name}}
+												</a>
+											</div>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
-						<div class="title-line"></div>
-						<div class="fc-main clear">
-							<div class="fl citys-l">
-								<ul>
-									<li class="clear" :key="index1" v-for="(item1,index1) in city" >
-										<span class="code-title fl">{{item1.title}}</span>
-										<div class="city-enum fl">
-											<a :key="index2"
-												v-for="(item2,index2) in item1.item"
-												@click="changeAddress(item2.name)">
-												{{item2.name}}
-											</a>
-										</div>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
+					</transition>
 				</div>
 				<div class="navmenu fr">
 					<ul class="item1">
-						<router-link tag="li" to="" class="loginregize">
-							<i class="iconfont icon-yonghu" v-if="!isLogin">
-								<span class="login" @click="login()">登录</span>/
-								<span class="logout" @click="register()">立即注册</span>
-							</i>
-							<i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/
+						<router-link tag="li" to="">
+							<div v-if="!isLogin">
+								<i class="iconfont icon-yonghu"></i>
+								<span class="login" @click="login()">登录</span> 
+								<span>/</span>
+								<span class="register" @click="register()">立即注册</span>
+							</div>
+							<div v-else>
+								<div class="headImage">
+									<img :src="userInfo.headImage">
+								</div>
+								<span class="user">{{userInfo.nickname}}</span>
+								<span>/</span> 
 								<span class="logout"  @click="logout()">退出</span>
-							</i>
+							</div>
 							<ul class="item4">
 								<router-link tag="li" to="">消息</router-link>
 								<router-link tag="li" to="">个人账户</router-link>
@@ -293,15 +301,16 @@
 		},
 		computed: {
 			isLogin() {
-				console.log(this.$store.state.logined)
 				return this.$store.state.logined;
-			}
+			},
+			userInfo() {
+            	return this.$store.state.LoginedUser;
+        	}
 		},
 		components:{
 			oDialog,
 		},
 		created() {
-			console.log(this.$store);
 			// let that = this;
 			// let geoc = new BMap.Geocoder(); 
 			// let geolocation = new BMap.Geolocation();
@@ -456,7 +465,7 @@
 	}
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 /*城市切换*/
 .shadowlay {
 	position: fixed;
@@ -669,24 +678,36 @@
 	border-bottom: 1px solid #a7a7a6;
 }
 
-.navmenu .item1 li:hover {
+.navmenu .item1 li:hover:not(:first-child){
 	color: red;
 }
 
-.navmenu .item1 li .login:hover {
+/* 登录/退出 */
+.navmenu .login:hover,
+.navmenu .register:hover,
+.navmenu .logout:hover{
 	color: red;
 }
-
-.navmenu .item1 li .logout:hover {
-	color: red;
-}
-
 .icon-yonghu,
 .login,
 .logout {
 	font-size: 19 px;
 	color: #FFFFFF;
 }
+.headImage{
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+	overflow: hidden;
+	float: left;
+	margin-right: 10px;
+	vertical-align: middle;
+	img{
+		width: 100%;
+		height: 100%;
+	}
+}
+
 
 .search-box-wrap{
 	position: relative;
@@ -701,7 +722,7 @@
 .search-box-wrap .mapSearchHouse{
 	position: absolute;
 	right: -130px;
-	top: 63px;
+	bottom: 10px;
 	width: 100px;
 	height: 50px;
 	line-height: 50px;
@@ -709,7 +730,6 @@
 	font-size: 15px;
 	color: #ffffff;
 	text-align: center;
-	z-index: 1100;
 }
 .search-box-wrap .search-hd span {
 	display: inline-block;
@@ -870,7 +890,6 @@
 	line-height: 25px;
 }
 /*购房指南*/
-
 #purchaseGuide .goods-bd ul {
 	margin-right: -60px;
 }
@@ -888,19 +907,18 @@
 #purchaseGuide .goods-bd li .image:hover img {
 	animation: pulse 1s .2s ease both;
 }
-/*bgColor*/
 
+/*背景颜色*/
 .bgColor1,
 .bgColor3 {
 	background: #FFFFFF;
 }
-
 .bgColor2,
 .bgColor4 {
 	background: #F9F9F9;
 }
-/*ad广告*/
 
+/*ad广告*/
 .advertisement {
 	width: 100%;
 	height: 485px;
@@ -958,13 +976,11 @@
 .QRcode .image img {
 	width: 100%;
 }
-
 .content {
 	width: 470px;
 	height: 167px;
 }
 /*动画*/
-
 @-webkit-keyframes pulse {
 	0% {
 		-webkit-transform: scale(1)
@@ -975,5 +991,16 @@
 	100% {
 		-webkit-transform: scale(1)
 	}
+}
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

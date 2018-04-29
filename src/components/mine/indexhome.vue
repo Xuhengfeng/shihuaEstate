@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-27 00:51:52
+ * @Last Modified time: 2018-04-29 22:24:16
  */
 <template>
     <div>
@@ -39,7 +39,7 @@
 export default {
     data() {
         return {
-            datalist: []
+            datalist: [],
         };
     },
     created() {
@@ -47,20 +47,19 @@ export default {
     },
     methods: {
         collectionListRequest() {
-            let token = localStorage.token;
-            let scity = localStorage.selectCity.value;
-            console.log(scity)
-            this.$http.get(this.$url.URL.HOUSE_COLLECTIONLIST, {
+          this.$http
+            .get(this.$url.URL.HOUSE_COLLECTIONLIST, {
                 headers: {
                     "Content-Type": "application/json",
-                    "scity": scity,
-                    "unique-code": token
+                    "scity": JSON.parse(localStorage.selectCity).value,
+                    "unique-code": sessionStorage.token
                 },
                 params: {
                     pageNo: 1
                 }
             })
             .then(response => {
+                console.log(response)
                 // //修正数据
                 // response.data.data.forEach(item => {
                 //     item.houseTag = item.houseTag.split(",");
@@ -87,9 +86,6 @@ h3 {
     flex-flow: row nowrap;
     padding: 20px 0;
     border-bottom: 1px solid #cacaca;
-    > div {
-      flex: 1;
-    }
     // 左边
     .image {
       flex: 232px 0 0;
@@ -104,6 +100,7 @@ h3 {
     }
     // 中间
     .description {
+      flex: 1;
       display: flex;
       flex-flow: column nowrap;
       justify-content: space-between;
@@ -140,6 +137,8 @@ h3 {
     }
     // 右边
     .r-content {
+      flex: 150px 0 0;
+      width: 150px;
       text-align: right;
       .collection {
         font-size: 16px;

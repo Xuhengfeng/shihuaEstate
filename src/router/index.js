@@ -1,19 +1,18 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-28 10:23:29
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-04-29 15:41:48
  */
 import Vue from 'vue'
 import Router from 'vue-router'
-
 
 const home = resolve => require(['components/home/home'], resolve)// 首页
 const login = resolve => require(['components/home/login'], resolve)//登录
 const register = resolve => require(['components/home/register'], resolve)//注册
 const forget = resolve => require(['components/home/forget'], resolve)//忘记
 
-const mapSearch = resolve => require(['components/mapSearch/mapSearch'], resolve)//地图找房
+const mapSearch = resolve => require(['components/mapSearch/mapSearch'], resolve)//地图找房(百度地图)
 const searchlist = resolve => require(['components/searchlist/searchlist'], resolve)//搜索
 const buyhouse = resolve => require(['components/buyhouse/buyhouse'], resolve)//二手房
 const contrast = resolve => require(['components/buyhouse/contrast'], resolve)//房源对比
@@ -46,7 +45,6 @@ const indexmessage = resolve => require(['components/mine/indexmessage'], resolv
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
 
 Vue.use(Router)
-
 const router = new Router({
 	// mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {

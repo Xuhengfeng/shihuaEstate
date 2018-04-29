@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 14:05:54 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-27 00:30:43
+ * @Last Modified time: 2018-04-29 20:49:07
  */
 <template>
 	<!-- 我的 -->
@@ -11,7 +11,7 @@
 			<div>
 				<div class="side">
 					<div class="image">
-						<img src="" alt="">
+						<img :src="userInfo.headImage" alt="">
 					</div>
 					<ul>
 						<li :key="index" :class="index==num?'bgColor':''" v-for="(item,index) in list" @click="routerLink(item,index)">{{item}}</li>
@@ -39,6 +39,11 @@ export default {
 			num: 0,
 			list: ['账户首页','待看列表','已看记录','看房报告','我的收藏','我的委托','我的经纪人','我的咨询','消息','编辑资料']
 		}
+	},
+	computed: {
+		userInfo() {
+            return this.$store.state.LoginedUser;
+        }
 	},
 	methods:{
 		// 跳转子路由
@@ -79,6 +84,10 @@ export default {
 			background: red;
 			display: block;
 			margin-bottom: 10px;
+			img{
+				width: 100%;
+				height: 100%;
+			}
 		}
 		ul{
 			width: 100%;
