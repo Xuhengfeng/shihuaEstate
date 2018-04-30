@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-29 21:27:14
+ * @Last Modified time: 2018-04-30 20:06:22
  */
 <template>
   <div id="app">
@@ -47,12 +47,16 @@ export default {
     };
   },
   created() {
-    // 初始化state
+    // 初始化state------------------------------------->>>>>>>>>>
     if(sessionStorage.logined) {
       this.$store.state.logined=true;
       let user = JSON.parse(sessionStorage.userInfo);
       this.$store.state.LoginedUser=Object.assign({}, user);
     }
+    if(localStorage.contrastList) {
+      this.$store.state.contrastList = JSON.parse(localStorage.contrastList);
+    }
+    // 初始化state--------------------------------------------<<<<<<<<<<
   },
   components: {
     oTopBar,

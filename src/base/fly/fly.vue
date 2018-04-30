@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       ballFlag: false,
-      targetEl: null
+      targetEl: null,
     }
   },
   methods: {
@@ -38,10 +38,10 @@ export default {
           let y = -(compareImg.top-rect.top);
           if(y<=0) {
             /* y 轴 贝塞尔曲线*/
-            this.$refs.ball.style.transition="all .6s cubic-bezier(0.49, -0.29, 0.75, 0.41)";
+            this.$refs.ball.style.transition="all 0.6s cubic-bezier(0.49, -0.29, 0.75, 0.41)";
           }else{
             /* y 轴 贝塞尔曲线*/
-            this.$refs.ball.style.transition="all .6s cubic-bezier(.39,1.59,.47,1.26)";
+            this.$refs.ball.style.transition="all 0.6s cubic-bezier(.39,1.59,.47,1.26)";
           }
           
 
@@ -81,13 +81,13 @@ export default {
 .ball-container {
   .ball{
     position:fixed;
-    
     /*内从做横向运动*/
     .inner{
       width: 20px;
+      background: url(../../imgs/home/contranst.png) no-repeat center center;
+      background-size: cover;
       height: 20px;
       border-radius: 50%;
-      background: #f00;
       transition: all .6s linear;
     }
   }

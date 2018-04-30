@@ -2,13 +2,12 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:18 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-29 21:25:37
+ * @Last Modified time: 2018-04-30 17:44:18
  */
 const state = {
-	// 登录状态为没登录
-	logined: false,
-	// 用户信息数据
-	LoginedUser: {}
+	logined: false,   //登录状态为没登录
+	LoginedUser: {},  //用户信息数据
+	contrastList: [], //缓存对比清单
 }
 
 export default state;

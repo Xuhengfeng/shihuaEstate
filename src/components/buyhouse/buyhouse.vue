@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-29 23:20:35
+ * @Last Modified time: 2018-04-30 21:24:08
  */
 <template>
 	<div>
@@ -112,15 +112,21 @@
 					
 					<div class="item">
 						<ul>
-							<li v-for="item in buyhouse">
+							<li :key="index" v-for="(item,index) in buyhouse">
 								<div class="image" @click="toSkip(item)">
-									<img :src="item.housePic"  alt="" />
+									<img :src="item.housePic"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce intrdex " @click="toSkip(item)" >{{item.houseTitle}}<span class="fr"style="font-size: 16px;color:rgba(0,0,0,0.5); " @click.stop="addCollection($event)">收藏</span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span>
+									<div class="introduce" @click="toSkip(item)" >{{item.houseTitle}}
+                    <span class="fr" @click.stop="addCollection($event)">收藏</span>
+                    <span class="contrast fr" @click.stop="addContrast(item, $event)">{{item.contentFlag?item.contentFlag:'加入对比'}}</span>
+                  </div>
+									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
+                    <span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span>
 										<span class="fr prices">{{item.saleTotal}}<span class="wan">万</span></span></div>
-									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
+									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" />
+                    <span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span>
+                  </div>
 									<div class="introduce ">
 										<span class="intrspan one">{{item.houseFeature}}</span>
 										<span class="intrspan two">{{item.areaName}}</span>
@@ -152,7 +158,7 @@ import oFly from "../../base/fly/fly";
 export default {
   data() {
     return {
-      selectCity: JSON.parse(window.localStorage.selectCity),
+      
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
@@ -163,15 +169,9 @@ export default {
       listseven: [],
       listeight: [],
       // listnine:["随时看房", "新上", "满五年", "世华独家"],
-      datas: "",
       num: 0,
       showBtn: false,
       showBtnone: false,
-      dialogVisible: false,
-      loginshow: null, //登陆注册阴影层
-      rightnow: true, //登陆注册判断条件
-      cancel: false, //取消登陆阴影
-      buyhouse: null, //二手房列表
       querycount: {
         //二手房总数量
         count: ""
@@ -206,19 +206,50 @@ export default {
         pageSize: null,
         roomsNum: null,
         scity: null
-      }
+      },
+      buyhouse: [], //二手房列表
+      selectCity: JSON.parse(localStorage.selectCity),//当前城市
+      contrastList:[]//缓存对比清单
     };
   },
   created() {
-	this.params.scity = this.selectCity.value;
-	let city = this.selectCity.value;
+    this.params.scity = this.selectCity.value;
+    let city = this.selectCity.value;
     this.render(city);
   },
   methods: {
     //收藏房源
     addCollection(e) {
-      console.log(e.target)
-      this.$refs.fly.drop(e.target)
+
+    },
+    //加入对比清单
+    addContrast(item, e) {
+      //判断本地缓存是否存在 存在则初始化对比清单
+      let arr = [];
+      if(localStorage.contrastList){
+        arr = JSON.parse(localStorage.contrastList);
+      }
+      //判断当前点击对象是否存在 
+      if(JSON.stringify(arr).indexOf(JSON.stringify(item)) == '-1') {
+        if(arr.length >= 4){
+          //判断是否点击的已加入对比的按钮
+          if(item.contentFlag == '已加入对比') {
+            return;
+          }else{
+            //提示用户
+            this.$alert('对比清单最多4个!', '添加失败', {
+              confirmButtonText: '确定'
+            });
+          }
+        }else{
+          arr.push(item);
+          e.target.innerHTML = '已加入对比';
+          this.$refs.fly.drop(e.target);
+          localStorage.contrastList = JSON.stringify(arr);
+        }
+        //修改状态
+        this.$store.dispatch('showlist');
+      }
     },
     toSkip(item) {
       let path = "/buyhouse/twohandhousedetail/" + item.sdid;
@@ -232,7 +263,17 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          this.buyhouse = response.data.data;
+          if(localStorage.contrastList) {
+            //修正数据 根据本地缓存修正response数据
+            response.data.data.forEach((item)=>{
+              JSON.parse(localStorage.contrastList).forEach((item2)=>{
+                if(item.sdid == item2.sdid){
+                  item.contentFlag = '已加入对比';
+                }
+              })
+            })
+          }
+          this.buyhouse = response.data.data;            
         });
       //获取搜索二手房总数量
       this.$http
@@ -383,37 +424,94 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style lang="less" scoped>
+//筛选条件
 .filter {
-  width: 1150px;
+  overflow: hidden;
   margin-top: 26px;
-  padding: 25px 35px;
   background-color: #fbfbfb;
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
-  font-size: 12px;
-  line-height: 1;
   position: relative;
-  font-size: 14px;
+  border-bottom: 1px solid #cacaca;
+  >ul{
+    margin-top: 24px;
+    margin-left: 35px;
+    >li{
+      overflow: hidden;
+      height: 25px;
+      line-height: 25px;
+      margin-bottom: 24px;
+      >ol{
+        >li{
+          cursor: pointer;
+          float: left;
+          text-align: left;
+          width: 100px;
+          white-space: nowrap;
+        }
+        &:nth-of-type(1){
+          width: 110px;
+          font-size: 14px;
+        }
+      }
+    }
+  } 
+}
+//高亮
+.querybtn {
+  color: #ff4343;
+  font-weight: bold;
 }
 
-.filter > ul > li {
-  margin-top: 24px;
-  display: block;
+//列表项 
+.item ul li{
   overflow: hidden;
-  line-height: 24px;
-}
-.filter ol li {
-  cursor: pointer;
-  float: left;
-  text-align: left;
-  width: 100px;
-  white-space: nowrap;
-}
-.filter > ul > li:nth-of-type(1) > ol:nth-of-type(2) {
-  margin-left: 68px;
-}
-.filter > ul > li > ol:nth-of-type(2) {
-  margin-left: 100px;
+  display: flex;
+  height: 175px;
+  border-bottom: 1px solid #cacaca;
+  padding: 33px 0;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  .image{
+    flex: 232px 0 0;
+    width: 232px;
+    height: 175px;
+    margin-right: 25px;
+    background: #f5f5f5;
+    cursor: pointer;
+    img{
+      width: 100%;
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+  .direciton{
+    flex: 1;
+    display: flex;
+    height: 100%;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    >div:nth-of-type(1){
+      font-size: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      cursor: pointer;
+      span{
+        color:rgba(0,0,0,0.5);
+        margin-left: 10px;
+        padding: 5px;
+        font-size: 10px;
+        border: 1px solid #cacaca;
+        visibility: hidden;
+        &:hover{
+          color: #000000;
+        }
+      }
+    }
+  }
+  &:hover .direciton>div:nth-of-type(1) span{
+    visibility: visible;
+  }
 }
 
 .m-checkbox {
@@ -433,124 +531,6 @@ export default {
 .quyu_kind > li > input {
   height: 20px;
   width: 37px;
-}
-/*登陆注册*/
-
-.panel_login {
-  width: 381px;
-  height: 392px;
-  background-color: #fff;
-  position: fixed;
-  z-index: 999;
-  left: 50%;
-  top: 50%;
-  margin-left: -190px;
-  margin-top: -205px;
-  /*    padding-left: 20px;*/
-  box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  -o-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
-  border-radius: 2px;
-}
-
-.panel_login .panel_info {
-  padding-top: 40px;
-  /*width: 300px;*/
-}
-
-.panel_login .panel_info .close_login {
-  cursor: pointer;
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  padding: 4px;
-}
-
-.panel_login .panel_tab .title .fl {
-  font-size: 20px;
-  color: #333;
-  font-weight: bold;
-  margin-left: 35%;
-  cursor: pointer;
-}
-
-.login_input {
-  margin-left: 10%;
-}
-
-.login_input > input {
-  width: 282px;
-  height: 43px;
-  line-height: 43px;
-  color: #333333;
-  padding-left: 16px;
-  margin-top: 10px;
-}
-
-.login_input_resgize {
-  width: 305px;
-  height: 60px;
-}
-
-.login_input_resgize > input {
-  width: 145px;
-  height: 43px;
-  line-height: 43px;
-  color: #333333;
-  padding-left: 16px;
-  margin-top: 10px;
-}
-
-.login_input_resgize > button {
-  background: red;
-  width: 108px;
-  height: 45px;
-  line-height: 43px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 29px;
-  font-size: 14px;
-  color: #ffffff;
-}
-
-.forget {
-  position: absolute;
-  left: 295px;
-  color: #000000;
-  font-size: 14px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.dl_login {
-  position: absolute;
-  left: 50px;
-  color: #000000;
-  font-size: 14px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.org_btn {
-  background: red;
-  height: 50px;
-  color: #fff;
-  width: 301px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 40px;
-  margin-left: 38px;
-}
-
-.come_login {
-  width: 128px;
-  height: 16px;
-  font-size: 16px;
-  margin-top: 46px;
-  margin-left: 115px;
 }
 
 .check {
@@ -602,6 +582,7 @@ export default {
 .content .leftContent .orderFilter .filterAgain {
   font-size: 12px;
   line-height: 50px;
+
 }
 .content .leftContent .orderFilter .filterAgain .title {
   display: inline-block;
@@ -625,22 +606,11 @@ export default {
 .listContentLine {
   border-bottom: 1px solid #f1f1f1;
 }
-.intrdex {
-  font-size: 22px;
-  color: rgba(0, 0, 0, 0.85);
-  font-weight: bold;
-  cursor: pointer;
-}
+
 .introduce span {
   font-size: 14px;
 }
-.direciton {
-  flex: 1;
-  display: flex;
-  height: 100%;
-  flex-flow: column nowrap;
-  justify-content: space-between;
-}
+
 .introduce .word {
   vertical-align: top;
   margin-left: 10px;
@@ -667,7 +637,6 @@ export default {
 .two {
   background-color: #fde8e8;
   color: rgba(239, 31, 31, 0.85);
-  margin-left: 10px;
 }
 .three {
   background: #e1f5ed;
@@ -694,33 +663,7 @@ export default {
   color: rgba(0, 0, 0, 0.5);
 }
 
-/* 列表项 */
-.item ul li {
-  height: 175px;
-  margin-top: 65px;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  overflow: hidden;
-}
-.item ul li .image {
-  flex: 232px 0 0;
-  width: 232px;
-  height: 175px;
-  margin-right: 25px;
-  background: #f5f5f5;
-  cursor: pointer;
-}
-.image > img {
-  width: 100%;
-  height: 100%;
-  vertical-align: top;
-}
 
-.querybtn {
-  color: #ff4343;
-  font-weight: bold;
-}
 
 /*推荐小区*/
 .push {

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-30 00:50:28
+ * @Last Modified time: 2018-04-30 17:53:45
  */
 <template>
   <div class="sideBar">
@@ -17,12 +17,12 @@
                   <div class="content-hd title">
                         <span class="fl">对比清单</span>   
                         <span class="fl">最多可以选择4套房源对比</span>
-                        <span class="fr">清空</span>
+                        <span class="fr" @click="clearAll()">清空</span>
                     </div>
                     <ul class="content-bd">
-                        <li v-for="item in [1,2,2,2]">
+                        <li v-for="item in contrastList">
                             <div class="image">
-                                <img src="" alt="">
+                                <img :src="item.housePic"/>
                             </div>
                             <div class="r-content">
                                 <div>深圳南山</div>
@@ -63,17 +63,27 @@
 export default {
     data() {
         return {
-            
+         
+        }
+    },
+    computed: {
+        //监控store中的contrastList
+        contrastList() {
+            return this.$store.state.contrastList;
         }
     },
     methods: {
+        //清空
+        clearAll() {
+            this.$store.dispatch('clearAll');
+        },
         //立即比较 
         compare() {
-           this.$router.push({path:'/contrast'})
+            this.$router.push({path:'/contrast'});
         }
     },
     mounted() {
-        window.onresize = ()=> {
+        window.onresize = window.onload = ()=> {
             //对比清单img的位置
             let rect = this.$refs.two.getBoundingClientRect();
             localStorage.compareImg = JSON.stringify(rect);
@@ -142,7 +152,7 @@ export default {
             //屏幕外第二个内容布局
             &.two>.screenOuter{
                 width: 352px;
-                height: 450px;
+                height: auto;
                 background: #ffffff;
                 box-shadow: 0 0 2px rgba(0,0,0,.3);
                 padding: 15px 25px 22px;
@@ -170,6 +180,7 @@ export default {
                             font-size: 12px;
                             color: #313131;
                             opacity: .6;
+                            cursor: pointer;
                         }
                     }
                 }   
@@ -184,6 +195,10 @@ export default {
                         height: 60px;
                         background: red;
                         margin-right: 12px;
+                        img{
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                     .r-content{
                         flex: 1;
