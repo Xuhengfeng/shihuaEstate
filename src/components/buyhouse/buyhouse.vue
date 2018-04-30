@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-30 21:24:08
+ * @Last Modified time: 2018-05-01 00:15:25
  */
 <template>
 	<div>
@@ -209,13 +209,14 @@ export default {
       },
       buyhouse: [], //二手房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
-      contrastList:[]//缓存对比清单
     };
   },
   created() {
     this.params.scity = this.selectCity.value;
-    let city = this.selectCity.value;
-    this.render(city);
+    this.render(this.selectCity.value);
+  },
+  computed: {
+    
   },
   methods: {
     //收藏房源
@@ -275,6 +276,7 @@ export default {
           }
           this.buyhouse = response.data.data;            
         });
+
       //获取搜索二手房总数量
       this.$http
         .post(this.$url.URL.HOUSE_QUERYCOUNT, {

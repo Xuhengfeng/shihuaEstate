@@ -1,4 +1,10 @@
-//引入axios
+/*
+ * @Author: 徐横峰 
+ * @Date: 2018-04-30 23:32:56 
+ * @Last Modified by:   徐横峰 
+ * @Last Modified time: 2018-04-30 23:32:56 
+ */
+//重新封装axios
 import Vue from 'vue'
 import axios from 'axios'
 

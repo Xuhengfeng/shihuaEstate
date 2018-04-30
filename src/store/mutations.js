@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-30 17:50:52
+ * @Last Modified time: 2018-04-30 23:53:03
  */
 // 主要是同步处理
 export default {
@@ -25,7 +25,10 @@ export default {
 		state.logined = '';
 		state.LoginedUser = {};
 	},
-	CLEARALL(state) {
+	CLEARALL(state, data) {
+		//重新刷新二手房数据
+		state.twoHouseList = data;
+
 		//清空缓存
 		localStorage.removeItem('contrastList');
 		//清空对比清单列表
