@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 00:15:25
+ * @Last Modified time: 2018-05-01 02:40:41
  */
 <template>
 	<div>
@@ -216,7 +216,28 @@ export default {
     this.render(this.selectCity.value);
   },
   computed: {
-    
+    //计算属性
+    refresh() {
+      return this.$store.state.refresh;
+    }
+  },
+  watch: {
+    //监听计算属性
+    refresh() {
+      console.log(111)
+      //请求二手的列表
+      this.$http
+        .post(this.$url.URL.HOUSE_QUERY, {
+          scity: this.selectCity.value,
+          pageNo: 1
+        })
+        .then(response => {
+          response.data.data.forEach((item)=>{
+            item.contentFlag = '加入对比';
+          })
+          this.buyhouse = response.data.data;   
+        });
+    }
   },
   methods: {
     //收藏房源
@@ -244,7 +265,7 @@ export default {
           }
         }else{
           arr.push(item);
-          e.target.innerHTML = '已加入对比';
+          item.contentFlag = '已加入对比';
           this.$refs.fly.drop(e.target);
           localStorage.contrastList = JSON.stringify(arr);
         }
