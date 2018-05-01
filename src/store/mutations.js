@@ -2,10 +2,21 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 14:42:19
+ * @Last Modified time: 2018-05-02 00:42:30
  */
 //同步处理
 export default {
+	//初始化 state 数据, 防止刷新状态还原
+	FIRSTSTATUS(state) {
+		if(sessionStorage.logined) {
+			state.logined=true;
+			let user = JSON.parse(sessionStorage.userInfo);
+			state.LoginedUser=Object.assign({}, user);
+		}
+		if(localStorage.contrastList) {
+			state.contrastList = JSON.parse(localStorage.contrastList);
+		}
+	},
 	//登录
 	LOGIN(state) {
 		//先让登录状态变为登录了
