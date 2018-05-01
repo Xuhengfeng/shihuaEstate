@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 02:40:41
+ * @Last Modified time: 2018-05-01 14:40:15
  */
 <template>
 	<div>
@@ -148,7 +148,7 @@
 			</div>
 		</div>
 		<!-- 飞入的物体 -->
-    	<o-fly class="fly" ref="fly"></o-fly>
+    <o-fly class="fly" ref="fly"></o-fly>
 	</div>
 </template>
 
@@ -216,15 +216,14 @@ export default {
     this.render(this.selectCity.value);
   },
   computed: {
-    //计算属性
+    //监控store的contrastList变化 声明一个计算属性控制刷新数据
     refresh() {
-      return this.$store.state.refresh;
+      return this.$store.state.contrastList;
     }
   },
   watch: {
     //监听计算属性
     refresh() {
-      console.log(111)
       //请求二手的列表
       this.$http
         .post(this.$url.URL.HOUSE_QUERY, {
@@ -232,9 +231,16 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          response.data.data.forEach((item)=>{
-            item.contentFlag = '加入对比';
-          })
+          if(localStorage.contrastList) {
+            //修正数据 根据本地缓存修正response数据
+            response.data.data.forEach((item)=>{
+              JSON.parse(localStorage.contrastList).forEach((item2)=>{
+                if(item.sdid == item2.sdid){
+                  item.contentFlag = '已加入对比';
+                }
+              })
+            })
+          }
           this.buyhouse = response.data.data;   
         });
     }
@@ -265,7 +271,7 @@ export default {
           }
         }else{
           arr.push(item);
-          item.contentFlag = '已加入对比';
+          this.$set(item, 'contentFlag', '已加入对比');
           this.$refs.fly.drop(e.target);
           localStorage.contrastList = JSON.stringify(arr);
         }

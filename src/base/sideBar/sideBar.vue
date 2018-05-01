@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-30 17:53:45
+ * @Last Modified time: 2018-05-01 14:03:13
  */
 <template>
   <div class="sideBar">
@@ -25,14 +25,16 @@
                                 <img :src="item.housePic"/>
                             </div>
                             <div class="r-content">
-                                <div>深圳南山</div>
-                                <div><span>1室1厅</span><span>100平米</span></div>
-                                <div><span>222</span>万</div>
+                                <div>{{item.houseTitle}}</div>
+                                <div><span>{{item.houseType}}</span><span>{{item.builtArea}}平米</span></div>
+                                <div><span>{{item.saleTotal}}</span>万</div>
                             </div>
+                            <div class="delete" @click="deleteOne(item)">删除</div>
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button @click="compare()">立即对比</button>
+                        <button v-show="compareBtn" @click="compare()">立即对比</button>
+                        <p v-show="!compareBtn">暂时没有任何比较的房源信息!</p>
                     </div>
               </div>
           </li>
@@ -63,19 +65,30 @@
 export default {
     data() {
         return {
-         
+            compareBtn: false
         }
     },
     computed: {
         //监控store中的contrastList
         contrastList() {
-            return this.$store.state.contrastList;
+            let list = this.$store.state.contrastList;
+            if(list.length>0){
+                this.compareBtn = true;
+            }else{
+                this.compareBtn = false;
+            }
+            return list;
         }
     },
     methods: {
         //清空
         clearAll() {
+            this.compareBtn = false;
             this.$store.dispatch('clearAll');
+        },
+        //删除
+        deleteOne(item) {
+            this.$store.dispatch('deleteOne', item);
         },
         //立即比较 
         compare() {
@@ -185,6 +198,7 @@ export default {
                     }
                 }   
                 ul>li{
+                    position: relative;
                     display: flex;
                     flex-flow: row nowrap;
                     overflow: hidden;
@@ -208,6 +222,7 @@ export default {
                         align-items: flex-start;
                         div{
                             color: #313131;
+                            text-align: left;
                             &:nth-of-type(1){
                                 font-size: 14px;
                             }
@@ -227,6 +242,18 @@ export default {
                             }
                         }
                     }
+                    .delete{
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                        padding: 5px;
+                        border: 1px solid #ff0000;
+                        border-radius: 5px;
+                        font-size: 10px;
+                        color: #ff0000;
+                        letter-spacing: 2px;
+                        cursor: pointer;
+                    }
                 }
                 .content-ft{
                     button{
@@ -240,6 +267,10 @@ export default {
                         color: #ffffff;
                         border: 0;
                         border-radius: 5px;
+                    }
+                    p{
+                        padding: 10px;
+                        color: #cacaca;
                     }
                 }
             }

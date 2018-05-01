@@ -2,10 +2,11 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 02:28:11
+ * @Last Modified time: 2018-05-01 14:42:19
  */
-// 主要是同步处理
+//同步处理
 export default {
+	//登录
 	LOGIN(state) {
 		//先让登录状态变为登录了
 		//同时缓存登录状态
@@ -16,6 +17,7 @@ export default {
 		let user = JSON.parse(sessionStorage.getItem('userInfo'));
 		state.LoginedUser = Object.assign({}, user);
 	},
+	//退出
 	LOGOUT(state) {
 		//及时清空缓存 提高用户安全 
 		sessionStorage.logined = '';
@@ -25,16 +27,25 @@ export default {
 		state.logined = '';
 		state.LoginedUser = {};
 	},
+	//清空对比清单列表
 	CLEARALL(state) {
 		//清空缓存
 		localStorage.removeItem('contrastList');
-		//清空对比清单列表
 		state.contrastList = [];
-		state.refresh = !state.refresh;
 	},
+	//显示对比清单列表
 	SHOWLIST(state) {
-		//显示对比清单列表
         state.contrastList = JSON.parse(localStorage.contrastList);
+	},
+	//删除对比清单的某一个
+	DELETEONE(state, data) {
+		let arr = JSON.parse(localStorage.contrastList);
+		let index =arr.findIndex((item)=>{
+			return	data.sdid == item.sdid
+		});
+		arr.splice(index, 1);
+		state.contrastList = arr;
+		localStorage.contrastList = JSON.stringify(arr);
 	}
 	
 	
