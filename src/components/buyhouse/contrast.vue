@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 15:46:04
+ * @Last Modified time: 2018-05-01 17:44:50
  */
 <template>
 	<!-- 房源对比 -->
@@ -278,12 +278,19 @@ table{
 			line-height: 48px;
 			max-width: 80px;
 			max-height: 48px;
-			border: 1px solid #b2b2b2;
+			border: 1px solid #eeeeee;
 			&:nth-of-type(1) {
 				text-align: center;
+				color: #9c9fa1;
+				font-weight: 600;
 			}
 			&:not(:nth-of-type(1)){
 				text-indent: 20px;
+			}
+		}
+		&:hover{
+			td{
+				border-bottom: 1px solid red;
 			}
 		}
 	}

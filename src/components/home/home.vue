@@ -59,7 +59,7 @@
 							</div>
 							<ul class="item4">
 								<router-link tag="li" to="">消息</router-link>
-								<router-link tag="li" to="">个人账户</router-link>
+								<router-link tag="li" to="/mine">个人账户</router-link>
 								<router-link tag="li" to="">预约看房</router-link>
 								<router-link tag="li" to="">我的收藏</router-link>
 								<router-link tag="li" to="">我的委托</router-link>
@@ -85,13 +85,13 @@
 						<router-link tag="li" to="/broker">找经纪人</router-link>
 						<router-link tag="li" to="/">业主委托
 							<ul>
-								<router-link tag="li" to="/entrustmentrent/renthouse">我要租房</router-link>
-								<router-link tag="li" to="/entrustmentrent/sellhouse">我要出售</router-link>
+								<router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
+								<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
 							</ul>
 						</router-link>
-						<router-link tag="li" to="/sellrent">租房</router-link>
-						<router-link tag="li" to="/renthouse">新房</router-link>
-						<router-link tag="li" to="/buyhouse">二手房</router-link>
+						<router-link tag="li" to="/rentHouse">租房</router-link>
+						<router-link tag="li" to="/newHouse">新房</router-link>
+						<router-link tag="li" to="/buyHouse">二手房</router-link>
 						<router-link tag="li" to="/home">首页</router-link>
 					</ul> 
 				</div>
@@ -106,7 +106,7 @@
 						<input class="search-box" :placeholder="souText" v-model="searchinput"></input>
 						<div class="search-box-btn fr" @click="searchBuyHouse()">开始找房</div>
 					</div>
-					<router-link tag="div" :to="/mapSearch/+houseTypeId"  class="mapSearchHouse">
+					<router-link class="mapSearchHouse" tag="div" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">
 						<i class="iconfont icon-location"></i>
 						<span>地图找房</span>
 					</router-link>

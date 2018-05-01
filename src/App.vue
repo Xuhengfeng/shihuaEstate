@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-30 20:06:22
+ * @Last Modified time: 2018-05-01 17:32:55
  */
 <template>
   <div id="app">
@@ -66,11 +66,7 @@ export default {
   watch: {
     $route(to, from) {
       let path = to.path;
-      if (
-        path == "/mapSearch/11" ||
-        path == "/mapSearch/12" ||
-        path == "/mapSearch/13"
-      ) {
+      if (path == "/mapSearch") {
         this.isShowTop = 0;
         this.isShowFooter = 0;
         this.isShowSide = 0;

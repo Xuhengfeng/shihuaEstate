@@ -2,11 +2,11 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 14:40:15
+ * @Last Modified time: 2018-05-01 17:41:13
  */
 <template>
 	<div>
-		<o-header></o-header>
+		<o-header :houseTypeId="houseTypeId"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
@@ -158,7 +158,7 @@ import oFly from "../../base/fly/fly";
 export default {
   data() {
     return {
-      
+      houseTypeId: 11, //二手房
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],

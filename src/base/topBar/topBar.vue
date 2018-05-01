@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-29 20:56:03
+ * @Last Modified time: 2018-05-01 18:21:26
  */
 <template>
     <div class="topBar">
@@ -15,7 +15,7 @@
                     <span class="register" @click="register()">立即注册</span>
                     <ul>
                         <router-link tag="li" to="">消息</router-link>
-                        <router-link tag="li" to="">个人账户</router-link>
+                        <router-link tag="li" to="/mine">个人账户</router-link>
                         <router-link tag="li" to="">预约看房</router-link>
                         <router-link tag="li" to="">我的收藏</router-link>
                         <router-link tag="li" to="">我的委托</router-link>
@@ -28,7 +28,7 @@
                     <span class="logout"  @click="logout()">退出</span>
                     <ul>
                         <router-link tag="li" to="">消息</router-link>
-                        <router-link tag="li" to="">个人账户</router-link>
+                        <router-link tag="li" to="/mine">个人账户</router-link>
                         <router-link tag="li" to="">预约看房</router-link>
                         <router-link tag="li" to="">我的收藏</router-link>
                         <router-link tag="li" to="">我的委托</router-link>
@@ -57,13 +57,13 @@
                 <router-link tag="li" to="/broker">找经纪人</router-link>
                 <router-link tag="li" to="">业主委托
                     <ul class="item2">
-                        <router-link tag="li" to="/entrustmentrent">我要租房</router-link>
-                        <router-link tag="li" to="/entrustmentrent">我要出售</router-link>
+                        <router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
+						<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
                     </ul>
                 </router-link>
-                <router-link tag="li" to="/sellrent">租房</router-link>
-                <router-link tag="li" to="/renthouse">新房</router-link>
-                <router-link tag="li" to="/buyhouse">二手房</router-link>
+                <router-link tag="li" to="/rentHouse">租房</router-link>
+                <router-link tag="li" to="/newHouse">新房</router-link>
+                <router-link tag="li" to="/buyHouse">二手房</router-link>
                 <router-link tag="li" to="/home">首页</router-link>
             </ol>
         </div>
@@ -151,6 +151,7 @@ export default {
                     text-align: left;
                     text-indent: 10px;
                     border-bottom: 1px solid #a7a7a6;
+                    cursor: pointer;
                 }
             }
         }
@@ -180,6 +181,7 @@ export default {
                     line-height: 30px;
                     text-indent: 10px;
                     border-bottom: 1px solid #a7a7a6;
+                    cursor: pointer;
                 }
             }
             &:hover{
@@ -188,6 +190,7 @@ export default {
                     visibility: visible;
                     li:hover{
                         color: red;
+                        
                     }
                 }
             }
@@ -200,13 +203,15 @@ export default {
 .navmenu .login:hover,
 .navmenu .register:hover,
 .navmenu .logout:hover{
-	color: red;
+    color: red;
+    cursor: pointer;    
 }
 .icon-yonghu,
 .login,
 .logout {
 	font-size: 19 px;
-	color: #FFFFFF;
+    color: #FFFFFF;
+    cursor: pointer;
 }
 .headImage{
     position: absolute;
