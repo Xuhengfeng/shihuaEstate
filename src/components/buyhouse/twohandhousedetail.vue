@@ -387,7 +387,7 @@ export default {
 </script>
 
 <style scoped="scoped">
-@import "../../../static/css/swiper-3.4.2.min.css";
+	@import '../../../static/css/swiper-3.4.2.min.css';
 .title {
   padding: 24px;
 }

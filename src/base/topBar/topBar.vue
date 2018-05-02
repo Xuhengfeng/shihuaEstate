@@ -47,8 +47,8 @@
                     <router-link tag="li" to="/broker">找经纪人</router-link>
                     <router-link tag="li" to="">业主委托
                         <ul class="item2">
-                            <router-link tag="li" to="/entrustmentrent">我要租房</router-link>
-                            <router-link tag="li" to="/entrustmentrent">我要出售</router-link>
+                            <router-link tag="li" to="/entrustmentrent/renthouse">我要租房</router-link>
+                            <router-link tag="li" to="/entrustmentrent/sellhouse">我要出售</router-link>
                         </ul>
                     </router-link>
                     <router-link tag="li" to="/sellrent">租房</router-link>

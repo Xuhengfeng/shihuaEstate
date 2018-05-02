@@ -29,99 +29,98 @@
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="collect fr">
-				<div class="content fr">
-					<div class="price ">
-						<div class="text">
-							<div class="unitPrice"><span class="unitPriceValue">{{buildlistinfo.avgSalePrice }}<span class="mintter">元/平米</span></i></span></div>
-						</div>
-						<div class="removeIcon"></div> 
-					</div>
-					<div class="aroundInfo">
-						<div class="communityName"><span class="label">建筑时间</span>
-							<span class="info">帝港海湾豪园</span>
-						</div>
-						<div class="areaName"><span class="label">栋数</span><span class="info"><span>福田区</span>&nbsp;</span></div>
-						<div class="visitTime"><span class="label">车位</span><span class="info">2000</span></div>
-						<div class="visitTime"><span class="label">小区类型</span><span class="info">2000</span></div>
-						<div class="visitTime"><span class="label">小区面积 </span><span class="info">2000</span></div>
-						<div class="visitTime"><span class="label">绿化率</span><span class="info">35</span></div>
-					</div>
-					<div class="duibi">
-							<div class="duibi_a">加入对比</div>
-							<div class="duibi_a">分享房源</div>
-						</div>
-				</div>
-			</div>
-		</div>
-		<div class="container">
-			<div class="fl">
-			<div class="headtitle">房源位置</div>
-				<b-map></b-map>
-				<!--房源信息-->
-				<div class="" style="width:700px;">
-						<div class="headtitle">房源位置</div>
-					<div class="introContent">
-						<div class="base" style="border-bottom: 0;">
-							<div class="name">基本属性</div>
-							<div class="contents">
-								<ul>
-									<li><span class="label">建筑时间</span>{{buildlistinfo.houseType}}</li>
-									<li><span class="label">小区类型</span>{{buildlistinfo.houseForm}} </li>
-									<li><span class="label">栋数</span>{{buildlistinfo.builtArea}}㎡</li>
-									<li><span class="label">小区面积</span>{{buildlistinfo.houseForm}}</li>
-									<li><span class="label">车位数</span>{{buildlistinfo.houseDirection}}</li>
-									<li><span class="label">绿化率</span>{{buildlistinfo.houseDecoration}}</li>
-                                    <li><span class="label">小区简介</span>{{buildlistinfo.houseDecoration}}</li>
-								</ul>
+							<div class="headtitle">小区位置</div>
+								<b-map></b-map>
+							<div class="headtitle">小区信息</div>
+									<div class="base" style="border-bottom: 0;">
+									<div class="name">基本属性</div>
+								<div class="contents">
+										<ul>
+											<li><span class="label">建筑时间</span>{{buildlistinfo.buildAge}}</li>
+										<li><span class="label">栋数</span>{{buildlistinfo.totalBuildNum}}</li>
+											<li><span class="label">小区面积</span>{{buildlistinfo.totalCoverArea }}</li>
+										<li><span class="label">小区类型</span>{{buildlistinfo.buildType }} </li>
+										<li><span class="label">车位数</span>{{buildlistinfo.carDownNum }}</li>
+										<li><span class="label">绿化率</span>{{buildlistinfo.greenRatio }}</li>
+											<li><span class="label">小区简介</span>{{buildlistinfo.buildSynop }}</li>
+										</ul>
+					  		</div>
 							</div>
-						</div>
-                        <div class="base">
-							<div class="name">附加属性</div>
-							<div class="contents">
-								<ul>
-									<li><span class="label">交通</span>{{buildlistinfo.houseType}}</li>
-									<li><span class="label">学校</span>{{buildlistinfo.houseForm}} </li>
-									<li><span class="label">医院</span>{{buildlistinfo.builtArea}}㎡</li>
-									<li><span class="la bel">银行</span>{{buildlistinfo.houseForm}}</li>
-									<li><span class="label">11路公交</span>{{buildlistinfo.houseDirection}}</li>
-									<li><span class="label">超市</span>{{buildlistinfo.houseDecoration}}</li>
-                                    <li><span class="label">景区</span>{{buildlistinfo.houseDecoration}}</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="item">
-					<ul>
-						<div class="headtitle">
-                            同小区房源
-                         <div class="fr changetab"><span>二手房</span><span>租房</span></div>
-                        </div>
-						<li v-for="item in samehouserent">
-							<div class="image fl"  @click="toSkip(item)">
-								<img :src="item.housePic"  />
-							</div>
-							<div class="direciton">
-							<div class="introduce" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice }}<span style="font-size: 14px;">元/月</span></span></div>
-								<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
-								<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
-								<div class="introduce ">
-									<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-									<span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
-									<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
+					<div class="base">
+						<div class="name">附加属性</div>
+ 							<div class="contents">
+ 								<ul>
+									 	<li><span class="label">银行</span>{{buildlistinfo.bankInfo }}</li>
+									<li><span class="label">交通</span>{{buildlistinfo.transportInfo }}</li>
+ 									<li><span class="label">学校</span>{{buildlistinfo.schoolInfo }} </li>
+									<li><span class="label">医院</span>{{buildlistinfo.hospitalInfo }}</li>
+ 								
+ 								</ul>
+ 							</div>
+ 						</div>
+						 	<div class="item">
+								 <div class="headtitle"> 同小区房源 <div class="fr changetab"><span @click="change(0)">二手房</span><span @click="change(1)">租房</span></div></div>
+									<ul>
+										<li v-for="item in samehouselist">
+											<div class="image fl"  @click="toSkip(item)">
+												<img :src="item.housePic"  />
+											</div>
+											<div class="direciton">
+												<div class="introduce intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+													<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice }}<span style="font-size: 14px;">元/月</span></span></div>
+												<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
+												<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
+													<div class="introduce ">
+													<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
+													<span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
+													<span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
+													</div>
+												</div>
+											</li>
+									</ul>
+									</div>
+										</div>
+									</div>
+								</div>
+								<div class="collect fr">
+									<div class="content fr">
+										<div class="price ">
+											<div class="text">
+												<div class="unitPrice"><span class="unitPriceValue">{{buildlistinfo.avgSalePrice }}<span class="mintter">元/平米</span></i></span></div>
+											</div>
+											<div class="removeIcon"></div> 
+										</div>
+										<div class="aroundInfo">
+											<div class="communityName"><span class="label">建筑时间</span>
+												<span class="info">{{buildlistinfo.buildAge}}</span>
+											</div>
+											<div class="areaName"><span class="label">栋数</span><span class="info"><span>{{buildlistinfo.totalBuildNum}}</span>&nbsp;</span></div>
+											<div class="visitTime"><span class="label">车位</span><span class="info">{{buildlistinfo.carDownNum }}</span></div>
+											<div class="visitTime"><span class="label">小区类型</span><span class="info">{{buildlistinfo.buildType }}</span></div>
+											<div class="visitTime"><span class="label">小区面积 </span><span class="info">{{buildlistinfo.totalCoverArea }}</span></div>
+											<div class="visitTime"><span class="label">绿化率</span><span class="info">{{buildlistinfo.greenRatio }}</span></div>
+										</div>
+										<div class="duibi">
+												<div class="duibi_a">加入对比</div>
+												<div class="duibi_a">分享房源</div>
+											</div>
+												<div class="callpeople">小区二手房</div>
+												<ul class="twohangul">
+													<li class="twohangright" v-for="item in bulidsecondlist">
+															<div  >
+																<div class="image_r">
+																<img :src="item.housePic">
+																</div>
+																<div class="text">
+																	{{item.houseTitle}}{{item.houseType}}
+																	</div>
+															</div>
+													</li>
+											</ul>
+									</div>
 								</div>
 							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
+						</div>
 
 </template>
 
@@ -134,20 +133,23 @@
 		data() {
 			return {
 				datas: "",
-				num: 0,
 				dialogVisible: false,
 				loginshow: null, //登陆注册阴影层
 				rightnow: true, //登陆注册判断条件
 				 buildlistinfo: {
-					//小区房详情
+					 //小区房详情
 					broker: {
-					emplName: "",
+						emplName: "",
 					photo: ""
 					}
 				},
 				buildsdid: "", //同小区sdid
 				cancel: false, //取消登陆阴影
-				samehouserent: [], //同小区房源列表
+				samehouselist: [], //同小区二手房房源列表
+				bulidsecondlist:[],//小区二手房
+				num: 0,           //切换ip
+				//二手房 租房
+				IPS: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
 				scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
 			};
 		},
@@ -167,31 +169,48 @@
 				this.$router.push({ path: path });
 			},
 			render() {
-				//小区详情
+				//小区详情BUILDSECOND_HOUSELIST
 				let sdid = this.$route.params.id;
 				let city = this.scity.value;
 				this.$http.get(this.$url.URL.BUILDLISTINFO + city + "/" + sdid)
 				.then(response => {
 					this.buildlistinfo = response.data.data;
-					this.buildsdid = response.data.data.buildSdid;
+					this.buildsdid = response.data.data.sdid;
 					this.px = response.data.data.px;
-          this.py = response.data.data.py;
-					 console.log(this.buildlistinfo)
-					    console.log(sdid)
+					this.py = response.data.data.py;
 
-					// //同小区房源
-					// this.$http.get(this.$url.URL.MAPHOURENT_USED_LIST +city + "/" + this.buildsdid,
-					// 					{
-					// 						pageNo: 1,
-					// 						pageSize: 10
-					// 					}
-					// 	)
-					// 	.then(response => {
-					// 		this.samehouserent= response.data.data;
-					// 		console.log(this.samehouserent)
+					//小区二手房
+					this.$http.get(this.$url.URL.BUILDSECOND_HOUSELIST +city + "/" + this.buildsdid,
+							{
+								pageNo: 1,
+								pageSize: 10
+							}
+					)
+					.then(response => {
+						this.bulidsecondlist= response.data.data;
+						console.log(this.bulidsecondlist)
 
-					// 	});
+					});
+					//同小区二手房房源
+					this.neayHouseRequest(0, this.buildsdid);
+
 				}); 
+			},
+			//同小区二手房房源
+			neayHouseRequest(num, sdid) {
+				this.$http.get(this.IPS[num] + this.scity.value + "/" + sdid,
+					{
+						pageNo: 1,
+						pageSize: 10
+					}
+				)
+				.then(response => {
+					this.samehouselist= response.data.data;
+				});
+			},
+			change(num) {
+					//同小区二手房房源
+					this.neayHouseRequest(num, this.buildsdid);
 			}
 		},
 		components: {
@@ -269,8 +288,6 @@
 
 .tit div {
   margin-top: 10px;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
 }
 
 .collect_s {
@@ -303,6 +320,12 @@
   width: 380px;
   line-height: 1;
   margin-top: 70px;
+}
+.text{
+	  width: 210px;
+		height: 78px;
+		line-height: 30px;
+		margin: 0 auto;
 }
 
 .content .price {
@@ -437,11 +460,9 @@
   line-height: 23px;
 }
 
-.introContent {
-  text-align: justify;
-}
 
-.introContent .base {
+
+.base {
   display: inline-block;
   width: 710px;
   vertical-align: top;
@@ -451,7 +472,7 @@
   padding: 20px 0;
 }
 
-.introContent .name {
+.name {
   float: left;
   width: 188px;
   text-align: left;
@@ -459,16 +480,16 @@
   line-height: 23px;
 }
 
-.introContent .contents {
+.contents {
   width: 522px;
   float: left;
 }
 
-.introContent .contents ul {
+ .contents ul {
   font-size: 0;
 }
 
-.introContent .contents ul li {
+ .contents ul li {
   display: inline-block;
   width: 50%;
   line-height: 24px;
@@ -476,11 +497,10 @@
   color: #394043;
 }
 
-.introContent .contents ul li .label {
+.contents ul li .label {
   color: #999999;
   margin-right: 30px;
 }
-
 .item {
   width: 830px;
   margin-bottom: 80px;
@@ -488,19 +508,22 @@
 }
 .item ul li {
   margin-top: 50px;
+	float: left;
   cursor: pointer;
 }
-.introduce {
-  margin-left: 215px;
-  height: 19px;
-  margin-top: 29px;
+.introduce[data-v-7ba0b57d] {
+    margin-left: 16px;
+    width: 700px;
+    margin-left: 40px;
+    height: 38px;
+		position: relative;
+    left: 42px;
 }
 .introduce span {
   font-size: 14px;
 }
-.direciton {
-  margin-left: 50px;
-}
+
+
 .introduce .word {
   vertical-align: top;
   margin-left: 10px;
@@ -529,7 +552,9 @@
   margin-top: 25px;
 }
 .changetab {
- margin-right: 100px;
+	font-size: 18px;
+	margin-right: 50px;
+	color: #000000
 }
 .changetab span{
     margin-left: 40px;
@@ -559,9 +584,23 @@
 .peopleintrode > :nth-child(2) > ul > :nth-child(3) {
   font-size: 12px;
 }
+
+.twohangright{
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	width: 378px;
+	float: right;
+
+}
 .image {
+	margin: 0 auto;
   width: 232px;
   height: 175px;
+}
+.image_r{
+	margin: 0 auto;
+  width: 232px;
+  height: 175px;
+	margin-top: 15px;
 }
 .image img {
   width: 100%;
@@ -604,7 +643,6 @@
   height: 51px;
   z-index: 10;
 }
-
 .preview {
   width: 100%;
   margin-top: 10px;
@@ -665,3 +703,6 @@
   height: 100%;
 }
 </style>
+
+
+
