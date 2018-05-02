@@ -1,3 +1,9 @@
+/*
+ * @Author: 徐横峰 
+ * @Date: 2018-04-29 18:52:11 
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-02 00:42:03
+ */
 <template>
   <div id="app">
     <!-- 头部start -->
@@ -7,7 +13,7 @@
     <!-- 头部end -->
     
     <!-- 侧边栏start -->
-    <div>
+    <div v-if="isShowSide == 1">
       <o-side-bar></o-side-bar>
     </div>
     <!-- 侧边栏end -->
@@ -36,31 +42,35 @@ export default {
   data() {
     return {
       isShowTop:  0, //显示1 隐藏0
+      isShowSide: 1, //显示1 隐藏0
       isShowFooter: 0 //显示1 隐藏0
     };
+  },
+  created() {
+    //初始化
+    this.$store.commit('FIRSTSTATUS');
   },
   components: {
     oTopBar,
     oSideBar,
-    oFooter,
-    // mySvg
+    oFooter
   },
   watch: {
     $route(to, from) {
-      var path = to.path;
-      if (
-        path == "/mapSearch/11" ||
-        path == "/mapSearch/12" ||
-        path == "/mapSearch/13"
-      ) {
+      let path = to.path;
+      if (path == "/mapSearch") {
+        this.isShowTop = 0;
         this.isShowFooter = 0;
+        this.isShowSide = 0;
       } 
       else if(path == "/home"){
         this.isShowTop = 0;
+        this.isShowSide = 1;   
         this.isShowFooter = 1;
       } 
       else {
-        this.isShowTop = 1;        
+        this.isShowTop = 1;     
+        this.isShowSide = 1;   
         this.isShowFooter = 1;
       }
     }

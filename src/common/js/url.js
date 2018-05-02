@@ -16,7 +16,7 @@ let URL = {
 	HOUSE_GETDETAILINFO:_host + '/house/getDetailInFo/',		//获取二手房详情
 	AREA_DISTRICTS:_host + '/area/areaDistricts/', 				//获取二手房搜索条件区域字段
 	HOUSE_HOUSESEE:_host + '/house/houseSee/',		            //二手房带看记录
-	HOUSE_RENTHOUSESEE:_host + '/rentHouse/houseSee/',		     //租房带看记录
+	HOUSE_RENTHOUSESEE:_host + '/rentHouse/houseSee/',		    //租房带看记录
 	RENTHOUSE_QUERY:_host + '/rentHouse/query',                 //查询租房列表全部数据
 	RENTHOUSE_QUERYCOUNT:_host + '/rentHouse/queryCount',       //获取租房总数量
 	RENTHOUSE_GETDATAILINFO:_host + '/rentHouse/getDetailInFo/',//获取租房详情
@@ -26,8 +26,8 @@ let URL = {
 	MAPHOURENT_USED_LIST:_host+'/build/same-rent/',			    //同小区租房房源
 	HOUSE_RIMHOUSING:_host+'/house/rimHousing',                 //二手房周边房源
 	RENTHOUSE_RIMHOUSING:_host+'/rentHouse/rimHousing',         //租房周边房源/
-	BUILDLIST:_host+'/build/buildList/',                         //小区列表
-	BUILDLISTINFO:_host+'/build/buildInfo/',                      //小区详情
+	BUILDLIST:_host+'/build/buildList/',                        //小区列表
+	BUILDLISTINFO:_host+'/build/buildInfo/',                    //小区详情
 	BUILDLIST_COUNT:_host+'/build/buildListCount',              //小区总数量
 	USER_LOGIN:_host+'/member/login',                           //用户登录
 	USER_REGISTER:_host+'/member/register',                     //用户注册
@@ -38,9 +38,9 @@ let URL = {
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
-	BUILDSECOND_HOUSELIST:_host+'/build/secondHouseList/',         //小区右侧二手房
-	HOUSE_SECONDHOUSE:_host + "/map-house/coordinate/secondHouse",//坐标找房 二手房
-	HOUSE_RENTHOUSE:_host + "/map-house/coordinate/rentHouse",//坐标找房 租房
+	HOUSE_SECONDHOUSE:_host + "/map-house/coordinate/secondHouse", //坐标找房 二手房
+	HOUSE_RENTHOUSE:_host + "/map-house/coordinate/rentHouse",     //坐标找房 租房
+	USER_DETAILINFO:_host + "/member/getDetailInfo",               //获取用户详细信息
     
 	
 };

@@ -1,62 +1,71 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-27 20:06:54
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-01 18:21:26
  */
 <template>
-    <div class="navmenu">
-        <div class="container">
-            <ul class="item1">
-                <ol class="banner_right fr">
-                    <li style="height: 70px;margin-top: -2px;">
-                        <i class="iconfont icon-yonghu" v-if="token" style="font-size: 14px;">
-                            <span class="login" @click="login()">登录</span>/
-                            <span class="logout" @click="register()">立即注册</span>
-                        </i>
-                        <i class="iconfont icon-yonghu" v-else><span class="login">xxxx</span>/<span class="logout">退出</span></i>
-                        <ul class="item4">
-                            <router-link tag="li" to="">消息</router-link>
-                            <router-link tag="li" to="">个人账户</router-link>
-                            <router-link tag="li" to="">预约看房</router-link>
-                            <router-link tag="li" to="">我的收藏</router-link>
-                            <router-link tag="li" to="">我的委托</router-link>
-                        </ul>
-                    </li>
+    <div class="topBar">
+        <div class="container navmenu">
+            <div class="fr">
+                <div v-if="!isLogin">
+                    <i class="iconfont icon-yonghu"></i>
+                    <span class="login" @click="login()">登录</span> 
+                    <span>/</span>
+                    <span class="register" @click="register()">立即注册</span>
+                    <ul>
+                        <router-link tag="li" to="">消息</router-link>
+                        <router-link tag="li" to="/mine">个人账户</router-link>
+                        <router-link tag="li" to="">预约看房</router-link>
+                        <router-link tag="li" to="">我的收藏</router-link>
+                        <router-link tag="li" to="">我的委托</router-link>
+                    </ul>
+                </div>
+                <div v-else>
+                    <img class="headImage" :src="userInfo.headImage">
+                    <span class="user">{{userInfo.nickname}}</span>
+                    <span>/</span> 
+                    <span class="logout"  @click="logout()">退出</span>
+                    <ul>
+                        <router-link tag="li" to="">消息</router-link>
+                        <router-link tag="li" to="/mine">个人账户</router-link>
+                        <router-link tag="li" to="">预约看房</router-link>
+                        <router-link tag="li" to="">我的收藏</router-link>
+                        <router-link tag="li" to="">我的委托</router-link>
+                    </ul>
+                </div>
+                <div>热线电话0779-3837272</div>
+            </div>
 
-                    <li style="font-size: 14px;">热线电话0779-3837272</li>
-                </ol>
-
-                <ol class="navlist fl">
-                    <router-link tag="li" to="">更多
-                        <ul class="item2">
-                            <router-link tag="li" to="/houseestate">小区找房</router-link>
-                            <router-link tag="li" to="">代办贷款</router-link>
-                            <router-link tag="li" to="">异地服务</router-link>
-                            <router-link tag="li" to="">房屋托管</router-link>
-                            <router-link tag="li" to="">装修</router-link>
-                            <router-link tag="li" to="">世华公益</router-link>
-                            <router-link tag="li" to="">咨询</router-link>
-                            <router-link tag="li" to="">购房指南</router-link>
-                            <router-link tag="li" to="">行业咨询</router-link>
-                        </ul>
-                    </router-link>
-                    <router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
-                    <router-link tag="li" to="/buyhouseguide">海外置业</router-link>
-                    <router-link tag="li" to="/broker">找门店</router-link>
-                    <router-link tag="li" to="/broker">找经纪人</router-link>
-                    <router-link tag="li" to="">业主委托
-                        <ul class="item2">
-                            <router-link tag="li" to="/entrustmentrent/renthouse">我要租房</router-link>
-                            <router-link tag="li" to="/entrustmentrent/sellhouse">我要出售</router-link>
-                        </ul>
-                    </router-link>
-                    <router-link tag="li" to="/sellrent">租房</router-link>
-                    <router-link tag="li" to="/renthouse">新房</router-link>
-                    <router-link tag="li" to="/buyhouse">二手房</router-link>
-                    <router-link tag="li" to="/home">首页</router-link>
-                </ol>
-            </ul>
+            <ol class="fl">
+                <router-link tag="li" to="">更多
+                    <ul class="item2">
+                        <router-link tag="li" to="/houseestate">小区找房</router-link>
+                        <router-link tag="li" to="">代办贷款</router-link>
+                        <router-link tag="li" to="">异地服务</router-link>
+                        <router-link tag="li" to="">房屋托管</router-link>
+                        <router-link tag="li" to="">装修</router-link>
+                        <router-link tag="li" to="">世华公益</router-link>
+                        <router-link tag="li" to="">咨询</router-link>
+                        <router-link tag="li" to="">购房指南</router-link>
+                        <router-link tag="li" to="">行业咨询</router-link>
+                    </ul>
+                </router-link>
+                <router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
+                <router-link tag="li" to="/buyhouseguide">海外置业</router-link>
+                <router-link tag="li" to="/broker">找门店</router-link>
+                <router-link tag="li" to="/broker">找经纪人</router-link>
+                <router-link tag="li" to="">业主委托
+                    <ul class="item2">
+                        <router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
+						<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
+                    </ul>
+                </router-link>
+                <router-link tag="li" to="/rentHouse">租房</router-link>
+                <router-link tag="li" to="/newHouse">新房</router-link>
+                <router-link tag="li" to="/buyHouse">二手房</router-link>
+                <router-link tag="li" to="/home">首页</router-link>
+            </ol>
         </div>
         <!-- 对话框 登录 注册 修改密码  -->
 		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
@@ -69,94 +78,150 @@ export default {
 		return {
 			showbox: 0,
             houseTypeId: 11,
-            token:window.localStorage.token?false:true
 		};
-	},
+    },
+    computed: {
+        isLogin() {
+            return this.$store.state.logined;
+        },
+        userInfo() {
+            return this.$store.state.LoginedUser;
+        }
+    },
 	methods: {
 		changeDialog(num) {//显示对应的对话框
 			this.showbox = num; 
 		},
-		login() {//点击登陆
+		login() {//登陆
 			this.showbox = 1; 
 			this.$refs.odialog.show();
 		},
-		register() {//点击注册
+		register() {//注册
 			this.showbox = 2;
 			this.$refs.odialog.show();
-		}
+        },
+        logout() {
+            this.$store.dispatch('logout');
+        }
+        
 	},
     components: {
-        oDialog,
+        oDialog
     }
   
 }
 </script>
-<style scoped>
-.header {
-	background-color: #F9F9F9;;
-	width: 100%;
-	padding: 50px 0;
-	overflow: hidden;
-}
+<style lang="less" scoped>
 
-.searchBox input {
-	position: absolute;
-	padding: 20px;
-	width: 514px;
-	height: 46px;
-	box-sizing: border-box;
-	margin-left: 46px;
-}
-.navmenu {
+.topBar{
     background: #394043;
+    height: 70px;
     font-size: 18px;
     color: #FFFFFF;
     position: relative;
 }
-.navmenu .container {
-    width: 1170px;
-    margin: 0 auto;
-    overflow: visible;
-    height: 70px;
+.navmenu{
+    overflow: visible!important;
+    >div{
+        line-height: 70px;
+        position: relative;
+        font-size: 16px;
+        >div:nth-of-type(1){
+            position: relative;
+            float: right;
+            text-align: right;
+            width: 150px;
+            &:hover ul{
+                visibility: visible;
+                li:hover{ color: red}
+            }
+            ul{
+                position: absolute;
+                right: 20px;
+                top: 70px;
+                width: 80px;
+                z-index:999;
+                background: #FFFFFF;
+                visibility: hidden;
+                >li{
+                    color: black;
+                    font-size: 14px;
+                    height: 30px;
+                    line-height: 30px;
+                    text-align: left;
+                    text-indent: 10px;
+                    border-bottom: 1px solid #a7a7a6;
+                    cursor: pointer;
+                }
+            }
+        }
+        >div:nth-of-type(2){
+            float: right;
+        }
+    }
+    >ol{
+        line-height: 70px;
+        >li{
+            position: relative;
+            float: right;
+            margin-left: 26px;
+            cursor: pointer;
+            >ul{
+                position: absolute;
+                left: 0;
+                top: 70px;
+                width: 80px;
+                z-index:999;
+                background: #FFFFFF;
+                visibility: hidden;
+                >li{
+                    color: black;
+                    font-size: 14px;
+                    height: 30px;
+                    line-height: 30px;
+                    text-indent: 10px;
+                    border-bottom: 1px solid #a7a7a6;
+                    cursor: pointer;
+                }
+            }
+            &:hover{
+                color: red;
+                >ul{
+                    visibility: visible;
+                    li:hover{
+                        color: red;
+                        
+                    }
+                }
+            }
+
+        }
+    }
 }
 
-.navmenu .item1 {
-    line-height: 70px;
-    
+/* 登录/退出 */
+.navmenu .login:hover,
+.navmenu .register:hover,
+.navmenu .logout:hover{
+    color: red;
+    cursor: pointer;    
 }
-
-.navmenu .item1 ol>li{
-    float: right;
-    margin-left: 26px;
+.icon-yonghu,
+.login,
+.logout {
+	font-size: 19 px;
+    color: #FFFFFF;
     cursor: pointer;
-    position: relative;
 }
-.item1>ol>li>ul{
-    z-index:999;
+.headImage{
     position: absolute;
-    left: 0;
-    width: 80px;
-    background: #FFFFFF;
-    visibility: hidden;
-}
-.item1>ol>li:hover ul{
-    visibility: visible;
+	width: 25px;
+	height: 25px;
+	border-radius: 50%;
+    overflow: hidden;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
 }
 
-.item1>ol>li>ul>li{
-    color: black;
-    font-size: 14px;
-    height: 30px;
-    line-height: 30px;
-    text-indent: 10px;
-    border-bottom: 1px solid #a7a7a6;
-}
-.navmenu .item1 li:hover,
-.navmenu .item1 li .login:hover,
-.navmenu .item1 li .logout:hover{
-    color: @fontColor1;
-}
-.navlist{
-    font-size: 16px;
-}
 </style>

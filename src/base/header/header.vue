@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:27:54 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-25 13:09:16
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-01 17:45:27
  */
 
 <template>
@@ -18,7 +18,7 @@
 			<div class="menu fr">
 				<ul class="menuright fl">
 					<li><img src="../../imgs/buyhouse/diwei.png" /></li>
-					<router-link tag="li" :to="/mapSearch/+houseTypeId"  class="mapSearchHouse">地图找房</router-link>
+					<router-link  class="mapSearchHouse" tag="li" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">地图找房</router-link>
 				</ul>
 			</div>
 		</div>
@@ -27,9 +27,15 @@
 
 <script>
 export default {
+	props: {
+		houseTypeId: {
+			type: Number,
+			default: 11
+		}
+	},
 	data() {
 		return {
-			houseTypeId: 11
+			
 		}
 	},
 	methods: {
