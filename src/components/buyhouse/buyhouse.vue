@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 17:41:13
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-03 17:54:02
  */
 <template>
 	<div>
@@ -210,6 +210,7 @@ export default {
       },
       buyhouse: [], //二手房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
+      contrastList: [],//对比清单列表
     };
   },
   created() {
@@ -232,16 +233,15 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          if(localStorage.contrastList) {
-            //修正数据 根据本地缓存修正response数据
-            response.data.data.forEach((item)=>{
-              JSON.parse(localStorage.contrastList).forEach((item2)=>{
-                if(item.sdid == item2.sdid){
-                  item.contentFlag = '已加入对比';
-                }
-              })
+          //修正数据 根据本地缓存修正response数据
+          response.data.data.forEach((item)=>{
+            this.contrastList.forEach((item2)=>{
+              if(item.sdid == item2.sdid){
+                item.contentFlag = '已加入对比';
+                item2.contentFlag = '已加入对比';
+              }
             })
-          }
+          })
           this.buyhouse = response.data.data;   
         });
     }
@@ -253,31 +253,27 @@ export default {
     },
     //加入对比清单
     addContrast(item, e) {
-      //判断本地缓存是否存在 存在则初始化对比清单
-      let arr = [];
-      if(localStorage.contrastList){
-        arr = JSON.parse(localStorage.contrastList);
-      }
       //判断当前点击对象是否存在 
-      if(JSON.stringify(arr).indexOf(JSON.stringify(item)) == '-1') {
-        if(arr.length >= 4){
-          //判断是否点击的已加入对比的按钮
+      if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
+        if(this.contrastList.length >= 4){
           if(item.contentFlag == '已加入对比') {
             return;
           }else{
-            //提示用户
             this.$alert('对比清单最多4个!', '添加失败', {
               confirmButtonText: '确定'
             });
           }
         }else{
-          arr.push(item);
-          this.$set(item, 'contentFlag', '已加入对比');
-          this.$refs.fly.drop(e.target);
-          localStorage.contrastList = JSON.stringify(arr);
+          if(item.contentFlag == '已加入对比') {
+            return;
+          }else{
+            this.contrastList.push(item);
+            this.$refs.fly.drop(e.target);
+            this.$set(item, 'contentFlag', '已加入对比');
+            this.$store.dispatch('addOne', item);
+            this.$store.dispatch('showlist', this.contrastList);
+          }
         }
-        //修改状态
-        this.$store.dispatch('showlist');
       }
     },
     toSkip(item) {
@@ -292,18 +288,18 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          if(localStorage.contrastList) {
-            //修正数据 根据本地缓存修正response数据
-            response.data.data.forEach((item)=>{
-              JSON.parse(localStorage.contrastList).forEach((item2)=>{
-                if(item.sdid == item2.sdid){
-                  item.contentFlag = '已加入对比';
-                }
-              })
-            })
-          }
           this.buyhouse = response.data.data;            
         });
+
+      //获取对比清单列表
+      this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
+      .then((res)=>{
+        if(res.data.data.length) {
+          this.contrastList = res.data.data;
+          //初始化清单列表
+          this.$store.dispatch('showlist', res.data.data);
+        }
+      })
 
       //获取搜索二手房总数量
       this.$http
@@ -314,7 +310,7 @@ export default {
         .then(response => {
           this.querycount = response.data.data;
         });
-
+        
       //请求搜索条件
       this.$http
         .get(this.$url.URL.AREA_DISTRICTS + city

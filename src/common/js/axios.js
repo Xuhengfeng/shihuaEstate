@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
- * @Last Modified by:   徐横峰 
- * @Last Modified time: 2018-04-30 23:32:56 
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-03 10:20:40
  */
 //重新封装axios
 import Vue from 'vue'
@@ -21,19 +21,27 @@ Vue.component(Pagination.name, Pagination);
 let cancel ,promiseArr = {}
 const CancelToken = axios.CancelToken;
 //请求拦截器
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use(
+  config => {
     //发起请求时，取消掉当前正在进行的相同请求
     if (promiseArr[config.url]) {
-        promiseArr[config.url]('操作取消')
-        promiseArr[config.url] = cancel
+      promiseArr[config.url]('操作取消')
+      promiseArr[config.url] = cancel
     } else {
-        promiseArr[config.url] = cancel
+      promiseArr[config.url] = cancel
     }
-      return config
-}, err => {
-    return Promise.reject(err)
-})
-
+    if (sessionStorage.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
+      config.headers = {
+        'scity': JSON.parse(localStorage.selectCity).value,
+        'unique-code': sessionStorage.token
+      }
+    }
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  }
+);
 //响应拦截器即异常处理
 axios.interceptors.response.use(response => {
     return response
@@ -89,7 +97,7 @@ axios.interceptors.response.use(response => {
 axios.defaults.baseURL = '/api'
 //设置默认请求头
 axios.defaults.headers = {
-    'X-Requested-With': 'XMLHttpRequest'
+  'X-Requested-With': 'XMLHttpRequest',
 }
 axios.defaults.timeout = 10000
 Vue.prototype.$http = axios;
