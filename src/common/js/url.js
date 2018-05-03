@@ -41,6 +41,11 @@ let URL = {
 	HOUSE_SECONDHOUSE:_host + "/map-house/coordinate/secondHouse", //坐标找房 二手房
 	HOUSE_RENTHOUSE:_host + "/map-house/coordinate/rentHouse",     //坐标找房 租房
 	USER_DETAILINFO:_host + "/member/getDetailInfo",               //获取用户详细信息
+	TWOHOUSE_CONTRAST:_host + "/contrast/used-house",              //添加二手房对比
+	TWOHOUSELIST_CONTRAST:_host + "/contrast/usedList",            //获取二手房对比列表
+	JOIN_CONTRAST:_host + "/contrast/joid",                        //加入对比(二手房 新房)
+	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
+	
     
 	
 };
