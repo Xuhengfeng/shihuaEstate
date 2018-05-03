@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 17:54:02
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-03 21:43:16
  */
 <template>
 	<div>
@@ -14,7 +14,7 @@
 						<li>
 							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
-								<li v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
@@ -40,31 +40,31 @@
 						<li>
 							<ol class="fl quyu">房型:</ol>
 							<ol class="fl quyu_kind">
-								<li v-for="(item, index) in listfour"  :class="{querybtn:queryfour==index }" @click="fangxing(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listfour"  :class="{querybtn:queryfour==index }" @click="fangxing(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">装修:</ol>
 							<ol class="fl quyu_kind">
-								<li v-for="(item, index) in listfive"  :class="{querybtn:queryfive==index }" @click="zhuangxiu(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listfive"  :class="{querybtn:queryfive==index }" @click="zhuangxiu(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">楼龄:</ol>
 							<ol class="fl quyu_kind">
-								<li v-for="(item, index) in listsix"  :class="{querybtn:querysix==index }" @click="louling(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listsix"  :class="{querybtn:querysix==index }" @click="louling(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">朝向:</ol>
 							<ol class="fl quyu_kind">
-								<li v-for="(item, index) in listseven"  :class="{querybtn:queryseven==index }" @click="chaoxiang(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listseven"  :class="{querybtn:queryseven==index }" @click="chaoxiang(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">特色:</ol>
 							<ol class="fl quyu_kind">
-								<li v-for="(item, index) in listeight"  :class="{querybtn:queryeight==index }" @click="teshe(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listeight"  :class="{querybtn:queryeight==index }" @click="teshe(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 					</ul>
@@ -253,6 +253,7 @@ export default {
     },
     //加入对比清单
     addContrast(item, e) {
+      
       //判断当前点击对象是否存在 
       if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
         if(this.contrastList.length >= 4){
@@ -313,8 +314,7 @@ export default {
         
       //请求搜索条件
       this.$http
-        .get(this.$url.URL.AREA_DISTRICTS + city
-        ) //区域
+        .get(this.$url.URL.AREA_DISTRICTS + city) //区域
         .then(response => {
           this.listone = response.data.data;
         });

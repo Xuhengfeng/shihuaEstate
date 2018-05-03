@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 14:03:13
+ * @Last Modified time: 2018-05-03 23:57:02
  */
 <template>
   <div class="sideBar">
@@ -168,13 +168,14 @@ export default {
                 height: auto;
                 background: #ffffff;
                 box-shadow: 0 0 2px rgba(0,0,0,.3);
-                padding: 15px 25px 22px;
+                padding: 15px 0 22px;
                 box-sizing:border-box;
                 &:after{
-                    top: 10px;
+                   top: 10px;
                 }
                 .title{
                     height: 30px;
+                    margin: 0 25px;
                     border-bottom: 1px solid #cacaca;
                     span{
                         color: #000000;
@@ -202,7 +203,7 @@ export default {
                     display: flex;
                     flex-flow: row nowrap;
                     overflow: hidden;
-                    margin-top: 16px;
+                    padding: 16px 25px;
                     .image{
                         flex: 80px 0 0;
                         width: 80px;
@@ -244,8 +245,8 @@ export default {
                     }
                     .delete{
                         position: absolute;
-                        bottom: 0;
-                        right: 0;
+                        bottom: 20px;
+                        right: 25px;
                         padding: 5px;
                         border: 1px solid #ff0000;
                         border-radius: 5px;
@@ -253,6 +254,13 @@ export default {
                         color: #ff0000;
                         letter-spacing: 2px;
                         cursor: pointer;
+                        display: none;
+                    }
+                    &:hover {
+                        background: #eee;
+                        .delete{
+                            display: block;
+                        }
                     }
                 }
                 .content-ft{

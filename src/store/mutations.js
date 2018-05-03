@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 18:26:16
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-03 22:59:05
  */
 //同步处理
 export default {
@@ -41,7 +41,11 @@ export default {
 	},
 	//显示对比清单列表
 	SHOWLIST(state, payload) {
-        state.contrastList = payload;
+		state.contrastList = payload;
+	},
+	//对比房源详情
+	SHOWDEITALLIST(state, payload) {
+		state.contrastDetailList = payload;
 	},
 	//删除对比清单的某一个
 	DELETEONE(state, payload) {
@@ -49,11 +53,6 @@ export default {
 			return payload.sdid == item.sdid;
 		})
 		state.contrastList.splice(index, 1);
-	},
-	//获取对比房源详情
-	DETAILCONTRASTLIST(state) {
-		console.log('test')
-	}
-	
+	}	
 	
 }

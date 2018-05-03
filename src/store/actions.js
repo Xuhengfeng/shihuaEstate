@@ -9,8 +9,8 @@ Vue.prototype.$message = Message//消息提示
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:14 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 18:28:43
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-03 22:31:47
  */
 //异步操作
 export default {
@@ -32,7 +32,17 @@ export default {
 	},
 	//显示对比列表
 	showlist({commit}, data) {
-		commit('SHOWLIST', data)
+		let sdidStr = '';
+		let city = JSON.parse(localStorage.selectCity).value;
+			data.forEach((item)=> {
+				sdidStr += item.sdid+'-';
+			});
+		//对比列表清单
+		commit('SHOWLIST', data);
+		//对比列表详情
+		axios.get(API.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then((response) => {
+			commit('SHOWDEITALLIST', response.data.data);
+		});
 	},
 	//删除对比清单中一个
 	deleteOne({commit}, item) {
