@@ -106,10 +106,10 @@
 						<input class="search-box" :placeholder="souText" v-model="searchinput"></input>
 						<div class="search-box-btn fr" @click="searchBuyHouse()">开始找房</div>
 					</div>
-					<router-link class="mapSearchHouse" tag="div" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">
+					<!-- <router-link class="mapSearchHouse" tag="div" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">
 						<i class="iconfont icon-location"></i>
 						<span>地图找房</span>
-					</router-link>
+					</router-link> -->
 				</div>
 			</div>
 		</div>

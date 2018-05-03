@@ -27,14 +27,18 @@ let URL = {
 	HOUSE_RIMHOUSING:_host+'/house/rimHousing',                 //二手房周边房源
 	RENTHOUSE_RIMHOUSING:_host+'/rentHouse/rimHousing',         //租房周边房源/
 	BUILDLIST:_host+'/build/buildList/',                        //小区列表
-	BUILDLISTINFO:_host+'/build/buildInfo/',                    //小区详情
+	BUILDLISTINFO:_host+'/build/buildInfo/',                    //小区详情POST{scity}/
 	BUILDLIST_COUNT:_host+'/build/buildListCount',              //小区总数量
+	BUILDCOLLECTION_ADD:_host+'/buildCollection/add/',          //小区收藏
+	BUILDCOLLECTION_CANCEL:_host+'/buildCollection/cancel/',    //取消小区收藏
+	BUILDCOLLECTION_LIST:_host+'/buildCollection/collectionList',//小区收藏列表
 	USER_LOGIN:_host+'/member/login',                           //用户登录
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
 	BROKERS_LIST:_host + '/broker/brokers',  					//经纪人
+	BROKERS_LISTCOUNT:_host + '/broker/brokerCount',  					//经纪人
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
