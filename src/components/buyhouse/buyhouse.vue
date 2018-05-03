@@ -720,51 +720,6 @@ export default {
 </style>
 
 
-<!--推荐小区-->
-		<!--<div class="push">
-		<div class="container">
-			<div class="newHousePush">
-				<div class="tilte">
-					<div class="fl" style="font-weight: bold;font-size: 24px;color: rgba(1,1,1,0.8);">推荐小区</div>
-					<div class="fr">更多小区</div>
-				</div>
-				<ul class="newHousePushContainer">
-					<li>
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-					<li class="newHousePushContainer_i">
-						<a href="" class="pic"><img src="../../imgs/buyhouse/tu2.png"/></a>
-						<div class="newHousePushPrice">
-							<div class="fl">500元/平</div>
-							<div class="fr">2001建设</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		</div>-->
+
+
+
