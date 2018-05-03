@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 15:19:56
+ * @Last Modified time: 2018-05-03 16:13:38
  */
 <template>
 	<div>
@@ -232,6 +232,7 @@ export default {
           pageNo: 1
         })
         .then(response => {
+          console.log(this.contrastList)
           //修正数据 根据本地缓存修正response数据
           response.data.data.forEach((item)=>{
             this.contrastList.forEach((item2)=>{

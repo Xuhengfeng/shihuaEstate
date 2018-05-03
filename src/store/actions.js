@@ -10,7 +10,7 @@ Vue.prototype.$message = Message//消息提示
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:14 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 15:48:39
+ * @Last Modified time: 2018-05-03 16:16:26
  */
 //异步操作
 export default {
@@ -25,8 +25,10 @@ export default {
 	//清空对比列表
 	clearAll({commit}) {
 		this.state.contrastList.forEach((item)=>{
-			axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {});
-			commit('CLEARALL');
+			axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {
+				commit('DELETEONE', item);
+			});
+			
 		})
 	},
 	//显示对比列表
