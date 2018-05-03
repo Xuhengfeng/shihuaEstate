@@ -205,7 +205,8 @@ export default {
         pageNo: 1,
         pageSize: null,
         roomsNum: null,
-        scity: null
+        scity: null,
+        useYear:null
       },
       buyhouse: [], //二手房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -392,9 +393,9 @@ export default {
     },
     louling(item, index) {
       this.querysix = index; //楼龄
-      //				this.params.minBuildArea = item.value.split('-')[0];
-      //				this.params.maxBuildArea = item.value.split('-')[1];
-      //				this.requestServerData(this.params);
+      this.params.useYear = item.value;
+      this.requestServerData(this.params);
+      this.requestCountData(this.params);
     },
     //朝向
     chaoxiang(item, index) {
