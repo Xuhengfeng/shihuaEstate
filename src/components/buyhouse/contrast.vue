@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 17:44:50
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-03 17:38:50
  */
 <template>
 	<!-- 房源对比 -->
@@ -35,31 +35,31 @@
 					<th>核心信息</th>
 					<tr>
 						<td>房源特色</td>
-						<td v-for="item in houseList2">{{item.houseTag}}</td>
+						<td v-for="item in contrastList" style="text-align:center">{{item.houseTitle}}</td>
 					</tr>
 					<tr>
 						<td>建筑面积</td>
-						<td v-for="item in houseList2">{{item.builtArea}}</td>
+						<td v-for="item in contrastList">{{item.builtArea}}</td>
 					</tr>
 					<tr>
 						<td>单价</td>
-						<td v-for="item in houseList2">{{item.salePrice}}</td>
+						<td v-for="item in contrastList">{{item.salePrice}}</td>
 					</tr>
 					<tr>
 						<td>户型</td>
-						<td v-for="item in houseList2">{{item.houseType}}</td>
+						<td v-for="item in contrastList">{{item.houseType}}</td>
 					</tr>
 					<tr>
 						<td>朝向</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>装修</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>年代</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 				</table>
 			</div>
@@ -70,35 +70,35 @@
 					</th>
 					<tr>
 						<td>套内面积</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>房屋类型</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>建筑类型</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>建筑结构</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>配备电梯</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>产权年限</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>房屋用途</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>产权</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 				</table>
 			</div>
@@ -107,31 +107,31 @@
 					<th>小区信息</th>
 					<tr>
 						<td>小区名称</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>          
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>          
 					</tr>
 					<tr>
 						<td>小区均价</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>建筑年代</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>楼栋总数</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>房屋总数</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>物业费用</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>总车位数</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>   
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>   
 					</tr>
 				</table>
 			</div>
@@ -140,23 +140,23 @@
 					<th>配套信息</th>
 					<tr>
 						<td>交通</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>学校</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>医院</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>银行</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
 					<tr>
 						<td>超市</td>
-						<td v-for="item in houseList2">{{item.houseDirection}}</td>
+						<td v-for="item in contrastList">{{item.houseDirection}}</td>
 					</tr>
  				</table>
 			</div>
@@ -170,20 +170,33 @@ export default {
 	data() {
 		return {
 			houseList: [],//头部的
-			houseList2: [],//表格的 要补起个数
+			contrastList: [],//表格的 要补起个数
 		}
 	},
 	created() {
-		let len = 4 - JSON.parse(localStorage.contrastList).length;
-		this.houseList = JSON.parse(localStorage.contrastList);
-		this.houseList2 = JSON.parse(localStorage.contrastList);
-		this.pushItem(len);
+		this.requestContrast();
 	},
 	methods: {
+		 //获取对比清单列表
+		requestContrast() {
+			console.log(1111)
+			this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
+			.then((res)=>{
+			  if(res.data.data.length) {
+				let result = res.data.data;
+				let len = 4 - res.data.data.length;
+				this.contrastList = result.slice(0);
+				this.houseList = result;
+				this.pushItem(len);
+				//初始化清单列表
+				this.$store.dispatch('showlist', result);
+			  }
+			})
+		},
 		//item 个数补齐
 		pushItem(num) {
 			for(let i=0;i<num;i++) {
-				this.houseList2.push({});
+				this.contrastList.push({});
 			}
 		}
 	},

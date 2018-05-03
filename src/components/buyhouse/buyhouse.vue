@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 16:13:38
+ * @Last Modified time: 2018-05-03 17:54:02
  */
 <template>
 	<div>
@@ -232,12 +232,12 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          console.log(this.contrastList)
           //修正数据 根据本地缓存修正response数据
           response.data.data.forEach((item)=>{
             this.contrastList.forEach((item2)=>{
               if(item.sdid == item2.sdid){
                 item.contentFlag = '已加入对比';
+                item2.contentFlag = '已加入对比';
               }
             })
           })
@@ -255,21 +255,23 @@ export default {
       //判断当前点击对象是否存在 
       if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
         if(this.contrastList.length >= 4){
-          //判断是否点击的已加入对比的按钮
           if(item.contentFlag == '已加入对比') {
             return;
           }else{
-            //提示用户
             this.$alert('对比清单最多4个!', '添加失败', {
               confirmButtonText: '确定'
             });
           }
         }else{
+          if(item.contentFlag == '已加入对比') {
+            return;
+          }else{
             this.contrastList.push(item);
             this.$refs.fly.drop(e.target);
             this.$set(item, 'contentFlag', '已加入对比');
             this.$store.dispatch('addOne', item);
             this.$store.dispatch('showlist', this.contrastList);
+          }
         }
       }
     },
