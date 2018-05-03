@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 15:26:44
+ * @Last Modified time: 2018-05-03 18:26:16
  */
 //同步处理
 export default {
@@ -49,6 +49,10 @@ export default {
 			return payload.sdid == item.sdid;
 		})
 		state.contrastList.splice(index, 1);
+	},
+	//获取对比房源详情
+	DETAILCONTRASTLIST(state) {
+		console.log('test')
 	}
 	
 	

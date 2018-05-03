@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 17:38:50
+ * @Last Modified time: 2018-05-03 18:28:23
  */
 <template>
 	<!-- 房源对比 -->
@@ -174,24 +174,29 @@ export default {
 		}
 	},
 	created() {
-		this.requestContrast();
+		// this.requestContrast();
+		this.requestContrastDetail();
 	},
 	methods: {
-		 //获取对比清单列表
+		//获取二手房对比
+		requestContrastDetail() {
+			this.$store.commit('DETAILCONTRASTLIST');
+		},
+		//获取对比清单列表
 		requestContrast() {
-			console.log(1111)
-			this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
-			.then((res)=>{
-			  if(res.data.data.length) {
-				let result = res.data.data;
-				let len = 4 - res.data.data.length;
-				this.contrastList = result.slice(0);
-				this.houseList = result;
-				this.pushItem(len);
-				//初始化清单列表
-				this.$store.dispatch('showlist', result);
-			  }
-			})
+			// console.log(1111)
+			// this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
+			// .then((res)=>{
+			//   if(res.data.data.length) {
+			// 	let result = res.data.data;
+			// 	let len = 4 - res.data.data.length;
+			// 	this.contrastList = result.slice(0);
+			// 	this.houseList = result;
+			// 	this.pushItem(len);
+			// 	//初始化清单列表
+			// 	this.$store.dispatch('showlist', result);
+			//   }
+			// })
 		},
 		//item 个数补齐
 		pushItem(num) {

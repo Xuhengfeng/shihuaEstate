@@ -46,7 +46,5 @@ let URL = {
 	JOIN_CONTRAST:_host + "/contrast/joid",                        //加入对比(二手房 新房)
 	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
 	
-    
-	
 };
 export default {URL}
