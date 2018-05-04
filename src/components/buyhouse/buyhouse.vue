@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-03 21:43:16
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-04 14:08:53
  */
 <template>
 	<div>
@@ -221,6 +221,9 @@ export default {
     //监控store的contrastList变化 声明一个计算属性控制刷新数据
     refresh() {
       return this.$store.state.contrastList;
+    },
+    logined() {
+      return this.$store.state.logined;
     }
   },
   watch: {
@@ -253,7 +256,7 @@ export default {
     },
     //加入对比清单
     addContrast(item, e) {
-      
+      if(!this.logined) return this.$alert('用户未登录!');
       //判断当前点击对象是否存在 
       if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
         if(this.contrastList.length >= 4){

@@ -134,7 +134,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li  @click="toSkip(item)" :key="index" v-for="(item,index) in houseRecmdlist">
+						<li  @click="toSkip(item)" :key="index" v-for="(item,index) in houseRecmdlist" v-show="index<=3?true:false">
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
@@ -178,7 +178,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in rentHouseRecmdlist">
+						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false">
 							<div class="image">
 								<img :src= item.housePic />
 							</div>
