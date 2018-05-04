@@ -159,36 +159,7 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
-  computed: {
-    //获取用户登录状态
-    logined() {
-      return this.$store.state.logined;
-    }
-  },
-  
   methods: {
-    //收藏房源
-    collection(item,e) {
-      console.log(this.logined)
-        if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
-      if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.BUILDCOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
-        .then(response => {
-            e.target.innerHTML = '已收藏'
-        });
-
-      }else{
-           this.$http
-        .post(this.$url.URL.BUILDCOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
-        .then(response => {
-            e.target.innerHTML = '收藏'
-        });
-      }
-      this.collectionFlag = !this.collectionFlag;
-    },
     toSkip(item) {
       let path = "/estatedetail/" + item.sdid;
       this.$router.push({ path: path });

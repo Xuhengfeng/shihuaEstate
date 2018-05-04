@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-03 10:20:40
+ * @Last Modified time: 2018-05-04 20:22:13
  */
 //重新封装axios
 import Vue from 'vue'
@@ -30,9 +30,9 @@ axios.interceptors.request.use(
     } else {
       promiseArr[config.url] = cancel
     }
+    config.headers.scity = JSON.parse(localStorage.selectCity).value;
     if (sessionStorage.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
       config.headers = {
-        'scity': JSON.parse(localStorage.selectCity).value,
         'unique-code': sessionStorage.token
       }
     }
