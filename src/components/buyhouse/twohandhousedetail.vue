@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-04 18:24:32
+ * @Last Modified time: 2018-05-04 20:53:30
  */
 <template>
 	<div>
@@ -94,10 +94,13 @@
                       <div> {{item.emplName}} </div>
                       <div> {{item.phone}}</div>
                     </div>
+                    <div class="list" v-show="!housesee.length">
+                        <div style="text-align:center!important;">暂无更多的记录!</div>
+                    </div>
                   </div>
                    <div class="more">
-                     <div><</div>
-                     <div>></div>
+                     <div @click="changeNum(1)"><</div>
+                     <div @click="changeNum(2)">></div>
                    </div>
                 </div>
             </div>
@@ -127,7 +130,7 @@
                           <img :src="item.housePic"  />
                         </div>
                         <div class="direciton">
-                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                           <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -148,7 +151,7 @@
                         <img src="item.housePic" />
                       </div>
                       <div class="direciton">
-                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle }} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName }}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                         <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -259,7 +262,8 @@ export default {
       buildsdid: "", //同小区sdid
       housesee:[],   //约看
       id:"",//带看id
-	    scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
+      page: 1,//默认带看记录是第一页
+	    scity: JSON.parse(localStorage.selectCity)//用户选定城市
     };
   },
   components: {
@@ -271,6 +275,29 @@ export default {
 	  this.render();
   },
   methods: {
+    //更多 带看记录
+    moreSeelog() {
+      //带看记录
+      this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id + "?pageNo=" + this.page)
+      .then(response =>{
+            this.housesee =  response.data.data
+            console.log(this.housesee)
+      })
+    },
+    //上一页 下一页
+    changeNum(num) {
+      if(num==1){
+        this.page--;
+        this.page<=0?this.page=1:this.page;
+        this.moreSeelog();
+      }else if(num==2){
+        if(this.housesee.length){
+          this.page++;
+          this.moreSeelog();
+        }
+      }
+    },
+
     //收藏房源
     addCollection(e) {
       console.log(e)
@@ -295,17 +322,9 @@ export default {
           this.id = response.data.data.id
            
             //带看记录
-            this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id ,{
-              headers: {
-                  "scity": city
-              },
-              params: {
-                pageNo: 1
-              }
-            })
+            this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id+"?pageNo=1")
             .then(response =>{
-                  this.housesee =  response.data.data
-                  console.log(this.housesee)
+                this.housesee =  response.data.data
             })
        
 
