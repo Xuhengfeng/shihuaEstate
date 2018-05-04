@@ -79,8 +79,7 @@
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}
-									<span class="fr" @click.stop="addCollection($event)">收藏</span>
-									<span class="contrast fr" @click.stop="addContrast(item, $event)">{{item.contentFlag?item.contentFlag:'加入对比'}}</span>
+									<span class="fr" @click.stop="collection(item,$event)">收藏</span>
               		 </div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
                     				<span class="word">{{item.areaName}}{{item.districtName}}/在{{item.buildAge}}年建成</span>
@@ -153,6 +152,7 @@ export default {
 	},
       buildlist: [], //小区列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
+       collectionFlag: true, //收藏标识
     };
   },
   created() {
@@ -160,68 +160,34 @@ export default {
     this.render(this.selectCity.value);
   },
   computed: {
-    //监控store的contrastList变化 声明一个计算属性控制刷新数据
-    refresh() {
-      return this.$store.state.contrastList;
+    //获取用户登录状态
+    logined() {
+      return this.$store.state.logined;
     }
   },
-  watch: {
-    //监听计算属性
-    refresh() {
-      //请求小区的列表
-      this.$http
-        .post(this.$url.URL.BUILDLIST, {
-          scity: this.selectCity.value,
-          pageNo: 1
-        })
-        .then(response => {
-          if(localStorage.contrastList) {
-            //修正数据 根据本地缓存修正response数据
-            response.data.data.forEach((item)=>{
-              JSON.parse(localStorage.contrastList).forEach((item2)=>{
-                if(item.sdid == item2.sdid){
-                  item.contentFlag = '已加入对比';
-                }
-              })
-            })
-          }
-          this.buildlist = response.data.data;   
-        });
-    }
-  },
+  
   methods: {
     //收藏房源
-    addCollection(e) {
+    collection(item,e) {
+      console.log(this.logined)
+        if(!this.logined){
+        return this.$alert('用户未登录!');
+      }
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.BUILDCOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
 
-	},
-	//加入对比清单
-    addContrast(item, e) {
-      //判断本地缓存是否存在 存在则初始化对比清单
-      let arr = [];
-      if(localStorage.contrastList){
-        arr = JSON.parse(localStorage.contrastList);
+      }else{
+           this.$http
+        .post(this.$url.URL.BUILDCOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '收藏'
+        });
       }
-      //判断当前点击对象是否存在 
-      if(JSON.stringify(arr).indexOf(JSON.stringify(item)) == '-1') {
-        if(arr.length >= 4){
-          //判断是否点击的已加入对比的按钮
-          if(item.contentFlag == '已加入对比') {
-            return;
-          }else{
-            //提示用户
-            this.$alert('对比清单最多4个!', '添加失败', {
-              confirmButtonText: '确定'
-            });
-          }
-        }else{
-          arr.push(item);
-          this.$set(item, 'contentFlag', '已加入对比');
-          this.$refs.fly.drop(e.target);
-          localStorage.contrastList = JSON.stringify(arr);
-        }
-        //修改状态
-        this.$store.dispatch('showlist');
-      }
+      this.collectionFlag = !this.collectionFlag;
     },
     toSkip(item) {
       let path = "/estatedetail/" + item.sdid;

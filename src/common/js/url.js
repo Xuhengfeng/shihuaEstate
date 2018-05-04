@@ -32,6 +32,10 @@ let URL = {
 	BUILDCOLLECTION_ADD:_host+'/buildCollection/add/',          //小区收藏
 	BUILDCOLLECTION_CANCEL:_host+'/buildCollection/cancel/',    //取消小区收藏
 	BUILDCOLLECTION_LIST:_host+'/buildCollection/collectionList',//小区收藏列表
+	HOUSECOLLECTION_ADD:_host+'/houseCollection/add/',           //二手房收藏
+	HOUSECOLLECTION_CANCEL:_host+'/houseCollection/cancel/',     //取消二手房收藏
+	RENTHCOLLECTION_ADD:_host+'/rentHCollection/add/',           //租房收藏
+	RENTHCOLLECTION_CANCEL:_host+'/rentHCollection/cancel/',     //取消租房收藏
 	USER_LOGIN:_host+'/member/login',                           //用户登录
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码

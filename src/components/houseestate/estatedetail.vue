@@ -101,7 +101,7 @@
 											<div class="visitTime"><span class="label">绿化率</span><span class="info">{{buildlistinfo.greenRatio }}</span></div>
 										</div>
 										<div class="duibi">
-												<div class="duibi_a">加入对比</div>
+												<div class="duibi_a">收藏房源</div>
 												<div class="duibi_a">分享房源</div>
 											</div>
 												<div class="callpeople">小区二手房</div>

@@ -36,7 +36,7 @@
 			</div>
 			<div class="collect fr">
 				<div class="collect_s">
-					<div class="collect_a" @click="addCollection($event)">收藏房源</div>
+					<div class="collect_a" @click="collection($event)">收藏房源</div>
 					<div class="collect_a">预约看房</div> 
           
 				</div>
@@ -217,7 +217,7 @@
 			</div>
 		</div>
     <!-- 飞入的物体 -->
-    <o-fly class="fly" ref="fly"></o-fly>
+    <!-- <o-fly class="fly" ref="fly"></o-fly> -->
 	</div>
 
 </template>
@@ -251,22 +251,44 @@ export default {
       buildsdid: "", //同小区sdid
       housesee:[],   //约看
       id:"",//带看id
-	    scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
+      scity: JSON.parse(window.localStorage.selectCity),//用户选定城市
+      collectionFlag: true, //收藏标识
     };
   },
   components: {
     oHeader,
-    BMap,
-    oFly
+    BMap
   },
   created() {
 	  this.render();
   },
+   computed: {
+    //获取用户登录状态
+    logined() {
+      return this.$store.state.logined;
+    }
+  },
   methods: {
     //收藏房源
-    addCollection(e) {
-      console.log(e)
-      this.$refs.fly.drop(e.target)
+    collection(e) {
+      if(!this.logined){
+        return this.$alert('用户未登录!');
+      }
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.scity.value +"/"+  this.buildsdid)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
+
+      }else{
+           this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
+        .then(response => {
+            e.target.innerHTML = '收藏房源'
+        });
+      }
+      this.collectionFlag = !this.collectionFlag;
     },
     //切换房源
 	  toSkip(item) {

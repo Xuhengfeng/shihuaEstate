@@ -40,7 +40,7 @@
 			</div>
 			<div class="collect fr">
 				<div class="collect_s">
-					<div class="collect_a">收藏房源</div>
+					<div class="collect_a"  @click="collection(item,$event)">收藏房源</div>
 					<div class="collect_a">预约看房</div>
 				</div>
 				<div class="content fr">
@@ -243,8 +243,9 @@
 				rentrimhousing:"",//周边房源
 				bulidinfo: "", //关联小区
 				renthousesee:[],//租房带看记录
-				 id:"",//带看id
-				scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
+				id:"",//带看id
+				scity: JSON.parse(window.localStorage.selectCity),//用户选定城市
+				collectionFlag: true, //收藏标识
 			};
 		},
 		 watch: {
@@ -255,7 +256,35 @@
 		 created() {
 			this.render();
 		},
+			computed: {
+			//获取用户登录状态
+			logined() {
+				return this.$store.state.logined;
+			}
+		},
 		methods: {
+					//收藏房源
+				collection(item,e) {
+					console.log(this.logined)
+						if(!this.logined){
+						return this.$alert('用户未登录!');
+					}
+					if(this.collectionFlag){
+						this.$http
+						.post(this.$url.URL.RENTHCOLLECTION_ADD + "/"+ this.scity.value +"/"+ this.buildsdid)
+						.then(response => {
+								e.target.innerHTML = '已收藏'
+						});
+
+					}else{
+							this.$http
+						.post(this.$url.URL.RENTHCOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
+						.then(response => {
+								e.target.innerHTML = '收藏房源'
+						});
+					}
+					this.collectionFlag = !this.collectionFlag;
+				},
 				toSkip(item) {
 				document.body.scrollTop = 0
 				document.documentElement.scrollTop = 0

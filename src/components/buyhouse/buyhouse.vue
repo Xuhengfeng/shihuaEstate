@@ -118,7 +118,7 @@
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.houseTitle}}
-                    <span class="fr" @click.stop="addCollection($event)">收藏</span>
+                    <span class="fr" @click.stop="collection(item,$event)">收藏</span>
                     <span class="contrast fr" @click.stop="addContrast(item, $event)">{{item.contentFlag?item.contentFlag:'加入对比'}}</span>
                   </div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
@@ -211,6 +211,7 @@ export default {
       buyhouse: [], //二手房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       contrastList: [],//对比清单列表
+      collectionFlag: true, //收藏标识
     };
   },
   created() {
@@ -221,6 +222,10 @@ export default {
     //监控store的contrastList变化 声明一个计算属性控制刷新数据
     refresh() {
       return this.$store.state.contrastList;
+    },
+    //获取用户登录状态
+    logined() {
+      return this.$store.state.logined;
     }
   },
   watch: {
@@ -242,14 +247,31 @@ export default {
               }
             })
           })
-          this.buyhouse = response.data.data;   
+          this.buyhouse = response.data.data; 
         });
     }
   },
   methods: {
     //收藏房源
-    addCollection(e) {
+    collection(item,e) {
+      if(!this.logined){
+        return this.$alert('用户未登录!');
+      }
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
 
+      }else{
+           this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '收藏'
+        });
+      }
+      this.collectionFlag = !this.collectionFlag;
     },
     //加入对比清单
     addContrast(item, e) {
@@ -289,7 +311,7 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          this.buyhouse = response.data.data;            
+          this.buyhouse = response.data.data;        
         });
 
       //获取对比清单列表
@@ -300,7 +322,7 @@ export default {
           //初始化清单列表
           this.$store.dispatch('showlist', res.data.data);
         }
-      })
+      });
 
       //获取搜索二手房总数量
       this.$http

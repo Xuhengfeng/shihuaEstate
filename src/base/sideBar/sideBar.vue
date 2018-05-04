@@ -40,7 +40,7 @@
           </li>
           <li class="three"><img src="../../imgs/home/collection.png">
               <div class="screenOuter">
-                  收藏
+                  我收藏的房源
               </div>
           </li>
           <li class="four"><img src="../../imgs/home/calc.png">

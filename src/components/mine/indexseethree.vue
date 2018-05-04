@@ -1,5 +1,5 @@
 <template>
-<div>已看记录</div>
+<div>看房报告</div>
 </template>
 
 <script>
