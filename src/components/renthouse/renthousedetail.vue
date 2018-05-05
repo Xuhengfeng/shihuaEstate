@@ -407,7 +407,7 @@
 	}
 </script>
 
-<style scoped="scoped">
+<style scoped>
 	@import '../../../static/css/swiper-3.4.2.min.css';
 .title {
   padding: 24px;

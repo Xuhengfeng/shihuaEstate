@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-04 20:22:13
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-05 15:24:29
  */
 //重新封装axios
 import Vue from 'vue'
@@ -30,10 +30,10 @@ axios.interceptors.request.use(
     } else {
       promiseArr[config.url] = cancel
     }
-    config.headers.scity = JSON.parse(localStorage.selectCity).value;
     if (sessionStorage.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
       config.headers = {
-        'unique-code': sessionStorage.token
+        'unique-code': sessionStorage.token,
+        'scity': JSON.parse(localStorage.selectCity).value
       }
     }
     return config;
@@ -88,7 +88,7 @@ axios.interceptors.response.use(response => {
           MessageBox.alert(`连接错误${err.response.status}`)
       }
     }else{
-     MessageBox.alert('连接到服务器失败')
+    //  MessageBox.alert('连接到服务器失败')
     }
     // message.error(err.message)
       return Promise.resolve(err.response)

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-04 20:53:30
+ * @Last Modified by: 徐横峰
+ * @Last Modified time: 2018-05-05 16:10:12
  */
 <template>
 	<div>
@@ -40,7 +40,9 @@
             </div>
             <div class="two">
                 <div class="title">房源位置</div>
-				        <b-map></b-map>
+                <div class="map">
+				          <b-map></b-map>
+                </div>
             </div>
             <div class="three">
                 <div class="title">房源信息</div>
@@ -174,7 +176,7 @@
                 <div>预约看房</div> 
               </div>
 
-              <div class="content fr">
+              <div class="content">
                   <div class="price ">
                     <span class="total">{{twohandhousedetail.saleTotal}}</span>
                     <span class="unit"><span>万</span>
@@ -214,15 +216,13 @@
                       <div class="duibi_a">分享房源</div>
                   </div>
                   <div class="callpeople">联系经纪人</div>
-                  <div class="fl peopleintrode">
+                  <div class="peopleintrode">
                       <div class="fl"><img :src="twohandhousedetail.broker.photo"></div>
-                      <div class="fr">
-                        <ul>
-                          <li>{{twohandhousedetail.broker.emplName}}</li>
-                          <li>{{twohandhousedetail.broker.phone}}</li>
-                          <li>亲自勘察，真实房源，竭诚为您服务</li>
-                        </ul>
-                      </div>
+                      <ul>
+                        <li class="broker">{{twohandhousedetail.broker.emplName}}</li>
+                        <li class="telphone">{{twohandhousedetail.broker.phone}}</li>
+                        <li class="decription">亲自勘察，真实房源，竭诚为您服务</li>
+                      </ul>
                   </div>
               </div>
         </div>
@@ -441,7 +441,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped="scoped">
+<style lang="less" scoped>
 @import '../../../static/css/swiper-3.4.2.min.css';
 .section{
   display: flex;
@@ -470,16 +470,11 @@ export default {
       }
     }
     .two{
-      .title{
-        font-size: 20px;
-        margin: 60px 0  26px;
-      }
+      .title{font-size: 20px;margin: 60px 0  26px}
+      .map{width: 100%}
     }
     .three{
-      .title{
-        font-size: 20px;
-        margin: 60px 0  26px;
-      }
+      .title{font-size: 20px;margin: 60px 0  26px}
       .introContent {
         overflow: hidden;
         .base {
@@ -511,20 +506,14 @@ export default {
               font-size: 14px;
               color: #394043;
               line-height: 24px;
-              .label{
-                color: #999999;
-                margin-right: 30px;
-              }
+              .label{color: #999999;margin-right: 30px}
             }
           }
         }
       }
     }
     .four{
-      .title{
-        font-size: 20px;
-        margin: 60px 0  26px;
-      }
+      .title{font-size: 20px;margin: 60px 0  26px}
       .content-hd{
         padding: 10px 0;
         border-top: 1px solid #cacaca;
@@ -533,9 +522,7 @@ export default {
           display: flex;
           flex-flow: row nowrap;
           justify-content: flex-start;
-          div{
-            flex: 1;
-          }
+          div{flex: 1}
         }
         .num>div{
           font-size: 30px;
@@ -552,20 +539,15 @@ export default {
           display: flex;
           flex-flow: row nowrap;
           justify-content: flex-start;
-          div{
-            flex: 1;
-          }
+          div{flex: 1}
         }
         .list{
-          // margin: 20px 0;
           padding: 20px 0;
           display: flex;
           flex-flow: row nowrap;
           justify-content: flex-start;
           border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-          div{
-            flex: 1;
-          }
+          div{flex: 1}
         }
       }
       .more{
@@ -588,33 +570,8 @@ export default {
       }
     }
     .five{
-      .guanlianxiaoqu{
-        .title{
-          font-size: 20px;
-          padding: 60px 0  30px;
-          margin-bottom: 30px;
-          border-bottom: 1px solid #cacaca;
-        }
-        .image{
-          margin-right: 25px;
-        }
-      }
-      .tongxiaoqu{
-        .title{
-          font-size: 20px;
-          padding: 60px 0  30px;
-          margin-bottom: 30px;
-          border-bottom: 1px solid #cacaca;
-        }
-        li{
-          overflow: hidden;
-          margin-bottom: 25px;
-          .image{
-            margin-right: 25px;
-          }
-        }
-        
-      }
+      .guanlianxiaoqu,
+      .tongxiaoqu,
       .zhoubian{
         .title{
           font-size: 20px;
@@ -622,12 +579,35 @@ export default {
           margin-bottom: 30px;
           border-bottom: 1px solid #cacaca;
         }
-        li{
-          overflow: hidden;
-          margin-bottom: 25px;
-          .image{
-            margin-right: 25px;
+        .image{
+          width: 232px;
+          height: 175px;
+          margin-right: 25px;
+          img{width: 100%;height: 100%}
+        }
+        .introduce {
+          margin-top: 29px;
+          span{font-size: 14px}
+          .word{
+            vertical-align: top;
+            margin-left: 10px;
+            color: rgba(0, 0, 0, 0.7);
           }
+          .intrspan {
+            width: 70px;
+            display: inline-block;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+          }
+        }
+      }
+      .tongxiaoqu,
+      .zhoubian{
+        li{
+          margin: 50px 0 25px;
+          cursor: pointer;
+          overflow: hidden;
         }
       }
     }
@@ -636,20 +616,18 @@ export default {
     flex: 380px 0 0;
     width: 380px;
     .btn{
-      margin-top: 3px;
       display: flex;
       flex-flow: row nowrap;
-      justify-content: space-around;
+      justify-content: flex-end;
       text-align: center;
       div{
         width: 112px;
         height: 46px;
         line-height: 46px;
         background: #ffffff;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-        &:nth-of-type(2){
-          background: red;
-        }
+        border: 1px solid #cacaca;
+        margin-left: 10px;
+        &:nth-of-type(2){background: red}
       }
     }
     .content{
@@ -679,10 +657,7 @@ export default {
               .unitPrice {
                 font-size: 16px;
                 color: #394043;
-                .unitPriceValue {
-                  font-weight: bold;
-                  color: #394043;
-                }
+                .unitPriceValue {font-weight: bold;color: #394043}
               }
               .tax {
                 margin-top: 11px;
@@ -696,10 +671,7 @@ export default {
               color: #e4393c;
               height: 37px;
               vertical-align: 6px;
-              span{
-                display: block;
-                margin-top: 9px;
-              }
+              span{display: block;margin-top: 9px}
             }
           }           
           .houseInfo {
@@ -709,10 +681,7 @@ export default {
             border-top: 1px solid #eeeeee;
             border-bottom: 1px solid #eeeeee;
             padding: 30px 0;
-            .room {
-              float: left;
-              width: 33%;
-            }
+            .room {float: left;width: 33%}
             .mainInfo {
               font-size: 20px;
               font-weight: bold;
@@ -722,7 +691,7 @@ export default {
               -o-text-overflow: ellipsis;
               white-space: nowrap;
             }
-            .subInfo {
+            .subInfo{
               margin-top: 8px;
               font-size: 12px;
               color: #394043;
@@ -731,11 +700,7 @@ export default {
               -o-text-overflow: ellipsis;
               white-space: nowrap;
             }
-            .type {
-              float: left;
-              width: 33%;
-            }
-
+            .type{float: left; width: 33%}
           }
           .aroundInfo {
             padding: 30px 0;
@@ -748,111 +713,48 @@ export default {
               overflow: hidden;
               text-overflow: ellipsis;
             }
-            .visitTime {
-              margin-top: 14px;
-            }
-            .houseRecord {
-              margin-top: 14px;
+            .visitTime {margin-top: 14px}
+            .houseRecord {margin-top: 14px}
+          }
+          .duibi{
+            display: flex;
+            flex-flow: row nowrap;
+            padding: 20px 0;
+            border-top: 1px solid #eeeeee; 
+            justify-content: center;
+            text-align: center;
+            div{
+              width: 120px;
+              height: 42px;
+              line-height: 42px;    
+              border: 1px solid #eeeeee;   
+              &:first-child{margin-right:20px}       
             }
           }
-          
+          .callpeople {
+            height: 42px;
+            line-height: 42px;
+            text-align: center;
+            color: white;
+            background: red;
+          }
+          .peopleintrode{
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            div{
+              width: 72px;
+              height: 80px;
+              margin-right: 10px;
+              img{width: 100%;height:100%}
+            }
+            ul li{line-height: 28px}
+            .telphone{color: red}
+            .decription{font-size: 12px}
+          }
     }
   }
 }
-
-
-.collect_s {
-  margin-left: 120px;
-}
-.duibi {
-  margin-top: 30px;
-  margin-left: 20px;
-}
-.duibi .duibi_a {
-  float: left;
-  padding: 12px 27px;
-  border: 1px solid gainsboro;
-  margin-left: 30px;
-}
-
-.item {
-  width: 830px;
-  margin-bottom: 80px;
-  overflow: hidden;
-}
-.item ul li {
-  margin-top: 50px;
-  cursor: pointer;
-}
-.introduce {
-  height: 19px;
-  margin-top: 29px;
-}
-.introduce span {
-  font-size: 14px;
-}
-
-.introduce .word {
-  vertical-align: top;
-  margin-left: 10px;
-  color: rgba(0, 0, 0, 0.7);
-}
-.intrspan {
-  width: 70px;
-  display: inline-block;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-}
-.headtitle {
-  font-size: 20px;
-  line-height: 30px;
-  margin-top: 60px;
-}
-.callpeople {
-  width: 380px;
-  float: left;
-  line-height: 42px;
-  text-align: center;
-  height: 42px;
-  background: red;
-  color: white;
-  margin-top: 25px;
-}
-.peopleintrode {
-  width: 285px;
-  margin-top: 20px;
-}
-.peopleintrode > div {
-  font-weight: bold;
-  font-size: 18px;
-}
-.peopleintrode > :nth-child(1) {
-  width: 72px;
-  height: 80px;
-}
-.peopleintrode > :nth-child(1) img {
-  width: 100%;
-  height: 100%;
-}
-.peopleintrode ul {
-  line-height: 28px;
-}
-.peopleintrode > :nth-child(2) > ul > :nth-child(2) {
-  color: red;
-}
-.peopleintrode > :nth-child(2) > ul > :nth-child(3) {
-  font-size: 12px;
-}
-.image {
-  width: 232px;
-  height: 175px;
-}
-.image img {
-  width: 100%;
-  height: 100%;
-}
-
 
 
 /*轮播切换*/
