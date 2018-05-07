@@ -1,6 +1,9 @@
 <template>
 	<div>
-		<o-header :houseTypeId="houseTypeId"></o-header>
+		<o-header :houseTypeId="houseTypeId" 
+              :keywordTypeId="keywordTypeId" 
+              :keyword="keyword"
+              @query="query"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
@@ -121,7 +124,10 @@ import oFly from "../../base/fly/fly";
 export default {
   data() {
     return {
-      houseTypeId: 11, //二手房
+      houseTypeId: 12, //地图 二手房 租房  小区 11 12 13
+      keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
+      keyword: '',//关键词
+
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
@@ -131,8 +137,7 @@ export default {
       showBtn: false,
       showBtnone: false,
       queryRentcount: {
-        //租房房总数量
-        count: ""
+        count: ""//租房房总数量
       },
       queryone: null, //租房房区域
       querytwo: null, //租房价格
@@ -143,7 +148,7 @@ export default {
       inputtwo: "",
       inputthree: "",
       inputfour: "",
-      params: {
+      params: {//这个是用来查询参数列表 不变的
         areaId: null,
         districtId: null,
         houseDecor: "",
@@ -152,13 +157,14 @@ export default {
         houseForm: "",
         keyword: "",
         maxBuildArea: null,
-        maxRentPrice: null,
+        maxPrice: null,
         minBuildArea: null,
-        minRentPrice: null,
+        minPrice: null,
         pageNo: 1,
         pageSize: null,
         roomsNum: null,
-        scity: null
+        scity: null,
+        useYear:null
       },
       renthouse: [], //租房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -169,7 +175,7 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
-    computed: {
+  computed: {
     //获取用户登录状态
     logined() {
       return this.$store.state.logined;
@@ -203,16 +209,11 @@ export default {
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求租房的列表
-      this.$http
-        .post(this.$url.URL.RENTHOUSE_QUERY, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.renthouse = response.data.data;            
-        });
-
+      //请求租房的列表(搜索)
+      this.keyword = this.$route.query.word;
+      this.keywordTypeId = parseInt(this.$route.query.type);
+      this.query();
+      
       //获取搜索租房总数量
       this.$http
         .post(this.$url.URL.RENTHOUSE_QUERYCOUNT, {
@@ -241,6 +242,18 @@ export default {
         .then(response => {
           this.listthree = response.data.data;
         });
+      
+      
+    },
+    //搜索
+    query(item) {
+      if(item) this.keyword = item.keyword;
+      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      this.$http
+      .post(this.$url.URL.RENTHOUSE_QUERY, params)
+      .then(response=>{
+        this.renthouse = response.data.data;
+      })
     },
     //点击区域条件
     address(item, index) {

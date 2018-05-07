@@ -1,6 +1,15 @@
+/*
+ * @Author: 徐横峰 
+ * @Date: 2018-05-07 18:13:41 
+ * @Last Modified by:   564297479@qq.com 
+ * @Last Modified time: 2018-05-07 18:13:41 
+ */
 <template>
 	<div>
-		<o-header></o-header>
+		<o-header :houseTypeId="houseTypeId" 
+					:keywordTypeId="keywordTypeId" 
+					:keyword="keyword"
+					@query="query"></o-header>
 		<div class="title container">
 			<div class="tit fl">
 				<p>{{buildlistinfo.buildName }}</p>
@@ -132,15 +141,15 @@
 	export default {
 		data() {
 			return {
-				datas: "",
-				dialogVisible: false,
-				loginshow: null, //登陆注册阴影层
-				rightnow: true, //登陆注册判断条件
-				 buildlistinfo: {
+				houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
+				keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
+				keyword: '',//关键词
+			
+			 buildlistinfo: {
 					 //小区房详情
 					broker: {
 						emplName: "",
-					photo: ""
+						photo: ""
 					}
 				},
 				buildsdid: "", //同小区sdid
@@ -150,19 +159,19 @@
 				num: 0,           //切换ip
 				//二手房 租房
 				IPS: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
-				scity: JSON.parse(window.localStorage.selectCity)//用户选定城市
+			  selectCity: JSON.parse(localStorage.selectCity),//当前城市
 			};
 		},
 		 watch: {
 			$route() {
-			this.render();
-		}
+				this.render();
+			}
 		},
 		 created() {
 			this.render();
 		},
 		methods: {
-				toSkip(item) {
+			toSkip(item) {
 				document.body.scrollTop = 0
 				document.documentElement.scrollTop = 0
 				let path = "/sellrentdetail/" + item.sdid;
@@ -180,21 +189,25 @@
 					this.py = response.data.data.py;
 
 					//小区二手房
-					this.$http.get(this.$url.URL.BUILDSECOND_HOUSELIST +city + "/" + this.buildsdid,
-							{
-								pageNo: 1,
-								pageSize: 10
-							}
-					)
+					this.$http.get(this.$url.URL.BUILDSECOND_HOUSELIST +city + "/" + this.buildsdid+"&pageNo="+1)
 					.then(response => {
 						this.bulidsecondlist= response.data.data;
-						console.log(this.bulidsecondlist)
-
 					});
 					//同小区二手房房源
 					this.neayHouseRequest(0, this.buildsdid);
-
 				}); 
+
+				
+			},
+			//搜索
+			query(item) {
+				if(item) this.keyword = item.keyword;
+				let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+				this.$http
+				.post(this.$url.URL.BUILDLIST, params)
+				.then(response=>{
+					this.bulidsecondlist = response.data.data;
+				})
 			},
 			//同小区二手房房源
 			neayHouseRequest(num, sdid) {

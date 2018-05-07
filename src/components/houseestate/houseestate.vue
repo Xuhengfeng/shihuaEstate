@@ -1,7 +1,10 @@
 
 <template>
 	<div>
-		<o-header :houseTypeId="houseTypeId"></o-header>
+		<o-header :houseTypeId="houseTypeId" 
+					:keywordTypeId="keywordTypeId" 
+					:keyword="keyword"
+					@query="query"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
@@ -115,7 +118,10 @@ import oFly from "../../base/fly/fly";
 export default {
   data() {
     return {
-      houseTypeId: 11, //二手房
+      houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
+      keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
+      keyword: '',//关键词
+
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
@@ -165,15 +171,10 @@ export default {
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求小区的列表
-      this.$http
-        .post(this.$url.URL.BUILDLIST, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.buildlist = response.data.data;            
-        });
+      //请求小区的列表(搜索)
+      this.keyword = this.$route.query.word;
+      this.keywordTypeId = parseInt(this.$route.query.type);
+      this.query();
 
       //获取搜索小区房总数量
       this.$http
@@ -202,6 +203,16 @@ export default {
         .then(response => {
           this.listthree = response.data.data;
         });
+    },
+    //搜索
+    query(item) {
+      if(item) this.keyword = item.keyword;
+      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      this.$http
+      .post(this.$url.URL.BUILDLIST, params)
+      .then(response=>{
+        this.buildlist = response.data.data;
+      })
     },
     //点击区域条件
     address(item, index) {

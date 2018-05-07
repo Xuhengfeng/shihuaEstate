@@ -97,14 +97,14 @@
 				</div>
 				<div class="search-box-wrap">
 					<div class="search-hd">
-						<span @click="placeholderText(1)">二手房</span>
-						<span @click="placeholderText(2)">租房</span>
-						<span @click="placeholderText(3)">小区</span>
+						<span @click="placeholderText(0)">二手房</span>
+						<span @click="placeholderText(1)">租房</span>
+						<span @click="placeholderText(2)">小区</span>
 					</div>
 					<div class="search-bd">
 						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
-						<input class="search-box" :placeholder="souText" v-model="searchinput"></input>
-						<div class="search-box-btn fr" @click="searchBuyHouse()">开始找房</div>
+						<input class="search-box" :placeholder="souText" v-model="searchinput" @keyup.enter="searchHouse()"></input>
+						<div class="search-box-btn fr" @click="searchHouse()">开始找房</div>
 					</div>
 					<!-- <router-link class="mapSearchHouse" tag="div" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">
 						<i class="iconfont icon-location"></i>
@@ -278,7 +278,8 @@
 				hotBuilding:[],    //热门小区
 				houseUsed:"",  //房源统计
 				houseTypeId: 11,
-				searchinput:'',
+				searchinput:'',//搜索关键词
+				placeholderTextType: 0,//搜索关键词类型
 				params: {
 				  "areaId": null,
 				  "districtId": null,
@@ -408,46 +409,63 @@
 					this.rentHouseRecmdlist = response.data.data
 				})
 			},
-			changeDialog(num) {//显示对应的对话框
+			//显示对应的对话框
+			changeDialog(num) {
 				this.showbox = num; 
 			},
-			login() {//登陆
+			//登陆
+			login() {
 				this.showbox = 1; 
 				this.$refs.odialog.show();
 				this.cityChange = false;
 			},
-			register() {//注册
+			//注册
+			register() {
 				this.showbox = 2;
 				this.cityChange = false;				
 				this.$refs.odialog.show();
 			},
-			logout() {//退出
+			//退出
+			logout() {
 				sessionStorage.token = "";
 				this.$store.dispatch('logout');
 			},
- 			openCity() {//打开城市列表
+			//打开城市列表
+ 			openCity() {
 				this.cityChange = true;
 			},
-			closeCity() {//关闭城市列表
+			//关闭城市列表
+			closeCity() {
 				this.cityChange = false;
 			},
-			placeholderText(num) {//搜索placeholder内容
-				if(num == 1) {
+			//搜索placeholder内容
+			placeholderText(num) {
+				switch(num) {
+					case 0:
+					this.placeholderTextType = 0;
 					this.$refs.sanjiao.style.left = '0px';
-					this.souText = '请输入区域丶商圈或小区名开始找房';					
-				} else if(num == 2) {
+					this.souText = '请输入区域丶商圈或小区名开始找房';		
+					break;
+					
+					case 1:
+					this.placeholderTextType = 1;
 					this.$refs.sanjiao.style.left = '120px';
-					this.souText = '请输区名开始租房';				
-				} else if(num == 3) {
+					this.souText = '请输区名开始租房';		
+					break;
+
+					case 2:
+					this.placeholderTextType = 2;
 					this.$refs.sanjiao.style.left = '220px';
-					this.souText = '请输入区域丶名开始找房';				
+					this.souText = '请输入区域丶名开始找房';
+					break;
 				}
 			},
-			
+			//二手房的 更多
 			toSkip(item) {  
 				let path = "/buyhouse/twohandhousedetail/"+item.sdid;
 				this.$router.push({path:path});
 			},
+			//选定地址
 			changeAddress(item) {
 				//item是中文, name是拼音
 				let name = pinyin(item, {noTone: true}).replace(/\s+/g,"");	
@@ -458,8 +476,14 @@
 				this.renderRequest(name);
 				localStorage.selectCity = JSON.stringify(selectCity);	
 			},
-			searchBuyHouse() {
-			 	this.$router.push({path:"/buyhouse", query: { word: this.searchinput}});
+			//开始找房
+			searchHouse() {
+				let num = this.placeholderTextType;
+				switch(num) {
+					case 0:this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+					case 1:this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+					case 2:this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+				}
 			}
 		}
 	}

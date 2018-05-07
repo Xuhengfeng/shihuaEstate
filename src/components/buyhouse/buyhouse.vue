@@ -2,11 +2,14 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-04 14:08:53
+ * @Last Modified time: 2018-05-07 18:26:42
  */
 <template>
 	<div>
-		<o-header :houseTypeId="houseTypeId"></o-header>
+		<o-header :houseTypeId="houseTypeId" 
+              :keywordTypeId="keywordTypeId" 
+              :keyword="keyword"
+              @query="query"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
@@ -14,7 +17,7 @@
 						<li>
 							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
-								<li :key="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index)">{{item.name}}</li>
+								<li :key="index" :data-id="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
@@ -90,12 +93,14 @@
 					<div style="font-size: 16px;color: color: rgba(0,0,0,0.8);margin-top: 30px;">下载世华易居APP</div>
 					<div style="margin-top: 30px;"><img src="../../imgs/buyhouse/erwm.png"/></div>
 				</div>
-				<!--左侧内容-->
+
+				<!--列表内容-->
 				<div class="leftContent">
+          <!-- 条件筛选 -->
 					<div class="orderFilter">
-						<!-- <div class="orderTag">
+						<div class="orderTag">
 							<ul>
-								<li v-for="(item, index) in list"><h3><a>{{item}}</a></h3></li>
+								<li v-for="(item, index) in [1,1]"><h3><a>{{item}}</a></h3></li>
 							</ul>
 						</div>
 						<div class="filterAgain">
@@ -103,15 +108,18 @@
 							<ul>
 								<li v-for="(item, index) in listnine"><h3><a>{{item}}</a></h3></li>
 							</ul>
-						</div> -->
-					</div>
-						<div class="resultDes">
-							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>套{{this.selectCity.name}}二手房</h2>
-							<div class="listContentLine"></div>
 						</div>
-					
+					</div>
+
+          <!-- 提示 -->
+          <div class="resultDes" ref="resultDes">
+            <h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>套{{this.selectCity.name}}二手房</h2>
+            <div class="listContentLine"></div>
+          </div>
+          
+					<!-- 列表 -->
 					<div class="item">
-						<ul>
+						<ul v-show="buyhouse.length">
 							<li :key="index" v-for="(item,index) in buyhouse">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.housePic"/>
@@ -135,15 +143,22 @@
 								</div> 
 							</li>
 						</ul>
+            <div class="noContent" v-show="!buyhouse.length">没有任何数据!</div>
 					</div>
-					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
-					<!--分页器-->
-					<el-pagination
-					  background
-					  layout="prev, pager, next"
-					  :total="1000"
-					  class="fr">
-					</el-pagination>
+
+          <!-- 分页器 -->
+          <div class="pagination">
+              <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
+                <router-link to="home">世华易居网南宁二手房</router-link>>
+                <router-link to="buyhouse">南宁二手房</router-link>
+              </div>
+              <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="1000"
+                class="fr">
+              </el-pagination>
+          </div>
 				</div>
 			</div>
 		</div>
@@ -158,8 +173,11 @@ import oFly from "../../base/fly/fly";
 export default {
   data() {
     return {
-      houseTypeId: 11, //二手房
-      // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
+      houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
+      keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
+      keyword: '',//关键词
+
+      list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
       listthree: [],
@@ -168,13 +186,12 @@ export default {
       listsix: [],
       listseven: [],
       listeight: [],
-      // listnine:["随时看房", "新上", "满五年", "世华独家"],
+      listnine:["随时看房", "新上", "满五年", "世华独家"],
       num: 0,
       showBtn: false,
       showBtnone: false,
       querycount: {
-        //二手房总数量
-        count: ""
+        count: ""//二手房总数量
       },
       queryone: null, //二手房区域
       querytwo: null, //二手房售价
@@ -190,7 +207,7 @@ export default {
       inputtwo: "",
       inputthree: "",
       inputfour: "",
-      params: {
+      params: {//这个是用来查询参数列表 不变的
         areaId: null,
         districtId: null,
         houseDecor: "",
@@ -303,16 +320,11 @@ export default {
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求二手的列表
-      this.$http
-        .post(this.$url.URL.HOUSE_QUERY, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.buyhouse = response.data.data;        
-        });
-
+      //请求二手的列表(搜索)
+      this.keyword = this.$route.query.word;
+      this.keywordTypeId = parseInt(this.$route.query.type);
+      this.query();
+      
       //获取对比清单列表
       this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
       .then((res)=>{
@@ -375,8 +387,18 @@ export default {
           this.listeight = response.data.data;
         });
     },
+    //搜索
+    query(item) {
+      if(item) this.keyword = item.keyword;
+      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      this.$http
+      .post(this.$url.URL.HOUSE_QUERY, params)
+      .then(response=>{
+        this.buyhouse = response.data.data;
+      })
+    },
     //点击区域条件
-    address(item, index) {
+    address(item, index, e) {
       this.queryone = index;
       this.params.areaId = item.id;
       this.requestServerData(this.params);
@@ -412,8 +434,9 @@ export default {
       this.requestServerData(this.params);
       this.requestCountData(this.params);
     },
+    //楼龄
     louling(item, index) {
-      this.querysix = index; //楼龄
+      this.querysix = index; 
       this.params.useYear = item.value;
       this.requestServerData(this.params);
       this.requestCountData(this.params);
@@ -465,8 +488,8 @@ export default {
     }
   },
   components: {
-	oHeader,
-	oFly
+    oHeader,
+    oFly
   }
 };
 </script>
@@ -589,8 +612,22 @@ export default {
   font-size: 13px;
 }
 
-/*content部分css*/
+//没有搜索到任何数据
+.noContent{
+  height: 280px;
+  line-height: 280px;
+  text-align: center;
+  color: #333333;
+  font-size: 20px;
+}
 
+//分页器
+.pagination{
+  height: 40px;
+  padding-top: 20px;
+}
+
+//内容
 .content {
   margin-top: 26px;
 }
@@ -708,39 +745,6 @@ export default {
   margin-top: 10px;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.5);
-}
-
-
-
-/*推荐小区*/
-.push {
-  padding: 50px;
-  background: #f5f5f6;
-}
-.newHousePush {
-  width: 1150px;
-}
-.newHousePush .tilte {
-  overflow: hidden;
-}
-.newHousePush ul {
-  margin-top: 30px;
-  width: 1200px;
-  overflow: hidden;
-}
-.newHousePush ul > li {
-  float: left;
-}
-.newHousePushContainer_i {
-  margin-left: 12px;
-}
-.newHousePushContainer_i img {
-  vertical-align: top;
-}
-.newHousePushPrice {
-  padding: 20px;
-  overflow: hidden;
-  background: white;
 }
 </style>
 
