@@ -16,6 +16,9 @@ let URL = {
 	HOUSE_GETDETAILINFO:_host + '/house/getDetailInFo/',		//获取二手房详情
 	AREA_DISTRICTS:_host + '/area/areaDistricts/', 				//获取二手房搜索条件区域字段
 	HOUSE_HOUSESEE:_host + '/house/houseSee/',		            //二手房带看记录
+	HOUSE_CLLECFTIONLIST:_host +'/houseCollection/collectionList',//二手房收藏列表
+	BULID_CLLECFTIONLIST:_host +'/buildCollection/collectionList',//小区房收藏列表
+	RENT_CLLECFTIONLIST:_host +'/rentHCollection/collectionList',//租房收藏列表
 	HOUSE_RENTHOUSESEE:_host + '/rentHouse/houseSee/',		    //租房带看记录
 	RENTHOUSE_QUERY:_host + '/rentHouse/query',                 //查询租房列表全部数据
 	RENTHOUSE_QUERYCOUNT:_host + '/rentHouse/queryCount',       //获取租房总数量
@@ -31,6 +34,7 @@ let URL = {
 	BUILDLIST_COUNT:_host+'/build/buildListCount',              //小区总数量
 	BUILDCOLLECTION_ADD:_host+'/buildCollection/add/',          //小区收藏
 	BUILDCOLLECTION_CANCEL:_host+'/buildCollection/cancel/',    //取消小区收藏
+	BUILDSECOND_HOUSELIST:_host+'/build/secondHouseList/',       //小区二手房
 	BUILDCOLLECTION_LIST:_host+'/buildCollection/collectionList',//小区收藏列表
 	HOUSECOLLECTION_ADD:_host+'/houseCollection/add/',           //二手房收藏
 	HOUSECOLLECTION_CANCEL:_host+'/houseCollection/cancel/',     //取消二手房收藏

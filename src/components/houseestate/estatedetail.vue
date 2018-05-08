@@ -180,16 +180,17 @@
 			render() {
 				//小区详情BUILDSECOND_HOUSELIST
 				let sdid = this.$route.params.id;
-				let city = this.scity.value;
+				let city = this.selectCity.value;
 				this.$http.get(this.$url.URL.BUILDLISTINFO + city + "/" + sdid)
 				.then(response => {
 					this.buildlistinfo = response.data.data;
 					this.buildsdid = response.data.data.sdid;
+					console.log(	this.buildsdid)
 					this.px = response.data.data.px;
 					this.py = response.data.data.py;
 
 					//小区二手房
-					this.$http.get(this.$url.URL.BUILDSECOND_HOUSELIST +city + "/" + this.buildsdid+"&pageNo="+1)
+					this.$http.get(this.$url.URL.BUILDSECOND_HOUSELIST + city + "/" + this.buildsdid +"?pageNo=1")
 					.then(response => {
 						this.bulidsecondlist= response.data.data;
 					});
@@ -211,7 +212,7 @@
 			},
 			//同小区二手房房源
 			neayHouseRequest(num, sdid) {
-				this.$http.get(this.IPS[num] + this.scity.value + "/" + sdid,
+				this.$http.get(this.IPS[num] + this.selectCity.value + "/" + sdid,
 					{
 						pageNo: 1,
 						pageSize: 10
@@ -604,18 +605,14 @@
 	float: right;
 
 }
-.image {
-	margin: 0 auto;
-  width: 232px;
-  height: 175px;
-}
+
 .image_r{
 	margin: 0 auto;
-  width: 232px;
+  width: 272px;
   height: 175px;
 	margin-top: 15px;
 }
-.image img {
+.image_r img {
   width: 100%;
   height: 100%;
 }

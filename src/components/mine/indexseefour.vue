@@ -1,27 +1,53 @@
 <template>
     <div>
-        <h3>收藏动态</h3>
+        <div class="collectlist">
+            <ul>
+              <li@click="change(0)">二手房</li>
+                <li @click="change(1)">租房</li>
+                  <li @click="change(2)">小区</li>
+                   <li @click="change(3)">经纪人</li>
+             </ul>
+          </div>
         <div class="main">
             <ul>
-                <li v-for="item in [1,1,1,1]">
+                <li v-for="item in collecttwohouse " v-if="num==0">
                     <div class="image">
-                        <img src="" alt="">
+                        <img :src="item.housePic">
                     </div>
                     <div class="description">
-                        <div class="title">1</div>
-                        <div class="info">2</div>
-                        <div class="attention">3</div>
+                        <div class="title">{{item.houseTitle}}</div>
+                        <div class="info">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                        <div class="attention">{{item.houseTag}}</div>
                         <div class="tag">
-                            <span>111</span>
-                            <span>111</span>
-                            <span>111</span>
-                            <span>111</span>
+                            <span>{{item.houseFeature}}</span>
+                            <span>{{item.areaName}}</span>
+                            <span>随时看房</span>
                         </div>
                     </div>
                     <div class="r-content">
                         <div class="collection">收藏</div>
-                        <div class="totalPrice"><span>200</span>万</div>
-                        <div class="sellPrice">单价<span>12000</span>元/平米</div>
+                        <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                        <div class="sellPrice">单价<span>{{item.salePrice }}</span>元/平米</div>
+                    </div>
+                </li>
+                 <li v-for="item in collecttwohouse "  v-if="num==1">
+                    <div class="image">
+                        <img :src="item.housePic">
+                    </div>
+                    <div class="description" v-if="num==1">
+                        <div class="title">{{item.houseTitle}}</div>
+                        <div class="info">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                        <div class="attention">{{item.houseTag}}</div>
+                        <div class="tag">
+                            <span>{{item.houseFeature}}</span>
+                            <span>{{item.areaName}}</span>
+                             <span>随时看房</span>
+                        </div>
+                    </div>
+                    <div class="r-content">
+                        <div class="collection">收藏</div>
+                        <div class="housetype"><span>{{item.houseType}}</span></div>
+                        <div class="sellPrice">单价<span>{{item.rentPrice }}</span>元/平米</div>
                     </div>
                 </li>
             </ul>
@@ -33,19 +59,22 @@
 export default {
     data() {
         return {
-            datalist: [],
+            collecttwohouse: [],//二手房收藏
+          	num: 0,           //切换ip
+            IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST],
         };
     },
     created() {
-        this.collectionListRequest();
+        this.collectionListRequest(0);
     },
     methods: {
-        collectionListRequest() {
+        collectionListRequest(num) {
+          this.num = num;
           this.$http
-            .get(this.$url.URL.HOUSE_COLLECTIONLIST, {
+            .get(this.IPS[num] , {
                 headers: {
                     "Content-Type": "application/json",
-                    "scity": JSON.parse(localStorage.selectCity).value,
+                    // "scity": JSON.parse(localStorage.selectCity).value,
                     "unique-code": sessionStorage.token
                 },
                 params: {
@@ -53,14 +82,19 @@ export default {
                 }
             })
             .then(response => {
-                console.log(response)
+                this.collecttwohouse = response.data.data;
+                
                 // //修正数据
                 // response.data.data.forEach(item => {
                 //     item.houseTag = item.houseTag.split(",");
                 // });
                 // this.datalist = response.data.data;
             });
-        }
+        },
+        change(num) {
+					//同小区二手房房源
+					this.collectionListRequest(num);
+			}
     }
 };
 </script>
@@ -73,7 +107,7 @@ h3 {
   color: #000000;
 }
 .main {
-  padding: 20px;
+  padding: 35px;
   border: 1px solid #cacaca;
   > ul > li {
     display: flex;
@@ -148,11 +182,34 @@ h3 {
           margin-right: 10px;
         }
       }
+      .housetype {
+        margin-bottom: 30px;
+        margin-top: 50px;
+        span {
+          font-size: 12px;
+        }
+      }
       .sellPrice {
         font-size: 12px;
         color: rgba(0, 0, 0, 0.3);
       }
     }
+  }
+}
+
+.collectlist{
+  >ul{
+    height: 35px;
+    background: rgba(0, 0, 0, 0.3);
+  }
+  >ul>li{
+    color: white;
+    float: left;
+    height: 35px;
+    width: 112px;
+    font-size: 16px;
+    text-align: center;
+    line-height: 35px;
   }
 }
 </style>
