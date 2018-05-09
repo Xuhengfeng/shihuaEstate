@@ -81,7 +81,7 @@ const router = new Router({
 		
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
-		{path:"/brokerdetail",component:brokerdetail,meta:{KeepAlive:false}},//找经纪人详情
+		{path:"/brokerdetail/:id",component:brokerdetail,meta:{KeepAlive:false}},//找经纪人详情
 		{path:"/shoper",component:shoper,meta:{KeepAlive:false}},//找门店
 		{path:"/shoperdetail",component:shoperdetail,meta:{KeepAlive:false}},//找门店详情
 		{path:"/buyhouseguide",component:buyhouseguide,children:[{//购房指南

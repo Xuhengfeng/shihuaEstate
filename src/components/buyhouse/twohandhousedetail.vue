@@ -132,7 +132,7 @@
                           <img :src="item.housePic"  />
                         </div>
                         <div class="direciton">
-                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                           <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -153,7 +153,7 @@
                         <img src="item.housePic" />
                       </div>
                       <div class="direciton">
-                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName }}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                         <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -263,7 +263,8 @@ export default {
       housesee:[],   //约看
       id:"",//带看id
       page: 1,//默认带看记录是第一页
-	    scity: JSON.parse(localStorage.selectCity)//用户选定城市
+      scity: JSON.parse(localStorage.selectCity),//用户选定城市
+      collectionFlag: true//收藏标识
     };
   },
   components: {
@@ -304,7 +305,7 @@ export default {
     },
 
     //收藏房源
-    collection(e) {
+    addCollection(e) {
       if(!this.logined){
         return this.$alert('用户未登录!');
       }
@@ -320,6 +321,28 @@ export default {
         .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
         .then(response => {
             e.target.innerHTML = '收藏房源'
+        });
+      }
+      this.collectionFlag = !this.collectionFlag;
+    },
+      //收藏房源
+    collection(e) {
+      console.log(111)
+      if(!this.logined){
+        return this.$alert('用户未登录!');
+      }
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.scity.value +"/"+  this.buildsdid)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
+
+      }else{
+           this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
+        .then(response => {
+            e.target.innerHTML = '收藏'
         });
       }
       this.collectionFlag = !this.collectionFlag;

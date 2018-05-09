@@ -75,7 +75,7 @@
 												<img :src="item.housePic"  />
 											</div>
 											<div class="direciton">
-												<div class="introduce intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" style="font-size: 16px;color: ">收藏</span></div>
+												<div class="introduce intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
 													<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice }}<span style="font-size: 14px;">元/月</span></span></div>
 												<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
 												<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -110,7 +110,7 @@
 											<div class="visitTime"><span class="label">绿化率</span><span class="info">{{buildlistinfo.greenRatio }}</span></div>
 										</div>
 										<div class="duibi">
-												<div class="duibi_a">收藏房源</div>
+												<div @click="addCollection($event)" class="duibi_a">收藏房源</div>
 												<div class="duibi_a">分享房源</div>
 											</div>
 												<div class="callpeople">小区二手房</div>
@@ -159,7 +159,8 @@
 				num: 0,           //切换ip
 				//二手房 租房
 				IPS: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
-			  selectCity: JSON.parse(localStorage.selectCity),//当前城市
+				selectCity: JSON.parse(localStorage.selectCity),//当前城市
+				 collectionFlag: true, //收藏标识
 			};
 		},
 		 watch: {
@@ -170,7 +171,55 @@
 		 created() {
 			this.render();
 		},
+			computed: {
+			//获取用户登录状态
+			logined() {
+				return this.$store.state.logined;
+			}
+		},
 		methods: {
+			//收藏房源
+			addCollection(e) {
+				if(!this.logined){
+					return this.$alert('用户未登录!');
+				}
+				if(this.collectionFlag){
+					this.$http
+					.post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ 	this.buildsdid)
+					.then(response => {
+							e.target.innerHTML = '已收藏'
+					});
+
+				}else{
+						this.$http
+					.post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+	this.buildsdid)
+					.then(response => {
+							e.target.innerHTML = '收藏房源'
+					});
+				}
+				this.collectionFlag = !this.collectionFlag;
+			},
+			 //收藏房源
+			collection(e) {
+				if(!this.logined){
+					return this.$alert('用户未登录!');
+				}
+				if(this.collectionFlag){
+					this.$http
+					.post(this.$url.URL.BUILDCOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ this.buildsdid)
+					.then(response => {
+							e.target.innerHTML = '已收藏'
+					});
+
+				}else{
+						this.$http
+					.post(this.$url.URL.BUILDCOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ this.buildsdid)
+					.then(response => {
+							e.target.innerHTML = '收藏'
+					});
+				}
+				this.collectionFlag = !this.collectionFlag;
+			},
 			toSkip(item) {
 				document.body.scrollTop = 0
 				document.documentElement.scrollTop = 0
@@ -604,6 +653,16 @@
 	width: 378px;
 	float: right;
 
+}
+.image{
+	margin: 0 auto;
+  width: 232px;
+  height: 175px;
+	margin-top: 15px;
+}
+.image img{
+	 width: 100%;
+  height: 100%;
 }
 
 .image_r{

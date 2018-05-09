@@ -64,11 +64,12 @@
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.emplName}} </div>
 									<div class="introduce">
-                   						 <span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span>
-										<span class="fr prices">{{item.rentPrice}}<span class="wan">元/月</span></span></div>
-									<div class="introduce">
+                   	 <span class="word">{{item.deptName}}</span>
+										 <span class="fr prices">{{item.grade}}分<span class="grade">评分</span></span>
+                     </div> 
+									<!-- <div class="introduce">
 									<span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span>
-									</div>
+									</div> -->
 									<div class="introduce ">
 										<span class="intrspan one">销售达人</span>
 										<span class="intrspan two">销售达人</span>
@@ -151,8 +152,8 @@ export default {
 
     },
     toSkip(item) {
-    //   let path = "/rentHouseDetail/" + item.sdid;
-    //   this.$router.push({ path: path });
+      let path = "/brokerdetail/" + item.sdid;
+      this.$router.push({ path: path });
     },
     render(city) {
       //请求经纪人的列表
@@ -162,7 +163,8 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          this.broker = response.data.data;            
+          this.broker = response.data.data;    
+          console.log(this.broker )        
         });
 
       //获取搜索经纪人总数量
@@ -272,19 +274,21 @@ export default {
 .item ul li{
   overflow: hidden;
   display: flex;
-  height: 175px;
+  height: 120px;
   border-bottom: 1px solid #cacaca;
-  padding: 33px 0;
+  margin-top: 30px;
   flex-flow: row nowrap;
   justify-content: flex-start;
   .image{
-    flex: 232px 0 0;
-    width: 232px;
-    height: 175px;
+    flex: 90px 0 0;
+    width: 90px;
+    height: 90px;
     margin-right: 25px;
     background: #f5f5f5;
+     border-radius: 50%;
     cursor: pointer;
     img{
+      border-radius: 50%;
       width: 100%;
       height: 100%;
       vertical-align: top;
@@ -293,7 +297,7 @@ export default {
   .direciton{
     flex: 1;
     display: flex;
-    height: 100%;
+    height: 90px;
     flex-flow: column nowrap;
     justify-content: space-between;
     >div:nth-of-type(1){
@@ -418,12 +422,21 @@ export default {
 
 .introduce .word {
   vertical-align: top;
-  margin-left: 10px;
   color: rgba(0, 0, 0, 0.7);
 }
 .prices {
-  font-size: 24px;
+  font-family: tahoma;
+  position: relative;
+  right: 370px;
+  font-size: 24px!important;
   color: rgba(239, 31, 31, 0.85);
+  
+}
+.grade{
+  margin-left: 4px;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6)
 }
 .wan {
   font-size: 14px;
