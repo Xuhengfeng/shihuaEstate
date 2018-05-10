@@ -152,7 +152,7 @@ export default {
 
     },
     toSkip(item) {
-      let path = "/brokerdetail/" + item.sdid;
+      let path = "/brokerdetail/" + item.id;
       this.$router.push({ path: path });
     },
     render(city) {

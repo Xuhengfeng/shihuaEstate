@@ -155,12 +155,14 @@ export default {
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
     };
   },
-//   created() {
-//     this.params.scity = this.selectCity.value;
-//     this.render(this.selectCity.value);
-//   },
+  created() {
+    // this.params.scity = this.selectCity.value;
+    this.render();
+  },
   methods: {
-
+    render() {
+        console.log(this.$route.params)
+    },
     changeshow() {
       this.showBtn = true;
     },

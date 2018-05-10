@@ -46,7 +46,9 @@ let URL = {
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
 	BROKERS_LIST:_host + '/broker/brokers',  					//经纪人
-	BROKERS_LISTCOUNT:_host + '/broker/brokerCount',  					//经纪人
+	BROKERS_LISTCOUNT:_host + '/broker/brokerCount',  			//经纪人数量
+	BROKERS_HOUSELIST:_host + '/broker/houseList/',  			//经纪人 -他的在售
+	BROKERS_RENTHOUSELIST:_host + '/broker/rentHouseList/',  	//经纪人 -他的在售
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
@@ -57,6 +59,7 @@ let URL = {
 	TWOHOUSELIST_CONTRAST:_host + "/contrast/usedList",            //获取二手房对比列表
 	JOIN_CONTRAST:_host + "/contrast/joid",                        //加入对比(二手房 新房)
 	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
+	
 	
 };
 export default {URL}
