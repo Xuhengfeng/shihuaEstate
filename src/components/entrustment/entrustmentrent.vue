@@ -92,7 +92,7 @@
 									</div>
 									<div class="three">
 										<div>联系电话:</div>
-										<div class="cellme">{{item.emplAccNo}}</div>
+										<div class="cellme">{{item.phone}}</div>
 									</div>
 								</div>
 							</div>

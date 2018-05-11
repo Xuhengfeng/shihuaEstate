@@ -65,7 +65,7 @@
 									<div class="introduce" @click="toSkip(item)" >{{item.emplName}} </div>
 									<div class="introduce">
                    	 <span class="word">{{item.deptName}}</span>
-										 <span class="fr prices">{{item.grade}}分<span class="grade">评分</span></span>
+										 <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
                      </div> 
 									<!-- <div class="introduce">
 									<span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span>

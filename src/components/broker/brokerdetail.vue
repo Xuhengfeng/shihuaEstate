@@ -26,24 +26,25 @@
 						<ul>
 							<li>
 								<div class="image">
-									<img src=""/>
+									<img :src="brokerdetail.photo"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" >000000</div>
+									<div class="introduce" >{{brokerdetail.emplName}}</div>
 									<div class="introduce">
-                                    	 <span class="word">所属门店：科技园店</span>
-										 <span class="fr prices">分<span class="grade">评分</span></span>
+                                    	 <span class="word">所属门店：{{brokerdetail.deptName}}</span>
+										 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
+                     	 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
                                      </div> 
                                      <div class="introduce">
-                                    	 <span class="word">所属门店：科技园店</span>
+                                    	 <span class="word">收藏经纪人</span>
 						
                                      </div> 
                                      <div class="introduce">
-                                    	 <span class="word">所属门店：科技园店</span>
+                                    	 <span class="word">世华工号：{{brokerdetail.emplAccNo}}</span>
 										 
                                      </div> 
                                      <div class="introduce">
-                                    	 <span class="word">所属门店：科技园店</span>
+                                    	 <span class="word">联系电话：{{brokerdetail.phone}}</span>
 										
                                      </div> 
 								</div> 
@@ -60,16 +61,16 @@
 				        </div> 
                         <div class="fr message">
                             <ul class="watchsee">
-                                <li>111</li>
-                                  <li>1111</li>
+                                <li>{{brokerdetail.historyDealNum}}</li>
+                                  <li>历史成交</li>
                             </ul> 
                              <ul class="watchsee">
-                                <li>11111</li>
-                                  <li>11111</li>
+                                <li>{{brokerdetail.byCollectNum}}</li>
+                                  <li>被收藏</li>
                             </ul> 
                              <ul class="watchsee">
-                                <li>111</li>
-                                  <li>1111</li> 
+                                <li>{{brokerdetail.houseSeeNum}}</li>
+                                  <li>带看量</li> 
                             </ul> 
 				        </div> 
                     </div>
@@ -97,18 +98,18 @@
                 <div class="tongxiaoqu">
                     <div class="title">他在售房源</div>
                     <ul>
-                      <li>
+                      <li v-for="item in brokerhouselist">
                         <div class="image fl" @click="toSkip(item)">
-                          <img src="item.housePic"  />
+                          <img :src="item.housePic" />
                         </div>
                         <div class="direciton">
-                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">的点点滴滴 <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
-                          <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">平|</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{<span style="font-size: 14px;">万</span></span></div>
-                          <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{</span><span class="fr">单价元/平米</span></div>
+                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
+                          <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal}}<span style="font-size: 14px;">万</span></span></div>
+                          <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                           <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
                           <div class="introduce ">
-                            <span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-                            <span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
+                            <span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">{{item.houseFeature}}</span>
+                            <span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">{{item.areaName}}</span>
                             <span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
                           </div>
                         </div>
@@ -118,18 +119,18 @@
                 <div class="zhoubian">
                   <div class="title">他在租房源</div>
                   <ul>
-                    <li>
+                    <li v-for="item in brokerrenthouselist">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img src="item.housePic" />
+                         <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
-                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">的点点滴滴 <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
-                        <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">|平||精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);"><span style="font-size: 14px;">万</span></span></div>
-                        <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价元/平米</span></div>
+                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
+                        <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice}}<span style="font-size: 14px;">元/月</span></span></div>
+                        <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseType}}   {{item.builtArea}}平米</span></div>
                         <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
                         <div class="introduce ">
-                          <span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
-                          <span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">地铁旁边</span>
+                          <span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">{{item.houseFeature}}</span>
+                          <span class="intrspan" style="background-color: #fde8e8;color: rgba(239,31,31,0.85);margin-left: 10px;">{{item.areaName}}</span>
                           <span class="intrspan" style="background-color: #e6f4eb;color: rgba(5,149,63,0.85);margin-left: 10px;">随时看房</span>
                         </div>
                       </div>
@@ -153,15 +154,37 @@ export default {
   data() {
     return {
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
+      brokerdetail:"",
+      brokerhouselist:"",
+      brokerrenthouselist:"",
+      scity:null,
     };
   },
   created() {
-    // this.params.scity = this.selectCity.value;
+    this.scity = this.selectCity.value;
     this.render();
   },
   methods: {
     render() {
-        console.log(this.$route.params)
+       let id =  this.$route.params.id
+       //请求经纪人的详情
+      this.$http
+        .get(this.$url.URL.BROKERS + this.scity + "/" + id)
+        .then(response => {
+          this.brokerdetail = response.data.data;         
+        });
+        //请求他在售房源列表
+         this.$http
+        .get(this.$url.URL.BROKERS_HOUSELIST + this.scity + "/" + id + "?pageNo=1")
+        .then(response => {
+          this.brokerhouselist = response.data.data;         
+        });
+         //请求他在租房源列表
+         this.$http
+        .get(this.$url.URL.BROKERS_RENTHOUSELIST + this.scity + "/" + id + "?pageNo=1")
+        .then(response => {
+          this.brokerrenthouselist = response.data.data;           
+        });
     },
     changeshow() {
       this.showBtn = true;
@@ -395,12 +418,14 @@ export default {
 }
 
 .introduce .word {
+  line-height: 25px;
   vertical-align: top;
   color: rgba(0, 0, 0, 0.7);
 }
 .prices {
   font-family: tahoma;
   position: relative;
+  top: 30px;
   right: 370px;
   font-size: 24px!important;
   color: rgba(239, 31, 31, 0.85);
@@ -472,7 +497,7 @@ export default {
           img{width: 100%;height: 100%}
         }
         .introduce {
-          margin-top: 29px;
+          margin-top: 25px;
           span{font-size: 14px}
           .word{
             vertical-align: top;
