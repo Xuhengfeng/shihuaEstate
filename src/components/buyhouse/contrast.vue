@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-03 23:45:59
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-13 15:42:32
  */
 <template>
 	<!-- 房源对比 -->
@@ -14,8 +14,12 @@
 					<div>
 						<h3>对比房源</h3>
 						<div>勾选可标记感兴趣的信息</div>
-						<div><input type="checkBox">突出优势项</div>
-						<div><input type="checkBox">隐藏相同项</div>
+						<div class="advantage">
+							<el-checkbox v-model="checked1" @change="Advantage()">突出优势项</el-checkbox>
+						</div>
+						<div class="hideSame">
+							<el-checkbox v-model="checked2" @change="">隐藏相同项</el-checkbox>
+						</div>
 					</div>
 					<div v-for="(item,index) in houseList" v-if="item.housePic">
 						<div class="image">
@@ -39,11 +43,11 @@
 					</tr>
 					<tr>
 						<td>建筑面积</td>
-						<td v-for="item in contrastList">{{item.builtArea}}</td>
+						<td v-for="item in contrastList" :class="item.builtArea==builtAreaIndex?'fontColor':''">{{item.builtArea}} 平米</td>
 					</tr>
 					<tr>
 						<td>单价</td>
-						<td v-for="item in contrastList">{{item.saleprice}}</td>
+						<td v-for="item in contrastList" :class="item.saleprice==priceIndex?'fontColor':''">{{item.saleprice}}元 / 平</td>
 					</tr>
 					<tr>
 						<td>户型</td>
@@ -55,11 +59,11 @@
 					</tr>
 					<tr>
 						<td>装修</td>
-						<td v-for="item in contrastList">{{item.houseDecoration}}</td>
+						<td v-for="item in contrastList" :class="item.houseDecoration==houseDecorationIndex?'fontColor':''">{{item.houseDecoration}}</td>
 					</tr>
 					<tr>
 						<td>年代</td>
-						<td v-for="item in contrastList">{{item.buildAge}}</td>
+						<td v-for="item in contrastList" :class="item.buildAge==buildAgeIndex?'fontColor':''">{{item.buildAge}}</td>
 					</tr>
 				</table>
 			</div>
@@ -166,10 +170,19 @@
 
 <script>
 import oHeader from "../../base/header/header";
+import "../../common/css/resetElement.less";
+
 export default {
 	data() {
 		return {
 			houseList: [],//头部的
+			priceIndex: null,//价格优势
+			builtAreaIndex: null,//建筑面积优势
+			buildAgeIndex: null,//年代优势
+			houseDecorationIndex: null,//装修优势
+			isAdvantage: true,//突出优势项
+ 			checked1: false,//突出优势项
+ 			checked2: false,//隐藏相同项
 			contrastList: [],//表格的 要补起个数
 		}
 	},
@@ -186,7 +199,7 @@ export default {
 	computed:{
 		contrastDetailList() {
 			return this.$store.state.contrastDetailList;
-		}
+		}		
 	},
 	watch: {
 		contrastDetailList() {
@@ -195,9 +208,59 @@ export default {
 			this.houseList = list.slice(0);
 			let newList = this.checkItem(list, list.length);
 			this.contrastList = newList;
-		}
+		},
 	},
 	methods: {
+		//突出优势项
+		Advantage() {
+			if(this.isAdvantage){
+				this.comparePrice();
+				this.compareBuiltArea();
+				this.compareBuildAgeIndex();
+				this.compareDecoration();
+				this.isAdvantage = false;
+			}else{
+				this.isAdvantage = true;				
+				this.priceIndex = null;
+				this.builtAreaIndex = null;
+				this.houseDecorationIndex = null;			
+				this.buildAgeIndex = null;
+			}
+		},
+		//价格优势
+		comparePrice() {
+			let arr = [];
+			this.contrastList.forEach(item => {
+				if(item.saleprice!==undefined){
+					arr.push(item.saleprice)
+				}
+			});
+			this.priceIndex = Math.max(...arr);
+		},
+		//建筑面积优势
+		compareBuiltArea() {
+			let arr = [];
+			this.contrastList.forEach(item => {
+				if(item.builtArea!==undefined){
+					arr.push(item.builtArea)
+				}
+			});
+			this.builtAreaIndex = Math.max(...arr);
+		},
+		//装修优势
+		compareDecoration() {
+			this.houseDecorationIndex="精装";
+		},
+		//年代优势
+		compareBuildAgeIndex() {
+			let arr = [];
+			this.contrastList.forEach(item => {
+				if(item.buildAge!==undefined){
+					arr.push(parseInt(item.buildAge))
+				}
+			});
+			this.buildAgeIndex = Math.min(...arr);
+		},
 		//获取对比清单列表
 		requestContrast() {
 			this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
@@ -225,6 +288,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 // section 头部
 .section{
 	padding: 10px 0;
@@ -245,14 +309,16 @@ export default {
 				&:nth-of-type(1){
 					margin-bottom: 30px;		
 				}
-				&:nth-of-type(2){
+				.advantage{
 					margin-bottom: 15px;
 					font-size: 14px;
-					color: #000000;																
+					color: #000000;	
+					cursor: pointer;															
 				}
-				&:nth-of-type(3){
+				.hideSame{
 					font-size: 14px;
-					color: #000000;						
+					color: #000000;	
+					cursor: pointer;					
 				}
 				input{
 					margin-right: 5px;
@@ -328,5 +394,8 @@ table{
 }
 .main{
 	margin-bottom: 45px; 
+}
+.fontColor{
+	color: #ff4343;
 }
 </style>

@@ -1,14 +1,14 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-05 15:24:29
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-13 15:06:00
  */
 //重新封装axios
 import Vue from 'vue'
 import axios from 'axios'
 
-import {Message, MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
+import {Message, MessageBox, Dialog,Button, Pagination, Checkbox} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框
 Vue.prototype.$confirm = MessageBox.confirm//弹出框
@@ -17,6 +17,7 @@ Vue.prototype.$message = Message//消息提示
 Vue.component(Button.name, Button);
 Vue.component(Dialog.name, Dialog);
 Vue.component(Pagination.name, Pagination);
+Vue.component(Checkbox.name, Checkbox);
 
 let cancel ,promiseArr = {}
 const CancelToken = axios.CancelToken;
