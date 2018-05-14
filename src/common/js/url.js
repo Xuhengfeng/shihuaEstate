@@ -20,6 +20,7 @@ let URL = {
 	BULID_CLLECFTIONLIST:_host +'/buildCollection/collectionList',//小区房收藏列表
 	RENT_CLLECFTIONLIST:_host +'/rentHCollection/collectionList',//租房收藏列表
 	HOUSE_RENTHOUSESEE:_host + '/rentHouse/houseSee/',		    //租房带看记录
+	NEWBUILDING_QUERY:_host + '/newbuilding/query/',		    //新房列表
 	RENTHOUSE_QUERY:_host + '/rentHouse/query',                 //查询租房列表全部数据
 	RENTHOUSE_QUERYCOUNT:_host + '/rentHouse/queryCount',       //获取租房总数量
 	RENTHOUSE_GETDATAILINFO:_host + '/rentHouse/getDetailInFo/',//获取租房详情
@@ -45,6 +46,7 @@ let URL = {
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
+	SHOPERS_LIST:_host +'/shop/shops',  					    //找门店
 	BROKERS_LIST:_host +'/broker/brokers',  					//经纪人
 	BROKERS:_host +'/broker/',  		         			       //经纪人详情
 	BROKERS_LISTCOUNT:_host +'/broker/brokerCount',  			//经纪人数量

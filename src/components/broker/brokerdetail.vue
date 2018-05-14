@@ -54,8 +54,8 @@
                     <div class="peoplemes">
                         <div class="fl message">
                             <ul>
-                                <li>入职时间：4-5年</li>
-                                  <li>综合评价：的就是点击</li>
+                                <li>入职时间：{{brokerdetail.joinDate}}</li>
+                                  <li>综合评价：{{brokerdetail.emplFlag}}</li>
                                     <li>主营板块：科技园区</li>
                             </ul> 
 				        </div> 
