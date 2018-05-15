@@ -12,7 +12,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
-
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -32,6 +32,14 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
+    new PrerenderSPAPlugin( // npm run build的输出目录
+            path.resolve(__dirname, './dist'),
+            // 需要进行预渲染的页面
+            ['/', '/home'], {
+                captureAfterTime: 5000,
+                maxAttempts: 10,
+            }
+			),
     new UglifyJsPlugin({
       uglifyOptions: {
         compress: {
