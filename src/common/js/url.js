@@ -20,6 +20,7 @@ let URL = {
 	BULID_CLLECFTIONLIST:_host +'/buildCollection/collectionList',//小区房收藏列表
 	RENT_CLLECFTIONLIST:_host +'/rentHCollection/collectionList',//租房收藏列表
 	HOUSE_RENTHOUSESEE:_host + '/rentHouse/houseSee/',		    //租房带看记录
+	NEWBUILDING_INDEX:_host + '/newbuilding/index',		        //首页新房
 	NEWBUILDING_QUERY:_host + '/newbuilding/query/',		    //新房列表
 	RENTHOUSE_QUERY:_host + '/rentHouse/query',                 //查询租房列表全部数据
 	RENTHOUSE_QUERYCOUNT:_host + '/rentHouse/queryCount',       //获取租房总数量
