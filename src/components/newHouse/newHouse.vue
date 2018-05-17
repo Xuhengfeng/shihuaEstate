@@ -9,7 +9,7 @@
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置: 区域</ol>
+							<ol class="fl quyu">位置: 城市</ol>
 							<ol class="fl">
 								<li :key="index" :data-id="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.name}}</li>
 							</ol>
@@ -79,8 +79,8 @@
                     <span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span>
                   </div>
 									<div class="introduce ">
-										<span class="intrspan one">{{item.houseFeature}}</span>
-										<span class="intrspan two">{{item.areaName}}</span>
+										<span class="intrspan one">{{item.houseFeature}}随时看房</span>
+										<span class="intrspan two">{{item.areaName}}随时看房</span>
 										<span class="intrspan three">随时看房</span>
 									</div>
 								</div> 
@@ -145,6 +145,7 @@ export default {
         houseFeature: "",
         houseForm: "",
         keyword: "",
+        cityCode:"",
         maxBuildArea: null,
         maxPrice: null,
         minBuildArea: null,
@@ -165,125 +166,41 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
-  computed: {
-    //监控store的contrastList变化 声明一个计算属性控制刷新数据
-    refresh() {
-      return this.$store.state.contrastList;
-    },
-    logined() {
-      return this.$store.state.logined;
-    }
-  },
-  watch: {
-    //监听计算属性
-    refresh() {
-      //请求二手的列表
-      this.$http
-        .post(this.$url.URL.NEWBUILDING_QUERY, {
-          scity: this.selectCity.value,
-          pageNo: 1
-        })
-        .then(response => {
-          //修正数据 根据本地缓存修正response数据
-          response.data.data.forEach((item)=>{
-            this.contrastList.forEach((item2)=>{
-              if(item.sdid == item2.sdid){
-                item.contentFlag = '已加入对比';
-                item2.contentFlag = '已加入对比';
-              }
-            })
-          })
-          this.buyhouse = response.data.data; 
-        });
-    }
-  },
   methods: {
-    // //收藏房源
-    // collection(item,e) {
-    //   if(!this.logined){
-    //     return this.$alert('用户未登录!');
-    //   }
-    //   if(this.collectionFlag){
-    //      this.$http
-    //     .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
-    //     .then(response => {
-    //         e.target.innerHTML = '已收藏'
-    //     });
-
-    //   }else{
-    //        this.$http
-    //     .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
-    //     .then(response => {
-    //         e.target.innerHTML = '收藏'
-    //     });
-    //   }
-    //   this.collectionFlag = !this.collectionFlag;
-    // },
     toSkip(item) {
       let path = "/buyhouse/twohandhousedetail/" + item.sdid;
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求二手的列表(搜索)
+      //请求新房的列表(搜索)
       this.keyword = this.$route.query.word;
       this.keywordTypeId = parseInt(this.$route.query.type);
       this.query();
-      
-      //获取对比清单列表
-      this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
-      .then((res)=>{
-        if(res.data.data.length) {
-          this.contrastList = res.data.data;
-          //初始化清单列表
-          this.$store.dispatch('showlist', res.data.data);
-        }
-      });
-
-      //获取搜索二手房总数量
-      this.$http
-        .post(this.$url.URL.HOUSE_QUERYCOUNT, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.querycount = response.data.data;
-        });
         
       //请求搜索条件
       this.$http
-        .get(this.$url.URL.AREA_DISTRICTS + city) //区域
+        .get(this.$url.URL.DICTIONARY_CITYS) //区域
         .then(response => {
+          console.log( this.listone)
           this.listone = response.data.data;
         });
     },
     //搜索
     query(item) {
       if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      let params = {'keyword': this.keyword,'pageNo': 1, 'scity': this.selectCity.value};
       this.$http
-      .post(this.$url.URL.HOUSE_QUERY, params)
+      .get(this.$url.URL.NEWBUILDING_QUERY + this.selectCity.value, params)
       .then(response=>{
         this.buyhouse = response.data.data;
       })
     },
+
     //点击区域条件
     address(item, index, e) {
       this.queryone = index;
       this.params.areaId = item.id;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
-    },
-    //请求过滤搜索条件数据
-    requestServerData(params) {
-      this.$http.post(this.$url.URL.HOUSE_QUERY, params).then(response => {
-        this.buyhouse = response.data.data;
-      });
-    },
-    //请求二手房源数量
-    requestCountData(params) {
-      this.$http.post(this.$url.URL.HOUSE_QUERYCOUNT, params).then(response => {
-        this.querycount = response.data.data;
-      });
     },
     changeshow() {
       this.showBtn = true;
@@ -291,19 +208,6 @@ export default {
     changeshowone() {
       this.showBtnone = true;
     },
-    okbtnone(num) {
-      if (num == 1) {
-        this.params.minPrice = this.inputone;
-        this.params.maxPrice = this.inputtwo;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
-      } else {
-        this.params.minPrice = this.inputthree;
-        this.params.maxPrice = this.inputfour;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
-      }
-    }
   },
   components: {
     oHeader,

@@ -9,25 +9,24 @@
         <h3>收藏小区动态</h3>
         <div class="main">
             <ul>
-                <li v-for="item in [1,1,1,1]">
+                <li v-for="item in indexhome">
                     <div class="image">
-                        <img src="" alt="">
+                       	<img :src="item.housePic"/>
                     </div>
                     <div class="description">
-                        <div class="title">1</div>
-                        <div class="info">2</div>
-                        <div class="attention">3</div>
+                        <div class="title">{{item.houseTitle}}</div>
+                        <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                        <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
                         <div class="tag">
-                            <span>111</span>
-                            <span>111</span>
-                            <span>111</span>
-                            <span>111</span>
+                            <span>{{item.houseFeature}}</span>
+                            <span>{{item.areaName}}</span>
+                            <span>随时看房</span>
                         </div>
                     </div>
                     <div class="r-content">
                         <div class="collection">收藏</div>
-                        <div class="totalPrice"><span>200</span>万</div>
-                        <div class="sellPrice">单价<span>12000</span>元/平米</div>
+                        <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                        <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
                     </div>
                 </li>
             </ul>
@@ -39,7 +38,7 @@
 export default {
     data() {
         return {
-            datalist: [],
+            indexhome: [],
         };
     },
     created() {
@@ -47,19 +46,27 @@ export default {
     },
     methods: {
         collectionListRequest() {
-          this.$http
-            .get(this.$url.URL.HOUSE_COLLECTIONLIST, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "scity": JSON.parse(localStorage.selectCity).value,
-                    "unique-code": sessionStorage.token
-                },
-                params: {
-                    pageNo: 1
-                }
+          // this.$http
+          //   .post(this.$url.URL.HOUSE_QUERY, {
+          //       headers: {
+          //           // "Content-Type": "application/json",
+          //           "scity": JSON.parse(localStorage.selectCity).value,
+          //           // "unique-code": sessionStorage.token
+          //       },
+          //       params: {
+          //           pageNo: 1
+          //       }
+          //   })
+              this.$http
+            .post(this.$url.URL.HOUSE_QUERY, {
+              scity: JSON.parse(localStorage.selectCity).value,
+              pageNo: 1
             })
+          
             .then(response => {
-                console.log(response)
+              
+                this.indexhome = response.data.data;
+                  console.log( this.indexhome )
                 // //修正数据
                 // response.data.data.forEach(item => {
                 //     item.houseTag = item.houseTag.split(",");

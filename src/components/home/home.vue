@@ -51,13 +51,13 @@
 							</div>
 							<div v-else>
 								<div class="headImage">
-									<img :src="userInfo.headImage">
+									<img :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
 								</div>
 								<span class="user">{{userInfo.nickname}}</span>
 								<span>/</span> 
 								<span class="logout"  @click="logout()">退出</span>
 							</div>
-							<ul class="item4">
+							<ul class="item4" v-if="isLogin">
 								<router-link tag="li" to="">消息</router-link>
 								<router-link tag="li" to="/mine">个人账户</router-link>
 								<router-link tag="li" to="">预约看房</router-link>
@@ -196,7 +196,7 @@
 				<div class="goods-hd">
 					<span class="twohandhouse">新盘推荐</span>
 					<span class="foryouselect">新起点</span>
-					<span class="morehouse fr"><router-link tag="li" to="">更多二手好房</router-link></span>
+					<span class="morehouse fr"><router-link tag="li" to="">更多好房</router-link></span>
 				</div>
 				<div class="goods-bd">
 					<ul>
@@ -218,7 +218,7 @@
 				<div class="goods-hd">
 					<span class="twohandhouse">行业资讯</span>
 					<span class="foryouselect">了解更多房产知识</span>
-					<span class="morehouse fr"><router-link tag="li" to="">更多二手好房</router-link></span>
+					<span class="morehouse fr"><router-link tag="li" to="">更多房产知识</router-link></span>
 				</div>
 				<div class="goods-bd">
 					<ul>
@@ -276,6 +276,7 @@
 				houseRecmdlist:[] , //二手房为你精选
 				rentHouseRecmdlist:[],  //时尚租房
 				hotBuilding:[],    //热门小区
+				newbuildindex:[],//首页新房
 				houseUsed:"",  //房源统计
 				houseTypeId: 11,
 				searchinput:'',//搜索关键词
