@@ -31,9 +31,9 @@
 								<div class="direciton">
 									<div class="introduce" >{{brokerdetail.emplName}}</div>
 									<div class="introduce">
-                                    	 <span class="word">所属门店：{{brokerdetail.deptName}}</span>
+                      <span class="word">所属门店：{{brokerdetail.deptName}}</span>
 										 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
-                     	 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
+                     	 <span class="fr brokerccloect">收藏</span>
                                      </div> 
                                      <div class="introduce">
                                     	 <span class="word">收藏经纪人</span>
@@ -430,6 +430,17 @@ export default {
   font-size: 24px!important;
   color: rgba(239, 31, 31, 0.85);
   
+}
+.brokerccloect{
+  height: 45px;
+  width: 113px;
+  border: 1px solid #cacaca;
+  font-family: tahoma;
+  position: relative;
+  text-align: center;
+  line-height: 45px;
+  top: 30px;
+  right: -65px;
 }
 .grade{
   margin-left: 4px;

@@ -50,6 +50,24 @@
                         <div class="sellPrice">单价<span>{{item.rentPrice }}</span>元/平米</div>
                     </div>
                 </li>
+                  <li v-for="item in collecttwohouse "  v-if="num==2">
+								<div class="image" @click="toSkip(item)">
+									<img :src="item.housePic"/>
+								</div>
+								<div class="direciton">
+									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}
+									<span class="fr" @click.stop="collection(item,$event)">收藏</span>
+              		 </div>
+									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
+                    				<span class="word">{{item.areaName}}{{item.districtName}}/在{{item.buildAge}}年建成</span>
+                             <span class="fr cout">{{item.saleCount}}<span class="wan">套</span></span>
+									<span class="fr prices">{{item.avgSalePrice}}<span class="wan">元/平米</span></span>	
+                 </div>
+									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" />
+                  					 <span class="word">在售{{item.saleCount}}套/在租{{item.rentCount}}套</span><span class="fr word">在售小区</span>
+                 				 </div>
+								</div> 
+							</li>
             </ul>
         </div>
     </div>
@@ -211,5 +229,57 @@ h3 {
     text-align: center;
     line-height: 35px;
   }
+}
+
+
+//列表项 
+
+  .direciton{
+    flex: 1;
+    display: flex;
+    height: 90px;
+    margin-top: 40px;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    >div:nth-of-type(1){
+      font-size: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      cursor: pointer;
+      span{
+        color:rgba(0,0,0,0.5);
+        margin-left: 10px;
+        padding: 5px;
+        font-size: 10px;
+        border: 1px solid #cacaca;
+        visibility: hidden;
+        &:hover{
+          color: #000000;
+        }
+      }
+    }
+  }
+  &:hover .direciton>div:nth-of-type(1) span{
+    visibility: visible;
+  }
+  .introduce .word {
+   font-size: 14px;
+  vertical-align: top;
+  margin-left: 10px;
+  color: rgba(0, 0, 0, 0.7);
+}
+.prices {
+  margin-right: 230px;
+  font-size: 24px;
+  color: rgba(239, 31, 31, 0.85);
+    font-weight: bold;
+}
+.cout{
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: bold;
+}
+.wan {
+  font-size: 14px;
 }
 </style>

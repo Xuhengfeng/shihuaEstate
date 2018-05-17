@@ -9,7 +9,7 @@
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置: 区域</ol>
+							<ol class="fl quyu">位置: 城市</ol>
 							<ol class="fl">
 								<li :key="index" :data-id="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.name}}</li>
 							</ol>
@@ -79,8 +79,8 @@
                     <span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span>
                   </div>
 									<div class="introduce ">
-										<span class="intrspan one">{{item.houseFeature}}</span>
-										<span class="intrspan two">{{item.areaName}}</span>
+										<span class="intrspan one">{{item.houseFeature}}随时看房</span>
+										<span class="intrspan two">{{item.areaName}}随时看房</span>
 										<span class="intrspan three">随时看房</span>
 									</div>
 								</div> 
@@ -172,15 +172,16 @@ export default {
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求二手的列表(搜索)
+      //请求新房的列表(搜索)
       this.keyword = this.$route.query.word;
       this.keywordTypeId = parseInt(this.$route.query.type);
       this.query();
         
       //请求搜索条件
       this.$http
-        .get(this.$url.URL.AREA_DISTRICTS + city) //区域
+        .get(this.$url.URL.DICTIONARY_CITYS) //区域
         .then(response => {
+          console.log( this.listone)
           this.listone = response.data.data;
         });
     },
@@ -200,7 +201,6 @@ export default {
       this.queryone = index;
       this.params.areaId = item.id;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
     },
     changeshow() {
       this.showBtn = true;
@@ -208,19 +208,6 @@ export default {
     changeshowone() {
       this.showBtnone = true;
     },
-    okbtnone(num) {
-      if (num == 1) {
-        this.params.minPrice = this.inputone;
-        this.params.maxPrice = this.inputtwo;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
-      } else {
-        this.params.minPrice = this.inputthree;
-        this.params.maxPrice = this.inputfour;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
-      }
-    }
   },
   components: {
     oHeader,
