@@ -51,13 +51,13 @@
 							</div>
 							<div v-else>
 								<div class="headImage">
-									<img :src="userInfo.headImage">
+									<img :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
 								</div>
 								<span class="user">{{userInfo.nickname}}</span>
 								<span>/</span> 
 								<span class="logout"  @click="logout()">退出</span>
 							</div>
-							<ul class="item4">
+							<ul class="item4" v-if="isLogin">
 								<router-link tag="li" to="">消息</router-link>
 								<router-link tag="li" to="/mine">个人账户</router-link>
 								<router-link tag="li" to="">预约看房</router-link>

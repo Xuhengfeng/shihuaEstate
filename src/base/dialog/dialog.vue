@@ -1,8 +1,8 @@
 /*
- * @Author: 徐横峰 
- * @Date: 2018-04-25 11:09:29 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-30 01:52:18
+ * @Author: mikey.zhaopeng 
+ * @Date: 2018-05-17 23:08:17 
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-18 00:18:57
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -11,47 +11,68 @@
         <div class="panel_login " v-show="showFlag">
             <i class="close_login" @click.stop="cancel()">×</i>
             <div class="panel_tab" v-if="showbox == 1">
+              <!-- 账号密码登录 -->
               <div class="title">账号密码登录</div>
               <div class="inputGroup">
-                <input type="text" v-model="phonenum1" placeholder="请输入手机号" maxlength="11">
-                <input autocomplete="off" :type="setpassword" v-model="password1" placeholder="请输入登录密码" maxlength="20" @focus="setPsd()">
-                            <div class="fr fontColor" @click="jump(4)">忘记密码</div>
-                            <button @click="login()">登录</button>
-                            <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
-                            <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
+                <input type="text" 
+                       v-model="phonenum1" 
+                       placeholder="请输入手机号"
+                       maxlength="11"/>
+                <input autocomplete="off" 
+                      :type="setpassword" 
+                      v-model="password1" 
+                      maxlength="20" 
+                      placeholder="请输入登录密码" 
+                      @focus="setPsd()"
+                      @keyup.enter="login()"/>
+                <div class="fr fontColor" @click="jump(4)">忘记密码</div>
+                <button @click="login()">登录</button>
+                <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
+                <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
               </div>
             </div>
-            
+            <!-- 手机号码注册 -->
             <div class="panel_tab" v-if="showbox == 2">
-                        <div class="title">手机号码注册</div>
+              <div class="title">手机号码注册</div>
               <div class="inputGroup">
-                <input type="text" v-model="phonenum2" placeholder="请输入手机号" maxlength="11">
-                <div class="AuthCode"><input type="text" v-model="msgcode1" placeholder="请输入验证码"><button @click="sendMsgCode(1)">获取验证码</button></div>
-                <input type="password" v-model="password2" placeholder="请输入密码（最少六位，数字加字母）" maxlength="11">
-                <input type="password" v-model="password3" placeholder="请再次输入密码" maxlength="11">
-                            <div class="fontColor"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
-                            <button @click="register()">注册</button>
-                            <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
+                <input type="text" 
+                      v-model="phonenum2" 
+                      placeholder="请输入手机号" 
+                      maxlength="11"/>
+                <div class="AuthCode"><input type="text" 
+                                            v-model="msgcode1" 
+                                            placeholder="请输入验证码"/><button :class="disabled1?'sendCode':''" @click="sendMsgCode(1)">{{sendBtn1}}</button></div>
+                <input type="password" 
+                      v-model="password2" 
+                      placeholder="请输入密码（最少六位，数字加字母）" 
+                      maxlength="11"/>
+                <input type="password" 
+                      v-model="password3" 
+                      placeholder="请再次输入密码" 
+                      maxlength="11"/>
+                <div class="fontColor"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
+                <button @click="register()">注册</button>
+                <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
               </div>
             </div>
-
+            <!-- 手机快捷登陆 -->
             <div class="panel_tab" v-if="showbox == 3">
                         <div class="title">手机快捷登陆</div>
               <div class="inputGroup">
                 <input type="text" v-model="phonenum3" placeholder="请输入手机号" maxlength="11">
-                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码"><button @click="sendMsgCode(2)">获取验证码</button></div>
-                            <button @click="rapid()">登录</button>
-                            <div class="dl_login"  @click="login()">账号密码登录</div>
-                            <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
+                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码"><button :class="disabled2?'sendCode':''" @click="sendMsgCode(2)">{{sendBtn2}}</button></div>
+                <button @click="rapid()">登录</button>
+                <div class="dl_login"  @click="jump(1)">账号密码登录</div>
+                <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
               </div>
             </div>
-
+            <!-- 找回密码 -->
             <div class="panel_tab" v-if="showbox == 4">
-                        <div class="title">找回密码</div>
+              <div class="title">找回密码</div>
               <div class="inputGroup">
                 <input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
                 <div class="AuthCode">
-                  <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled?'sendCode':''" ref="sendCode" @click="sendMsgCode(3)">获取验证码</button>
+                  <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled3?'sendCode':''" @click="sendMsgCode(3)">{{sendBtn3}}</button>
                 </div>
                 <input type="password" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)">
                 <input type="password" v-model="password5" placeholder="再次输入密码">
@@ -99,21 +120,33 @@ export default {
 
       //状态判断
       showFlag: false,
-      disabled: false
+      disabled1: false,
+      disabled2: false,
+      disabled3: false,
+      sendBtn1:'发送验证码',//手机号码注册
+      sendBtn2:'发送验证码',//手机快捷登录
+      sendBtn3:'发送验证码',//忘记密码
     };
   },
   methods: {
     setPsd(e) {
       this.setpassword='password';
     },
+    //显示
     show() {
       this.showFlag = true;
     },
+    //隐藏
     hide() {
       this.showFlag = false;
     },
+    //关闭
     cancel() {
       this.hide();
+    },
+    tab(e){
+      console.log(e)
+      e.keyCode=9;
     },
     //登录
     login() {
@@ -128,25 +161,24 @@ export default {
             let code = res.data.data;
             this.phonenum1 = '';
             this.password1 = '';
-            this.userDetailInfo(code);
+            sessionStorage.token = code;
+            this.$message({message: "登录成功",type: 'success'});
+            this.userDetailInfo();
           }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    // 获取用户详细信息
-    userDetailInfo(code) {
+    //获取用户详细信息
+    userDetailInfo() {
       this.$http
-        .post(this.$url.URL.USER_DETAILINFO,{},{
-          headers: {'unique-code': code}
-        })
+        .post(this.$url.URL.USER_DETAILINFO)
         .then(res => {
           if(res.data.status == 1) {
-            sessionStorage.token = code;
-            sessionStorage.userInfo = JSON.stringify(res.data.data);
+            let newData = res.data.data;
+            sessionStorage.userInfo = JSON.stringify(newData);
             this.cancel();
             this.$store.dispatch('login');
-            this.$message({message: "登录成功",type: 'success'});
           }
         });
     },
@@ -158,43 +190,38 @@ export default {
           this.password2 !== this.password3
       ) {
         this.cancel();
-        return this.$alert("填写信息不完整!");
+        this.$alert("填写信息不完整!");
+      }else{
+        this.$http
+          .post(this.$url.URL.USER_REGISTER, {
+            deviceCode: "web",
+            mobile: this.phonenum2,
+            password: this.password2,
+            smsCode: this.msgcode1
+          })
+          .then(res => {
+            if(res.data.status == 1) {
+              this.$alert("注册成功!");
+              this.jump(1);//去登入
+            }else{
+              this.$alert(res.data.msg);
+            }
+          });
       }
-      this.$http
-        .post(this.$url.URL.USER_REGISTER, {
-          deviceCode: "web",
-          mobile: this.phonenum2,
-          password: this.password2,
-          smsCode: this.msgcode1
-        })
-        .then(res => {
-          console.log(res)
-          console.log(res.status)
-          if(res.data.status == 1) {
-            this.cancel();
-            this.$alert("注册成功!");
-            localStorage.token=res.data.data;
-            console.log(res.data)
-          }else{
-            this.$alert(res.data.msg);
-          }
-        });
     },
-    //快捷登录 接口有问题
+    //快捷登录
     rapid() {
       this.$http
         .post(this.$url.URL.SMSCODE_LOGIN, {
           deviceCode: "web",
           mobile: this.phonenum3,
-          password: "string", ///??????
           smsCode: this.msgcode2
         })
         .then(res => {
           if (res.data.status == 1) {
-            this.$message({
-              message: "登录成功",
-              type: 'success'
-            });
+            sessionStorage.token = res.data.data;
+            this.$message({message: "登录成功",type: 'success'});
+            this.userDetailInfo();
           }else{
             this.$alert(res.data.msg);
           }
@@ -213,74 +240,73 @@ export default {
           if(res.status == 200) {
             this.$alert('修改成功！', {
               confirmButtonText: '确定',
-              callback: () => {
-                this.jump(1);
-              }
+              callback: () => {this.jump(1)}
             })
           }else{
             this.$alert(res.data.msg);
           }
         });
     },
-    //验证码倒计时
-    countDown() {
+    //倒计时
+    countDown(num) {
       let timer,times=60;
       timer = setInterval(()=> {
         times--;
         if (times <= 0) {
-            times = 0; 
-            clearInterval(timer);
-            this.disabled=false;
-            this.$refs.sendCode.innerHTML = '获取验证码';
+          times = 0; 
+          clearInterval(timer);
+          switch(num){
+            case 1:this.sendBtn1='发送验证码';this.disabled1=false;break;
+            case 2:this.sendBtn2='发送验证码';this.disabled2=false;break;
+            case 3:this.sendBtn3='发送验证码';this.disabled3=false;break;
+          }
         } else {
-            this.disabled=true;
-            this.$refs.sendCode.innerHTML = times + '秒后重试';
+          switch(num){
+            case 1:this.sendBtn1=times + 's重试';this.disabled1=true;break;
+            case 2:this.sendBtn2=times + 's重试';this.disabled2=true;break;
+            case 3:this.sendBtn3=times + 's重试';this.disabled3=true;break;
+          }
         }
       }, 1000);
     },
     //发送验证码
     sendMsgCode(num) {
-      if(!this.disabled) {
-        let mobile, operateType;
-        if (num == 1) {
-          mobile = this.phonenum2;
-          operateType = "REGISTER";
-        } else if (num == 2) {
-          mobile = this.phonenum3;
-          operateType = "LOGIN";
-        } else if (num == 3) {
-          mobile = this.phonenum4;
-          operateType = "RESET_PASSWORD";
-        }
-        //非空校验 正则校验
-        if(mobile == undefined) {
-          return this.$alert('手机不能为空!');
-        }else if(!(/^1[34578]\d{9}$/).test(mobile)) {
-          return this.$alert('手机格式不对!');
-        }else{
-          this.countDown();
-        }
+      switch(num){
+        case 1:this.disabled1==false&&this.sendMsgCodeRequest(num);break;
+        case 2:this.disabled2==false&&this.sendMsgCodeRequest(num);break;
+        case 3:this.disabled3==false&&this.sendMsgCodeRequest(num);break;
+      }
+    },  
+    //发送验证码请求
+    sendMsgCodeRequest(num) {
+      let mobile, operateType;
+      switch(num) {
+        case 1:mobile = this.phonenum2;operateType = "REGISTER";break;
+        case 2:mobile = this.phonenum3;operateType = "LOGIN";break;
+        case 3:mobile = this.phonenum4;operateType = "RESET_PASSWORD";break;
+      }
+      //非空校验 正则校验
+      if(mobile == undefined) {
+        return this.$alert('手机不能为空!');
+      }else if(!(/^1[34578]\d{9}$/).test(mobile)) {
+        return this.$alert('手机格式不对!');
+      }
 
-        //手机号签名
-        let key = mobile + "29e94f94-8664-48f2-a4ff-7a5807e13b68";
-        this.$http.post(this.$url.URL.FETCHSMSCODE, {
-          deviceCode: "web",
-          mobile: mobile,
-          operateType: operateType,
-          sign: md5(key.toUpperCase())
-        })
-        .then(res => {
-          if (res.data.status == "500") {
-            this.$alert(res.data.msg);
-          }
-        });
-      } 
+      //手机号签名
+      let key = mobile + "29e94f94-8664-48f2-a4ff-7a5807e13b68";
+      this.$http.post(this.$url.URL.FETCHSMSCODE, {
+        deviceCode: "web",
+        mobile: mobile,
+        operateType: operateType,
+        sign: md5(key.toUpperCase())
+      })
+      .then(res => {
+        //成功时候开启倒计时
+        res.data.status==1&&this.countDown(num);
+        //不成功不开启倒计时
+        res.data.status!=1&&this.$alert(res.data.msg);
+      });
     },
-    // if (!/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/.test(this.password)) {
-    //     this.$alert("必须是8~16位含字母和数字的密码");
-    //     this.password = "";
-    //   }
-    
     //num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
     jump(num) {
       this.$emit("changeDialog", num);
@@ -310,9 +336,6 @@ export default {
   margin-left: -190px;
   margin-top: -205px;
   box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
-  -o-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
   padding: 40px 0 40px;
 }

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-01 18:21:26
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-18 00:08:17
  */
 <template>
     <div class="topBar">
@@ -13,16 +13,9 @@
                     <span class="login" @click="login()">登录</span> 
                     <span>/</span>
                     <span class="register" @click="register()">立即注册</span>
-                    <ul>
-                        <router-link tag="li" to="">消息</router-link>
-                        <router-link tag="li" to="/mine">个人账户</router-link>
-                        <router-link tag="li" to="">预约看房</router-link>
-                        <router-link tag="li" to="">我的收藏</router-link>
-                        <router-link tag="li" to="">我的委托</router-link>
-                    </ul>
                 </div>
                 <div v-else>
-                    <img class="headImage" :src="userInfo.headImage">
+                    <img class="headImage" :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
                     <span class="user">{{userInfo.nickname}}</span>
                     <span>/</span> 
                     <span class="logout"  @click="logout()">退出</span>
