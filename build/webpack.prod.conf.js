@@ -33,12 +33,10 @@ const webpackConfig = merge(baseWebpackConfig, {
       'process.env': env
     }),
     new PrerenderSPAPlugin( // npm run build的输出目录
-            path.resolve(__dirname, './dist'),
-            // 需要进行预渲染的页面
-            ['/', '/home'], {
-                captureAfterTime: 5000,
-                maxAttempts: 10,
-            }
+        path.resolve(__dirname, '../dist'),
+        // 需要进行预渲染的页面
+        ['/home', '/mine/indexhome','/mine/indexseeone','/mine/indexseetwo'], 
+        {captureAfterTime: 5000,maxAttempts: 10}
 			),
     new UglifyJsPlugin({
       uglifyOptions: {
