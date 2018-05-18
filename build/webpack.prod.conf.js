@@ -12,6 +12,7 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -32,6 +33,14 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
+    new PrerenderSPAPlugin( // npm run build的输出目录
+      path.resolve(__dirname, '../dist'),
+      // 需要进行预渲染的页面
+      ['/buyHouse', '/mine/indexhome', '/mine/indexseeone', '/', '/newHouse', '/rentHouse', '/houseestate', '/shoper', '/buyhouseguide'], {
+        captureAfterTime: 5000,
+        maxAttempts: 10,
+      }
+    ),
     new UglifyJsPlugin({
       uglifyOptions: {
         compress: {
@@ -81,7 +90,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // split vendor js into its own file
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
-      minChunks (module) {
+      minChunks(module) {
         // any required modules inside node_modules are extracted to vendor
         return (
           module.resource &&

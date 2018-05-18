@@ -49,12 +49,13 @@ const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], reso
 
 Vue.use(Router)
 const router = new Router({
-	// mode: 'history', //历史模式, 取消地址栏"#"
+	mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
   	routes: [
-		{path:"*",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
+		// {path:"*",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
+		{path:"/",component:home,meta:{KeepAlive:false}},//重定向首页
 		{path:"/home",component:home,meta:{KeepAlive:false}},//首页
 		{path:"/login",component:login,meta:{KeepAlive:false}},//登录
 		{path:"/register",component:register,meta:{KeepAlive:false}},//注册

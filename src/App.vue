@@ -63,7 +63,7 @@ export default {
         this.isShowFooter = 0;
         this.isShowSide = 0;
       } 
-      else if(path == "/home"){
+      else if(path == "/home"||path == "/"){
         this.isShowTop = 0;
         this.isShowSide = 1;   
         this.isShowFooter = 1;
