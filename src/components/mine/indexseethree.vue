@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </div>
-            <o-house-list></o-house-list>
+            <o-house-list :list="list" :isShowNum="isShowNum"></o-house-list>
         </div>
     </div>
 </template>
@@ -33,11 +33,31 @@ export default {
         return {
             spanList: ['确认中','预约成功','已取消'],//状态
             num:0,//默认第一个
+            list: [],//哪个接口数据
+            isShowNum: 1,//考虑选择哪个模板渲染
         };
+    },
+    created() {
+        this.seeHouseRecordRequest();
     },
     methods:{
         selectItem(index){
             this.num=index;
+        },
+        seeHouseRecordRequest() {
+          this.$http
+          .post(this.$url.URL.HOUSE_QUERY, {
+            scity: JSON.parse(localStorage.selectCity).value,
+            pageNo: 1
+          })
+          .then(response => {
+             this.list = response.data.data;
+              // //修正数据
+              // response.data.data.forEach(item => {
+              //     item.houseTag = item.houseTag.split(",");
+              // });
+              // this.datalist = response.data.data;
+          });
         }
     },
     components: {

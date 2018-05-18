@@ -1,13 +1,102 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-18 20:43:29
- * @description: 房源列表项
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-19 01:00:27
+ * @description: 列表项
  */
 <template>
     <ul>
-        <li v-for="item in list">
+        <!-- 二手房模板 -->
+        <li v-for="item in list" v-show="isShowNum == 1">
+            <div class="image">
+                <img :src="item.housePic"/>
+            </div>
+            <div class="description">
+                <div class="title">{{item.houseTitle}}</div>
+                <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
+                <div class="tag">
+                    <span>{{item.houseFeature}}</span>
+                    <span>{{item.areaName}}</span>
+                    <span>随时看房</span>
+                </div>
+            </div>
+            <div class="r-content">
+                <div class="collection">收藏</div>
+                <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
+            </div>
+        </li>
+
+        <!-- 租房模板 -->
+         <li v-for="item in list" v-show="isShowNum == 2">
+            <div class="image">
+                <img :src="item.housePic"/>
+            </div>
+            <div class="description">
+                <div class="title">{{item.houseTitle}}</div>
+                <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
+                <div class="tag">
+                    <span>{{item.houseFeature}}</span>
+                    <span>{{item.areaName}}</span>
+                    <span>随时看房</span>
+                </div>
+            </div>
+            <div class="r-content">
+                <div class="collection">收藏</div>
+                <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
+            </div>
+        </li>
+
+        <!-- 新房模板 -->
+         <li v-for="item in list" v-show="isShowNum == 3">
+            <div class="image">
+                <img :src="item.housePic"/>
+            </div>
+            <div class="description">
+                <div class="title">{{item.houseTitle}}</div>
+                <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
+                <div class="tag">
+                    <span>{{item.houseFeature}}</span>
+                    <span>{{item.areaName}}</span>
+                    <span>随时看房</span>
+                </div>
+            </div>
+            <div class="r-content">
+                <div class="collection">收藏</div>
+                <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
+            </div>
+        </li>
+        
+        <!-- 小区模板 -->
+        <li v-for="item in list" v-show="isShowNum == 4">
+            <div class="image">
+                <img :src="item.housePic"/>
+            </div>
+            <div class="description">
+                <div class="title">{{item.houseTitle}}</div>
+                <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
+                <div class="tag">
+                    <span>{{item.houseFeature}}</span>
+                    <span>{{item.areaName}}</span>
+                    <span>随时看房</span>
+                </div>
+            </div>
+            <div class="r-content">
+                <div class="collection">收藏</div>
+                <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
+            </div>
+        </li>
+
+        <!-- 经纪人模板 -->
+        <li v-for="item in list" v-show="isShowNum == 5">
             <div class="image">
                 <img :src="item.housePic"/>
             </div>
@@ -33,35 +122,16 @@
 <script>
 export default {
     props: {
-      list: {
-        type: Array,
-        value: []
-      }   
+      list: {type: Array,value: []},//数据导入
+      isShowNum: {type: Number,value: 1},//切换模板
     },
     data() {
         return {
           
         }
     },
-    created() {
-      this.collectionListRequest();
-    },
     methods: {
-        collectionListRequest() {
-          this.$http
-          .post(this.$url.URL.HOUSE_QUERY, {
-            scity: JSON.parse(localStorage.selectCity).value,
-            pageNo: 1
-          })
-          .then(response => {
-             console.log(response.data.data);
-              // //修正数据
-              // response.data.data.forEach(item => {
-              //     item.houseTag = item.houseTag.split(",");
-              // });
-              // this.datalist = response.data.data;
-          });
-        }
+      
     }
 };
 </script>
@@ -73,9 +143,7 @@ h3 {
   font-size: 30px;
   color: #000000;
 }
-.main {
-  padding: 20px;
-}
+.main {padding: 20px}
 ul > li {
   display: flex;
   flex-flow: row nowrap;
