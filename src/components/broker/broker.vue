@@ -59,7 +59,7 @@
 						<ul>
 							<li :key="index" v-for="(item,index) in broker">
 								<div class="image" @click="toSkip(item)">
-									<img :src="item.photo"/>
+									<img :src="item.photo" @error="avatar"/>
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.emplName}} </div>
@@ -101,6 +101,7 @@ import oFly from "../../base/fly/fly";
 export default {
   data() {
     return {
+      
       houseTypeId: 11, //二手房
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
@@ -147,9 +148,9 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
-    //收藏房源
-    addCollection(e) {
-
+    avatar(item){
+      console.log(1111)
+      item.photo = require('../../imgs/home/avatar.png')
     },
     toSkip(item) {
       let path = "/brokerdetail/" + item.id;
