@@ -131,10 +131,10 @@ export default {
     addCollection(e) {
 
     },
-    toSkip(item) {
-      let path = "/brokerdetail/" + item.id;
-      this.$router.push({ path: path });
-    },
+    // toSkip(item) {
+    //   let path = "/brokerdetail/" + item.id;
+    //   this.$router.push({ path: path });
+    // },
     render(city) {
       //请求经纪人的列表
       this.$http

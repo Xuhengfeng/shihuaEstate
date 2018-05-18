@@ -65,18 +65,18 @@
 						<ul v-show="buyhouse.length">
 							<li :key="index" v-for="(item,index) in buyhouse">
 								<div class="image" @click="toSkip(item)">
-									<img :src="item.housePic"/>
+									<img :src="item.imageUrl"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" @click="toSkip(item)" >{{item.houseTitle}}
+									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}
                     <!-- <span class="fr" @click.stop="collection(item,$event)">收藏</span>
                     <span class="contrast fr" @click.stop="addContrast(item, $event)">{{item.contentFlag?item.contentFlag:'加入对比'}}</span> -->
                   					</div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
-                    <span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span>
-										<span class="fr prices">{{item.saleTotal}}<span class="wan">万</span></span></div>
+                    <span class="word">{{item.tag}}</span>
+										<span class="fr prices">{{item.saleTotal}}<span class="wan">均价</span></span></div>
 									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" />
-                    <span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span>
+                    <span class="word">{{item.buildSummary}}</span><span class="fr">单价{{item.avgPrice }}元/平米</span>
                   </div>
 									<div class="introduce ">
 										<span class="intrspan one">{{item.houseFeature}}随时看房</span>
@@ -167,23 +167,11 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
-    toSkip(item) {
-      let path = "/buyhouse/twohandhousedetail/" + item.sdid;
-      this.$router.push({ path: path });
-    },
     render(city) {
       //请求新房的列表(搜索)
       this.keyword = this.$route.query.word;
       this.keywordTypeId = parseInt(this.$route.query.type);
       this.query();
-        
-      //请求搜索条件
-      this.$http
-        .get(this.$url.URL.DICTIONARY_CITYS) //区域
-        .then(response => {
-          console.log( this.listone)
-          this.listone = response.data.data;
-        });
     },
     //搜索
     query(item) {
@@ -193,15 +181,16 @@ export default {
       .get(this.$url.URL.NEWBUILDING_QUERY + this.selectCity.value, params)
       .then(response=>{
         this.buyhouse = response.data.data;
+          console.log(this.buyhouse)
       })
     },
 
     //点击区域条件
-    address(item, index, e) {
-      this.queryone = index;
-      this.params.areaId = item.id;
-      this.requestServerData(this.params);
-    },
+    // address(item, index, e) {
+    //   this.queryone = index;
+    //   this.params.areaId = item.id;
+    //   this.requestServerData(this.params);
+    // },
     changeshow() {
       this.showBtn = true;
     },

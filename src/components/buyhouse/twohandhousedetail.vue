@@ -150,7 +150,7 @@
                   <ul>
                     <li v-for="item in rimhousing">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img src="item.housePic" />
+                        <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
                         <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
@@ -383,6 +383,7 @@ export default {
             })
             .then(response => {
               this.rimhousing = response.data.data;
+              console.log(this.rimhousing )
             });
 
           //关联小区
