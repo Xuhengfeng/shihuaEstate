@@ -81,7 +81,7 @@
 						</router-link>
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/broker">海外置业</router-link>
-						<router-link tag="li" to="/broker">找门店</router-link>
+						<router-link tag="li" to="/shoper">找门店</router-link>
 						<router-link tag="li" to="/broker">找经纪人</router-link>
 						<router-link tag="li" to="/">业主委托
 							<ul>
@@ -156,7 +156,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in hotBuilding">
+						<li  @click="toSkiptwo(item)"  v-for="item in hotBuilding" >
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
@@ -178,7 +178,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false">
+						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false"  @click="toSkipthree(item)" >
 							<div class="image">
 								<img :src= item.housePic />
 							</div>
@@ -464,6 +464,16 @@
 			//二手房的 更多
 			toSkip(item) {  
 				let path = "/buyhouse/twohandhousedetail/"+item.sdid;
+				this.$router.push({path:path});
+			},
+			//小区房的 更多
+			toSkiptwo(item) {  
+				let path = "/estatedetail/"+item.sdid;
+				this.$router.push({path:path});
+			},
+			//时尚租房的 更多
+			toSkipthree(item) {  
+				let path = "/rentHouseDetail/"+item.sdid;
 				this.$router.push({path:path});
 			},
 			//选定地址
