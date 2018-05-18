@@ -131,13 +131,10 @@ export default {
     addCollection(e) {
 
     },
-<<<<<<< HEAD
-=======
     // toSkip(item) {
     //   let path = "/brokerdetail/" + item.id;
     //   this.$router.push({ path: path });
     // },
->>>>>>> aeef83da289dcb63649693ee6b11b190c055ebf5
     render(city) {
       //请求经纪人的列表
       this.$http
