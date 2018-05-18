@@ -1,31 +1,34 @@
 <template>
     <div>
-        <div class="header">
-            <div class="description">
-                <div>
-                    <span class="time">2018.11.02</span> 
-                    <span class="day">全天</span>
-                    <div class="status">
-                        <span v-for="(item,index) in spanList" 
-                                :key="index"
-                                :class="index==num?'spanBgColor':''"
-                                @click="selectItem(index)">{{item}}</span>
-                        <!-- <span>预约成功</span>
-                        <span>已取消</span> -->
+        <div v-for="(item,index) in [1,1,1,1]" :key="index">
+            <!-- 一个列表项 -->
+            <div class="header">
+                <div class="description">
+                    <div>
+                        <span class="time">2018.11.02</span> 
+                        <span class="day">全天</span>
+                        <div class="status">
+                            <span v-for="(item,index) in spanList" 
+                                    :key="index"
+                                    :class="index==num?'spanBgColor':''"
+                                    @click="selectItem(index)">{{item}}</span>
+                            <!-- <span>预约成功</span>
+                            <span>已取消</span> -->
+                        </div>
+                    </div>
+                    <div>约看2套房</div>
+                    <div>取消预约</div>
+                </div>
+                <div class="broker">
+                    <img src="../../imgs/home/avatar.png">
+                    <div>
+                        <p><span>张三</span>高级经纪人</p>
+                        <p>123 1234 1234</p>
                     </div>
                 </div>
-                <div>约看2套房</div>
-                <div>取消预约</div>
             </div>
-            <div class="broker">
-                <img src="../../imgs/home/avatar.png">
-                <div>
-                    <p><span>张三</span>高级经纪人</p>
-                    <p>123 1234 1234</p>
-                </div>
-            </div>
+            <o-house-list></o-house-list>
         </div>
-        <o-house-list></o-house-list>
     </div>
 </template>
 
@@ -41,7 +44,25 @@ export default {
     methods:{
         selectItem(index){
             this.num=index;
+        },
+        collectionListRequest() {
+          this.$http
+          .post(this.$url.URL.HOUSE_QUERY, {
+            scity: JSON.parse(localStorage.selectCity).value,
+            pageNo: 1
+          })
+          .then(response => {
+              this.indexhome = response.data.data;
+              // //修正数据
+              // response.data.data.forEach(item => {
+              //     item.houseTag = item.houseTag.split(",");
+              // });
+              // this.datalist = response.data.data;
+          });
         }
+    },
+    created() {
+        this.collectionListRequest();
     },
     components: {
         oHouseList

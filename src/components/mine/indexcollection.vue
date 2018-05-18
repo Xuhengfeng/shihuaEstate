@@ -80,6 +80,7 @@ export default {
             collecttwohouse: [],//二手房收藏
           	num: 0,           //切换ip
             IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST],
+            page: 1,
         };
     },
     created() {
@@ -89,19 +90,9 @@ export default {
         collectionListRequest(num) {
           this.num = num;
           this.$http
-            .get(this.IPS[num] , {
-                headers: {
-                    "Content-Type": "application/json",
-                    // "scity": JSON.parse(localStorage.selectCity).value,
-                    "unique-code": sessionStorage.token
-                },
-                params: {
-                    pageNo: 1
-                }
-            })
+            .get(this.IPS[num]+"?pageNo="+this.page)
             .then(response => {
                 this.collecttwohouse = response.data.data;
-                
                 // //修正数据
                 // response.data.data.forEach(item => {
                 //     item.houseTag = item.houseTag.split(",");

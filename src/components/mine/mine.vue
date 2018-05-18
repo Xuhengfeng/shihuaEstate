@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 14:05:54 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-18 14:09:48
+ * @Last Modified time: 2018-05-18 20:44:48
  */
 <template>
 	<!-- 我的 -->
@@ -69,7 +69,7 @@ export default {
 
 <style lang="less" scoped>
 .mine{
-	margin-top: 20px;
+	margin: 20px 0 40px;
 }
 .mine>div>div{
 	display: flex;
@@ -84,6 +84,7 @@ export default {
 			background: red;
 			display: block;
 			margin-bottom: 10px;
+			color: #ffffff;
 			img{
 				width: 100%;
 				height: 100%;
@@ -98,6 +99,7 @@ export default {
 				line-height: 53px;
 				background: #e5e5e5;
 				border-bottom: 1px solid #ffffff;
+				cursor: pointer;
 				&:hover{
 					background: red;
 				}
@@ -112,5 +114,6 @@ export default {
 }
 .bgColor{
 	background: red!important;
+	color: #ffffff;
 }
 </style>

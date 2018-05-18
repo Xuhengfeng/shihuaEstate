@@ -2,45 +2,49 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-18 14:03:41
+ * @Last Modified time: 2018-05-18 20:43:29
  * @description: 房源列表项
  */
 <template>
-    <div class="main">
-        <ul>
-            <li v-for="item in indexhome">
-                <div class="image">
-                    <img :src="item.housePic"/>
+    <ul>
+        <li v-for="item in list">
+            <div class="image">
+                <img :src="item.housePic"/>
+            </div>
+            <div class="description">
+                <div class="title">{{item.houseTitle}}</div>
+                <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
+                <div class="tag">
+                    <span>{{item.houseFeature}}</span>
+                    <span>{{item.areaName}}</span>
+                    <span>随时看房</span>
                 </div>
-                <div class="description">
-                    <div class="title">{{item.houseTitle}}</div>
-                    <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
-                    <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTag}}</div>
-                    <div class="tag">
-                        <span>{{item.houseFeature}}</span>
-                        <span>{{item.areaName}}</span>
-                        <span>随时看房</span>
-                    </div>
-                </div>
-                <div class="r-content">
-                    <div class="collection">收藏</div>
-                    <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
-                    <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
-                </div>
-            </li>
-        </ul>
-    </div>
+            </div>
+            <div class="r-content">
+                <div class="collection">收藏</div>
+                <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
+            </div>
+        </li>
+    </ul>
 </template>
 
 <script>
 export default {
+    props: {
+      list: {
+        type: Array,
+        value: []
+      }   
+    },
     data() {
         return {
-            indexhome: [],
-        };
+          
+        }
     },
     created() {
-        this.collectionListRequest();
+      this.collectionListRequest();
     },
     methods: {
         collectionListRequest() {
@@ -50,7 +54,7 @@ export default {
             pageNo: 1
           })
           .then(response => {
-              this.indexhome = response.data.data;
+             console.log(response.data.data);
               // //修正数据
               // response.data.data.forEach(item => {
               //     item.houseTag = item.houseTag.split(",");

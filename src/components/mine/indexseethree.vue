@@ -1,23 +1,28 @@
 <template>
     <div>
-        <div class="header">
-            <div class="description">
-                <div>
-                    <span class="time">2018.11.02</span> 
-                    <span class="day">全天</span>
+        <div v-for="(item,index) in [1,1,1]" :key="index">
+            <div class="header">
+                <div class="description">
+                    <div class="one">
+                        <span class="time">2018.11.02</span> 
+                        <span class="day">全天</span>
+                    </div>
+                    <div class="two">约看2套房</div>
+                    <div class="three">
+                        <div>评价</div>
+                        <div>投诉</div>
+                    </div>
                 </div>
-                <div>约看2套房</div>
-                <div>取消预约</div>
-            </div>
-            <div class="broker">
-                <img src="../../imgs/home/avatar.png">
-                <div>
-                    <p><span>张三</span>高级经纪人</p>
-                    <p>123 1234 1234</p>
+                <div class="broker">
+                    <img src="../../imgs/home/avatar.png">
+                    <div>
+                        <p><span>张三</span>高级经纪人</p>
+                        <p>123 1234 1234</p>
+                    </div>
                 </div>
             </div>
+            <o-house-list></o-house-list>
         </div>
-        <o-house-list></o-house-list>
     </div>
 </template>
 
@@ -49,43 +54,33 @@ export default {
     padding-bottom: 25px;
     border-bottom: 1px solid #cacaca;
     .description{
-        div{overflow: hidden;
-            &:nth-of-type(1){
-                height: 28px;
-                margin-bottom: 15px;
-            }
-            &:nth-of-type(2){
-                font-size: 14px;
-                color: #000000;
-                margin-bottom: 15px;
-            }
-            &:nth-of-type(3){
-                float: left;
-                background: #ff4343;
-                color: #ffffff;
-                width: 100px;
+        div{overflow: hidden;}
+        .one{
+            height: 28px;
+            margin-bottom: 15px;
+        }
+        .two{
+            font-size: 14px;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+        .three{
+            >div{
+                display: inline-block;
+                width: 70px;
                 height: 30px;
                 line-height: 30px;
-                font-size: 14px;
-                text-align: center;
-                border-radius: 10px;
+                background: #ff4343;
+                margin-right: 20px;
                 cursor:pointer;
+                text-align: center;
+                color: #ffffff;
+                font-size: 14px;
+                border-radius: 10px;
             }
         }
         .time{float:left;margin: 5px 15px 0 0;font-size: 18px;color: #000000}
         .day{float:left;margin: 5px 25px 0 0}
-        .status{
-            float: left;
-            span{
-                float:left;
-                display: inline-block;
-                padding: 5px 10px;
-                border-radius: 10px;
-                font-size: 14px;
-                cursor:pointer;
-            }
-        }
-        
     }
     .broker{
         position: absolute;

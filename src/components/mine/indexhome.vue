@@ -2,12 +2,14 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-18 14:06:18
+ * @Last Modified time: 2018-05-18 20:20:39
  */
 <template>
     <div>
         <h3>收藏小区动态</h3>
-        <o-house-list></o-house-list>
+        <div class="main">
+            <o-house-list></o-house-list>
+        </div>
     </div>
 </template>
 <script>
