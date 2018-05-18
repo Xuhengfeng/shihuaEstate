@@ -81,7 +81,7 @@ export default {
             }
         }
         .time{float:left;margin: 5px 15px 0 0;font-size: 18px;color: #000000}
-        .day{float:left;margin: 5px 25px 0}
+        .day{float:left;margin: 5px 25px 0 0}
         .status{
             float: left;
             span{
