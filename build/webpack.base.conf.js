@@ -56,7 +56,7 @@ module.exports = {
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpg|woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
