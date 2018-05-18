@@ -1,15 +1,15 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-18 13:42:51
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-18 23:54:49
  */
 <template>
     <div class="topBar">
         <div class="container navmenu">
             <div class="fr">
                 <div v-if="!isLogin">
-                    <i class="iconfont icon-yonghu"></i>
+                    <i class="iconfont el-icon-own-yonghu"></i>
                     <span class="login" @click="login()">登录</span> 
                     <span>/</span>
                     <span class="register" @click="register()">立即注册</span>

@@ -7,7 +7,7 @@
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
-					<span class="iconfont icon-location location" @click="openCity()">{{selectCity}}</span>
+					<span class="iconfont el-icon-own-location location" @click="openCity()">{{selectCity}}</span>
 					<transition name="bounce">
 						<div class="city-change " v-if="cityChange">
 							<span class="close" @click="closeCity()"></span>
@@ -44,7 +44,7 @@
 					<ul class="item1">
 						<router-link tag="li" to="">
 							<div v-if="!isLogin">
-								<i class="iconfont icon-yonghu"></i>
+								<i class="iconfont el-icon-own-yonghu"></i>
 								<span class="login" @click="login()">登录</span> 
 								<span>/</span>
 								<span class="register" @click="register()">立即注册</span>
@@ -102,7 +102,7 @@
 						<span @click="placeholderText(2)">小区</span>
 					</div>
 					<div class="search-bd">
-						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
+						<i ref="sanjiao" class="tip iconfont el-icon-own-sanjiaoxing-up"></i>
 						<input class="search-box" :placeholder="souText" v-model="searchinput" @keyup.enter="searchHouse()"></input>
 						<div class="search-box-btn fr" @click="searchHouse()">开始找房</div>
 					</div>
