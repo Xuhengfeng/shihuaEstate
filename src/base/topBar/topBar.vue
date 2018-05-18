@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 00:08:17
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-18 13:42:51
  */
 <template>
     <div class="topBar">
@@ -123,7 +123,7 @@ export default {
             position: relative;
             float: right;
             text-align: right;
-            width: 150px;
+            width: 180px;
             &:hover ul{
                 visibility: visible;
                 li:hover{ color: red}
@@ -157,7 +157,7 @@ export default {
         >li{
             position: relative;
             float: right;
-            margin-left: 26px;
+            margin-right: 26px;
             cursor: pointer;
             >ul{
                 position: absolute;
