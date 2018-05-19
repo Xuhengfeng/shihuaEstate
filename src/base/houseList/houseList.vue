@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-19 01:00:27
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-19 15:13:14
  * @description: 列表项
  */
 <template>
@@ -155,7 +155,7 @@ ul > li {
     width: 232px;
     height: 175px;
     margin-right: 35px;
-    background: red;
+    background: #e6e6e6;
     img {
       width: 100%;
       height: 100%;

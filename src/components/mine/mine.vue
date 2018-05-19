@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 14:05:54 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-18 20:44:48
+ * @Last Modified time: 2018-05-19 17:12:10
  */
 <template>
 	<!-- 我的 -->
@@ -11,7 +11,7 @@
 			<div>
 				<div class="side">
 					<div class="image">
-						<img :src="userInfo.headImage" alt="">
+						<img :src="userInfo.headImage"/>
 					</div>
 					<ul>
 						<li :key="index" :class="index==num?'bgColor':''" v-for="(item,index) in list" @click="routerLink(item,index)">{{item}}</li>

@@ -4,6 +4,7 @@ let localhostDev = false;
 let _host= localhostDev ? 'http://192.168.16.173:7031/custAppApi' : 'http://112.74.181.229:7031/custAppApi';
 
 let URL = {
+	DEFAULT_CITY: _host + "/dictionary/defaultCity",            //默认城市
 	STATISTICS_HOUSEUSED: _host + '/statistics/houseUsed/',     //获取首页房价统计
     HOUSE_RECMDLIST: _host + '/house/recmdList/',               //获取首页二手为你精选列表GET 
     RENTHOUSE_RECMDLIST: _host + '/rentHouse/recmdList/',       //获取首页时尚租房
@@ -66,7 +67,12 @@ let URL = {
 	TWOHOUSELIST_CONTRAST:_host + "/contrast/usedList",            //获取二手房对比列表
 	JOIN_CONTRAST:_host + "/contrast/joid",                        //加入对比(二手房 新房)
 	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
-	
+	APPOINT_READYLIST:_host + "/appoint/readyList",                //待看日程列表
+	APPOINT_DETAILLIST:_host + "/appoint/detailLsit",              //待看列表
+	APPOINT_COMPLETE:_host + "/appoint/complete",                  //已看记录列表
+	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
+	REPORT_LIST:_host + "/report/list",                            //看房报告
+
 	
 };
 export default {URL}
