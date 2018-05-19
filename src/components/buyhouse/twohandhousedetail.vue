@@ -172,7 +172,8 @@
         <!-- 右侧sidebar -->
         <div class="side">
             	<div class="btn">
-                <div @click="addCollection($event)">收藏房源</div>
+                <div @click="addCollection($event)" v-if="!twohandhousedetail.isCollect" >收藏房源</div>
+                 <div @click="addCollection($event)"v-if="twohandhousedetail.isCollect" >已收藏</div>
                 <div>预约看房</div> 
               </div>
 

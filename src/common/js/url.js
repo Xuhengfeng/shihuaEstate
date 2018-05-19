@@ -49,7 +49,10 @@ let URL = {
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
 	SHOPERS_LIST:_host +'/shop/shops',  					    //找门店
 	BROKERS_LIST:_host +'/broker/brokers',  					//经纪人
-	BROKERS:_host +'/broker/',  		         			       //经纪人详情
+	BROKERS:_host +'/broker/',  		         			     //经纪人详情
+	BROKERS_ADD:_host +'/brokerCollection/add/',                //经纪人收藏
+	BROKERS_CANCEL:_host +'/brokerCollection/cancel/',           //取消经纪人收藏
+	BROKERS_collectionlist:_host +'/brokerCollection/collectionList', //经纪人
 	BROKERS_LISTCOUNT:_host +'/broker/brokerCount',  			//经纪人数量
 	BROKERS_HOUSELIST:_host +'/broker/houseList/',  			//经纪人 -他的在售
 	BROKERS_RENTHOUSELIST:_host +'/broker/rentHouseList/',  	//经纪人 -他的在售

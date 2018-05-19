@@ -66,6 +66,7 @@
 									<div class="introduce">
                    	 <span class="word">{{item.deptName}}</span>
 										 <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
+                     	 <span class="fr call">联系电话：{{item.phone}}</span>
                      </div> 
 									<!-- <div class="introduce">
 									<span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span>
@@ -82,10 +83,13 @@
 					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
 					<!--分页器-->
 					<el-pagination
+           @current-change="handleCurrentChange"
 					  background
 					  layout="prev, pager, next"
+             prev-text="上一页"
+					   next-text="下一页"
 					  :total="1000"
-					  class="fr">
+					  class="fr pagination">
 					</el-pagination>
 				</div>
 			</div>
@@ -148,6 +152,10 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
+     handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.render(null, val);		
+    },
     avatar(item){
       console.log(1111)
       item.photo = require('../../imgs/home/avatar.png')
@@ -156,12 +164,12 @@ export default {
       let path = "/brokerdetail/" + item.id;
       this.$router.push({ path: path });
     },
-    render(city) {
+    render(city , num) {
       //请求经纪人的列表
       this.$http
         .post(this.$url.URL.BROKERS_LIST, {
           scity: city,
-          pageNo: 1
+          pageNo: num
         })
         .then(response => {
           this.broker = response.data.data;    
@@ -432,6 +440,10 @@ export default {
   font-size: 24px!important;
   color: rgba(239, 31, 31, 0.85);
   
+}
+.call{
+  position: relative;
+  right: 0px;
 }
 .grade{
   margin-left: 4px;

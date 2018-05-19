@@ -33,7 +33,7 @@
 									<div class="introduce">
                       <span class="word">所属门店：{{brokerdetail.deptName}}</span>
 										 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
-                     	 <span class="fr brokerccloect">收藏</span>
+                     	 <span class="fr brokerccloect"  @click="addcollectborker(brokerdetail,$event)">收藏</span>
                                      </div> 
                                      <div class="introduce">
                                     	 <span class="word">收藏经纪人</span>
@@ -103,7 +103,7 @@
                           <img :src="item.housePic" />
                         </div>
                         <div class="direciton">
-                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
+                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr collect" @click.stop="collection(item,$event)">收藏</span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal}}<span style="font-size: 14px;">万</span></span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                           <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -124,7 +124,7 @@
                          <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
-                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
+                        <div class="" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection(item,$event)">收藏</span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice}}<span style="font-size: 14px;">元/月</span></span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseType}}   {{item.builtArea}}平米</span></div>
                         <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -158,13 +158,62 @@ export default {
       brokerhouselist:"",
       brokerrenthouselist:"",
       scity:null,
+      collectionFlag: true, //收藏标识
     };
   },
   created() {
     this.scity = this.selectCity.value;
     this.render();
   },
+   computed: {
+    logined() {
+      return this.$store.state.logined;
+    }
+  },
   methods: {
+
+    //收藏经纪人
+    addcollectborker(item,e) {
+      if(!this.logined){
+        return this.$alert('用户未登录!');
+      }
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.BROKERS_ADD + "/"+ this.selectCity.value +"/"+ item.id)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
+
+      }else{
+           this.$http
+        .post(this.$url.URL.BROKERS_CANCEL + "/"+ this.selectCity.value +"/"+ item.id)
+        .then(response => {
+            e.target.innerHTML = '收藏'
+        });
+      }
+      this.collectionFlag = !this.collectionFlag;
+    },
+    //收藏房源
+    collection(item,e) {
+      if(!this.logined){
+        return this.$alert('用户未登录!');
+      }
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
+
+      }else{
+           this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '收藏'
+        });
+      }
+      this.collectionFlag = !this.collectionFlag;
+    },
     render() {
        let id =  this.$route.params.id
        //请求经纪人的详情
@@ -210,38 +259,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-//筛选条件
-.filter {
-  overflow: hidden;
-  margin-top: 26px;
-  background-color: #fbfbfb;
-  box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
-  position: relative;
-  border-bottom: 1px solid #cacaca;
-  >ul{
-    margin-top: 24px;
-    margin-left: 35px;
-    >li{
-      overflow: hidden;
-      height: 25px;
-      line-height: 25px;
-      margin-bottom: 24px;
-      >ol{
-        >li{
-          cursor: pointer;
-          float: left;
-          text-align: left;
-          width: 100px;
-          white-space: nowrap;
-        }
-        &:nth-of-type(1){
-          width: 110px;
-          font-size: 14px;
-        }
-      }
-    }
-  } 
-}
+
 //高亮
 .querybtn {
   color: #ff4343;
@@ -282,21 +300,7 @@ export default {
       color: rgba(0, 0, 0, 0.85);
       font-weight: bold;
       cursor: pointer;
-      span{
-        color:rgba(0,0,0,0.5);
-        margin-left: 10px;
-        padding: 5px;
-        font-size: 10px;
-        border: 1px solid #cacaca;
-        visibility: hidden;
-        &:hover{
-          color: #000000;
-        }
-      }
     }
-  }
-  &:hover .direciton>div:nth-of-type(1) span{
-    visibility: visible;
   }
 }
 .peoplemes{
@@ -317,8 +321,6 @@ export default {
     }
   }
 }
-
-
 
 .m-checkbox {
   display: inline-block;
@@ -523,6 +525,7 @@ export default {
             text-align: center;
           }
         }
+
       }
       .tongxiaoqu,
       .zhoubian{
@@ -532,6 +535,33 @@ export default {
           overflow: hidden;
         }
       }
+       .direciton{
+    flex: 1;
+    display: flex;
+    height: 90px;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    >div:nth-of-type(1){
+      font-size: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      cursor: pointer;
+      span{
+        color:rgba(0,0,0,0.5);
+        margin-left: 10px;
+        padding: 5px;
+        font-size: 10px;
+        border: 1px solid #cacaca;
+        visibility: hidden;
+        &:hover{
+          color: #000000;
+        }
+      }
+    }
+  }
+  &:hover .direciton>div:nth-of-type(1) span{
+    visibility: visible;
+  }
     }
 
 

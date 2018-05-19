@@ -96,10 +96,13 @@
                 <router-link to="buyhouse">南宁二手房</router-link>
               </div>
               <el-pagination
+               @current-change="handleCurrentChange"
                 background
                 layout="prev, pager, next"
+                 prev-text="上一页"
+					       next-text="下一页"
                 :total="1000"
-                class="fr">
+                class="fr pagination">
               </el-pagination>
           </div>
 				</div>
@@ -167,6 +170,10 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
+      handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.query(null, val);		
+    },
     render(city) {
       //请求新房的列表(搜索)
       this.keyword = this.$route.query.word;
@@ -174,9 +181,9 @@ export default {
       this.query();
     },
     //搜索
-    query(item) {
+    query(item, num) {
       if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword,'pageNo': 1, 'scity': this.selectCity.value};
+      let params = {'keyword': this.keyword,'pageNo': num, 'scity': this.selectCity.value};
       this.$http
       .get(this.$url.URL.NEWBUILDING_QUERY + this.selectCity.value, params)
       .then(response=>{

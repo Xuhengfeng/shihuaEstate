@@ -62,8 +62,11 @@
 					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
 					<!--分页器-->
 					<el-pagination
+           @current-change="handleCurrentChange"
 					  background
 					  layout="prev, pager, next"
+            prev-text="上一页"
+					   next-text="下一页"
 					  :total="1000"
 					  class="fr">
 					</el-pagination>
@@ -127,6 +130,10 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.render(null, val);		
+    },
     //收藏房源
     addCollection(e) {
 
@@ -135,12 +142,12 @@ export default {
     //   let path = "/brokerdetail/" + item.id;
     //   this.$router.push({ path: path });
     // },
-    render(city) {
+    render(city, num) {
       //请求经纪人的列表
       this.$http
         .post(this.$url.URL.SHOPERS_LIST, {
           scity: city,
-          pageNo: 1
+          pageNo: num
         })
         .then(response => {
           this.shoper = response.data.data;    

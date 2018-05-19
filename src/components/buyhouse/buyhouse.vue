@@ -9,7 +9,7 @@
 		<o-header :houseTypeId="houseTypeId" 
               :keywordTypeId="keywordTypeId" 
               :keyword="keyword"
-              @query="query"></o-header>
+              @query="query()"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
@@ -152,11 +152,14 @@
                 <router-link to="home">世华易居网南宁二手房</router-link>>
                 <router-link to="buyhouse">南宁二手房</router-link>
               </div>
-              <el-pagination
+              <el-pagination 
+                  @current-change="handleCurrentChange"
                 background
                 layout="prev, pager, next"
+                prev-text="上一页"
+					      next-text="下一页"
                 :total="1000"
-                class="fr">
+                class="fr pagination">
               </el-pagination>
           </div>
 				</div>
@@ -268,6 +271,10 @@ export default {
     }
   },
   methods: {
+     handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.query(null, val);		
+    },
     //收藏房源
     collection(item,e) {
       if(!this.logined){
@@ -388,9 +395,9 @@ export default {
         });
     },
     //搜索
-    query(item) {
+    query(item , num) {
       if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      let params = {'keyword': this.keyword, 'pageNo': num, 'scity': this.selectCity.value};
       this.$http
       .post(this.$url.URL.HOUSE_QUERY, params)
       .then(response=>{
@@ -467,6 +474,7 @@ export default {
         this.querycount = response.data.data;
       });
     },
+   
     changeshow() {
       this.showBtn = true;
     },
