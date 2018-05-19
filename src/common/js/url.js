@@ -4,6 +4,7 @@ let localhostDev = false;
 let _host= localhostDev ? 'http://192.168.16.173:7031/custAppApi' : 'http://112.74.181.229:7031/custAppApi';
 
 let URL = {
+	DEFAULT_CITY: _host + "/dictionary/defaultCity",            //默认城市
 	STATISTICS_HOUSEUSED: _host + '/statistics/houseUsed/',     //获取首页房价统计
     HOUSE_RECMDLIST: _host + '/house/recmdList/',               //获取首页二手为你精选列表GET 
     RENTHOUSE_RECMDLIST: _host + '/rentHouse/recmdList/',       //获取首页时尚租房
