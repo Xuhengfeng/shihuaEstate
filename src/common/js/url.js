@@ -68,6 +68,7 @@ let URL = {
 	APPOINT_DETAILLIST:_host + "/appoint/detailLsit",              //待看列表
 	APPOINT_COMPLETE:_host + "/appoint/complete",                  //已看记录列表
 	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
+	REPORT_LIST:_host + "/report/list",                            //看房报告
 
 	
 };
