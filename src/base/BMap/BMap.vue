@@ -1,6 +1,5 @@
 <template>
 	<div class="bmap-wrapper">
-      <div id="map"></div>
       <ul>
         <li @click="tabMap(1)">交通</li>
         <li @click="tabMap(2)">购物</li>
@@ -9,6 +8,7 @@
         <li @click="tabMap(5)">医疗</li>
         <li @click="tabMap(6)">娱乐</li>
       </ul>
+      <div id="bMap"></div>
 	</div>
 </template>
 
@@ -16,22 +16,15 @@
 export default {
   data() {
     return {
-      style: {
-        width: "100%",
-        height: this.height + "px"
-      },
       map: null
     };
   },
   props: {
     //里面存放的也是数据，与data里面的数据不同的是，这里的数据是从其他地方得到的数据
-    height: {
-      type: Number,
-      default: 300
-    },
+    height: {type: Number,default: 300},
     longitude: {}, //定义经度
     latitude: {}, //定义纬度
-    addr: {}, //地址
+    addr: {type:Object,default:{}}, //地址
     chengshi: {}
   },
   mounted() {
@@ -40,8 +33,8 @@ export default {
   methods: {
     ready() {
       let that = this;
-      that.map = new BMap.Map("map");
-      var point = new BMap.Point(116.331398, 39.897445);
+      that.map = new BMap.Map("bMap");
+      var point = new BMap.Point(116.331398, 39.897445);//城市的坐标
       that.map.centerAndZoom(point, 12);
 
       var geolocation = new BMap.Geolocation();
@@ -65,18 +58,15 @@ export default {
           autoViewport: true
         }
       });
-      if (num == "1") {
-        local.searchNearby("交通", "南山");
-      } else if (num == "2") {
-        local.searchNearby("购物", "南山");
-      } else if (num == "3") {
-        local.searchNearby("学校", "南山");
-      } else if (num == "4") {
-        local.searchNearby("餐饮", "南山");
-      } else if (num == "5") {
-        local.searchNearby("医疗", "南山");
-      } else if (num == "6") {
-        local.searchNearby("娱乐", "南山");
+            console.log(typeof num)
+            console.log(this.addr.name)
+      switch(num){
+        case 1:local.searchNearby('交通',this.addr.name);break;
+        case 2:local.searchNearby('购物',this.addr.name);break;
+        case 3:local.searchNearby('学校',this.addr.name);break;
+        case 4:local.searchNearby('餐饮',this.addr.name);break;
+        case 5:local.searchNearby('医疗',this.addr.name);break;
+        case 6:local.searchNearby('娱乐',this.addr.name);break;
       }
     }
   }
@@ -86,13 +76,10 @@ export default {
 <style lang="less" scoped>
 .bmap-wrapper{
   height: 392px;
-  position: relative;
-  #map{
-    height: 100%;
+  #bMap{
+    height: 322px;
   }
   ul{
-    position: absolute;
-    top: 0;
     width: 100%;
     display: flex;
     flex-flow: row nowrap;

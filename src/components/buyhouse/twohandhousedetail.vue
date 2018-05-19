@@ -41,7 +41,7 @@
             <div class="two">
                 <div class="title">房源位置</div>
                 <div class="map">
-				          <b-map></b-map>
+				          <b-map :addr="scity"></b-map>
                 </div>
             </div>
             <div class="three">
