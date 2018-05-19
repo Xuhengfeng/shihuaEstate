@@ -1,12 +1,19 @@
+/*
+ * @Author: 徐横峰 
+ * @Date: 2018-05-19 13:32:30 
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-19 15:03:26
+ * @description: 待看日程
+ */
 <template>
     <div>
-        <div v-for="(item,index) in [1,1,1,1]" :key="index">
+        <div v-for="(item,index) in readyList" :key="index">
             <!-- 一个列表项 -->
             <div class="header">
                 <div class="description">
                     <div>
-                        <span class="time">2018.11.02</span> 
-                        <span class="day">全天</span>
+                        <span class="time">{{item.appointDate1}}</span> 
+                        <span class="day">{{item.appointDate2}}</span>
                         <div class="status">
                             <span v-for="(item,index) in spanList" 
                                     :key="index"
@@ -20,10 +27,10 @@
                     <div>取消预约</div>
                 </div>
                 <div class="broker">
-                    <img src="../../imgs/home/avatar.png">
+                    <div class="image"><img :src="item.broker.photo"></div>
                     <div>
-                        <p><span>张三</span>高级经纪人</p>
-                        <p>123 1234 1234</p>
+                        <p><span>{{item.broker.emplName}}</span>{{item.broker.positionName}}</p>
+                        <p>{{item.broker.phone}}</p>
                     </div>
                 </div>
             </div>
@@ -39,30 +46,30 @@ export default {
         return {
             spanList: ['确认中','预约成功','已取消'],//状态
             num:0,//默认第一个
+            readyList: [],//约看日程
         };
+    },
+    created() {
+        this.readyListRequest();
     },
     methods:{
         selectItem(index){
             this.num=index;
         },
-        collectionListRequest() {
-          this.$http
-          .post(this.$url.URL.HOUSE_QUERY, {
-            scity: JSON.parse(localStorage.selectCity).value,
-            pageNo: 1
-          })
-          .then(response => {
-              this.indexhome = response.data.data;
-              // //修正数据
-              // response.data.data.forEach(item => {
-              //     item.houseTag = item.houseTag.split(",");
-              // });
-              // this.datalist = response.data.data;
-          });
+        readyListRequest() {
+            let city = JSON.parse(localStorage.selectCity).value;
+            this.$http
+            .get(this.$url.URL.APPOINT_READYLIST+"?pageNo="+1+"&scity="+city)
+            .then(response => {
+                let data = response.data.data;
+                data.forEach(item => {
+                    //修正时间格式形如2018.01.01
+                    item.appointDate1 = item.appointDate.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
+                    item.appointDate2 = item.appointDate.split(' ')[1];
+                });
+                this.readyList = response.data.data;
+            });
         }
-    },
-    created() {
-        this.collectionListRequest();
     },
     components: {
         oHouseList
@@ -124,13 +131,19 @@ export default {
         height: 90px;
         bottom: 25px;
         right: 0;
-        img{
+        .image{
+            overflow: hidden;
             margin-right:10px;
-            flex:90px 0 0;
             width: 90px;
             height: 90px;
+            border-radius: 50%;
+            img{
+                flex:90px 0 0;
+                width: 100%;
+                height: 100%;
+            }
         }
-        img+div{
+        .image+div{
             flex: 1;
             display: flex;
             flex-flow: column nowrap;
@@ -144,7 +157,6 @@ export default {
                 &:nth-of-type(2){margin:0}
             }
         }
-        
     }
 }
 .spanBgColor{

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div v-for="(item,index) in [1,1,1]" :key="index">
+        <div v-for="(item,index) in completelist" :key="index">
             <div class="header">
                 <div class="description">
                     <div class="one">
-                        <span class="time">2018.11.02</span> 
-                        <span class="day">全天</span>
+                        <span class="time">{{item.scheduleTime1}}</span> 
+                        <span class="day">{{item.scheduleTime2}}</span>
                     </div>
                     <div class="two">约看2套房</div>
                     <div class="three">
@@ -14,14 +14,14 @@
                     </div>
                 </div>
                 <div class="broker">
-                    <img src="../../imgs/home/avatar.png">
+                    <div class="image"><img :src="item"></div>
                     <div>
-                        <p><span>张三</span>高级经纪人</p>
-                        <p>123 1234 1234</p>
+                        <p><span>{{item.brokerName}}</span>xxxx</p>
+                        <p>{{item.complaintPhone}}</p>
                     </div>
                 </div>
             </div>
-            <o-house-list :list="list" :isShowNum="isShowNum"></o-house-list>
+            <o-house-list :list="item.houseList" :isShowNum="isShowNum"></o-house-list>
         </div>
     </div>
 </template>
@@ -33,7 +33,7 @@ export default {
         return {
             spanList: ['确认中','预约成功','已取消'],//状态
             num:0,//默认第一个
-            list: [],//哪个接口数据
+            completelist: [],//已看列表
             isShowNum: 1,//考虑选择哪个模板渲染
         };
     },
@@ -45,19 +45,19 @@ export default {
             this.num=index;
         },
         seeHouseRecordRequest() {
-          this.$http
-          .post(this.$url.URL.HOUSE_QUERY, {
-            scity: JSON.parse(localStorage.selectCity).value,
-            pageNo: 1
-          })
-          .then(response => {
-             this.list = response.data.data;
-              // //修正数据
-              // response.data.data.forEach(item => {
-              //     item.houseTag = item.houseTag.split(",");
-              // });
-              // this.datalist = response.data.data;
-          });
+            let city = JSON.parse(localStorage.selectCity).value;
+            this.$http
+            .get(this.$url.URL.APPOINT_COMPLETE+"?pageNo="+1+"&scity="+city)
+            .then(response => {
+                let newData = response.data.data;
+                newData.forEach(item => {
+                    //修正时间格式形如2018.01.01
+                    item.scheduleTime1 = item.scheduleTime.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
+                    item.scheduleTime2 = item.scheduleTime.split(' ')[2];
+                });
+                this.completelist = newData;
+                console.log(newData)
+            });
         }
     },
     components: {
@@ -110,13 +110,19 @@ export default {
         height: 90px;
         bottom: 25px;
         right: 0;
-        img{
+        .image{
+            overflow: hidden;
             margin-right:10px;
-            flex:90px 0 0;
             width: 90px;
             height: 90px;
+            border-radius: 50%;
+            img{
+                flex:90px 0 0;
+                width: 100%;
+                height: 100%;
+            }
         }
-        img+div{
+        .image+div{
             flex: 1;
             display: flex;
             flex-flow: column nowrap;

@@ -63,7 +63,11 @@ let URL = {
 	TWOHOUSELIST_CONTRAST:_host + "/contrast/usedList",            //获取二手房对比列表
 	JOIN_CONTRAST:_host + "/contrast/joid",                        //加入对比(二手房 新房)
 	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
-	
+	APPOINT_READYLIST:_host + "/appoint/readyList",                //待看日程列表
+	APPOINT_DETAILLIST:_host + "/appoint/detailLsit",              //待看列表
+	APPOINT_COMPLETE:_host + "/appoint/complete",                  //已看记录列表
+	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
+
 	
 };
 export default {URL}
