@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router'
+import {createRouter} from './router'
 import axios from './common/js/axios.js';
 import store from './store'//共享数据
 import Icon from './base/mySvg/mySvg'
@@ -38,10 +38,23 @@ Date.prototype.$format = function (fmt) { //注册全局时间格式化
 };
 
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>'
-})
+// new Vue({
+//   el: '#app',
+//   router,
+//   store,
+//   components: { App },
+//   template: '<App/>'
+// })
+
+export function createApp(){
+  const router = new createRouter();
+  const app = new Vue({
+    router,
+    render: h=>h(app)
+  })
+  return {app, router}
+}
+
+
+
+

@@ -9,8 +9,7 @@ const path = require('path')
 const chalk = require('chalk')
 const webpack = require('webpack')
 const config = require('../config')
-// const webpackConfig = require('./webpack.prod.conf')//加了预渲染插件
-const webpackConfig = require('./webpack.demo.conf')//没加预渲染插件
+const webpackConfig = require('./webpack.prod.conf')
 
 const spinner = ora('building for production...')
 spinner.start()
