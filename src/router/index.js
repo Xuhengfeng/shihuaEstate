@@ -42,6 +42,7 @@ const indexseethree = resolve => require(['components/mine/indexseethree'], reso
 const indexseefour = resolve => require(['components/mine/indexseefour'], resolve)//看房报告
 const indexcollection = resolve => require(['components/mine/indexcollection'], resolve)//我的收藏
 const indexdelegation = resolve => require(['components/mine/indexdelegation'], resolve)//我的委托
+const indexdelegationdetail = resolve => require(['components/mine/indexdelegationdetail'], resolve)//我的委托详情
 const indexbroker = resolve => require(['components/mine/indexbroker'], resolve)//我的经纪人
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
@@ -98,7 +99,8 @@ const router = new Router({
 				path:"indexbroker",component:indexbroker,meta:{KeepAlive:false}},{//我的经纪人
 				path:"indexconsult",component:indexconsult,meta:{KeepAlive:false}},{//我的咨询
 				path:"indexmessage",component:indexmessage,meta:{KeepAlive:false}},{//消息
-				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}}//编辑资料
+				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}},{//编辑资料
+				path:"indexdelegationdetail:id",component:indexdelegationdetail,meta:{KeepAlive:false}}//我的委托详情
 			]},
   	]
 })

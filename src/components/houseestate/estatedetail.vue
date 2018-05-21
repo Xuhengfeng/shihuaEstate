@@ -110,7 +110,8 @@
 											<div class="visitTime"><span class="label">绿化率</span><span class="info">{{buildlistinfo.greenRatio }}</span></div>
 										</div>
 										<div class="duibi">
-												<div @click="addCollection($event)" class="duibi_a">收藏房源</div>
+											 <div class="duibi_a" @click="addCollection($event)" v-if="!buildlistinfo.isCollect" >收藏房源</div>
+             				   <div class="duibi_a" @click="addCollection($event)" v-if="buildlistinfo.isCollect" >已收藏</div>
 												<div class="duibi_a">分享房源</div>
 											</div>
 												<div class="callpeople">小区二手房</div>

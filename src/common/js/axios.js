@@ -8,7 +8,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 
-import {Message, MessageBox, Dialog,Button, Pagination, Checkbox} from 'element-ui';//导入elementjs
+import {Message, MessageBox, Dialog,Button, Pagination, Checkbox, Steps,Step} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框
 Vue.prototype.$confirm = MessageBox.confirm//弹出框
@@ -18,6 +18,8 @@ Vue.component(Button.name, Button);
 Vue.component(Dialog.name, Dialog);
 Vue.component(Pagination.name, Pagination);
 Vue.component(Checkbox.name, Checkbox);
+Vue.component(Steps.name, Steps);
+Vue.component(Step.name, Step);
 
 let cancel ,promiseArr = {}
 const CancelToken = axios.CancelToken;

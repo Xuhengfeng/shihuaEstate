@@ -33,7 +33,8 @@
 									<div class="introduce">
                       <span class="word">所属门店：{{brokerdetail.deptName}}</span>
 										 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
-                     	 <span class="fr brokerccloect"  @click="addcollectborker(brokerdetail,$event)">收藏</span>
+                     	 <span class="fr brokerccloect"   @click="addcollectborker(brokerdetail,$event)" v-if="!brokerdetail.isCollect">收藏</span>
+                        	 <span class="fr brokerccloect"  @click="addcollectborker(brokerdetail,$event)"  v-if="brokerdetail.isCollect">已收藏</span>
                                      </div> 
                                      <div class="introduce">
                                     	 <span class="word">收藏经纪人</span>
