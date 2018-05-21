@@ -16,7 +16,7 @@
                 <div class="broker">
                     <div class="image"><img :src="item"></div>
                     <div>
-                        <p><span>{{item.brokerName}}</span>xxxx</p>
+                        <p><span>{{item.brokerName}}</span>{{item.broker.positionName}}</p>
                         <p>{{item.complaintPhone}}</p>
                     </div>
                 </div>

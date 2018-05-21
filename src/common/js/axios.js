@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-13 15:06:00
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-21 12:15:34
  */
 //重新封装axios
 import Vue from 'vue'
@@ -11,7 +11,9 @@ import axios from 'axios'
 import {Message, MessageBox, Dialog,Button, Pagination, Checkbox, Steps,Step} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框
-Vue.prototype.$confirm = MessageBox.confirm//弹出框
+Vue.prototype.$confirm = MessageBox.confirm//确认框
+Vue.prototype.$prompt = MessageBox.prompt//可编辑弹出框
+
 Vue.prototype.$message = Message//消息提示
 
 Vue.component(Button.name, Button);
