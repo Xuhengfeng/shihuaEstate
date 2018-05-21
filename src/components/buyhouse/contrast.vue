@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-13 15:42:32
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-21 12:57:37
  */
 <template>
 	<!-- 房源对比 -->
@@ -170,7 +170,6 @@
 
 <script>
 import oHeader from "../../base/header/header";
-import "../../common/css/resetElement.less";
 
 export default {
 	data() {

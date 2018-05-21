@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-19 13:32:30 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-19 17:11:21
+ * @Last Modified time: 2018-05-21 12:55:25
  * @description: 待看日程
  */
 <template>
@@ -24,7 +24,8 @@
                         </div>
                     </div>
                     <div>约看2套房</div>
-                    <div>取消预约</div>
+                    <div class=""><el-button type="danger" @click="open3">取消预约</el-button></div>
+                    
                 </div>
                 <div class="broker">
                     <div class="image"><img :src="item.broker.photo"></div>
@@ -69,6 +70,24 @@ export default {
                 });
                 this.readyList = response.data.data;
             });
+        },
+        open3() {
+            this.$prompt('请输入你取消的内容', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+                inputErrorMessage: '内容不能为空!'
+            }).then(({ value }) => {
+                this.$message({
+                    type: 'success',
+                    message: '提交成功'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '取消输入'
+                });       
+            });
         }
     },
     components: {
@@ -95,8 +114,7 @@ export default {
                 color: #000000;
                 margin-bottom: 15px;
             }
-            &:nth-of-type(3){
-                float: left;
+            &:nth-of-type(3)>button{
                 background: #ff4343;
                 color: #ffffff;
                 width: 100px;
@@ -106,6 +124,9 @@ export default {
                 text-align: center;
                 border-radius: 10px;
                 cursor:pointer;
+                padding: 0;
+                border: 0;
+
             }
         }
         .time{float:left;margin: 5px 15px 0 0;font-size: 18px;color: #000000}
