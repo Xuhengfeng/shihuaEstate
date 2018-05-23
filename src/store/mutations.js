@@ -39,9 +39,17 @@ export default {
 	CLEARALL(state) {
 		state.contrastList = [];
 	},
+	//清空待看清单列表
+	CLEARDAIKAN(state) {
+		state.daikan = [];
+	},
 	//显示对比清单列表
 	SHOWLIST(state, payload) {
 		state.contrastList = payload;
+	},
+	//显示待看清单列表
+	SHOWLISTONE(state, payload) {
+		state.daikan = payload;
 	},
 	//对比房源详情
 	SHOWDEITALLIST(state, payload) {
@@ -53,6 +61,17 @@ export default {
 			return payload.sdid == item.sdid;
 		})
 		state.contrastList.splice(index, 1);
-	}	
+	},
+	//删除待看清单的某一个
+	DELETETWO(state, payload) {
+		let index = state.contrastList.findIndex((item)=>{
+			return payload.sdid == item.sdid;
+		})
+		state.daikan.splice(index, 1);
+	},	
+	ADDTWO(state, payload){
+		console.log(payload)
+		state.daika = payload;
+	}
 	
 }

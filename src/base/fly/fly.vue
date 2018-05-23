@@ -26,11 +26,15 @@ export default {
       this.ballFlag = true;
     },
     beforeEnter(el) {
+      console.log(this.targetEl)
         if(this.ballFlag) {
+          
           //终点位置
           let compareImg = JSON.parse(localStorage.compareImg);
           this.$refs.ball.style.right = 0;
           this.$refs.ball.style.top = compareImg.top+'px';
+          console.log( compareImg)
+
 
           //起始位置
           let rect = this.targetEl.getBoundingClientRect(); 

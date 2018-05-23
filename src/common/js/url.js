@@ -53,7 +53,7 @@ let URL = {
 	BROKERS:_host +'/broker/',  		         			     //经纪人详情
 	BROKERS_ADD:_host +'/brokerCollection/add/',                //经纪人收藏
 	BROKERS_CANCEL:_host +'/brokerCollection/cancel/',           //取消经纪人收藏
-	BROKERS_collectionlist:_host +'/brokerCollection/collectionList', //经纪人
+	BROKERS_collectionlist:_host +'/brokerCollection/collectionList', //经纪人收藏列表
 	BROKERS_LISTCOUNT:_host +'/broker/brokerCount',  			//经纪人数量
 	BROKERS_HOUSELIST:_host +'/broker/houseList/',  			//经纪人 -他的在售
 	BROKERS_RENTHOUSELIST:_host +'/broker/rentHouseList/',  	//经纪人 -他的在售
@@ -69,6 +69,9 @@ let URL = {
 	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
 	APPOINT_READYLIST:_host + "/appoint/readyList",                //待看日程列表
 	APPOINT_DETAILLIST:_host + "/appoint/detailLsit",              //待看列表
+	APPOINT_CANCEL:_host + "/appoint/cancel",                       //取消待看列表/appoint/delete/{id}
+	APPOINT_ADD:_host + "/appoint/add",                             //加入待看
+	APPOINT_DELETE:_host + "/appoint/delete/",                     //删除待看列表
 	APPOINT_COMPLETE:_host + "/appoint/complete",                  //已看记录列表
 	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
 	REPORT_LIST:_host + "/report/list",                            //看房报告

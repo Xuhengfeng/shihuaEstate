@@ -68,6 +68,24 @@
                  				 </div>
 								</div> 
 							</li>
+               <li v-for="item in collecttwohouse "  v-if="num==3">
+								<div class="image" @click="toSkip(item)">
+									<img :src="item.photo"/>
+								</div>
+								<div class="direciton">
+									<div class="introduce" @click="toSkip(item)"> {{item.emplName}}</div>
+									<div class="introduce">
+                    				<span class="word">{{item.deptName}}</span>
+                            <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
+                             <span class="fr call">联系电话：1111111111{{item.phone}}</span>
+                 </div>
+									<div class="introduce">
+                    <span class="intrspan one">销售达人</span>
+										<span class="intrspan two">销售达人</span>
+										<span class="intrspan three">销售达人</span>
+                 </div>
+								</div> 
+							</li>
             </ul>
         </div>
     </div>
@@ -79,7 +97,7 @@ export default {
         return {
             collecttwohouse: [],//二手房收藏
           	num: 0,           //切换ip
-            IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST],
+            IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST,this.$url.URL.BROKERS_collectionlist],
             page: 1,
         };
     },
@@ -260,9 +278,11 @@ h3 {
   color: rgba(0, 0, 0, 0.7);
 }
 .prices {
-  margin-right: 230px;
-  font-size: 24px;
-  color: rgba(239, 31, 31, 0.85);
+     font-family: tahoma;
+    position: relative;
+    right: 340px;
+    font-size: 24px!important;
+    color: rgba(239, 31, 31, 0.85);
     font-weight: bold;
 }
 .cout{
@@ -272,5 +292,34 @@ h3 {
 }
 .wan {
   font-size: 14px;
+}
+.call{
+  position: relative;
+  right: 0px;
+}
+.grade{
+  margin-left: 4px;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.6)
+}
+.intrspan {
+  width: 70px;
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+}
+.one {
+  background-color: #e5f2ff;
+  color: rgba(0, 85, 164, 0.85);
+}
+.two {
+  background-color: #fde8e8;
+  color: rgba(239, 31, 31, 0.85);
+}
+.three {
+  background: #e1f5ed;
+  color: #33be85;
 }
 </style>

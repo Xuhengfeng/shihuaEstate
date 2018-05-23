@@ -84,7 +84,7 @@
                     </div>
                   </div>
 
-                  <div class="daikan">
+                  <div class="recodr">
                     <div>带看记录</div>
                     <div>
                       <div> 看房日期 </div>
@@ -174,7 +174,7 @@
             	<div class="btn">
                 <div @click="addCollection($event)" v-if="!twohandhousedetail.isCollect" >收藏房源</div>
                  <div @click="addCollection($event)"v-if="twohandhousedetail.isCollect" >已收藏</div>
-                <div>预约看房</div> 
+                <div  @click.stop="addContrast(twohandhousedetail, $event)">{{twohandhousedetail.contentFlag?twohandhousedetail.contentFlag:'预约看房'}}</div> 
               </div>
 
               <div class="content">
@@ -229,7 +229,7 @@
         </div>
     </div>
     <!-- 飞入的物体 -->
-    <!-- <o-fly class="fly" ref="fly"></o-fly> -->
+    <o-fly class="fly" ref="fly"></o-fly>
 	</div>
 
 </template>
@@ -263,6 +263,7 @@ export default {
       buildsdid: "", //同小区sdid
       housesee:[],   //约看
       id:"",//带看id
+      daikan:[],//待看列表
       page: 1,//默认带看记录是第一页
       scity: JSON.parse(localStorage.selectCity),//用户选定城市
       collectionFlag: true//收藏标识
@@ -270,15 +271,42 @@ export default {
   },
   components: {
     oHeader,
-    BMap
+    BMap,
+    oFly
   },
   created() {
 	  this.render();
   },
    computed: {
+     //监控store的contrastList变化 声明一个计算属性控制刷新数据
+    refresh() {
+      return this.$store.state.daikan;
+    },
     //获取用户登录状态
     logined() {
       return this.$store.state.logined;
+    }
+  },
+   watch: {
+    //监听计算属性
+    refresh() {
+      // //请求二手的详情
+      // this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + this.scity.value + "/" + this.$route.params.id)
+      //   .then(response => {
+      //     // console.log(response.data.data)
+      //     let arr = Array.from(response.data.data);
+      //     //修正数据 根据本地缓存修正response数据
+      //     arr.forEach((item)=>{
+      //       this.daikan.forEach((item2)=>{
+             
+      //         if(item.sdid == item2.id){
+      //           item.contentFlag = '已预约';
+      //           item2.contentFlag = '已预约';
+      //         }
+      //       })
+      //     })
+      //     this.twohandhousedetail = response.data.data; 
+      //   });
     }
   },
   methods: {
@@ -304,7 +332,37 @@ export default {
         }
       }
     },
+    //加入待看清单
+    addContrast(item, e) {
+      console.log(item)
+         
 
+      if(!this.logined) return this.$alert('用户未登录!');
+      //判断当前点击对象是否存在 
+      if(JSON.stringify(this.daikan).indexOf(JSON.stringify(item)) == '-1') {
+        if(this.daikan.length >= 4){
+          if(item.contentFlag == '已预约') {
+            return;
+          }else{
+            this.$alert('待看清单最多4个!', '添加失败', {
+              confirmButtonText: '确定'
+            });
+          }
+        }else{
+          if(item.contentFlag == '已预约') {
+            return;
+          }else{
+            console.log('来了')
+            this.daikan.push(item);
+            console.log(this.daikan.length)
+            this.$refs.fly.drop(e.target);
+            this.$set(item, 'contentFlag', '已预约');
+            this.$store.dispatch('addTwo', this.daikan);
+            this.$store.dispatch('showlistone', this.daikan);
+          }
+        }
+      }
+    },
     //收藏房源
     addCollection(e) {
       if(!this.logined){
@@ -366,6 +424,16 @@ export default {
           this.py = response.data.data.py;
           this.id = response.data.data.id
            
+           //获取待看清单列表
+          this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1")
+          .then((res)=>{
+            if(res.data.data.length) {
+              this.daikan = res.data.data;
+              //初始化清单列表
+              this.$store.dispatch('showlistone', res.data.data);
+            }
+          });
+
             //带看记录
             this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id+"?pageNo=1")
             .then(response =>{
@@ -384,7 +452,6 @@ export default {
             })
             .then(response => {
               this.rimhousing = response.data.data;
-              console.log(this.rimhousing )
             });
 
           //关联小区
@@ -555,7 +622,7 @@ export default {
           text-indent: 40px;
         }
       }
-      .daikan{
+      .recodr{
         >div:nth-of-type(1){
           font-size: 16px;
           padding: 20px 0;

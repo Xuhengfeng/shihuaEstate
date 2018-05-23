@@ -7,9 +7,30 @@
 <template>
   <div class="sideBar">
       <ul>
-          <li class="one"><img src="../../imgs/home/list.png">
+          <li class="two"><img src="../../imgs/home/list.png">
             <div class="screenOuter">
-               对比
+                <div class="content-hd title">
+                        <span class="fl">待看清单</span>   
+                        <span class="fl">最多可以选择4套房源待看</span>
+                        <span class="fr" @click="clearDaikan()">清空</span>
+                    </div>
+                        <ul class="content-bd">
+                        <li v-for="item in daikan">
+                            <div class="image">
+                                <img :src="item.housePic"/>
+                            </div>
+                            <div class="r-content">
+                                <div>{{item.houseTitle}}</div>
+                                <div><span>{{item.houseType}}</span><span>{{item.builtArea}}平米</span></div>
+                                <div><span>{{item.saleTotal}}</span>万</div>
+                            </div>
+                            <div class="delete" @click="deleteTwo(item)">删除</div>
+                        </li>
+                    </ul>
+                    <div class="content-ft">
+                        <button v-show="compareBtn" @click="compareone(daikan)">立即预约</button>
+                        <p v-show="!compareBtn">暂时没有任何预约的房源信息!</p>
+                    </div>
             </div>
           </li>
           <li class="two" ref="two"><img src="../../imgs/home/contranst.png">
@@ -78,6 +99,18 @@ export default {
                 this.compareBtn = false;
             }
             return list;
+        },
+        //监控store中的daikan
+        daikan() {
+           
+            let list = this.$store.state.daikan;
+            //  console.log(list)
+            if(list.length>0){
+                this.compareBtn = true;
+            }else{
+                this.compareBtn = false;
+            }
+            return list;
         }
     },
     methods: {
@@ -86,13 +119,32 @@ export default {
             this.compareBtn = false;
             this.$store.dispatch('clearAll');
         },
+         //清空
+        clearDaikan() {
+            this.compareBtn = false;
+            this.$store.dispatch('clearDaikan');
+        },
         //删除
         deleteOne(item) {
             this.$store.dispatch('deleteOne', item);
         },
+          //删除待看
+        deleteTwo(item) {
+            this.$store.dispatch('deleteTwo', item);
+        },
         //立即比较 
         compare() {
             this.$router.push({path:'/contrast'});
+        },
+        //立即预约
+        compareone(item) {
+            console.log(item)
+            this.$http.post(this.$url.URL.APPOINT_ADD  ,{
+                "scity":  JSON.parse(localStorage.selectCity).value,
+			    "sdid": item.sdid,
+            })
+           .then(response =>{})
+            this.$router.push({path:'/mine/indexseeone'});
         }
     },
     mounted() {
@@ -100,6 +152,9 @@ export default {
             //对比清单img的位置
             let rect = this.$refs.two.getBoundingClientRect();
             localStorage.compareImg = JSON.stringify(rect);
+            //待看清单img的位置
+             let rectone = this.$refs.two.getBoundingClientRect();
+            localStorage.compareImg = JSON.stringify(rectone);
         }
     }
 }

@@ -30,6 +30,14 @@ export default {
 			});
 		})
 	},
+	//清空待看列表
+	clearDaikan({commit}) {
+		this.state.daikan.forEach((item)=>{
+			axios.delete(API.URL.APPOINT_CANCEL+"?houseSdid="+item.sdid).then((response) => {
+				commit('DELETETWO', item);
+			});
+		})
+	},
 	//显示对比列表
 	showlist({commit}, data) {
 		let sdidStr = '';
@@ -44,18 +52,44 @@ export default {
 			commit('SHOWDEITALLIST', response.data.data);
 		});
 	},
+	//显示待看列表
+	showlistone({commit}, data) {
+		let sdidStr = '';
+		let city = JSON.parse(localStorage.selectCity).value;
+			data.forEach((item)=> {
+				sdidStr += item.sdid+'-';
+			});
+		//待看列表清单
+		commit('SHOWLISTONE', data);
+	},
 	//删除对比清单中一个
 	deleteOne({commit}, item) {
 		axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {});
 		commit('DELETEONE', item);
 	},
-	//添加一个到对比清单
+	//删除待看清单中一个
+	deleteTwo({commit}, item) {
+		axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
+		commit('DELETETWO', item);
+	},
+	//添加一个到对比清单(发请求)
 	addOne({commit}, item) {
+		// console.log(item)
 		let params = {
 			"houseId": item.id,
 			"houseSdid": item.sdid
 		}
 		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {});
+	},
+	//添加一个到待看清单(不发请求)
+	addTwo({commit}, item) {
+		console.log(item)
+		commit('SHOWLISTONE', item);
+		// let params = {
+		// 	"scity":  JSON.parse(localStorage.selectCity).value,
+		// 	"sdid": item.sdid,
+		// }
+		// axios.post(API.URL.APPOINT_ADD, params).then((response) => {});
 	}
 }
 
