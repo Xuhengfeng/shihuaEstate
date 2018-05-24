@@ -31,12 +31,14 @@ export default {
 		})
 	},
 	//清空待看列表
-	clearDaikan({commit}) {
+	clearDaikan({commit}, item) {
+		
 		this.state.daikan.forEach((item)=>{
-			axios.delete(API.URL.APPOINT_CANCEL+"?houseSdid="+item.sdid).then((response) => {
+			axios.delete(API.URL.APPOINT_DELETE+item.id).then((response) => {
 				commit('DELETETWO', item);
 			});
 		})
+		localStorage.removeItem('daikan');//按key单个删除
 	},
 	//显示对比列表
 	showlist({commit}, data) {
@@ -71,6 +73,7 @@ export default {
 	deleteTwo({commit}, item) {
 		axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
 		commit('DELETETWO', item);
+		localStorage.removeItem('daikan');//按key单个删除
 	},
 	//添加一个到对比清单(发请求)
 	addOne({commit}, item) {

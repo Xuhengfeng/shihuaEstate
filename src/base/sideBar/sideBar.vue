@@ -86,7 +86,8 @@
 export default {
     data() {
         return {
-            compareBtn: false
+            compareBtn: false,
+            sdid:""
         }
     },
     computed: {
@@ -137,14 +138,21 @@ export default {
             this.$router.push({path:'/contrast'});
         },
         //立即预约
-        compareone(item) {
-            console.log(item)
+        compareone(daikan) {
+             
+            for(var i = 0; i < daikan.length;i++){
+                  this.sdid = daikan[i].sdid
+                  console.log( this.sdid)
+            }
             this.$http.post(this.$url.URL.APPOINT_ADD  ,{
-                "scity":  JSON.parse(localStorage.selectCity).value,
-			    "sdid": item.sdid,
+                "scity":JSON.parse(localStorage.selectCity).value,
+			    "sdid":this.sdid,
             })
-           .then(response =>{})
+           .then(response =>{
+                 location.reload()
+           })
             this.$router.push({path:'/mine/indexseeone'});
+          
         }
     },
     mounted() {

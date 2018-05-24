@@ -8,7 +8,7 @@
 <template>
     <ul>
         <!-- 二手房模板 -->
-        <li v-for="item in list" v-show="isShowNum == 1">
+        <li v-for="item in list" v-show="isShowNum == 1" style=" margin-left: 10px;">
             <div class="image">
                 <img :src="item.housePic"/>
             </div>
@@ -223,4 +223,6 @@ ul > li {
     }
   }
 }
+
+
 </style>

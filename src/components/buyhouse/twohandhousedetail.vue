@@ -275,6 +275,7 @@ export default {
     oFly
   },
   created() {
+    this.daikan =  localStorage.daikan?JSON.parse(localStorage.daikan): [];
 	  this.render();
   },
    computed: {
@@ -334,9 +335,7 @@ export default {
     },
     //加入待看清单
     addContrast(item, e) {
-      console.log(item)
-         
-
+      console.log(this.daikan.length)
       if(!this.logined) return this.$alert('用户未登录!');
       //判断当前点击对象是否存在 
       if(JSON.stringify(this.daikan).indexOf(JSON.stringify(item)) == '-1') {
@@ -354,6 +353,7 @@ export default {
           }else{
             console.log('来了')
             this.daikan.push(item);
+            window.localStorage.daikan = JSON.stringify(this.daikan);
             console.log(this.daikan.length)
             this.$refs.fly.drop(e.target);
             this.$set(item, 'contentFlag', '已预约');
@@ -428,7 +428,9 @@ export default {
           this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1")
           .then((res)=>{
             if(res.data.data.length) {
+              console.log(res.data.data)
               this.daikan = res.data.data;
+              
               //初始化清单列表
               this.$store.dispatch('showlistone', res.data.data);
             }
