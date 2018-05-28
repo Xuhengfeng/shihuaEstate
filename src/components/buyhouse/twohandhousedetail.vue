@@ -101,7 +101,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"><</div>
+                     <div @click="changeNum(1)"></div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
@@ -173,7 +173,7 @@
         <div class="side">
             	<div class="btn">
                 <div @click="addCollection($event)" v-if="!twohandhousedetail.isCollect" >收藏房源</div>
-                 <div @click="addCollection($event)"v-if="twohandhousedetail.isCollect" >已收藏</div>
+                 <div @click="addCollection($event)" v-if="twohandhousedetail.isCollect" >已收藏</div>
                 <div  @click.stop="addContrast(twohandhousedetail, $event)">{{twohandhousedetail.contentFlag?twohandhousedetail.contentFlag:'预约看房'}}</div> 
               </div>
 
@@ -292,6 +292,7 @@ export default {
     //监听计算属性
     refresh() {
       // //请求二手的详情
+      console.log('refresh')
       // this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + this.scity.value + "/" + this.$route.params.id)
       //   .then(response => {
       //     // console.log(response.data.data)
@@ -317,7 +318,6 @@ export default {
       this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id + "?pageNo=" + this.page)
       .then(response =>{
             this.housesee =  response.data.data
-            console.log(this.housesee)
       })
     },
     //上一页 下一页
@@ -335,12 +335,11 @@ export default {
     },
     //加入待看清单
     addContrast(item, e) {
-      console.log(this.daikan.length)
       if(!this.logined) return this.$alert('用户未登录!');
       //判断当前点击对象是否存在 
       if(JSON.stringify(this.daikan).indexOf(JSON.stringify(item)) == '-1') {
         if(this.daikan.length >= 4){
-          if(item.contentFlag == '已预约') {
+          if(item.contentFlag == '已预约'){
             return;
           }else{
             this.$alert('待看清单最多4个!', '添加失败', {
@@ -352,13 +351,14 @@ export default {
             return;
           }else{
             console.log('来了')
+            console.log(item)
             this.daikan.push(item);
             window.localStorage.daikan = JSON.stringify(this.daikan);
-            console.log(this.daikan.length)
             this.$refs.fly.drop(e.target);
             this.$set(item, 'contentFlag', '已预约');
             this.$store.dispatch('addTwo', this.daikan);
-            this.$store.dispatch('showlistone', this.daikan);
+            console.log(this.daikan)
+            console.log(this.$store.state.daikan)
           }
         }
       }
@@ -432,7 +432,7 @@ export default {
               this.daikan = res.data.data;
               
               //初始化清单列表
-              this.$store.dispatch('showlistone', res.data.data);
+              this.$store.commit('FIRSTSTATUS', res.data.data);
             }
           });
 

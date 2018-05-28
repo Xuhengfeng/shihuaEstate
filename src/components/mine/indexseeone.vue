@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div style="display:none">
+        <div >
             <ul>
-                <li v-for="item in houseList">
+                <li v-for="item in houseList" >
                     <input class="inpt" type="checkbox" v-model="item.checked" />
                     <div class="image">
                         <img :src="item.housePic"/>
@@ -31,7 +31,7 @@
          </div> 
         </div>
 
-        <div>
+        <!-- <div>
            
         <div class="book-time">
              <div class="desc">个人信息</div>
@@ -51,15 +51,14 @@
         </li>
         </ul>
     </div>
-    <div class="time-picker">
-        <span class="no-r left-r selected" data-value="4">全天</span>
-        <span class="no-r" data-value="1"> 上午</span><span class="no-r" data-value="2">下午</span>
-        <span class="right-r" data-value="3"> 晚上</span>
-    </div>
-</div>
+        <div class="time-picker">
+            <span class="no-r left-r selected" data-value="4">全天</span>
+            <span class="no-r" data-value="1"> 上午</span><span class="no-r" data-value="2">下午</span>
+            <span class="right-r" data-value="3"> 晚上</span>
         </div>
-        
-        
+    </div>
+    
+        </div> -->
     </div>
 
 </template>
@@ -81,9 +80,11 @@ export default {
      computed: {
             allChecked: {
                 get: function(){
+                    console.log(1)
                     return this.checkedCount == this.houseList.length;
                 },
                 set: function(value){
+                    console.log(2)
                     this.houseList.forEach(function(item){
                         item.checked = value
                     })
@@ -111,9 +112,9 @@ export default {
              this.$http
             .delete(this.$url.URL.APPOINT_DELETE+  this.id)
             .then(response => {
+                localStorage.removeItem('daikan');//按key单个删除
+                // location.reload()
             });
-            localStorage.removeItem('daikan');//按key单个删除
-             location.reload()
         },
         //待看房源请求
         readyHouseListRequest() {
@@ -270,16 +271,16 @@ dl, dt, dd, ul, ol, li {
     text-align: center;
 }
 .book-time .date-picker .dates .date.selected {
-    border: 1px solid #00ae66;
+    border: 1px solid red;
 }
  .book-time .time-picker {
     margin-left: 25px;
     margin-top: 30px;
 }
 .book-time .time-picker>span.selected {
-    background: #00ae66;
+    background: red;
     color: #fff;
-    border-color: #00ae66;
+    border-color:red;
 }
 .book-time .time-picker>span {
     width: 11%;

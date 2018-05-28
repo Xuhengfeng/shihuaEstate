@@ -7,11 +7,17 @@
 //同步处理
 export default {
 	//初始化 state 数据, 防止刷新状态还原
-	FIRSTSTATUS(state) {
+	FIRSTSTATUS(state,payload) {
+		console.log(payload)
 		if(sessionStorage.logined) {
 			state.logined=true;
 			let user = JSON.parse(sessionStorage.userInfo);
 			state.LoginedUser=Object.assign({}, user);
+			if(payload){
+				state.daikan = payload;
+			}else{
+				state.daikan=JSON.parse(localStorage.daikan);
+			}
 		}
 	},
 	//登录
@@ -70,8 +76,6 @@ export default {
 		state.daikan.splice(index, 1);
 	},	
 	ADDTWO(state, payload){
-		console.log(payload)
 		state.daika = payload;
-	}
-	
+	},
 }

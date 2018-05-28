@@ -28,8 +28,8 @@
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button v-show="compareBtn" @click="compareone(daikan)">立即预约</button>
-                        <p v-show="!compareBtn">暂时没有任何预约的房源信息!</p>
+                        <button v-show="compareBtntwo" @click="compareone(daikan)">立即预约</button>
+                        <p v-show="!compareBtntwo">暂时没有任何预约的房源信息!</p>
                     </div>
             </div>
           </li>
@@ -84,270 +84,286 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            compareBtn: false,
-            sdid:""
-        }
+  data() {
+    return {
+      compareBtn: false,//对比
+       compareBtntwo: false,//待看
+
+      sdid: ""
+    };
+  },
+  computed: {
+    //监控store中的contrastList
+    contrastList() {
+      let list = this.$store.state.contrastList;
+    //   console.log(list)
+      if (list.length > 0) {
+        this.compareBtn = true;
+      } else {
+        this.compareBtn = false;
+      }
+      return list;
     },
-    computed: {
-        //监控store中的contrastList
-        contrastList() {
-            let list = this.$store.state.contrastList;
-            if(list.length>0){
-                this.compareBtn = true;
-            }else{
-                this.compareBtn = false;
-            }
-            return list;
-        },
-        //监控store中的daikan
-        daikan() {
-           
-            let list = this.$store.state.daikan;
-            //  console.log(list)
-            if(list.length>0){
-                this.compareBtn = true;
-            }else{
-                this.compareBtn = false;
-            }
-            return list;
-        }
-    },
-    methods: {
-        //清空
-        clearAll() {
-            this.compareBtn = false;
-            this.$store.dispatch('clearAll');
-        },
-         //清空
-        clearDaikan() {
-            this.compareBtn = false;
-            this.$store.dispatch('clearDaikan');
-        },
-        //删除
-        deleteOne(item) {
-            this.$store.dispatch('deleteOne', item);
-        },
-          //删除待看
-        deleteTwo(item) {
-            this.$store.dispatch('deleteTwo', item);
-        },
-        //立即比较 
-        compare() {
-            this.$router.push({path:'/contrast'});
-        },
-        //立即预约
-        compareone(daikan) {
-             
-            for(var i = 0; i < daikan.length;i++){
-                  this.sdid = daikan[i].sdid
-                  console.log( this.sdid)
-            }
-            this.$http.post(this.$url.URL.APPOINT_ADD  ,{
-                "scity":JSON.parse(localStorage.selectCity).value,
-			    "sdid":this.sdid,
-            })
-           .then(response =>{
-                 location.reload()
-           })
-            this.$router.push({path:'/mine/indexseeone'});
-          
-        }
-    },
-    mounted() {
-        window.onresize = window.onload = ()=> {
-            //对比清单img的位置
-            let rect = this.$refs.two.getBoundingClientRect();
-            localStorage.compareImg = JSON.stringify(rect);
-            //待看清单img的位置
-             let rectone = this.$refs.two.getBoundingClientRect();
-            localStorage.compareImg = JSON.stringify(rectone);
-        }
+    //监控store中的daikan
+    daikan() {
+      let list = this.$store.state.daikan;
+    //    console.log(list)
+      if (list.length > 0) {
+        this.compareBtntwo = true;
+      } else {
+        this.compareBtntwo = false;
+      }
+      return list;
     }
-}
+  },
+  methods: {
+    //清空
+    clearAll() {
+      this.compareBtn = false;
+      this.$store.dispatch("clearAll");
+    },
+    //清空
+    clearDaikan() {
+      this.compareBtn = false;
+      this.$store.dispatch("clearDaikan");
+    },
+    //删除
+    deleteOne(item) {
+      this.$store.dispatch("deleteOne", item);
+    },
+    //删除待看
+    deleteTwo(item) {
+      this.$store.dispatch("deleteTwo", item);
+    },
+    //立即比较
+    compare() {
+      this.$router.push({ path: "/contrast" });
+    },
+    //立即预约
+    compareone(daikan) {
+      
+      for (let i = 0; i < daikan.length; i++) {
+          console.log(daikan)
+        this.sdid = daikan[i].sdid;
+        console.log(daikan[i].sdid);
+        this.$http
+          .post(this.$url.URL.APPOINT_ADD, {
+            scity: JSON.parse(localStorage.selectCity).value,
+            sdid: this.sdid
+          })
+          .then(response => {
+            console.log("aaaaa")
+            if(i==this.daikan.length-1){
+               this.$router.push({ path: "/mine/indexseeone" });
+            }
+          });
+      }
+    }
+
+  },
+  _querys() {
+    this.$http
+      .post(this.$url.URL.APPOINT_ADD, {
+        scity: JSON.parse(localStorage.selectCity).value,
+        sdid: this.sdid
+      })
+      .then(response => {
+        //  location.reload()
+      });
+  },
+  mounted() {
+    window.onresize = window.onload = () => {
+      //对比清单img的位置
+      let rect = this.$refs.two.getBoundingClientRect();
+      localStorage.compareImg = JSON.stringify(rect);
+      //待看清单img的位置
+      let rectone = this.$refs.two.getBoundingClientRect();
+      localStorage.compareImg = JSON.stringify(rectone);
+    };
+  }
+};
 </script>
 <style lang="less" scoped>
-.sideBar{
-    position:fixed;
-    right:0;
-    top:0;
-    bottom:0;
-    width: 40px;
-    background: #ffffff;
-    box-shadow: 0 0 2px rgba(0,0,0,.3);
-    z-index: 1000;
-    >ul{
-        width: 100%;
-        height: auto;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        //选项
-        >li{
-            padding: 5px 0 3px;
-            margin-bottom: 25px;
-            text-align: center;
-            position: relative;
-            &:hover{
-                background: #e6e6e6; 
-                .screenOuter{
-                    right: 40px;
-                    opacity: 1;
-                    visibility: visible;
-                }
-            }
-            image{
-                width: 25px;
-                height: 25px;
-                vertical-align: top;
-            }
-            .screenOuter{
-                visibility: hidden;
-                position: absolute;
-                right: 60px;
-                top:0;
-                width: 100px;
-                height: 100px;
-                opacity: 0;
-                background: red;
-                transition: all .3s ease;
-                //添加border三角形
-                &:after{
-                    position: absolute;
-                    right: -15px;
-                    top: 10%;
-                    content: '';
-                    width: 0;
-                    height: 0;
-                    border-width: 8px;
-                    border-style: solid;
-                    border-color:transparent transparent transparent #ffffff;
-                }
-            }
-            //屏幕外第二个内容布局
-            &.two>.screenOuter{
-                width: 352px;
-                height: auto;
-                background: #ffffff;
-                box-shadow: 0 0 2px rgba(0,0,0,.3);
-                padding: 15px 0 22px;
-                box-sizing:border-box;
-                &:after{
-                   top: 10px;
-                }
-                .title{
-                    height: 30px;
-                    margin: 0 25px;
-                    border-bottom: 1px solid #cacaca;
-                    span{
-                        color: #000000;
-                        margin-right: 15px;
-                        &:nth-of-type(1){
-                            font-size: 18px;
-                        }
-                        &:nth-of-type(2){
-                            font-size: 12px;
-                            color: #313131;
-                            opacity: .6;
-                            margin-top: 5px;
-                        }
-                        &:last-child{
-                            margin: 5px 0 0;
-                            font-size: 12px;
-                            color: #313131;
-                            opacity: .6;
-                            cursor: pointer;
-                        }
-                    }
-                }   
-                ul>li{
-                    position: relative;
-                    display: flex;
-                    flex-flow: row nowrap;
-                    overflow: hidden;
-                    padding: 16px 25px;
-                    .image{
-                        flex: 80px 0 0;
-                        width: 80px;
-                        height: 60px;
-                        background: red;
-                        margin-right: 12px;
-                        img{
-                            width: 100%;
-                            height: 100%;
-                        }
-                    }
-                    .r-content{
-                        flex: 1;
-                        display: flex;
-                        flex-flow: column;
-                        justify-content: space-between;
-                        align-items: flex-start;
-                        div{
-                            color: #313131;
-                            text-align: left;
-                            &:nth-of-type(1){
-                                font-size: 14px;
-                            }
-                            &:nth-of-type(2){
-                                span{
-                                    font-size: 12px;
-                                    margin-right: 10px;
-                                }
-                            }
-                            &:nth-of-type(3){
-                                color: red;
-                                font-size: 12px;
-                                span{
-                                    font-size: 16px;
-                                    margin-right: 5px;
-                                }
-                            }
-                        }
-                    }
-                    .delete{
-                        position: absolute;
-                        bottom: 20px;
-                        right: 25px;
-                        padding: 5px;
-                        border: 1px solid #ff0000;
-                        border-radius: 5px;
-                        font-size: 10px;
-                        color: #ff0000;
-                        letter-spacing: 2px;
-                        cursor: pointer;
-                        display: none;
-                    }
-                    &:hover {
-                        background: #eee;
-                        .delete{
-                            display: block;
-                        }
-                    }
-                }
-                .content-ft{
-                    button{
-                        margin: 30px auto 0;
-                        width: 290px;
-                        height: 42px;
-                        line-height: 42px;
-                        text-align: center;
-                        outline: none;
-                        background: red;
-                        color: #ffffff;
-                        border: 0;
-                        border-radius: 5px;
-                    }
-                    p{
-                        padding: 10px;
-                        color: #cacaca;
-                    }
-                }
-            }
-            //屏幕外第三个内容布局
-            //屏幕外第四个内容布局
+.sideBar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: #ffffff;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  > ul {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    //选项
+    > li {
+      padding: 5px 0 3px;
+      margin-bottom: 25px;
+      text-align: center;
+      position: relative;
+      &:hover {
+        background: #e6e6e6;
+        .screenOuter {
+          right: 40px;
+          opacity: 1;
+          visibility: visible;
         }
+      }
+      image {
+        width: 25px;
+        height: 25px;
+        vertical-align: top;
+      }
+      .screenOuter {
+        visibility: hidden;
+        position: absolute;
+        right: 60px;
+        top: 0;
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+        background: red;
+        transition: all 0.3s ease;
+        //添加border三角形
+        &:after {
+          position: absolute;
+          right: -15px;
+          top: 10%;
+          content: "";
+          width: 0;
+          height: 0;
+          border-width: 8px;
+          border-style: solid;
+          border-color: transparent transparent transparent #ffffff;
+        }
+      }
+      //屏幕外第二个内容布局
+      &.two > .screenOuter {
+        width: 352px;
+        height: auto;
+        background: #ffffff;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+        padding: 15px 0 22px;
+        box-sizing: border-box;
+        &:after {
+          top: 10px;
+        }
+        .title {
+          height: 30px;
+          margin: 0 25px;
+          border-bottom: 1px solid #cacaca;
+          span {
+            color: #000000;
+            margin-right: 15px;
+            &:nth-of-type(1) {
+              font-size: 18px;
+            }
+            &:nth-of-type(2) {
+              font-size: 12px;
+              color: #313131;
+              opacity: 0.6;
+              margin-top: 5px;
+            }
+            &:last-child {
+              margin: 5px 0 0;
+              font-size: 12px;
+              color: #313131;
+              opacity: 0.6;
+              cursor: pointer;
+            }
+          }
+        }
+        ul > li {
+          position: relative;
+          display: flex;
+          flex-flow: row nowrap;
+          overflow: hidden;
+          padding: 16px 25px;
+          .image {
+            flex: 80px 0 0;
+            width: 80px;
+            height: 60px;
+            background: red;
+            margin-right: 12px;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .r-content {
+            flex: 1;
+            display: flex;
+            flex-flow: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            div {
+              color: #313131;
+              text-align: left;
+              &:nth-of-type(1) {
+                font-size: 14px;
+              }
+              &:nth-of-type(2) {
+                span {
+                  font-size: 12px;
+                  margin-right: 10px;
+                }
+              }
+              &:nth-of-type(3) {
+                color: red;
+                font-size: 12px;
+                span {
+                  font-size: 16px;
+                  margin-right: 5px;
+                }
+              }
+            }
+          }
+          .delete {
+            position: absolute;
+            bottom: 20px;
+            right: 25px;
+            padding: 5px;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            font-size: 10px;
+            color: #ff0000;
+            letter-spacing: 2px;
+            cursor: pointer;
+            display: none;
+          }
+          &:hover {
+            background: #eee;
+            .delete {
+              display: block;
+            }
+          }
+        }
+        .content-ft {
+          button {
+            margin: 30px auto 0;
+            width: 290px;
+            height: 42px;
+            line-height: 42px;
+            text-align: center;
+            outline: none;
+            background: red;
+            color: #ffffff;
+            border: 0;
+            border-radius: 5px;
+          }
+          p {
+            padding: 10px;
+            color: #cacaca;
+          }
+        }
+      }
+      //屏幕外第三个内容布局
+      //屏幕外第四个内容布局
     }
+  }
 }
 </style>

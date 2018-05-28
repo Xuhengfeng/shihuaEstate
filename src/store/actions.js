@@ -1,17 +1,13 @@
 import API from '../common/js/url.js';
 import axios from 'axios';
 import Vue from 'vue'
+// import Router from 'vue-router'
 import {Message, MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框
 Vue.prototype.$confirm = MessageBox.confirm//弹出框
 Vue.prototype.$message = Message//消息提示
-/*
- * @Author: 徐横峰 
- * @Date: 2018-04-28 00:21:14 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-03 22:31:47
- */
+
 //异步操作
 export default {
 	//登录
@@ -54,16 +50,6 @@ export default {
 			commit('SHOWDEITALLIST', response.data.data);
 		});
 	},
-	//显示待看列表
-	showlistone({commit}, data) {
-		let sdidStr = '';
-		let city = JSON.parse(localStorage.selectCity).value;
-			data.forEach((item)=> {
-				sdidStr += item.sdid+'-';
-			});
-		//待看列表清单
-		commit('SHOWLISTONE', data);
-	},
 	//删除对比清单中一个
 	deleteOne({commit}, item) {
 		axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {});
@@ -86,13 +72,7 @@ export default {
 	},
 	//添加一个到待看清单(不发请求)
 	addTwo({commit}, item) {
-		console.log(item)
 		commit('SHOWLISTONE', item);
-		// let params = {
-		// 	"scity":  JSON.parse(localStorage.selectCity).value,
-		// 	"sdid": item.sdid,
-		// }
-		// axios.post(API.URL.APPOINT_ADD, params).then((response) => {});
-	}
+	},
 }
 
