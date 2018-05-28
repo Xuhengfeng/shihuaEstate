@@ -75,6 +75,7 @@ let URL = {
 	APPOINT_COMPLETE:_host + "/appoint/complete",                  //已看记录列表
 	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
 	REPORT_LIST:_host + "/report/list",                            //看房报告
+	DICTIONARY_CURRENTDATETIME:_host + '/dictionary/currentDateTime',  	   //获取当前时间
 
 	
 };

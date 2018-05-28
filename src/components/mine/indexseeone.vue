@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div >
+        <!-- <div >
             <ul>
                 <li v-for="item in houseList" >
                     <input class="inpt" type="checkbox" v-model="item.checked" />
@@ -29,36 +29,82 @@
               <span @click="del(houseList)">删除</span>
             <button class="btn">预约看房时间</button>
          </div> 
-        </div>
-
-        <!-- <div>
-           
-        <div class="book-time">
-             <div class="desc">个人信息</div>
-            <div class="mesg">
-                <div>姓名<input placeholder="请输入你的姓名"></div>
-                <div class="call">电话 12132131</div>
-            </div>
-            <div class="desc">看房时间</div>
-            <div class="date-picker"> 
-        <ul class="dates"> 
-        <li class="date selected" v-for="item in [1,1,1,1,1]">
-            <div class="week-day">周四</div>
-            <div class="month-info">
-            <div class="month-day">24</div>
-            <div class="month">5月</div>
-            </div>
-        </li>
-        </ul>
-    </div>
-        <div class="time-picker">
-            <span class="no-r left-r selected" data-value="4">全天</span>
-            <span class="no-r" data-value="1"> 上午</span><span class="no-r" data-value="2">下午</span>
-            <span class="right-r" data-value="3"> 晚上</span>
-        </div>
-    </div>
-    
         </div> -->
+
+        <div>
+            <div class="book-time">
+                <div class="desc">个人信息</div>
+                <div class="mesg">
+                    <div>姓名<input placeholder="请输入你的姓名" v-model="username"></div>
+                    <div class="call">电话 {{mobile}}</div>
+                </div>
+                <div class="desc">看房时间</div>
+                <div class="date-picker"> 
+                <ul class="dates"> 
+                <li class="date selected" v-for="item in datelist" @click="appoint(item,$event)">
+                    <div class="week-day">{{item.w}}</div>
+                    <div class="month-info">
+                    <div class="month-day">24</div>
+                    <div class="month">5月</div>
+                    </div>
+                </li>
+                </ul>
+             </div>
+                <div class="time-picker">
+                    <span class="no-r left-r" @click="range($event,index)" v-for="(item,index) in appointRange">{{item.range}}</span>
+                </div>
+                 <div class="desc">待看经纪人</div>
+                <div class="mesg">
+                    <div>经纪人<input placeholder="选择经纪人" readonly v-model="brokerValue" @click="toggleBroker()"></div>      
+               </div>
+              </div>
+                <div class="form-ft">
+                    <button @click="commitRequest()">提交</button>
+                </div>
+              </div>
+        <div class="brokerList" v-show="brokerFlag">
+            <h3>选择经纪人</h3>
+            <ul>
+                <li v-for="item in brokerLists" @click="selectBroker(item)">
+                    <div>
+                        <div class="image">
+                            <img :src="item.photo">
+                        </div>      
+                        <div class="content">
+                            <div class="one">
+                                <div class="name"><span>{{item.emplName}}</span>{{item.positionName}}</div>
+                                <div class="decription">
+                                    <span>{{item.deptName}}</span>
+                                    <span></span>
+                                </div>
+                                <div class="tag">
+                                    <span>销售达人</span>
+                                    <span>销售达人</span>
+                                    <span>销售达人</span>
+                                </div>
+                            </div>
+                            <div class="two">
+                                <span>{{item.grade}}.0</span> 评分
+                            </div>
+                            <div class="three">
+                                <div>联系电话:</div>
+                                <div class="cellme">{{item.phone}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <!--分页器-->
+            <el-pagination class="pagination"
+                @current-change="handleCurrentChange"
+                background
+                layout="prev,pager, next"
+                prev-text="上一页"
+                next-text="下一页"
+                :total="1000">
+            </el-pagination>
+        </div>
     </div>
 
 </template>
@@ -68,14 +114,26 @@ import oHouseList from "../../base/houseList/houseList";
 export default {
     data() {
         return {
+            appointRange:[{range:"全天"},{range:"上午"},{range:"下午"},{range:"晚上"}],
+            username: "", //姓名
+            datelist:[],
             houseList: [{
                 checked:true
             }],//待看房源列表
-            id:""
+            id:"",
+            brokerFlag: false, //经纪人
+            brokerLists: [], //经纪人列表
+            brokerValue: "", //经纪人
+            currentCity: JSON.parse(localStorage.selectCity),
+            currenttime:"",
+            mobile:JSON.parse(sessionStorage.userInfo).mobile ,//电话
+            rangetime:""
         };
     },
     created() {
         this.readyHouseListRequest();
+        this.brokerListRequest(1);
+        this.week()
     },
      computed: {
             allChecked: {
@@ -103,6 +161,45 @@ export default {
         },
     methods:{
 
+        //日期
+        week(){
+                this.$http
+                .get(this.$url.URL.DICTIONARY_CURRENTDATETIME)
+                .then(response => {
+                    this.currenttime = response.data.data.currentDateTime;
+                    let nowTime = this.currenttime;
+                    let arr = [];
+                    for(let i=0;i<5;i++) {
+                        let time = nowTime+24*60*60*1000*i
+                        arr.push(this.format(time));
+                    }
+                    this.datelist = arr;
+                    console.log(arr)
+                });
+        },
+        format(time) {
+            let newTime = new Date(time);    
+            let  Y = newTime.getFullYear();
+            let  W = newTime.getDay();
+            switch(W){
+                case 0: W='周日';break;
+                case 1: W='周一';break;
+                case 2: W='周二';break;
+                case 3: W='周三';break;
+                case 4: W='周四';break;
+                case 5: W='周五';break;
+                case 6: W='周六';break;
+            }
+            let  M = (newTime.getMonth()+1 < 10 ? '0'+(newTime.getMonth()+1) : newTime.getMonth()+1) ;
+            let  D = newTime.getDate();
+            return {
+                y: Y,
+                m: M,
+                w: W,
+                d: D,
+                all:Y+"-"+M +"-"+D
+            };            
+        },
         //删除待看房源
         del(houseList){
             console.log(houseList)
@@ -124,6 +221,62 @@ export default {
             .then(response => {
                 this.houseList = response.data.data;
             });
+        },
+        selectBroker(item) {
+        this.brokerFlag = false;
+        this.brokerValue = item.emplName;
+        this.brokerId = item.id;
+        },
+        handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+            this.brokerListRequest(val);		
+        },
+        brokerListRequest(num){  
+        this.$http
+            .post(this.$url.URL.BROKERS_LIST, {   //经纪人
+            scity: this.currentCity.value,
+            pageNo: num
+            })
+            .then(response => {
+            this.brokerLists = response.data.data;
+            });
+        },
+          toggleBroker() {
+           this.brokerFlag = !this.brokerFlag;
+        },
+        commitRequest() {
+            let scity = this.cityCode ? this.cityCode : this.currentCity.value;
+            let params = {
+                "appointDate": "string", //预约时间
+                appointMobile: this.mobile, //手机号
+                appointName: this.username, //姓名
+                appointRange:this.rangetime ,//预约时段类型
+                "brokerId": 0,      //经纪人id 
+                "houseList": [      // 约看房源列表，必填
+                    {
+                    scity: scity,  //城市编码
+                    "sdid": 0      //房源sdid
+                    }
+                 ]
+              }
+        },
+        appoint(item,e) {
+            console.log(item.all)
+        },
+        range(e,index) {
+             this.rangetime = e.target.innerHTML
+             if(index ==0){
+                this.rangetime = "ALL_DAY"
+             }
+             if(index ==1){
+                this.rangetime = "FORENOON"
+             }
+             if(index ==2){
+                this.rangetime = "AFTERNOON"
+             }
+              if(index ==3){
+                this.rangetime = "NIGHT"
+             }
         }
     },
     components: {
@@ -133,12 +286,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
-h3 {
-  height: 120px;
-  line-height: 120px;
-  font-size: 30px;
-  color: #000000;
-}
+// h3 {
+//   height: 120px;
+//   line-height: 120px;
+//   font-size: 30px;
+//   color: #000000;
+// }
 
 ul > li {
   display: flex;
@@ -301,6 +454,7 @@ dl, dt, dd, ul, ol, li {
     padding: 0 15px;
     border: 1px solid #d9dcde;
     border-radius: 2px;
+    width: 300px;
 }
 .call{
     margin-top: 20px;
@@ -308,4 +462,141 @@ dl, dt, dd, ul, ol, li {
 .mesg{
     margin-left: 25px;
 }
+
+.brokerList {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  width: 614px;
+  height: 642px;
+  transform: translateX(-50%);
+  background: #efefef;
+  h3{
+    text-align: center;
+    line-height: 50px;
+    font-size: 20px;
+    color: #ffffff;
+    background: red;
+  }
+  ul{
+    max-height: 530px;
+    overflow: auto;
+    >li{
+      overflow: hidden;
+      cursor: pointer;
+      height: 124px;
+      position: relative;
+      >div{
+        margin: 0 10px;
+        height: 124px;
+        padding: 28px 0;
+        box-sizing: border-box;
+        // border-bottom: 1px solid #cacaca;
+        .image {
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
+          background: red;
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          overflow: hidden;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .content {
+          overflow: hidden;
+          margin-left: 120px;
+          display: flex;
+          flex-flow: row nowrap;
+          >div{
+            flex: 1;
+          }
+          .one{
+            .name{
+              font-size: 16px;
+              margin-bottom: 10px;
+              span{
+                font-size: 24px;
+                color: rgba(0, 0, 0, 0.8);
+                margin-right: 10px;
+              }
+            }
+            .decription{
+              margin: 0 15px 10px 0;
+              span{
+                font-size: 14px;
+              }
+            }
+            .tag{
+              display: flex;
+              flex-flow: row nowrap;
+              white-space: nowrap;
+              span{
+                font-size: 12px;
+                margin-right: 10px;
+                padding: 5px;
+                &:nth-of-type(1){
+                    background: #edf9ff;
+                    color: #00a8ff;
+                }
+                &:nth-of-type(2){
+                    background: #fff2ed;
+                    color: #ff7f50;
+                }
+                &:nth-of-type(3){
+                    background: #ebfff3;
+                    color: #00b969;
+                }
+              }
+            }
+          }
+          .two{
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            span{
+              font-size: 24px;
+              color: #ff0000;
+            }
+          }
+          .three{
+              margin-left: 60px;
+            div{
+              font-size: 16px;
+              &:nth-of-type(1) {
+                margin-bottom: 10px;
+              }
+            }
+          }
+        }
+      }
+      &:hover{
+        background: #ffffff;
+      }
+    }
+  }
+}
+.pagination{
+	width: 360px;
+	margin-top: 20px;
+	margin-left: 15%;
+}
+.form-ft{
+    margin-right: 225px;
+    margin-top: 30px;
+  button{
+    display: block;
+    width: 280px;
+    height: 40px;
+    line-height: 40px;
+    background: red;
+    border: 0;
+    margin: 0 auto;
+    font-size: 18px;
+    color: #ffffff;
+  }
+}
+
 </style>
