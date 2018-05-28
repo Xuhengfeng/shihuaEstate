@@ -49,7 +49,7 @@
 									<div class="introduce" @click="toSkip(item)" >{{item.deptName }} </div>
 									<div class="introduce">
                    						 <span class="word">{{item.addr}}</span>
-										 <span class="fr prices"><img src="../../imgs/buyhouse/diwei.png" /></span>
+										 <span class="fr prices"><img src="../../imgs/buyhouse/diwei.png" @click="getLocation(item)"/></span>
 										 <span class="fr phone">{{item.telNum}}</span>
                    					</div> 
 									<!-- <div class="introduce">
@@ -130,18 +130,20 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
+    getLocation(item){
+      let geolocation = new BMap.Geolocation();
+      geolocation.getCurrentPosition(function(r){
+        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+          location.href=`http://api.map.baidu.com/direction?origin=${r.point.lat},${r.point.lng}&destination=${item.py},${item.px}&mode=driving&region=北海&output=html`;
+        }
+        else {
+          alert('failed'+this.getStatus());
+        }        
+      },{enableHighAccuracy: true})
+    },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.render(null, val);		
     },
-    //收藏房源
-    addCollection(e) {
-
-    },
-    // toSkip(item) {
-    //   let path = "/brokerdetail/" + item.id;
-    //   this.$router.push({ path: path });
-    // },
     render(city, num) {
       //请求经纪人的列表
       this.$http
