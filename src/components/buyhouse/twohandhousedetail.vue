@@ -275,13 +275,13 @@ export default {
     oFly
   },
   created() {
-    this.daikan =  localStorage.daikan?JSON.parse(localStorage.daikan): [];
+    // this.daikan =  localStorage.daikan?JSON.parse(localStorage.daikan): [];
 	  this.render();
   },
    computed: {
      //监控store的contrastList变化 声明一个计算属性控制刷新数据
     refresh() {
-      return this.$store.state.daikan;
+      // return this.$store.state.daikan;
     },
     //获取用户登录状态
     logined() {
@@ -352,15 +352,17 @@ export default {
           if(item.contentFlag == '已预约') {
             return;
           }else{
-            console.log('来了')
             console.log(item)
-            this.daikan.push(item);
-            window.localStorage.daikan = JSON.stringify(this.daikan);
+            // this.daikan.push(item);
+            // window.localStorage.daikan = JSON.stringify(this.daikan);
             this.$refs.fly.drop(e.target);
             this.$set(item, 'contentFlag', '已预约');
-            this.$store.dispatch('addTwo', this.daikan);
-            console.log(this.daikan)
-            console.log(this.$store.state.daikan)
+             //带看记录
+            this.$http.get(this.$url.URL.APPOINT_ADD +this.scity.value )
+            .then(response =>{
+                  this.housesee =  response.data.data
+            })
+            // this.$store.dispatch('addTwo', this.daikan);
           }
         }
       }

@@ -15,7 +15,7 @@
                         <span class="fr" @click="clearDaikan()">清空</span>
                     </div>
                         <ul class="content-bd">
-                        <li v-for="item in daikan">
+                        <li v-for="item in [1,1,1]">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -92,53 +92,53 @@ export default {
       sdid: ""
     };
   },
-  computed: {
-    //监控store中的contrastList
-    contrastList() {
-      let list = this.$store.state.contrastList;
-    //   console.log(list)
-      if (list.length > 0) {
-        this.compareBtn = true;
-      } else {
-        this.compareBtn = false;
-      }
-      return list;
-    },
+  // computed: {
+  //   //监控store中的contrastList
+  //   contrastList() {
+  //     let list = this.$store.state.contrastList;
+  //   //   console.log(list)
+  //     if (list.length > 0) {
+  //       this.compareBtn = true;
+  //     } else {
+  //       this.compareBtn = false;
+  //     }
+  //     return list;
+  //   },
     //监控store中的daikan
-    daikan() {
-      let list = this.$store.state.daikan;
-    //    console.log(list)
-      if (list.length > 0) {
-        this.compareBtntwo = true;
-      } else {
-        this.compareBtntwo = false;
-      }
-      return list;
-    }
-  },
+  //   daikan() {
+  //     let list = this.$store.state.daikan;
+  //   //    console.log(list)
+  //     if (list.length > 0) {
+  //       this.compareBtntwo = true;
+  //     } else {
+  //       this.compareBtntwo = false;
+  //     }
+  //     return list;
+  //   }
+  // },
   methods: {
-    //清空
-    clearAll() {
-      this.compareBtn = false;
-      this.$store.dispatch("clearAll");
-    },
-    //清空
-    clearDaikan() {
-      this.compareBtn = false;
-      this.$store.dispatch("clearDaikan");
-    },
-    //删除
-    deleteOne(item) {
-      this.$store.dispatch("deleteOne", item);
-    },
-    //删除待看
-    deleteTwo(item) {
-      this.$store.dispatch("deleteTwo", item);
-    },
-    //立即比较
-    compare() {
-      this.$router.push({ path: "/contrast" });
-    },
+    // //清空
+    // clearAll() {
+    //   this.compareBtn = false;
+    //   this.$store.dispatch("clearAll");
+    // },
+    // //清空
+    // clearDaikan() {
+    //   this.compareBtn = false;
+    //   this.$store.dispatch("clearDaikan");
+    // },
+    // //删除
+    // deleteOne(item) {
+    //   this.$store.dispatch("deleteOne", item);
+    // },
+    // //删除待看
+    // deleteTwo(item) {
+    //   this.$store.dispatch("deleteTwo", item);
+    // },
+    // //立即比较
+    // compare() {
+    //   this.$router.push({ path: "/contrast" });
+    // },
     //立即预约
     compareone(daikan) {
       
