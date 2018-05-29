@@ -33,6 +33,8 @@ let URL = {
 	HOUSE_RIMHOUSING:_host+'/house/rimHousing',                 //二手房周边房源
 	RENTHOUSE_RIMHOUSING:_host+'/rentHouse/rimHousing',         //租房周边房源/
 	BUILDLIST:_host+'/build/buildList/',                        //小区列表
+	BUILDINGLISTDZ: _host + "/build/building/dz/",             //栋座号列表
+	BUILDINGLISTDYFH: _host + "/build/building/dyfh",          //单元或房号列表
 	BUILDLISTINFO:_host+'/build/buildInfo/',                    //小区详情POST{scity}/
 	BUILDLIST_COUNT:_host+'/build/buildListCount',              //小区总数量
 	BUILDCOLLECTION_ADD:_host+'/buildCollection/add/',          //小区收藏

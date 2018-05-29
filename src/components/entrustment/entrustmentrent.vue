@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-27 00:38:54
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-29 10:00:14
  */
 <template>
   <div class="sellRent">
@@ -22,31 +22,55 @@
 							</li>
 							<li>
 								<div>电话</div>
-								<input type="telphone"  placeholder="请输入你的电话" v-model="telphone">
+								<input type="telphone"  placeholder="请输入你的电话" minlength="11" maxlength="11" v-model="telphone">
 							</li>
-							<li>
+							<li class="city">
 								<div>城市</div>
-								<div class="city">
-									<input placeholder="选择你的城市" readonly v-model="cityValue" @click="toggleCity()">
-									<ul v-if="cityFlag">
-										<li v-for="item1 in cityList">
-											<ol v-for="item2 in item1.item">
-												<li @click="selectCity(item2)">{{item2.name}}</li>
-											</ol>
-										</li>
-									</ul>
-								</div>
+                <input type="text" placeholder="选择你的城市" v-model="cityValue" @click="toggleCity()">
+                <ul v-show="isSelectNum == 0">
+                  <li v-for="item1 in cityList">
+                      <ol v-for="item2 in item1.item">
+                        <li @click="selectCity(item2)">{{item2.name}}</li>
+                      </ol>
+                  </li>
+                </ul>
 							</li>
-							<li>
+							<li class="xiaoqu">
 								<div>小区</div>
-								<input type="text"  placeholder="请输入房源小区名称" v-model="houseTyName">
+								<input type="text" placeholder="请输入房源小区名称" v-model="houseTyName" @input="changeInput()"  @click="toggleXiaoqu()">
+                <ul v-show="isSelectNum == 1">
+                  <li v-for="item in houseTyNameList" @click="selectXiaoqu(item)">
+                    {{item.buildName}}
+                  </li>
+                </ul>
 							</li>
 							<li>
 								<div>房屋编号</div>
 								<div class="houseNum">
-									<input type="text"  placeholder="栋座号" v-model="houseOne">
-									<input type="text"  placeholder="单元号" v-model="houseTwo">
-									<input type="text"  placeholder="门牌号" v-model="houseThree">
+                  <div class="houseNum1">
+									  <input type="text"  placeholder="栋座号" v-model="houseOne" @click="toggleDong()">
+                    <ul v-show="isSelectNum == 2">
+                      <li v-for="item in houseOneList" @click="selectDong(item)">
+                        {{item}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="houseNum2">
+									  <input type="text"  placeholder="单元号" v-model="houseTwo" @click="toggleDanyuan()">
+                    <ul v-show="isSelectNum == 3">
+                      <li v-for="item1 in 2" @click="selectDanyuan(item)">
+                        {{item}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="houseNum3">
+									  <input type="text"  placeholder="门牌号" v-model="houseThree" @click="togglehouseNum()">
+                    <ul v-show="isSelectNum == 4">
+                      <li v-for="item1 in 2" @click="selecthouseNum(item)">
+                        {{item1}}
+                      </li>
+                    </ul>
+                  </div>
 								</div>
 							</li>
 							<li>
@@ -119,17 +143,29 @@ export default {
     return {
       username: "", //用户名
       telphone: "", //手机号
+      isSelectNum: null, //展开项
+      
       cityValue: "", //选择城市
-      brokerValue: "", //经纪人
-      brokerId: "", //经纪人id
-      cityFlag: false, //城市
-      brokerFlag: false, //经纪人
       cityList: [], //城市列表
+      
+      brokerId: "", //经纪人id
+      brokerFlag: false, //经纪人
+      brokerValue: "", //经纪人
       brokerLists: [], //经纪人列表
+      
       houseTyName: "", //小区名称
+      houseTyNameList: [],//小区列表
+      houseTyId: "",//小区id
+
       houseOne: "", //栋座号
+      houseOneList: "",//栋座号列表
+
       houseTwo: "", //单元号
+      houseTwoList: "",//单元号列表
+      
       houseThree: "", //门牌号
+      houseThreeList: "",//门牌号列表
+
       address: "", //地址
       items: ["我要出售", "我要出租"],
       options: [{ name: 1, id: 1 }],
@@ -142,86 +178,242 @@ export default {
       IPSnum: 0,
       cityCode: "", //城市编码
       currentCity: JSON.parse(localStorage.selectCity),
-      pageSize: 0
+      pageSize: 0,
+      page: 1
     };
   },
   created() {
     this.cityListRequest();
-    this.brokerListRequest(1);
+  },
+  watch: {
+    cityCode() {
+      this.brokerListRequest();
+      this.xiaoquListRequest();
+    }
   },
   methods: {
+    //分页器
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-        this.brokerListRequest(val);		
+      this.brokerListRequest(val);		
     },
+    //卖房 租房
     changeItem(num) {
       this.checked = num;
       this.IPSnum = num;
     },
+    //城市
     toggleCity() {
-      this.cityFlag = !this.cityFlag;
+      this.isSelectNum = 0;
       this.brokerFlag = false;
     },
-    toggleBroker() {
-      this.cityFlag = false;
-      this.brokerFlag = !this.brokerFlag;
-    },
-    cityListRequest() {
-      //城市
-      //请求城市列表
-      let map = {
-        hot: { title: "热门", item: [] }
-      };
-      this.$http.get(this.$url.URL.DICTIONARY_CITYS).then(response => {
-        response.data.data.forEach((obj, index) => {
-          //城市数据 重新map排列
-          const type = obj.value.slice(0, 1).toUpperCase();
-          if (!map[type]) {
-            map[type] = { title: type, item: [] };
-          }
-          map[type].item.push({
-            name: obj.name,
-            key: obj.value.slice(0, 1).toUpperCase(),
-            value: obj.value
-          });
-          let ret = [];
-          for (let key in map) {
-            let val = map[key];
-            if (val.title.match(/[a-zA-Z]/)) ret.push(val);
-          }
-          ret.sort((a, b) => {
-            return a.title.charCodeAt() - b.title.charCodeAt();
-          });
-          this.cityList = ret;
-          console.log(ret);
-        });
-      });
-    },
-    brokerListRequest(num) {
-      let scity = this.cityCode ? this.cityCode : this.currentCity.value;
-      //经纪人
-      this.$http
-        .post(this.$url.URL.BROKERS_LIST, {
-          scity: scity,
-          pageNo: num
-        })
-        .then(response => {
-          console.log(response.data.data);
-          this.brokerLists = response.data.data;
-        });
-    },
     selectCity(item) {
-      this.cityFlag = false;
+      this.isSelectNum = null;
       this.cityCode = item.value; //拼音
       this.cityValue = item.name; //中文
+    },
+    //经纪人
+    toggleBroker() {
+      this.isSelectNum = null;
+      this.brokerFlag = true;
     },
     selectBroker(item) {
       this.brokerFlag = false;
       this.brokerValue = item.emplName;
       this.brokerId = item.id;
     },
+
+    //小区
+    toggleXiaoqu() {
+      this.isSelectNum = 1;
+    },
+    selectXiaoqu(item) {
+      this.isSelectNum = null;
+      this.houseTyName = item.buildName;
+      this.houseTyId = item.id;
+      this.dongzuoListRequest(item.id);
+    },
+    changeInput() {
+      setTimeout(()=>{this.xiaoquListRequest(this.houseTyName)}, 3000);
+    },
+    //栋座号
+    toggleDong() {
+      this.houseTyId
+      ? this.isSelectNum = 2
+      : this.$alert("请先选取小区");
+    },
+    selectDong(item) {
+      this.isSelectNum = null;
+    },
+    //单元号
+    toggleDanyuan() {
+      this.isSelectNum = 3;
+    },
+    selectDanyuan(item) {
+      this.isSelectNum = null;
+    },
+    //门牌号
+    togglehouseNum() {
+      this.isSelectNum = 4;
+    },
+    selecthouseNum(item) {
+      this.isSelectNum = null;
+    },
+    //请求城市列表 
+    cityListRequest() {
+      let map = {hot: { title: "热门", item: []}};
+      this.$http
+          .get(this.$url.URL.DICTIONARY_CITYS)
+          .then(response => {
+            response.data.data.forEach((obj, index) => {
+              //城市数据 重新map排列
+              const type = obj.value.slice(0, 1).toUpperCase();
+              if (!map[type]) {
+                map[type] = { title: type, item: [] };
+              }
+              map[type].item.push({
+                name: obj.name,
+                key: obj.value.slice(0, 1).toUpperCase(),
+                value: obj.value
+              });
+              let ret = [];
+              for (let key in map) {
+                let val = map[key];
+                if (val.title.match(/[a-zA-Z]/)) ret.push(val);
+              }
+              ret.sort((a, b) => {
+                return a.title.charCodeAt() - b.title.charCodeAt();
+              });
+              this.cityList = ret;
+              console.log(ret)
+            });
+          });
+    },
+    //请求经纪人
+    brokerListRequest(num) {
+      let scity = this.cityCode;
+      this.$http
+        .post(this.$url.URL.BROKERS_LIST, {scity: scity, pageNo: 1})
+        .then(response => {
+          this.brokerLists = response.data.data;
+        });
+    },
+    //请求小区
+    xiaoquListRequest(keyword) {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http
+          .post(this.$url.URL.BUILDLIST, {scity: scity, pageNo: num, keyword: keyword})
+          .then(res => {
+            this.$nextTick(() => {
+                if(!res.data.data.length) this.isSelectNum = null;
+                this.houseTyNameList = res.data.data
+                let el = document.querySelector('.xiaoqu ul');
+                el.onscroll = () => {
+                  let scrollTop=el.scrollTop;     //页面上卷的高度  
+                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                  let divHeight=el.clientHeight;  //页面可视区域的高度  
+                  if(scrollTop+divHeight>=wholeHeight){  
+                    let page = num++;
+                    this.$http
+                        .post(this.$url.URL.BUILDLIST, {scity: scity, pageNo: page})
+                        .then(res => {
+                            this.houseTyNameList = this.houseTyNameList.concat(res.data.data);
+                        })
+                    
+                  }  
+                };
+            });
+          });
+    },
+    //请求栋座号
+    dongzuoListRequest(id, keyword) {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http  
+          .get(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: num, keyword: keyword})
+          .then(res=>{
+            this.$nextTick(()=>{
+                this.houseOneList = res.data.data;
+                this.danyuanListRequest();
+
+                let el = document.querySelector('.houseNum1 ul');
+                el.onscroll = () => {
+                  let scrollTop=el.scrollTop;     //页面上卷的高度  
+                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                  let divHeight=el.clientHeight;  //页面可视区域的高度  
+                  if(scrollTop+divHeight>=wholeHeight){  
+                    let page = num++;
+                    this.$http
+                        .post(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: page})
+                        .then(res => {
+                            this.houseOneList = this.houseOneList.concat(res.data.data);
+                        })
+                    
+                  }  
+                };
+              
+            })  
+          })
+
+    },
+    //请求单元号或门牌号
+    danyuanListRequest() {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http  
+          .get(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
+          .then(res=>{
+            this.$nextTick(()=>{
+                this.houseTwoList = res.data.data
+                let el = document.querySelector('.houseNum2 ul');
+                el.onscroll = () => {
+                  let scrollTop=el.scrollTop;     //页面上卷的高度  
+                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                  let divHeight=el.clientHeight;  //页面可视区域的高度  
+                  if(scrollTop+divHeight>=wholeHeight){  
+                    let page = num++;
+                    this.$http
+                        .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
+                        .then(res => {
+                          this.houseTwoList = this.houseTwoList.concat(res.data.data);
+                        })
+                    
+                  }  
+                };
+              
+            })  
+          })
+    },
+    houseNumListRequest() {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http  
+          .get(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
+          .then(res=>{
+            this.$nextTick(()=>{
+                this.houseThreeList = res.data.data
+                let el = document.querySelector('.houseNum3 ul');
+                el.onscroll = () => {
+                  let scrollTop=el.scrollTop;     //页面上卷的高度  
+                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                  let divHeight=el.clientHeight;  //页面可视区域的高度  
+                  if(scrollTop+divHeight>=wholeHeight){  
+                    let page = num++;
+                    this.$http
+                        .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
+                        .then(res => {
+                          this.houseThreeList = this.houseThreeList.concat(res.data.data);
+                        })
+                    
+                  }  
+                };
+              
+            })  
+          })
+    },
+    //提交
     commitRequest() {
-      let scity = this.cityCode ? this.cityCode : this.currentCity.value;
+      let scity = this.cityCode;
       let params = {
         cityCode: scity, //城市编码
         brokerId: this.brokerId, //经纪人id
@@ -270,10 +462,13 @@ export default {
     background: #ffffff;
   }
 }
-.city {
-  flex: 1;
+.city,
+.xiaoqu,
+.houseNum1,
+.houseNum2,
+.houseNum3{
   position: relative;
-  >input{
+  input{
     width: 100%;
     height: 40px;
     line-height: 40px;
@@ -283,30 +478,34 @@ export default {
     border: 1px solid #cacaca;
     box-sizing: border-box;
   }
-  >ul{
+  ul{
     position: absolute;
     top: 40px;
-    left: 0;
-    width: 100%;
+    right: 0;
+    width: 294px;
     height: 200px;
     background: #ffffff;
     border: 1px solid #cacaca;
+    border-top: 0;
     box-sizing: border-box;
     text-indent: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
     z-index: 1000;
     li{
-      ol{
-        width: 100%;
-        li{
-          border-bottom: 1px solid #cacaca;
-          &:hover{
-            background: red;
-          }
-        }
+      border-bottom: 1px solid #cacaca;
+      cursor: pointer;
+      ol{width: 100%;
+        // li{&:hover{background: red;cursor: pointer}}
       }
     }
+  }
+}
+.houseNum1,
+.houseNum2,
+.houseNum3{
+  ul{
+    width:90px!important
   }
 }
 
