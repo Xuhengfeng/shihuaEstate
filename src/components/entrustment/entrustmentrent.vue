@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-29 10:00:14
+ * @Last Modified time: 2018-05-29 13:40:50
  */
 <template>
   <div class="sellRent">
@@ -58,7 +58,7 @@
                   <div class="houseNum2">
 									  <input type="text"  placeholder="单元号" v-model="houseTwo" @click="toggleDanyuan()">
                     <ul v-show="isSelectNum == 3">
-                      <li v-for="item1 in 2" @click="selectDanyuan(item)">
+                      <li v-for="item in houseTwoList" @click="selectDanyuan(item)">
                         {{item}}
                       </li>
                     </ul>
@@ -66,8 +66,8 @@
                   <div class="houseNum3">
 									  <input type="text"  placeholder="门牌号" v-model="houseThree" @click="togglehouseNum()">
                     <ul v-show="isSelectNum == 4">
-                      <li v-for="item1 in 2" @click="selecthouseNum(item)">
-                        {{item1}}
+                      <li v-for="item in houseThreeList" @click="selecthouseNum(item)">
+                        {{item}}
                       </li>
                     </ul>
                   </div>
@@ -80,7 +80,7 @@
 							<li>
 								<div>经纪人</div>
 								<div class="broker">
-									<input type="text" placeholder="选择你的经纪人" readonly v-model="brokerValue" @click="toggleBroker()">
+									<input type="text" placeholder="选择你的经纪人" v-model="brokerValue" @click="toggleBroker()">
 								</div>
 							</li>
 						</ul>
@@ -154,8 +154,8 @@ export default {
       brokerLists: [], //经纪人列表
       
       houseTyName: "", //小区名称
-      houseTyNameList: [],//小区列表
       houseTyId: "",//小区id
+      houseTyNameList: [],//小区列表
 
       houseOne: "", //栋座号
       houseOneList: "",//栋座号列表
@@ -168,30 +168,43 @@ export default {
 
       address: "", //地址
       items: ["我要出售", "我要出租"],
-      options: [{ name: 1, id: 1 }],
       //出售 出租
-      IPS: [
-        this.$url.URL.HOUSE_ENTRUSTAPPLY_SELLHOUSE,
-        this.$url.URL.HOUSE_ENTRUSTAPPLY_RENTHOUSE
-      ],
+      IPS: [this.$url.URL.HOUSE_ENTRUSTAPPLY_SELLHOUSE,this.$url.URL.HOUSE_ENTRUSTAPPLY_RENTHOUSE],
       checked: 0,
       IPSnum: 0,
+      page: 1,
       cityCode: "", //城市编码
-      currentCity: JSON.parse(localStorage.selectCity),
-      pageSize: 0,
-      page: 1
+      currentCity: JSON.parse(localStorage.selectCity).value,//首页默认点击的城市
     };
   },
   created() {
+    //初始化
     this.cityListRequest();
+    this.brokerListRequest();	
+    this.xiaoquListRequest();   
   },
   watch: {
     cityCode() {
+      this.clearAllInput();
       this.brokerListRequest();
       this.xiaoquListRequest();
     }
   },
   methods: {
+    //清空操作
+    clearAllInput() {
+      this.brokerLists = null;
+      this.houseTyName = null;
+      this.houseTyNameList = null;
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.brokerValue = null;
+    },
     //分页器
     handleCurrentChange(val) {
       this.brokerListRequest(val);		
@@ -233,7 +246,14 @@ export default {
       this.dongzuoListRequest(item.id);
     },
     changeInput() {
-      setTimeout(()=>{this.xiaoquListRequest(this.houseTyName)}, 3000);
+      this.throttle(this.xiaoquListRequest(this.houseTyName), null, 2000);
+    },
+    //函数节流
+    throttle (method,context,delay) {
+        clearTimeout(method.tId);
+        method.tId = setTimeout(function () {
+            method.call(context);
+        },delay)
     },
     //栋座号
     toggleDong() {
@@ -257,6 +277,8 @@ export default {
     },
     selecthouseNum(item) {
       this.isSelectNum = null;
+      //最后生具体地址
+      this.address = this.cityValue;
     },
     //请求城市列表 
     cityListRequest() {
@@ -284,13 +306,12 @@ export default {
                 return a.title.charCodeAt() - b.title.charCodeAt();
               });
               this.cityList = ret;
-              console.log(ret)
             });
           });
     },
     //请求经纪人
-    brokerListRequest(num) {
-      let scity = this.cityCode;
+    brokerListRequest() {
+      let scity = this.cityCode?this.cityCode:this.currentCity;
       this.$http
         .post(this.$url.URL.BROKERS_LIST, {scity: scity, pageNo: 1})
         .then(response => {
@@ -300,13 +321,13 @@ export default {
     //请求小区
     xiaoquListRequest(keyword) {
       let num = 1;
-      let scity = this.cityCode;
+      let scity = this.cityCode?this.cityCode:this.currentCity;
       this.$http
           .post(this.$url.URL.BUILDLIST, {scity: scity, pageNo: num, keyword: keyword})
           .then(res => {
+            if(!res.data.data.length) this.isSelectNum = null;
+            this.houseTyNameList = res.data.data
             this.$nextTick(() => {
-                if(!res.data.data.length) this.isSelectNum = null;
-                this.houseTyNameList = res.data.data
                 let el = document.querySelector('.xiaoqu ul');
                 el.onscroll = () => {
                   let scrollTop=el.scrollTop;     //页面上卷的高度  
@@ -327,95 +348,95 @@ export default {
     },
     //请求栋座号
     dongzuoListRequest(id, keyword) {
+      console.log(id)
       let num = 1;
-      let scity = this.cityCode;
+      let scity = this.cityCode?this.cityCode:this.currentCity;
       this.$http  
           .get(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: num, keyword: keyword})
           .then(res=>{
-            this.$nextTick(()=>{
-                this.houseOneList = res.data.data;
-                this.danyuanListRequest();
-
-                let el = document.querySelector('.houseNum1 ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: page})
-                        .then(res => {
-                            this.houseOneList = this.houseOneList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
-              
-            })  
+              this.houseOneList = res.data.data;
+              this.$nextTick(()=>{
+                  this.danyuanListRequest();
+                  let el = document.querySelector('.houseNum1 ul');
+                  el.onscroll = () => {
+                    let scrollTop=el.scrollTop;     //页面上卷的高度  
+                    let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                    let divHeight=el.clientHeight;  //页面可视区域的高度  
+                    if(scrollTop+divHeight>=wholeHeight){  
+                      let page = num++;
+                      this.$http
+                          .get(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: page})
+                          .then(res => {
+                              this.houseOneList = this.houseOneList.concat(res.data.data);
+                          })
+                      
+                    }  
+                  };
+                
+              })  
           })
 
     },
-    //请求单元号或门牌号
-    danyuanListRequest() {
+    //请求单元号
+    danyuanListRequest(keyword) {
       let num = 1;
-      let scity = this.cityCode;
+      let scity = this.cityCode?this.cityCode:this.currentCity;
       this.$http  
-          .get(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
+          .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
           .then(res=>{
-            this.$nextTick(()=>{
-                this.houseTwoList = res.data.data
-                let el = document.querySelector('.houseNum2 ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
-                        .then(res => {
-                          this.houseTwoList = this.houseTwoList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
-              
-            })  
+              this.houseTwoList = res.data.data;
+              this.$nextTick(()=>{
+                    let el = document.querySelector('.houseNum2 ul');
+                    el.onscroll = () => {
+                      let scrollTop=el.scrollTop;     //页面上卷的高度  
+                      let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                      let divHeight=el.clientHeight;  //页面可视区域的高度  
+                      if(scrollTop+divHeight>=wholeHeight){  
+                        let page = num++;
+                        this.$http
+                            .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
+                            .then(res => {
+                              this.houseTwoList = this.houseTwoList.concat(res.data.data);
+                            })
+                        
+                      }  
+                    };
+                
+              })  
           })
     },
+    //门牌号
     houseNumListRequest() {
       let num = 1;
-      let scity = this.cityCode;
+      let scity = this.cityCode?this.cityCode:this.currentCity;
       this.$http  
-          .get(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
+          .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
           .then(res=>{
-            this.$nextTick(()=>{
-                this.houseThreeList = res.data.data
-                let el = document.querySelector('.houseNum3 ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
-                        .then(res => {
-                          this.houseThreeList = this.houseThreeList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
-              
-            })  
+              this.houseThreeList = res.data.data;
+              this.$nextTick(()=>{
+                    let el = document.querySelector('.houseNum3 ul');
+                    el.onscroll = () => {
+                      let scrollTop=el.scrollTop;     //页面上卷的高度  
+                      let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
+                      let divHeight=el.clientHeight;  //页面可视区域的高度  
+                      if(scrollTop+divHeight>=wholeHeight){  
+                        let page = num++;
+                        this.$http
+                            .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
+                            .then(res => {
+                              this.houseThreeList = this.houseThreeList.concat(res.data.data);
+                            })
+                        
+                      }  
+                    };
+                
+              })  
           })
     },
     //提交
     commitRequest() {
-      let scity = this.cityCode;
       let params = {
-        cityCode: scity, //城市编码
+        cityCode: this.cityCode, //城市编码
         brokerId: this.brokerId, //经纪人id
         linkman: this.username, //姓名
         phone: this.telphone, //联系电话
@@ -426,7 +447,7 @@ export default {
         address: this.address //详细地址
       };
       if (
-        scity == "" ||
+        this.cityCode == "" ||
         this.brokerId == "" ||
         this.username == "" ||
         this.telphone == "" ||
@@ -493,10 +514,9 @@ export default {
     overflow-x: hidden;
     z-index: 1000;
     li{
-      border-bottom: 1px solid #cacaca;
       cursor: pointer;
       ol{width: 100%;
-        // li{&:hover{background: red;cursor: pointer}}
+        li{border-bottom: 1px solid #cacaca;}
       }
     }
   }
