@@ -145,7 +145,9 @@ export default {
       for (let i = 0; i < daikan.length; i++) {
           console.log(daikan)
         this.sdid = daikan[i].sdid;
-        console.log(daikan[i].sdid);
+        this.id = daikan[i].id;
+        console.log(this.sdid);
+         console.log(this.id);
         this.$http
           .post(this.$url.URL.APPOINT_ADD, {
             scity: JSON.parse(localStorage.selectCity).value,

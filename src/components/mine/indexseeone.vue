@@ -1,9 +1,9 @@
 <template>
     <div>
-        <!-- <div >
+        <div v-if="order">
             <ul>
                 <li v-for="item in houseList" >
-                    <input class="inpt" type="checkbox" v-model="item.checked" />
+                    <input class="inpt" type="checkbox" v-model="item.checked" @click="check(item)"/>
                     <div class="image">
                         <img :src="item.housePic"/>
                     </div>
@@ -26,12 +26,12 @@
              </ul>
            <div class="orderdiv">
              <input type="checkbox" v-model="allChecked"/>全选
-              <span @click="del(houseList)">删除</span>
-            <button class="btn">预约看房时间</button>
+              <span @click="del()">删除</span>
+            <button class="btn" @click="btn()">预约看房时间</button>
          </div> 
-        </div> -->
+        </div>
 
-        <div>
+        <div v-else="order">
             <div class="book-time">
                 <div class="desc">个人信息</div>
                 <div class="mesg">
@@ -124,10 +124,15 @@ export default {
             brokerFlag: false, //经纪人
             brokerLists: [], //经纪人列表
             brokerValue: "", //经纪人
+            brokerId:"",     //经纪人id
             currentCity: JSON.parse(localStorage.selectCity),
             currenttime:"",
             mobile:JSON.parse(sessionStorage.userInfo).mobile ,//电话
-            rangetime:""
+            rangetime:"",
+            appointDate:"",    //预约时间
+            order:true,    //点击预约显示
+            allChecked: false,
+            houseSdid:"",   //房源sdid
         };
     },
     created() {
@@ -135,32 +140,20 @@ export default {
         this.brokerListRequest(1);
         this.week()
     },
-     computed: {
-            allChecked: {
-                get: function(){
-                    console.log(1)
-                    return this.checkedCount == this.houseList.length;
-                },
-                set: function(value){
-                    console.log(2)
-                    this.houseList.forEach(function(item){
-                        item.checked = value
-                    })
-                    return value;
-                }
-            },
-            checkedCount: {
-                get: function(){
-                    var i = 0;
-                    this.houseList.forEach(function(item){
-                        if(item.checked == true) i++;
-                    })
-                    return i;
-                }
+    watch: {
+        allChecked() {
+            if(this.allChecked) {
+                this.houseList.forEach(item=>{
+                    item.checked = true
+                })
+            }else{
+                this.houseList.forEach(item=>{
+                    item.checked = false
+                })
             }
-        },
+        }
+    },
     methods:{
-
         //日期
         week(){
                 this.$http
@@ -174,7 +167,7 @@ export default {
                         arr.push(this.format(time));
                     }
                     this.datelist = arr;
-                    console.log(arr)
+                    // console.log(arr)
                 });
         },
         format(time) {
@@ -201,17 +194,18 @@ export default {
             };            
         },
         //删除待看房源
-        del(houseList){
-            console.log(houseList)
-            for(var i = 0;i<houseList.length;i++){
-                this.id = houseList[i].id
-            }
-             this.$http
-            .delete(this.$url.URL.APPOINT_DELETE+  this.id)
-            .then(response => {
-                localStorage.removeItem('daikan');//按key单个删除
-                // location.reload()
-            });
+        del() {
+            this.houseList.forEach(item=>{
+                if(item.checked==true){
+                    this.$http
+                       .delete(this.$url.URL.APPOINT_DELETE+  item.id)
+                       .then(response => {
+                           localStorage.removeItem('daikan');//按key单个删除
+                           location.reload()
+                            
+                       });
+                }
+            })
         },
         //待看房源请求
         readyHouseListRequest() {
@@ -219,49 +213,65 @@ export default {
             this.$http
             .get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo="+1)
             .then(response => {
+                response.data.data.forEach(item=>{
+                    // console.log(item)
+                     item.checked = false
+                });
                 this.houseList = response.data.data;
+               
             });
         },
         selectBroker(item) {
-        this.brokerFlag = false;
-        this.brokerValue = item.emplName;
-        this.brokerId = item.id;
+            this.brokerFlag = false;
+            this.brokerValue = item.emplName;
+            this.brokerId = item.id;
+            console.log( this.brokerId )
         },
         handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
             this.brokerListRequest(val);		
         },
         brokerListRequest(num){  
-        this.$http
-            .post(this.$url.URL.BROKERS_LIST, {   //经纪人
-            scity: this.currentCity.value,
-            pageNo: num
-            })
-            .then(response => {
-            this.brokerLists = response.data.data;
-            });
+            this.$http
+                .post(this.$url.URL.BROKERS_LIST, {scity: this.currentCity.value,pageNo: num})
+                .then(response => {
+                this.brokerLists = response.data.data;
+                });
         },
-          toggleBroker() {
+        toggleBroker() {
            this.brokerFlag = !this.brokerFlag;
         },
         commitRequest() {
             let scity = this.cityCode ? this.cityCode : this.currentCity.value;
             let params = {
-                "appointDate": "string", //预约时间
+                appointDate:this.appointDate, //预约时间
                 appointMobile: this.mobile, //手机号
                 appointName: this.username, //姓名
                 appointRange:this.rangetime ,//预约时段类型
-                "brokerId": 0,      //经纪人id 
-                "houseList": [      // 约看房源列表，必填
+                brokerId: this.brokerId,      //经纪人id 
+                houseList: [      // 约看房源列表，必填
                     {
                     scity: scity,  //城市编码
-                    "sdid": 0      //房源sdid
+                    sdid: this.houseSdid       //房源sdid
                     }
                  ]
-              }
+              };
+              if (
+                scity == "" ||
+                this.brokerId == "" ||
+                this.username == "" ||
+                this.rangetime == "" ||
+                this.appointDate == ""
+            ) {
+                this.$alert("信息不能为空!");
+            }else {
+                this.$http.post(this.$url.URL.APPOINT_HOUSE, params).then(response => {
+                console.log(response.data.data);
+                });
+            }
         },
         appoint(item,e) {
-            console.log(item.all)
+         this.appointDate =item.all
+         console.log( this.appointDate )
         },
         range(e,index) {
              this.rangetime = e.target.innerHTML
@@ -274,9 +284,17 @@ export default {
              if(index ==2){
                 this.rangetime = "AFTERNOON"
              }
-              if(index ==3){
+             if(index ==3){
                 this.rangetime = "NIGHT"
              }
+             console.log(this.rangetime)
+        },
+        btn() {
+            this.order = false
+        },
+        check(item){
+           this.houseSdid = item.houseSdid
+                
         }
     },
     components: {
@@ -286,12 +304,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// h3 {
-//   height: 120px;
-//   line-height: 120px;
-//   font-size: 30px;
-//   color: #000000;
-// }
 
 ul > li {
   display: flex;

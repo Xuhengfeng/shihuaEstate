@@ -335,9 +335,11 @@ export default {
     },
     //加入待看清单
     addContrast(item, e) {
+      console.log(item)
       if(!this.logined) return this.$alert('用户未登录!');
       //判断当前点击对象是否存在 
       if(JSON.stringify(this.daikan).indexOf(JSON.stringify(item)) == '-1') {
+        console.log(11)
         if(this.daikan.length >= 4){
           if(item.contentFlag == '已预约'){
             return;

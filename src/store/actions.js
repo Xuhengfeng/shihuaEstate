@@ -34,7 +34,6 @@ export default {
 				commit('DELETETWO', item);
 			});
 		})
-		localStorage.removeItem('daikan');//按key单个删除
 	},
 	//显示对比列表
 	showlist({commit}, data) {
@@ -57,9 +56,9 @@ export default {
 	},
 	//删除待看清单中一个
 	deleteTwo({commit}, item) {
-		axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
-		commit('DELETETWO', item);
-		localStorage.removeItem('daikan');//按key单个删除
+		console.log(item)
+		// axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
+		// commit('DELETETWO', item);
 	},
 	//添加一个到对比清单(发请求)
 	addOne({commit}, item) {

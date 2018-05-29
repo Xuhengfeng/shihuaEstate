@@ -71,6 +71,7 @@ let URL = {
 	APPOINT_DETAILLIST:_host + "/appoint/detailLsit",              //待看列表
 	APPOINT_CANCEL:_host + "/appoint/cancel",                       //取消待看列表/appoint/delete/{id}
 	APPOINT_ADD:_host + "/appoint/add",                             //加入待看
+	APPOINT_HOUSE:_host + "/appoint/house",                         //提交预约
 	APPOINT_DELETE:_host + "/appoint/delete/",                     //删除待看列表
 	APPOINT_COMPLETE:_host + "/appoint/complete",                  //已看记录列表
 	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
