@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 23:54:49
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-29 18:16:05
  */
 <template>
     <div class="topBar">
@@ -34,8 +34,8 @@
                 <router-link tag="li" to="">更多
                     <ul class="item2">
                         <router-link tag="li" to="/houseestate">小区找房</router-link>
-                        <router-link tag="li" to="">代办贷款</router-link>
-                        <router-link tag="li" to="">异地服务</router-link>
+                        <router-link tag="li" to="">代办业务</router-link>
+						<router-link tag="li" to="">便民服务</router-link>
                         <router-link tag="li" to="">房屋托管</router-link>
                         <router-link tag="li" to="">装修</router-link>
                         <router-link tag="li" to="">世华公益</router-link>
