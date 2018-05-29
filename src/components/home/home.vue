@@ -69,8 +69,8 @@
 						<router-link tag="li" to="/more">更多
 							<ul>
 								<router-link tag="li" to="/houseestate">小区找房</router-link>
-								<router-link tag="li" to="">代办贷款</router-link>
-								<router-link tag="li" to="">异地服务</router-link>
+								<router-link tag="li" to="">代办业务</router-link>
+								<router-link tag="li" to="">便民服务</router-link>
 								<router-link tag="li" to="">房屋托管</router-link>
 								<router-link tag="li" to="">装修</router-link>
 								<router-link tag="li" to="">世华公益</router-link>

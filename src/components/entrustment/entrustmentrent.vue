@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-29 10:00:14
+ * @Last Modified time: 2018-05-29 18:25:28
  */
 <template>
   <div class="sellRent">
@@ -51,23 +51,23 @@
 									  <input type="text"  placeholder="栋座号" v-model="houseOne" @click="toggleDong()">
                     <ul v-show="isSelectNum == 2">
                       <li v-for="item in houseOneList" @click="selectDong(item)">
-                        {{item}}
+                        {{item.name}}
                       </li>
                     </ul>
                   </div>
                   <div class="houseNum2">
 									  <input type="text"  placeholder="单元号" v-model="houseTwo" @click="toggleDanyuan()">
                     <ul v-show="isSelectNum == 3">
-                      <li v-for="item1 in 2" @click="selectDanyuan(item)">
-                        {{item}}
+                      <li v-for="item in houseTwoList" @click="selectDanyuan(item)">
+                        {{item.name}}
                       </li>
                     </ul>
                   </div>
                   <div class="houseNum3">
 									  <input type="text"  placeholder="门牌号" v-model="houseThree" @click="togglehouseNum()">
                     <ul v-show="isSelectNum == 4">
-                      <li v-for="item1 in 2" @click="selecthouseNum(item)">
-                        {{item1}}
+                      <li v-for="item in houseThreeList" @click="selecthouseNum(item)">
+                        {{item.name}}
                       </li>
                     </ul>
                   </div>
@@ -80,7 +80,7 @@
 							<li>
 								<div>经纪人</div>
 								<div class="broker">
-									<input type="text" placeholder="选择你的经纪人" readonly v-model="brokerValue" @click="toggleBroker()">
+									<input type="text" placeholder="选择你的经纪人" v-model="brokerValue" @click="toggleBroker()">
 								</div>
 							</li>
 						</ul>
@@ -144,31 +144,30 @@ export default {
       username: "", //用户名
       telphone: "", //手机号
       isSelectNum: null, //展开项
-      
+
       cityValue: "", //选择城市
       cityList: [], //城市列表
-      
+
       brokerId: "", //经纪人id
       brokerFlag: false, //经纪人
       brokerValue: "", //经纪人
       brokerLists: [], //经纪人列表
-      
+
       houseTyName: "", //小区名称
-      houseTyNameList: [],//小区列表
-      houseTyId: "",//小区id
+      houseTyId: "", //小区id
+      houseTyNameList: [], //小区列表
 
       houseOne: "", //栋座号
-      houseOneList: "",//栋座号列表
+      houseOneList: "", //栋座号列表
 
       houseTwo: "", //单元号
-      houseTwoList: "",//单元号列表
-      
+      houseTwoList: "", //单元号列表
+
       houseThree: "", //门牌号
-      houseThreeList: "",//门牌号列表
+      houseThreeList: "", //门牌号列表
 
       address: "", //地址
       items: ["我要出售", "我要出租"],
-      options: [{ name: 1, id: 1 }],
       //出售 出租
       IPS: [
         this.$url.URL.HOUSE_ENTRUSTAPPLY_SELLHOUSE,
@@ -176,25 +175,42 @@ export default {
       ],
       checked: 0,
       IPSnum: 0,
+      page: 1,
       cityCode: "", //城市编码
-      currentCity: JSON.parse(localStorage.selectCity),
-      pageSize: 0,
-      page: 1
+      currentCity: JSON.parse(localStorage.selectCity).value //首页默认点击的城市
     };
   },
   created() {
+    //初始化
     this.cityListRequest();
+    this.brokerListRequest();
+    this.xiaoquListRequest();
   },
   watch: {
     cityCode() {
+      this.clearAllInput();
       this.brokerListRequest();
       this.xiaoquListRequest();
     }
   },
   methods: {
+    //清空操作
+    clearAllInput() {
+      this.brokerLists = null;
+      this.houseTyName = null;
+      this.houseTyNameList = null;
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.brokerValue = null;
+    },
     //分页器
     handleCurrentChange(val) {
-      this.brokerListRequest(val);		
+      this.brokerListRequest(val);
     },
     //卖房 租房
     changeItem(num) {
@@ -233,15 +249,21 @@ export default {
       this.dongzuoListRequest(item.id);
     },
     changeInput() {
-      setTimeout(()=>{this.xiaoquListRequest(this.houseTyName)}, 3000);
+      this.throttle(this.xiaoquListRequest(this.houseTyName), null, 2000);
+    },
+    //函数节流
+    throttle(method, context, delay) {
+      clearTimeout(method.tId);
+      method.tId = setTimeout(function() {
+        method.call(context);
+      }, delay);
     },
     //栋座号
     toggleDong() {
-      this.houseTyId
-      ? this.isSelectNum = 2
-      : this.$alert("请先选取小区");
+      this.houseTyId ? (this.isSelectNum = 2) : this.$alert("请先选取小区");
     },
     selectDong(item) {
+      this.houseOne = item.name;
       this.isSelectNum = null;
     },
     //单元号
@@ -249,6 +271,7 @@ export default {
       this.isSelectNum = 3;
     },
     selectDanyuan(item) {
+      this.houseTwo = item.name;
       this.isSelectNum = null;
     },
     //门牌号
@@ -257,42 +280,41 @@ export default {
     },
     selecthouseNum(item) {
       this.isSelectNum = null;
+      //最后生具体地址
+      this.address = this.cityValue;
     },
-    //请求城市列表 
+    //请求城市列表
     cityListRequest() {
-      let map = {hot: { title: "热门", item: []}};
-      this.$http
-          .get(this.$url.URL.DICTIONARY_CITYS)
-          .then(response => {
-            response.data.data.forEach((obj, index) => {
-              //城市数据 重新map排列
-              const type = obj.value.slice(0, 1).toUpperCase();
-              if (!map[type]) {
-                map[type] = { title: type, item: [] };
-              }
-              map[type].item.push({
-                name: obj.name,
-                key: obj.value.slice(0, 1).toUpperCase(),
-                value: obj.value
-              });
-              let ret = [];
-              for (let key in map) {
-                let val = map[key];
-                if (val.title.match(/[a-zA-Z]/)) ret.push(val);
-              }
-              ret.sort((a, b) => {
-                return a.title.charCodeAt() - b.title.charCodeAt();
-              });
-              this.cityList = ret;
-              console.log(ret)
-            });
+      let map = { hot: { title: "热门", item: [] } };
+      this.$http.get(this.$url.URL.DICTIONARY_CITYS).then(response => {
+        response.data.data.forEach((obj, index) => {
+          //城市数据 重新map排列
+          const type = obj.value.slice(0, 1).toUpperCase();
+          if (!map[type]) {
+            map[type] = { title: type, item: [] };
+          }
+          map[type].item.push({
+            name: obj.name,
+            key: obj.value.slice(0, 1).toUpperCase(),
+            value: obj.value
           });
+          let ret = [];
+          for (let key in map) {
+            let val = map[key];
+            if (val.title.match(/[a-zA-Z]/)) ret.push(val);
+          }
+          ret.sort((a, b) => {
+            return a.title.charCodeAt() - b.title.charCodeAt();
+          });
+          this.cityList = ret;
+        });
+      });
     },
     //请求经纪人
-    brokerListRequest(num) {
-      let scity = this.cityCode;
+    brokerListRequest() {
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
       this.$http
-        .post(this.$url.URL.BROKERS_LIST, {scity: scity, pageNo: 1})
+        .post(this.$url.URL.BROKERS_LIST, { scity: scity, pageNo: 1 })
         .then(response => {
           this.brokerLists = response.data.data;
         });
@@ -300,122 +322,91 @@ export default {
     //请求小区
     xiaoquListRequest(keyword) {
       let num = 1;
-      let scity = this.cityCode;
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
+      let midobj = { value: scity };
+      let currentCity = localStorage.selectCity; //缓存当前城市
+      localStorage.selectCity = JSON.stringify(midobj); //替换缓存的当前城市  从而修改请求头里面的scity;
       this.$http
-          .post(this.$url.URL.BUILDLIST, {scity: scity, pageNo: num, keyword: keyword})
-          .then(res => {
+        .post(this.$url.URL.BUILDLIST, {
+          scity: scity,
+          pageNo: num,
+          keyword: keyword
+        })
+        .then(res => {
+          if (!res.data.data.length) this.isSelectNum = null;
+          this.houseTyNameList = res.data.data;
+          localStorage.selectCity = currentCity;
             this.$nextTick(() => {
-                if(!res.data.data.length) this.isSelectNum = null;
-                this.houseTyNameList = res.data.data
-                let el = document.querySelector('.xiaoqu ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDLIST, {scity: scity, pageNo: page})
-                        .then(res => {
-                            this.houseTyNameList = this.houseTyNameList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
+                let node = ".xiaoqu ul";
+                let fn = this.xiaoquListRequest2();
+                //滚动加载
+                this.scrollItem(num, node);
             });
+        });
+    },
+    xiaoquListRequest2(keyword,page) {
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
+      this.$http
+          .post(this.$url.URL.BUILDLIST, {
+            scity: scity,
+            pageNo: page,
+            keyword: keyword
+          })
+          .then(res => {
+            if (!res.data.data.length) this.isSelectNum = null;
+            this.houseTyNameList = res.data.data;
+            localStorage.selectCity = currentCity;
           });
     },
     //请求栋座号
     dongzuoListRequest(id, keyword) {
       let num = 1;
-      let scity = this.cityCode;
-      this.$http  
-          .get(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: num, keyword: keyword})
-          .then(res=>{
-            this.$nextTick(()=>{
-                this.houseOneList = res.data.data;
-                this.danyuanListRequest();
-
-                let el = document.querySelector('.houseNum1 ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDINGLISTDZ+id, {scity: scity, pageNo: page})
-                        .then(res => {
-                            this.houseOneList = this.houseOneList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
-              
-            })  
-          })
-
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
+      this.$http
+        .get(this.$url.URL.BUILDINGLISTDZ + id + "?pageNo=1&pageSize=10")
+        .then(res => {
+          this.houseOneList = res.data.data;
+          this.$nextTick(() => {
+            this.danyuanListRequest();
+            this.houseOneList = this.houseOneList.concat(res.data.data);
+          });
+        });
     },
-    //请求单元号或门牌号
-    danyuanListRequest() {
+    //请求单元号或者门牌号
+    danyuanListRequest(keyword) {
       let num = 1;
-      let scity = this.cityCode;
-      this.$http  
-          .get(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
-          .then(res=>{
-            this.$nextTick(()=>{
-                this.houseTwoList = res.data.data
-                let el = document.querySelector('.houseNum2 ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
-                        .then(res => {
-                          this.houseTwoList = this.houseTwoList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
-              
-            })  
-          })
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
+      this.$http
+        .post(this.$url.URL.BUILDINGLISTDYFH, {
+          scity: scity,
+          pageNo: num,
+          keyword: keyword
+        })
+        .then(res => {
+          this.houseTwoList = res.data.data;
+          this.$nextTick(() => {
+            this.danyuanListRequest();
+            this.houseOneList = this.houseOneList.concat(res.data.data);
+          });
+        });
     },
-    houseNumListRequest() {
-      let num = 1;
-      let scity = this.cityCode;
-      this.$http  
-          .get(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: num, keyword: keyword})
-          .then(res=>{
-            this.$nextTick(()=>{
-                this.houseThreeList = res.data.data
-                let el = document.querySelector('.houseNum3 ul');
-                el.onscroll = () => {
-                  let scrollTop=el.scrollTop;     //页面上卷的高度  
-                  let wholeHeight=el.scrollHeight;//页面底部到顶部的距离  
-                  let divHeight=el.clientHeight;  //页面可视区域的高度  
-                  if(scrollTop+divHeight>=wholeHeight){  
-                    let page = num++;
-                    this.$http
-                        .post(this.$url.URL.BUILDINGLISTDYFH, {scity: scity, pageNo: page})
-                        .then(res => {
-                          this.houseThreeList = this.houseThreeList.concat(res.data.data);
-                        })
-                    
-                  }  
-                };
-              
-            })  
-          })
+    //滚动加载
+    scrollItem(num,node,fn) {
+      let el = document.querySelector(node);
+      el.onscroll = () => {
+        let scrollTop = el.scrollTop; //页面上卷的高度
+        let wholeHeight = el.scrollHeight; //页面底部到顶部的距离
+        let divHeight = el.clientHeight; //页面可视区域的高度
+        if (scrollTop + divHeight >= wholeHeight){
+          let page = num++;
+          fn(null, page);
+        }
+      };
     },
     //提交
     commitRequest() {
-      let scity = this.cityCode;
       let params = {
-        cityCode: scity, //城市编码
+        cityCode: this.cityCode, //城市编码
         brokerId: this.brokerId, //经纪人id
         linkman: this.username, //姓名
         phone: this.telphone, //联系电话
@@ -426,7 +417,7 @@ export default {
         address: this.address //详细地址
       };
       if (
-        scity == "" ||
+        this.cityCode == "" ||
         this.brokerId == "" ||
         this.username == "" ||
         this.telphone == "" ||
@@ -466,9 +457,9 @@ export default {
 .xiaoqu,
 .houseNum1,
 .houseNum2,
-.houseNum3{
+.houseNum3 {
   position: relative;
-  input{
+  input {
     width: 100%;
     height: 40px;
     line-height: 40px;
@@ -478,7 +469,7 @@ export default {
     border: 1px solid #cacaca;
     box-sizing: border-box;
   }
-  ul{
+  ul {
     position: absolute;
     top: 40px;
     right: 0;
@@ -492,20 +483,22 @@ export default {
     overflow-y: scroll;
     overflow-x: hidden;
     z-index: 1000;
-    li{
-      border-bottom: 1px solid #cacaca;
+    li {
       cursor: pointer;
-      ol{width: 100%;
-        // li{&:hover{background: red;cursor: pointer}}
+      ol {
+        width: 100%;
+        li {
+          border-bottom: 1px solid #cacaca;
+        }
       }
     }
   }
 }
 .houseNum1,
 .houseNum2,
-.houseNum3{
-  ul{
-    width:90px!important
+.houseNum3 {
+  ul {
+    width: 90px !important;
   }
 }
 
@@ -517,18 +510,18 @@ export default {
   height: 105px;
   line-height: 105px;
   font-size: 20px;
-  >div{
+  > div {
     flex: 1;
     &:nth-of-type(1) input,
-    &:nth-of-type(2) input{
+    &:nth-of-type(2) input {
       cursor: pointer;
     }
-    &:nth-of-type(1)>div{
+    &:nth-of-type(1) > div {
       float: right;
       margin-right: 22px;
       cursor: pointer;
     }
-    &:nth-of-type(2)>div{
+    &:nth-of-type(2) > div {
       float: left;
       margin-left: 22px;
       cursor: pointer;
@@ -539,21 +532,21 @@ export default {
 /* form 身体 */
 .form-bd {
   margin: 0 114px 0 74px;
-  >ul{
-    >li{
+  > ul {
+    > li {
       height: 40px;
       line-height: 40px;
       display: flex;
       flex-flow: row nowrap;
       margin-bottom: 18px;
-      >div:nth-of-type(1){
+      > div:nth-of-type(1) {
         margin-right: 22px;
         text-align: right;
         width: 110px;
         font-size: 20px;
         color: #000000;
       }
-      >input{
+      > input {
         flex: 1;
         text-indent: 10px;
         font-size: 14px;
@@ -570,7 +563,7 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  input{
+  input {
     height: 40px;
     width: 90px;
     line-height: 40px;
@@ -587,8 +580,8 @@ input::-webkit-input-placeholder {
   font-size: 14px;
 }
 /* form 脚步 */
-.form-ft{
-  button{
+.form-ft {
+  button {
     display: block;
     width: 280px;
     height: 40px;
@@ -599,7 +592,7 @@ input::-webkit-input-placeholder {
     font-size: 18px;
     color: #ffffff;
   }
-  p{
+  p {
     text-align: center;
     font-size: 14px;
     color: #272c30;
@@ -609,10 +602,10 @@ input::-webkit-input-placeholder {
 }
 
 /* 经纪人 */
-.broker{
+.broker {
   flex: 1;
   position: relative;
-  input{
+  input {
     width: 100%;
     height: 40px;
     line-height: 40px;
@@ -631,22 +624,22 @@ input::-webkit-input-placeholder {
   height: 642px;
   transform: translateX(-50%);
   background: #efefef;
-  h3{
+  h3 {
     text-align: center;
     line-height: 50px;
     font-size: 20px;
     color: #ffffff;
     background: red;
   }
-  ul{
+  ul {
     max-height: 530px;
     overflow: auto;
-    >li{
+    > li {
       overflow: hidden;
       cursor: pointer;
       height: 124px;
       position: relative;
-      >div{
+      > div {
         margin: 0 10px;
         height: 124px;
         padding: 28px 0;
@@ -661,7 +654,7 @@ input::-webkit-input-placeholder {
           top: 20px;
           left: 20px;
           overflow: hidden;
-          img{
+          img {
             width: 100%;
             height: 100%;
           }
@@ -671,58 +664,58 @@ input::-webkit-input-placeholder {
           margin-left: 120px;
           display: flex;
           flex-flow: row nowrap;
-          >div{
+          > div {
             flex: 1;
           }
-          .one{
-            .name{
+          .one {
+            .name {
               font-size: 16px;
               margin-bottom: 10px;
-              span{
+              span {
                 font-size: 24px;
                 color: rgba(0, 0, 0, 0.8);
                 margin-right: 10px;
               }
             }
-            .decription{
+            .decription {
               margin: 0 15px 10px 0;
-              span{
+              span {
                 font-size: 14px;
               }
             }
-            .tag{
+            .tag {
               display: flex;
               flex-flow: row nowrap;
               white-space: nowrap;
-              span{
+              span {
                 font-size: 12px;
                 margin-right: 10px;
                 padding: 5px;
-                &:nth-of-type(1){
-                    background: #edf9ff;
-                    color: #00a8ff;
+                &:nth-of-type(1) {
+                  background: #edf9ff;
+                  color: #00a8ff;
                 }
-                &:nth-of-type(2){
-                    background: #fff2ed;
-                    color: #ff7f50;
+                &:nth-of-type(2) {
+                  background: #fff2ed;
+                  color: #ff7f50;
                 }
-                &:nth-of-type(3){
-                    background: #ebfff3;
-                    color: #00b969;
+                &:nth-of-type(3) {
+                  background: #ebfff3;
+                  color: #00b969;
                 }
               }
             }
           }
-          .two{
+          .two {
             font-size: 14px;
             color: rgba(0, 0, 0, 0.6);
-            span{
+            span {
               font-size: 24px;
               color: #ff0000;
             }
           }
-          .three{
-            div{
+          .three {
+            div {
               font-size: 16px;
               &:nth-of-type(1) {
                 margin-bottom: 10px;
@@ -731,17 +724,17 @@ input::-webkit-input-placeholder {
           }
         }
       }
-      &:hover{
+      &:hover {
         background: #ffffff;
       }
     }
   }
 }
 
-.pagination{
-	width: 360px;
-	margin-top: 20px;
-	margin-left: 15%;
+.pagination {
+  width: 360px;
+  margin-top: 20px;
+  margin-left: 15%;
 }
 </style>
 

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-21 12:15:34
+ * @Last Modified time: 2018-05-29 16:21:21
  */
 //重新封装axios
 import Vue from 'vue'
@@ -35,11 +35,9 @@ axios.interceptors.request.use(
     } else {
       promiseArr[config.url] = cancel
     }
-    if (sessionStorage.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
-      config.headers = {
-        'unique-code': sessionStorage.token,
-        'scity': JSON.parse(localStorage.selectCity).value
-      }
+    config.headers = {
+      'unique-code': sessionStorage.token||null,
+      'scity': JSON.parse(localStorage.selectCity).value
     }
     return config;
   },
@@ -102,7 +100,7 @@ axios.interceptors.response.use(response => {
 axios.defaults.baseURL = '/api'
 //设置默认请求头
 axios.defaults.headers = {
-  'X-Requested-With': 'XMLHttpRequest',
+  'X-Requested-With': 'XMLHttpRequest'
 }
 axios.defaults.timeout = 10000
 Vue.prototype.$http = axios;
