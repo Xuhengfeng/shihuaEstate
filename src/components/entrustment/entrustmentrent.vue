@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-29 18:25:28
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-30 00:45:03
  */
 <template>
   <div class="sellRent">
@@ -18,15 +18,15 @@
 						<ul>
 							<li>
 								<div>姓名</div>
-								<input type="username" placeholder="请输入你的姓名" v-model="username">
+								<input type="username" placeholder="请输入你的姓名" v-model="username" @click="close()">
 							</li>
 							<li>
 								<div>电话</div>
-								<input type="telphone"  placeholder="请输入你的电话" minlength="11" maxlength="11" v-model="telphone">
+								<input type="telphone"  placeholder="请输入你的电话" minlength="11" maxlength="11" v-model="telphone" @click="close()">
 							</li>
 							<li class="city">
 								<div>城市</div>
-                <input type="text" placeholder="选择你的城市" v-model="cityValue" @click="toggleCity()">
+                <input type="text" placeholder="选择你的城市" readonly v-model="cityValue" @click="toggleCity()">
                 <ul v-show="isSelectNum == 0">
                   <li v-for="item1 in cityList">
                       <ol v-for="item2 in item1.item">
@@ -48,7 +48,7 @@
 								<div>房屋编号</div>
 								<div class="houseNum">
                   <div class="houseNum1">
-									  <input type="text"  placeholder="栋座号" v-model="houseOne" @click="toggleDong()">
+									  <input type="text"  placeholder="栋座号" readonly v-model="houseOne" @click="toggleDong()">
                     <ul v-show="isSelectNum == 2">
                       <li v-for="item in houseOneList" @click="selectDong(item)">
                         {{item.name}}
@@ -56,18 +56,18 @@
                     </ul>
                   </div>
                   <div class="houseNum2">
-									  <input type="text"  placeholder="单元号" v-model="houseTwo" @click="toggleDanyuan()">
+									  <input type="text"  placeholder="单元号" readonly v-model="houseTwo" @click="toggleDanyuan()">
                     <ul v-show="isSelectNum == 3">
                       <li v-for="item in houseTwoList" @click="selectDanyuan(item)">
-                        {{item.name}}
+                        {{item}}
                       </li>
                     </ul>
                   </div>
                   <div class="houseNum3">
-									  <input type="text"  placeholder="门牌号" v-model="houseThree" @click="togglehouseNum()">
+									  <input type="text"  placeholder="门牌号" readonly v-model="houseThree" @click="togglehouseNum()">
                     <ul v-show="isSelectNum == 4">
                       <li v-for="item in houseThreeList" @click="selecthouseNum(item)">
-                        {{item.name}}
+                        {{item}}
                       </li>
                     </ul>
                   </div>
@@ -146,7 +146,9 @@ export default {
       isSelectNum: null, //展开项
 
       cityValue: "", //选择城市
+      cityCode: "", //城市编码
       cityList: [], //城市列表
+      currentCity: JSON.parse(localStorage.selectCity).value, //首页默认点击的城市
 
       brokerId: "", //经纪人id
       brokerFlag: false, //经纪人
@@ -158,13 +160,15 @@ export default {
       houseTyNameList: [], //小区列表
 
       houseOne: "", //栋座号
-      houseOneList: "", //栋座号列表
+      houseOneId: "",//栋座号id
+      houseOneList: [], //栋座号列表
 
       houseTwo: "", //单元号
-      houseTwoList: "", //单元号列表
+      houseTwoList: [], //单元号列表
+      
 
       houseThree: "", //门牌号
-      houseThreeList: "", //门牌号列表
+      houseThreeList: [], //门牌号列表
 
       address: "", //地址
       items: ["我要出售", "我要出租"],
@@ -176,8 +180,6 @@ export default {
       checked: 0,
       IPSnum: 0,
       page: 1,
-      cityCode: "", //城市编码
-      currentCity: JSON.parse(localStorage.selectCity).value //首页默认点击的城市
     };
   },
   created() {
@@ -194,6 +196,9 @@ export default {
     }
   },
   methods: {
+    close() {
+      this.isSelectNum = null;
+    },
     //清空操作
     clearAllInput() {
       this.brokerLists = null;
@@ -246,10 +251,18 @@ export default {
       this.isSelectNum = null;
       this.houseTyName = item.buildName;
       this.houseTyId = item.id;
+      //清空操作
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
       this.dongzuoListRequest(item.id);
     },
     changeInput() {
-      this.throttle(this.xiaoquListRequest(this.houseTyName), null, 2000);
+      this.throttle(this.xiaoquListRequest(this.houseTyName), null, 3000);
     },
     //函数节流
     throttle(method, context, delay) {
@@ -260,28 +273,44 @@ export default {
     },
     //栋座号
     toggleDong() {
-      this.houseTyId ? (this.isSelectNum = 2) : this.$alert("请先选取小区");
+      this.houseTyId 
+      ? (this.isSelectNum = 2) 
+      : this.$alert("请先选取小区");
     },
     selectDong(item) {
-      this.houseOne = item.name;
       this.isSelectNum = null;
+      this.houseOne = item.name;
+      this.houseOneId = item.id;
+      //清空操作
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.danyuanListRequest(item.id);
     },
     //单元号
     toggleDanyuan() {
-      this.isSelectNum = 3;
+       this.houseTyId 
+       ? (this.isSelectNum = 3) 
+       : this.$alert("请先选取小区");
     },
     selectDanyuan(item) {
-      this.houseTwo = item.name;
       this.isSelectNum = null;
+      this.houseTwo = item;
+      this.danyuanListRequest(this.houseOneId, item);
     },
     //门牌号
     togglehouseNum() {
-      this.isSelectNum = 4;
+      this.houseTyId 
+      ? (this.isSelectNum = 4) 
+      : this.$alert("请先选取小区");
     },
     selecthouseNum(item) {
       this.isSelectNum = null;
+      this.houseThree = item;
       //最后生具体地址
-      this.address = this.cityValue;
+      this.address = this.cityValue + this.houseTyName + this.houseOne + this.houseTwo + this.houseThree ;
     },
     //请求城市列表
     cityListRequest() {
@@ -323,86 +352,79 @@ export default {
     xiaoquListRequest(keyword) {
       let num = 1;
       let scity = this.cityCode ? this.cityCode : this.currentCity;
-      let midobj = { value: scity };
-      let currentCity = localStorage.selectCity; //缓存当前城市
-      localStorage.selectCity = JSON.stringify(midobj); //替换缓存的当前城市  从而修改请求头里面的scity;
+      const currentCity = localStorage.selectCity;//缓存当前城市
+      let midobj = {value: scity};
+      localStorage.selectCity = JSON.stringify(midobj);//替换缓存的当前城市  从而修改请求头里面的scity;
+
       this.$http
-        .post(this.$url.URL.BUILDLIST, {
-          scity: scity,
-          pageNo: num,
-          keyword: keyword
-        })
-        .then(res => {
-          if (!res.data.data.length) this.isSelectNum = null;
-          this.houseTyNameList = res.data.data;
-          localStorage.selectCity = currentCity;
-            this.$nextTick(() => {
-                let node = ".xiaoqu ul";
-                let fn = this.xiaoquListRequest2();
-                //滚动加载
-                this.scrollItem(num, node);
-            });
-        });
-    },
-    xiaoquListRequest2(keyword,page) {
-      let scity = this.cityCode ? this.cityCode : this.currentCity;
-      this.$http
-          .post(this.$url.URL.BUILDLIST, {
-            scity: scity,
-            pageNo: page,
-            keyword: keyword
-          })
+          .post(this.$url.URL.BUILDLIST, {scity: scity,pageNo: num,keyword: keyword})
           .then(res => {
-            if (!res.data.data.length) this.isSelectNum = null;
-            this.houseTyNameList = res.data.data;
+              this.houseTyNameList = res.data.data;
+              localStorage.selectCity = currentCity;
+              this.$nextTick(() => {
+                  //滚动加载
+                  let el = document.querySelector(".xiaoqu ul");
+                  el.onscroll = () => {
+                    let scrollTop = el.scrollTop; //页面上卷的高度
+                    let wholeHeight = el.scrollHeight; //页面底部到顶部的距离
+                    let divHeight = el.clientHeight; //页面可视区域的高度
+                    if(scrollTop + divHeight+ 10 >= wholeHeight) {
+                      let page = num++;
+                      localStorage.selectCity = JSON.stringify(midobj);
+                      this.xiaoquListRequest2(scity, keyword, page, currentCity);
+                    }
+                  };
+              });
+          });
+ 
+    },
+    xiaoquListRequest2(scity, keyword, page,currentCity) {
+      this.$http
+          .post(this.$url.URL.BUILDLIST, {scity: scity,pageNo: page,keyword: keyword})
+          .then(res => {
             localStorage.selectCity = currentCity;
+            this.houseTyNameList = this.houseTyNameList.concat(res.data.data);
           });
-    },
-    //请求栋座号
-    dongzuoListRequest(id, keyword) {
-      let num = 1;
-      let scity = this.cityCode ? this.cityCode : this.currentCity;
-      this.$http
-        .get(this.$url.URL.BUILDINGLISTDZ + id + "?pageNo=1&pageSize=10")
-        .then(res => {
-          this.houseOneList = res.data.data;
-          this.$nextTick(() => {
-            this.danyuanListRequest();
-            this.houseOneList = this.houseOneList.concat(res.data.data);
-          });
-        });
-    },
-    //请求单元号或者门牌号
-    danyuanListRequest(keyword) {
-      let num = 1;
-      let scity = this.cityCode ? this.cityCode : this.currentCity;
-      this.$http
-        .post(this.$url.URL.BUILDINGLISTDYFH, {
-          scity: scity,
-          pageNo: num,
-          keyword: keyword
-        })
-        .then(res => {
-          this.houseTwoList = res.data.data;
-          this.$nextTick(() => {
-            this.danyuanListRequest();
-            this.houseOneList = this.houseOneList.concat(res.data.data);
-          });
-        });
     },
     //滚动加载
-    scrollItem(num,node,fn) {
+    scrollEvent(node, fn) {
       let el = document.querySelector(node);
       el.onscroll = () => {
         let scrollTop = el.scrollTop; //页面上卷的高度
         let wholeHeight = el.scrollHeight; //页面底部到顶部的距离
         let divHeight = el.clientHeight; //页面可视区域的高度
-        if (scrollTop + divHeight >= wholeHeight){
-          let page = num++;
-          fn(null, page);
-        }
+        (scrollTop + divHeight >= wholeHeight)&&fn();
       };
     },
+    //请求栋座号
+    dongzuoListRequest(id, keyword) {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http
+        .get(this.$url.URL.BUILDINGLISTDZ + id + "?pageNo=1&pageSize=10")
+        .then(res => {
+          this.houseOneList =  res.data.data;
+        });
+    },
+    //请求单元号或者门牌号
+    danyuanListRequest(id, item) {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http
+        .post(this.$url.URL.BUILDINGLISTDYFH, {
+          scity: scity,
+          pageNo: num,
+          buildId: this.houseTyId,
+          dyname: item,
+          dzId : id,
+        })
+        .then(res => {
+          item
+          ? (this.houseThreeList = res.data.data)
+          : (this.houseTwoList = res.data.data)
+        });
+    },
+
     //提交
     commitRequest() {
       let params = {
