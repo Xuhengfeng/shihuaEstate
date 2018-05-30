@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-30 09:35:00
+ * @Last Modified time: 2018-05-30 20:18:49
  */
 <template>
 	<div>
@@ -143,7 +143,7 @@
 								</div> 
 							</li>
 						</ul>
-            <div class="noContent" v-show="!buyhouse.length">没有任何数据!</div>
+            <div class="noContent" v-show="!buyhouse.length">没有数据!</div>
 					</div>
 
           <!-- 分页器 -->

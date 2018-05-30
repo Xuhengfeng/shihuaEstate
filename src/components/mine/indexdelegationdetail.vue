@@ -132,7 +132,7 @@
 .collectlist{
   >ul{
     height: 35px;
-    background: rgba(0, 0, 0, 0.3);
+    background: #e5e5e5;
   }
   >ul>li{
     color: white;
@@ -146,9 +146,6 @@
 }
 .step{
   margin: 30px 0;
-  .is-success{
-    color: #ff4343!important;
-  }
 }
 .btn{
     margin-top: 12px;

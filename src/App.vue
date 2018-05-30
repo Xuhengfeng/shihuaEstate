@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 22:53:00
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-30 20:50:23
  */
 <template>
   <div id="app">
@@ -83,6 +83,7 @@ export default {
 @import "../static/css/iconfont.css";/*字体图标*/
 @import 'common/css/base.less';/*base样式*/
 @import "common/css/variable.less";/*颜色和字体样式*/
+@import "common/css/resetElement.less";/*重置element样式*/
 html,body{
   width:100%;
   height:100%;

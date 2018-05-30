@@ -79,7 +79,8 @@ let URL = {
 	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
 	REPORT_LIST:_host + "/report/list",                            //看房报告
 	DICTIONARY_CURRENTDATETIME:_host + '/dictionary/currentDateTime',  	   //获取当前时间
-
+	RENT_APPLYLIST:_host + '/houseEntrustApply/queryRentApplyList',  	   //我的出租申请列表
+	SELL_APPLYLIST:_host + '/houseEntrustApply/querySellApplyList',  	   //我的卖房申请列表
 	
 };
 export default {URL}

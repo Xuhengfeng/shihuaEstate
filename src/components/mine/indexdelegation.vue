@@ -2,8 +2,7 @@
 <div>
     <div class="collectlist">
         <ul>
-        <li>出售</li>
-            <li>出租</li>
+            <li v-for="(item,index) in sellRent" :class="num==index?'fontColor':''" @click="selectBtn(index)">{{item}}</li>
         </ul>
     </div>
        <div class=" collectlistone">
@@ -16,15 +15,28 @@
         </ul>
     </div>
     <table>
-        <tr v-for="item in 5" @click="change(item)">
-             <td>2013-14</td>
+        <tr v-for="item in tableData" @click="change(item)">
+            <td>2013-14</td>
             <td >张三</td>
-             <td >单价</td>
-              <td>联系方式</td>
-               <td >申请中</td>
-              
+            <td >单价</td>
+            <td>联系方式</td>
+            <td >申请中</td>
         </tr>
     </table>
+    <div class="noContent" v-show="!tableData.length">没有数据!</div>
+    
+    <!-- 分页器 -->
+    <div class="oPagination">
+        <el-pagination 
+            @current-change="handleCurrentChange"
+        background
+        layout="prev, pager, next"
+        prev-text="上一页"
+                    next-text="下一页"
+        :total="1000"
+        class="fr pagination">
+        </el-pagination>
+    </div>
 </div>
 </template>
 
@@ -32,12 +44,36 @@
 import { Steps } from "element-ui";
 export default {
   data() {
-    return {};
+    return {
+        sellRent: ['出售','出租'],
+        num: 0,
+        IPS: [this.$url.URL.SELL_APPLYLIST,this.$url.URL.RENT_APPLYLIST],
+        tableData: [],
+        selectCity: JSON.parse(localStorage.selectCity),//当前城市
+    };
+  },
+  created() {
+    this.tableDataRequest(0);
+  },
+  watch: {
+      num() {
+        this.tableDataRequest(0);
+      }
   },
   methods: {
     change(item) {
-      console.log(item);
-      this.$router.push({ path: `indexdelegationdetail/${item.id}` });
+      this.$router.push({ path: `indexdelegationdetail/${item.id}`});
+    },
+    selectBtn(index) {
+        this.num = index;
+    },
+    tableDataRequest(page) {
+        let params = {scity: this.selectCity}
+        this.$http
+            .get(this.IPS[this.num]+`?pageNo=${page}`)
+            .then(data=>{
+                console.log(data);
+            })
     },
     
   }
@@ -46,18 +82,15 @@ export default {
 
 <style lang="less" scoped>
 .collectlist {
-  > ul {
-    height: 35px;
-    background: rgba(0, 0, 0, 0.3);
-  }
+  > ul {overflow:hidden;background: #cccccc}
   > ul > li {
-    color: white;
     float: left;
     height: 40px;
+    line-height: 40px;
     width: 112px;
     font-size: 16px;
     text-align: center;
-    line-height: 35px;
+    cursor: pointer;
   }
 }
 
@@ -68,8 +101,8 @@ export default {
     background: #ffb2b2;
   }
   > ul > li {
-    color: white;
     float: left;
+    color: #000000;
     height: 45px;
     width: 190px;
     font-size: 16px;
@@ -100,15 +133,32 @@ table {
       border: 1px solid #eeeeee;
       box-sizing: border-box;
       text-align: center;
-      color: #9c9fa1;
+      color: #000000;
       font-weight: 600;
       cursor: pointer;
     }
     &:hover {
       td {
-        border-bottom: 1px solid red;
+        border-bottom: 1px solid #ff4343;
       }
     }
   }
 }
+.fontColor{
+    color: #ffffff!important;
+    background: #ff4343;
+}
+.oPagination{
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
+}
+//没有搜索到任何数据
+.noContent{
+  height: 280px;
+  line-height: 280px;
+  text-align: center;
+  color: #333333;
+  font-size: 20px;
+}
 </style>
+
