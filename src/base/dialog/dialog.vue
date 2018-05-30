@@ -2,7 +2,7 @@
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 00:18:57
+ * @Last Modified time: 2018-05-31 00:48:23
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -50,7 +50,9 @@
                       v-model="password3" 
                       placeholder="请再次输入密码" 
                       maxlength="11"/>
-                <div class="fontColor"><label class="check"><input type="checkbox"></input><span>同意</span><span style="color: red;">《世华服务协议》</span></label></div>
+                <div class="fontColor advantage">
+							    <el-checkbox v-model="agree">同意</el-checkbox><span style="color: red;font-size:14px">《世华服务协议》</span>
+                </div>
                 <button @click="register()">注册</button>
                 <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
               </div>
@@ -126,6 +128,7 @@ export default {
       sendBtn1:'发送验证码',//手机号码注册
       sendBtn2:'发送验证码',//手机快捷登录
       sendBtn3:'发送验证码',//忘记密码
+      agree: false, //是否同意《世华服务协议》
     };
   },
   methods: {
@@ -184,30 +187,26 @@ export default {
     },
     //注册
     register() {
-      if (!this.phonenum2 ||
-          !this.password2 ||
-          !this.password3 ||
-          this.password2 !== this.password3
-      ) {
-        this.cancel();
-        this.$alert("填写信息不完整!");
-      }else{
-        this.$http
-          .post(this.$url.URL.USER_REGISTER, {
-            deviceCode: "web",
-            mobile: this.phonenum2,
-            password: this.password2,
-            smsCode: this.msgcode1
-          })
-          .then(res => {
-            if(res.data.status == 1) {
-              this.$alert("注册成功!");
-              this.jump(1);//去登入
-            }else{
-              this.$alert(res.data.msg);
-            }
-          });
+      switch(true){
+        case !this.phonenum2,!this.password2,!this.password3: return this.$alert("填写信息不能为空!");break;
+        case !this.password2 !== this.password3: return this.$alert("两次密码不一致!");break;
+        case !this.agree: return this.$alert("请同意世华服务协议,谢谢配合!");break;
       }
+      this.$http
+        .post(this.$url.URL.USER_REGISTER, {
+          deviceCode: "web",
+          mobile: this.phonenum2,
+          password: this.password2,
+          smsCode: this.msgcode1
+        })
+        .then(res => {
+          if(res.data.status == 1) {
+            this.$alert("注册成功!");
+            this.jump(1);//去登入
+          }else{
+            this.$alert(res.data.msg);
+          }
+        });
     },
     //快捷登录
     rapid() {

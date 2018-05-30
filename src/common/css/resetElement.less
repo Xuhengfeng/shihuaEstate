@@ -1,8 +1,40 @@
 @charset "utf-8";
+// input 标签
+.advantage .el-checkbox__input.is-checked+.el-checkbox__labelinner,
+.hideSame .el-checkbox__input.is-checked+.el-checkbox__labelinner{
+    color: #ff4343!important;
+}
+.advantage .el-checkbox__input.is-checked .el-checkbox__inner,
+.hideSame .el-checkbox__input.is-checked .el-checkbox__inner{
+    background-color:#ff4343!important;
+    border-color: #ff4343!important;
+}
+.advantage .el-checkbox__input.is-checked+.el-checkbox__label,
+.hideSame .el-checkbox__input.is-checked+.el-checkbox__label{
+    color: #ff4343!important;
+}
+.advantage .el-checkbox__inner,
+.hideSame .el-checkbox__inner{
+    border:1px solid #dcdfe6!important;
+}
 // 分页器
 .oPagination .active{
     background: #ff4343!important;
 }
 .oPagination li:hover{
     color: #606266!important;
+}
+
+//步骤条
+.step .el-step__head.is-success {
+    color: #ff4343;
+    border-color: #ff4343;
+}
+.step .el-step__title.is-success{
+    color: #ff4343;
+}
+.step .el-button:focus, .step .el-button:hover {
+    color: #ffffff;
+    border-color: #ff4343;
+    background-color: #ff4343;
 }

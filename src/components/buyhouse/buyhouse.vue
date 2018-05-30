@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-30 20:18:49
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-30 23:14:18
  */
 <template>
 	<div>
@@ -147,19 +147,18 @@
 					</div>
 
           <!-- 分页器 -->
-          <div class="pagination">
+          <div class="pageFooter">
               <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
                 <router-link to="home">世华易居网南宁二手房</router-link>>
                 <router-link to="buyhouse">南宁二手房</router-link>
               </div>
-              <el-pagination 
+              <el-pagination class="fr oPagination"
                   @current-change="handleCurrentChange"
-                background
-                layout="prev, pager, next"
-                prev-text="上一页"
-					      next-text="下一页"
-                :total="1000"
-                class="fr pagination">
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :total="1000">
               </el-pagination>
           </div>
 				</div>
@@ -628,12 +627,10 @@ export default {
   font-size: 20px;
 }
 
-//分页器
-.pagination{
-  height: 40px;
+.pageFooter{
+  overflow: hidden;
   padding-top: 20px;
 }
-
 //内容
 .content {
   margin-top: 26px;

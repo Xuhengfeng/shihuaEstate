@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-03 23:57:02
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-30 22:48:44
  */
 <template>
   <div class="sideBar">
@@ -108,12 +108,10 @@ export default {
     //监控appinthouse
     appinthouse() {
      let list = this.$store.state.appinthouse;
-      if (list.length > 0) {
-        this.compareBtntwo = true;
-      } else {
-        this.compareBtntwo = false;
-      }
-      return list;
+     list.length
+     ? this.compareBtntwo = true
+     : this.compareBtntwo = false;
+     return list;
     }
   },
   methods: {

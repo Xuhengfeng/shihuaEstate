@@ -28,13 +28,13 @@
     <!-- 分页器 -->
     <div class="oPagination">
         <el-pagination 
+            class="fr"
             @current-change="handleCurrentChange"
-        background
-        layout="prev, pager, next"
-        prev-text="上一页"
-                    next-text="下一页"
-        :total="1000"
-        class="fr pagination">
+            background
+            layout="prev, pager, next"
+            prev-text="上一页"
+                        next-text="下一页"
+            :total="1000">
         </el-pagination>
     </div>
 </div>
@@ -48,16 +48,16 @@ export default {
         sellRent: ['出售','出租'],
         num: 0,
         IPS: [this.$url.URL.SELL_APPLYLIST,this.$url.URL.RENT_APPLYLIST],
-        tableData: [],
+        tableData: [1],
         selectCity: JSON.parse(localStorage.selectCity),//当前城市
     };
   },
   created() {
-    this.tableDataRequest(0);
+    // this.tableDataRequest(1);
   },
   watch: {
       num() {
-        this.tableDataRequest(0);
+        this.tableDataRequest(1);
       }
   },
   methods: {

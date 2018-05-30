@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-03 22:59:05
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-30 22:51:34
  */
 //同步处理
 export default {
@@ -16,7 +16,9 @@ export default {
 	},
 	//初始化待看列表数据
 	CHUSHIHUA(state,payload){
-		state.appinthouse = payload;
+		payload != null
+		? state.appinthouse = payload
+		: state.appinthouse = [];
 	},
 	//登录
 	LOGIN(state) {

@@ -2,13 +2,25 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-19 00:52:29
+ * @Last Modified time: 2018-05-31 00:53:27
  */
 <template>
     <div>
         <h3>收藏小区动态</h3>
         <div class="main">
             <o-house-list :list="list" :isShowNum="isShowNum"></o-house-list>
+        </div>
+        <!-- 分页器 -->
+        <div class="oPagination">
+            <el-pagination 
+                class="fr"
+                @current-change="handleCurrentChange"
+                background
+                layout="prev, pager, next"
+                prev-text="上一页"
+                            next-text="下一页"
+                :total="1000">
+            </el-pagination>
         </div>
     </div>
 </template>
@@ -57,5 +69,9 @@ h3 {
 .main {
   padding: 20px;
   border: 1px solid #cacaca;
+}
+.oPagination{
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
 }
 </style>

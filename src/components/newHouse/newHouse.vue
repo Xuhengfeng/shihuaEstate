@@ -90,19 +90,18 @@
 					</div>
 
           <!-- 分页器 -->
-          <div class="pagination">
+          <div class="pageFooter">
               <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
                 <router-link to="home">世华易居网南宁二手房</router-link>>
                 <router-link to="buyhouse">南宁二手房</router-link>
               </div>
-              <el-pagination
-               @current-change="handleCurrentChange"
-                background
-                layout="prev, pager, next"
-                 prev-text="上一页"
-					       next-text="下一页"
-                :total="1000"
-                class="fr pagination">
+              <el-pagination class="fr oPagination"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :total="1000">
               </el-pagination>
           </div>
 				</div>
@@ -171,7 +170,6 @@ export default {
   },
   methods: {
       handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.query(null, val);		
     },
     render(city) {
@@ -338,10 +336,8 @@ export default {
   color: #333333;
   font-size: 20px;
 }
-
-//分页器
-.pagination{
-  height: 40px;
+.pageFooter{
+  overflow: hidden;
   padding-top: 20px;
 }
 

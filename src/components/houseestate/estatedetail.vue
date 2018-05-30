@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-07 18:13:41 
- * @Last Modified by:   564297479@qq.com 
- * @Last Modified time: 2018-05-07 18:13:41 
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-30 23:28:15
  */
 <template>
 	<div>
@@ -59,11 +59,10 @@
 						<div class="name">附加属性</div>
  							<div class="contents">
  								<ul>
-									 	<li><span class="label">银行</span>{{buildlistinfo.bankInfo }}</li>
+									<li><span class="label">银行</span>{{buildlistinfo.bankInfo }}</li>
 									<li><span class="label">交通</span>{{buildlistinfo.transportInfo }}</li>
  									<li><span class="label">学校</span>{{buildlistinfo.schoolInfo }} </li>
 									<li><span class="label">医院</span>{{buildlistinfo.hospitalInfo }}</li>
- 								
  								</ul>
  							</div>
  						</div>

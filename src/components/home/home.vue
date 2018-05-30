@@ -513,12 +513,14 @@
 			},
 			//开始找房
 			searchHouse() {
-				let num = this.placeholderTextType;
-				switch(num) {
-					case 0:this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
-					case 1:this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
-					case 2:this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: this.placeholderTextType}});break;
-				}
+				// if(this.searchinput){
+					let num = this.placeholderTextType;
+					switch(num) {
+						case 0:this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+						case 1:this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+						case 2:this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+					}
+				// }
 			}
 		}
 	}
