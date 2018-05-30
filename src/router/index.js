@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 23:03:20
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-30 10:38:23
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -100,7 +100,7 @@ const router = new Router({
 				path:"indexconsult",component:indexconsult,meta:{KeepAlive:false}},{//我的咨询
 				path:"indexmessage",component:indexmessage,meta:{KeepAlive:false}},{//消息
 				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}},{//编辑资料
-				path:"indexdelegationdetail:id",component:indexdelegationdetail,meta:{KeepAlive:false}}//我的委托详情
+				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}}//我的委托详情
 			]},
   	]
 })

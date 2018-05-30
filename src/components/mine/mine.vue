@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 14:05:54 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-19 17:12:10
+ * @Last Modified time: 2018-05-30 15:24:27
  */
 <template>
 	<!-- 我的 -->
@@ -14,7 +14,9 @@
 						<img :src="userInfo.headImage"/>
 					</div>
 					<ul>
-						<li :key="index" :class="index==num?'bgColor':''" v-for="(item,index) in list" @click="routerLink(item,index)">{{item}}</li>
+						<router-link :key="index" v-for="(item,index) in list" :to="item.url" @click.native="clickrouter(index)">
+							<li :class="index==num?'bgColor':''">{{item.name}}</li>
+						</router-link>
 					</ul>
 				</div>
 				<div class="content">
@@ -37,7 +39,19 @@ export default {
 	data() {
 		return {
 			num: 0,
-			list: ['账户首页','待看列表','待看日程','已看记录','看房报告','我的收藏','我的委托','我的经纪人','我的咨询','消息','编辑资料']
+			list: [
+				{name: '账户首页', url: '/mine/indexhome'},//账户首页
+				{name: '待看列表', url: '/mine/indexseeone'},//待看列表
+				{name: '待看日程', url: '/mine/indexseetwo'},//待看日程
+				{name: '已看记录', url: '/mine/indexseethree'},//已看记录
+				{name: '看房报告', url: '/mine/indexseefour'},//看房报告
+				{name: '我的收藏', url: '/mine/indexcollection'},//我的收藏
+				{name: '我的委托', url: '/mine/indexdelegation'},//我的委托
+				{name: '我的经纪人', url: '/mine/indexbroker'},//我的经纪人
+				{name: '我的咨询', url: '/mine/indexconsult'},//我的咨询
+				{name: '消息', url: '/mine/indexmessage'},//消息
+				{name: '编辑资料', url: '/mine/indexeditInfo'},//编辑资料
+			]
 		}
 	},
 	computed: {
@@ -46,22 +60,8 @@ export default {
         }
 	},
 	methods:{
-		// 跳转子路由
-		routerLink(item,index) {
+		clickrouter(index) {
 			this.num = index;
-			switch(index) {
-				case 0:this.$router.push({path:'indexhome'});break;//账户首页
-				case 1:this.$router.push({path:'indexseeone'});break;//待看列表
-				case 2:this.$router.push({path:'indexseetwo'});break;//待看日程
-				case 3:this.$router.push({path:'indexseethree'});break;//已看记录
-				case 4:this.$router.push({path:'indexseefour'});break;//看房报告
-				case 5:this.$router.push({path:'indexcollection'});break;//我的收藏
-				case 6:this.$router.push({path:'indexdelegation'});break;//我的委托
-				case 7:this.$router.push({path:'indexbroker'});break;//我的经纪人
-				case 8:this.$router.push({path:'indexconsult'});break;//我的咨询
-				case 9:this.$router.push({path:'indexmessage'});break;//消息
-				case 10:this.$router.push({path:'indexeditInfo'});break;//编辑资料
-			}
 		}
 	}
 }
@@ -81,13 +81,15 @@ export default {
 		.image{
 			width: 100%;
 			height: 164px;
-			background: red;
+			background: url('../../imgs/home/defalut.jpg') no-repeat center center;
+			background-size: cover;
 			display: block;
 			margin-bottom: 10px;
 			color: #ffffff;
 			img{
 				width: 100%;
 				height: 100%;
+				border: 0;
 			}
 		}
 		ul{
@@ -102,6 +104,7 @@ export default {
 				cursor: pointer;
 				&:hover{
 					background: red;
+					color: #ffffff;
 				}
 			}
 		}
