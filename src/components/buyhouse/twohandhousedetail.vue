@@ -174,7 +174,8 @@
             	<div class="btn">
                 <div @click="addCollection($event)" v-if="!twohandhousedetail.isCollect" >收藏房源</div>
                  <div @click="addCollection($event)" v-if="twohandhousedetail.isCollect" >已收藏</div>
-                <div  @click.stop="addContrast(twohandhousedetail, $event)">{{twohandhousedetail.contentFlag?twohandhousedetail.contentFlag:'预约看房'}}</div> 
+                <div  @click.stop="addContrast(twohandhousedetail, $event)" v-if="!twohandhousedetail.isAppoint">预约看房</div> 
+                <div  @click.stop="addContrast(twohandhousedetail, $event)" v-if="twohandhousedetail.isAppoint">已预约</div> 
               </div>
 
               <div class="content">
@@ -263,7 +264,6 @@ export default {
       buildsdid: "", //同小区sdid
       housesee:[],   //约看
       id:"",//带看id
-      daikan:[],//待看列表
       page: 1,//默认带看记录是第一页
       scity: JSON.parse(localStorage.selectCity),//用户选定城市
       collectionFlag: true//收藏标识
@@ -279,36 +279,9 @@ export default {
 	  this.render();
   },
    computed: {
-     //监控store的contrastList变化 声明一个计算属性控制刷新数据
-    refresh() {
-      // return this.$store.state.daikan;
-    },
     //获取用户登录状态
     logined() {
       return this.$store.state.logined;
-    }
-  },
-   watch: {
-    //监听计算属性
-    refresh() {
-      // //请求二手的详情
-      console.log('refresh')
-      // this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + this.scity.value + "/" + this.$route.params.id)
-      //   .then(response => {
-      //     // console.log(response.data.data)
-      //     let arr = Array.from(response.data.data);
-      //     //修正数据 根据本地缓存修正response数据
-      //     arr.forEach((item)=>{
-      //       this.daikan.forEach((item2)=>{
-             
-      //         if(item.sdid == item2.id){
-      //           item.contentFlag = '已预约';
-      //           item2.contentFlag = '已预约';
-      //         }
-      //       })
-      //     })
-      //     this.twohandhousedetail = response.data.data; 
-      //   });
     }
   },
   methods: {
@@ -335,37 +308,35 @@ export default {
     },
     //加入待看清单
     addContrast(item, e) {
-      console.log(item)
-      if(!this.logined) return this.$alert('用户未登录!');
-      //判断当前点击对象是否存在 
-      if(JSON.stringify(this.daikan).indexOf(JSON.stringify(item)) == '-1') {
-        console.log(11)
-        if(this.daikan.length >= 4){
-          if(item.contentFlag == '已预约'){
-            return;
-          }else{
-            this.$alert('待看清单最多4个!', '添加失败', {
+       if(!this.logined) return this.$alert('用户未登录!');
+       console.log(this.$store.state.appinthouse)
+        if( this.$store.state.appinthouse.length <= 3){
+          
+             this.$http.post(this.$url.URL.APPOINT_ADD,{
+                sdid:item.sdid,
+                scity:this.scity.value 
+              })
+              .then(response =>{
+                this.$refs.fly.drop(e.target);
+                this.twohandhousedetail.isAppoint = true
+                this.appintHouse();
+              })
+        }else{
+            this.$alert('对比清单最多4个!', '添加失败', {
               confirmButtonText: '确定'
             });
           }
-        }else{
-          if(item.contentFlag == '已预约') {
-            return;
-          }else{
-            console.log(item)
-            // this.daikan.push(item);
-            // window.localStorage.daikan = JSON.stringify(this.daikan);
-            this.$refs.fly.drop(e.target);
-            this.$set(item, 'contentFlag', '已预约');
-             //带看记录
-            this.$http.get(this.$url.URL.APPOINT_ADD +this.scity.value )
-            .then(response =>{
-                  this.housesee =  response.data.data
-            })
-            // this.$store.dispatch('addTwo', this.daikan);
-          }
-        }
-      }
+    },
+    //待看列表
+    appintHouse() {
+        this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+          scity:this.scity.value
+        })
+        .then(response =>{
+            let newData = response.data.data;
+            //添加数据
+            this.$store.commit('ADDTWO', newData);
+        })
     },
     //收藏房源
     addCollection(e) {
@@ -429,16 +400,13 @@ export default {
           this.id = response.data.data.id
            
            //获取待看清单列表
-          this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1")
-          .then((res)=>{
-            if(res.data.data.length) {
-              console.log(res.data.data)
-              this.daikan = res.data.data;
-              
-              //初始化清单列表
-              this.$store.commit('FIRSTSTATUS', res.data.data);
-            }
-          });
+          // this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1")
+          // .then((res)=>{
+          //   if(res.data.data.length) {            
+          //     //初始化清单列表
+          //     this.$store.commit('FIRSTSTATUS', res.data.data);
+          //   }
+          // });
 
             //带看记录
             this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id+"?pageNo=1")

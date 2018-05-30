@@ -43,17 +43,38 @@ export default {
     return {
       isShowTop:  0, //显示1 隐藏0
       isShowSide: 1, //显示1 隐藏0
-      isShowFooter: 0 //显示1 隐藏0
+      isShowFooter: 0, //显示1 隐藏0
+      city: null,
     };
   },
   created() {
     //初始化
     this.$store.commit('FIRSTSTATUS');
+    this._mapquerys();
   },
   components: {
     oTopBar,
     oSideBar,
     oFooter
+  },
+  methods:{
+    _mapquerys(){
+      this.$http.get(this.$url.URL.DEFAULT_CITY)
+				.then((response)=>{
+          localStorage.selectCity = JSON.stringify(response.data.data);
+          this.appinthouse();
+				})
+    },
+    appinthouse() {
+      this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+					scity: JSON.parse(localStorage.selectCity),//用户选定城市
+				})
+				.then(response =>{
+				let newData = response.data.data;
+				//初始化清单列表
+				this.$store.commit('CHUSHIHUA', newData);
+				})
+    }
   },
   watch: {
     $route(to, from) {

@@ -22,19 +22,18 @@ export default {
 	clearAll({commit}) {
 		this.state.contrastList.forEach((item)=>{
 			axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {
-				commit('DELETEONE', item);
+				commit('CLEARALL', item);
 			});
 		})
 	},
 	//清空待看列表
-	// clearDaikan({commit}, item) {
-		
-	// 	this.state.daikan.forEach((item)=>{
-	// 		axios.delete(API.URL.APPOINT_DELETE+item.id).then((response) => {
-	// 			commit('DELETETWO', item);
-	// 		});
-	// 	})
-	// },
+	clearDaikan({commit}) {
+		this.state.appinthouse.forEach((item)=>{
+			axios.delete(API.URL.APPOINT_DELETE+item.id).then((response) => {
+				commit('CLEARDAIKAN', item);
+			});
+		})
+	},
 	//显示对比列表
 	showlist({commit}, data) {
 		let sdidStr = '';
@@ -55,11 +54,11 @@ export default {
 		commit('DELETEONE', item);
 	},
 	// //删除待看清单中一个
-	// deleteTwo({commit}, item) {
-	// 	console.log(item)
-	// 	// axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
-	// 	// commit('DELETETWO', item);
-	// },
+	deleteTwo({commit}, item) {
+		console.log(item)
+		axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
+		commit('DELETETWO', item);
+	},
 	//添加一个到对比清单(发请求)
 	addOne({commit}, item) {
 		// console.log(item)
@@ -69,9 +68,5 @@ export default {
 		}
 		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {});
 	},
-	// //添加一个到待看清单(不发请求)
-	// addTwo({commit}, item) {
-	// 	commit('SHOWLISTONE', item);
-	// },
 }
 
