@@ -200,7 +200,6 @@ export default {
                     this.$http
                        .delete(this.$url.URL.APPOINT_DELETE+  item.id)
                        .then(response => {
-                           localStorage.removeItem('daikan');//按key单个删除
                            location.reload()
                             
                        });
@@ -211,7 +210,9 @@ export default {
         readyHouseListRequest() {
             let city = JSON.parse(localStorage.selectCity).value;
             this.$http
-            .get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo="+1)
+            .get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo="+1,{
+				  scity: city
+				})
             .then(response => {
                 response.data.data.forEach(item=>{
                     // console.log(item)

@@ -15,7 +15,7 @@
                         <span class="fr" @click="clearDaikan()">清空</span>
                     </div>
                         <ul class="content-bd">
-                        <li v-for="item in [1,1,1]">
+                        <li v-for="item in appinthouse">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -28,7 +28,7 @@
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button v-show="compareBtntwo" @click="compareone(daikan)">立即预约</button>
+                        <button v-show="compareBtntwo" @click="compareone()">立即预约</button>
                         <p v-show="!compareBtntwo">暂时没有任何预约的房源信息!</p>
                     </div>
             </div>
@@ -87,81 +87,65 @@ export default {
   data() {
     return {
       compareBtn: false,//对比
-       compareBtntwo: false,//待看
-
+      compareBtntwo: false,//待看
+      scity: JSON.parse(localStorage.selectCity),//用户选定城市
+      id:"",            //待看id
       sdid: ""
     };
   },
-  // computed: {
+  computed: {
   //   //监控store中的contrastList
-  //   contrastList() {
-  //     let list = this.$store.state.contrastList;
-  //   //   console.log(list)
-  //     if (list.length > 0) {
-  //       this.compareBtn = true;
-  //     } else {
-  //       this.compareBtn = false;
-  //     }
-  //     return list;
-  //   },
-    //监控store中的daikan
-  //   daikan() {
-  //     let list = this.$store.state.daikan;
-  //   //    console.log(list)
-  //     if (list.length > 0) {
-  //       this.compareBtntwo = true;
-  //     } else {
-  //       this.compareBtntwo = false;
-  //     }
-  //     return list;
-  //   }
-  // },
-  methods: {
-    // //清空
-    // clearAll() {
-    //   this.compareBtn = false;
-    //   this.$store.dispatch("clearAll");
-    // },
-    // //清空
-    // clearDaikan() {
-    //   this.compareBtn = false;
-    //   this.$store.dispatch("clearDaikan");
-    // },
-    // //删除
-    // deleteOne(item) {
-    //   this.$store.dispatch("deleteOne", item);
-    // },
-    // //删除待看
-    // deleteTwo(item) {
-    //   this.$store.dispatch("deleteTwo", item);
-    // },
-    // //立即比较
-    // compare() {
-    //   this.$router.push({ path: "/contrast" });
-    // },
-    //立即预约
-    compareone(daikan) {
-      
-      for (let i = 0; i < daikan.length; i++) {
-          console.log(daikan)
-        this.sdid = daikan[i].sdid;
-        this.id = daikan[i].id;
-        console.log(this.sdid);
-         console.log(this.id);
-        this.$http
-          .post(this.$url.URL.APPOINT_ADD, {
-            scity: JSON.parse(localStorage.selectCity).value,
-            sdid: this.sdid
-          })
-          .then(response => {
-            console.log("aaaaa")
-            if(i==this.daikan.length-1){
-               this.$router.push({ path: "/mine/indexseeone" });
-            }
-          });
+    contrastList() {
+      let list = this.$store.state.contrastList;
+    //   console.log(list)
+      if (list.length > 0) {
+        this.compareBtn = true;
+      } else {
+        this.compareBtn = false;
       }
+      return list;
+    },
+    //监控appinthouse
+    appinthouse() {
+     let list = this.$store.state.appinthouse;
+      if (list.length > 0) {
+        this.compareBtntwo = true;
+      } else {
+        this.compareBtntwo = false;
+      }
+      return list;
     }
-
+  },
+  methods: {
+    //清空对比
+    clearAll() {
+      this.compareBtn = false;
+      this.$store.dispatch("clearAll");
+    },
+    //清空待看
+    clearDaikan() {
+      this.compareBtntwo = false;
+      this.$store.dispatch("clearDaikan");
+    },
+     //删除对比
+    deleteOne(item) {
+      this.$store.dispatch("deleteOne", item);
+    },
+    //删除待看列表
+    deleteTwo(item) {
+      this.$store.dispatch("deleteTwo", item);
+    },
+     //立即比较(对比)
+    compare() {
+      this.$router.push({ path: "/contrast" });
+    },
+    //立即预约 (待看)
+    compareone() {
+       this.appinthouse.forEach(item => {
+            this.id = item.id
+         });
+        this.$router.push({ path: "/mine/indexseeone"});
+      }
   },
   _querys() {
     this.$http
