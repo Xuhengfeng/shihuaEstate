@@ -16,7 +16,7 @@
         </ul>
     </div>
     <table>
-        <tr v-for="item in [1,1,1,1,1]" @click="change(item)">
+        <tr v-for="item in 5" @click="change(item)">
              <td>2013-14</td>
             <td >张三</td>
              <td >单价</td>
@@ -29,32 +29,28 @@
 </template>
 
 <script>
-import {Steps} from 'element-ui';
+import { Steps } from "element-ui";
 export default {
-    data() {
-        return {
-           
-        };
+  data() {
+    return {};
+  },
+  methods: {
+    change(item) {
+      console.log(item);
+      this.$router.push({ path: `indexdelegationdetail/${item.id}` });
     },
-   
-    methods: {
-        change(item) {
-            // let id = item.id?item.id:null;
-            let path = "indexdelegationdetail:id";
-            this.$router.push({ path: path });
-        }
-    }
+    
+  }
 };
 </script>
 
 <style lang="less" scoped>
-
-.collectlist{
-  >ul{
+.collectlist {
+  > ul {
     height: 35px;
     background: rgba(0, 0, 0, 0.3);
   }
-  >ul>li{
+  > ul > li {
     color: white;
     float: left;
     height: 40px;
@@ -65,13 +61,13 @@ export default {
   }
 }
 
-.collectlistone{
-    margin-top: 30px;
-  >ul{
+.collectlistone {
+  margin-top: 30px;
+  > ul {
     height: 45px;
-    background:#ffb2b2;
+    background: #ffb2b2;
   }
-  >ul>li{
+  > ul > li {
     color: white;
     float: left;
     height: 45px;
@@ -82,40 +78,37 @@ export default {
   }
 }
 
-
-
 // body 表格
-table{
-	width: 100%;
-	height: 48px;
-	box-sizing: border-box;
-	th{
-		padding: 50px 0 22px;
-		text-align: left;
-		font-size: 22px;
-		color: rgba(0,0,0,.3);
-	}
-	tr{
-		td{
-			overflow: hidden;
-			width: 80px;
-			height: 48px;
-			line-height: 48px;
-			max-width: 80px;
-			max-height: 48px;
-			border: 1px solid #eeeeee;
-			box-sizing: border-box;
-            text-align: center;
-            color: #9c9fa1;
-            font-weight: 600;
-            cursor: pointer;
-			
-		}
-		&:hover{
-			td{
-				border-bottom: 1px solid red;
-			}
-		}
-	}
+table {
+  width: 100%;
+  height: 48px;
+  box-sizing: border-box;
+  th {
+    padding: 50px 0 22px;
+    text-align: left;
+    font-size: 22px;
+    color: rgba(0, 0, 0, 0.3);
+  }
+  tr {
+    td {
+      overflow: hidden;
+      width: 80px;
+      height: 48px;
+      line-height: 48px;
+      max-width: 80px;
+      max-height: 48px;
+      border: 1px solid #eeeeee;
+      box-sizing: border-box;
+      text-align: center;
+      color: #9c9fa1;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    &:hover {
+      td {
+        border-bottom: 1px solid red;
+      }
+    }
+  }
 }
 </style>

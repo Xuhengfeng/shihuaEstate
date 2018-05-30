@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-07 18:26:42
+ * @Last Modified time: 2018-05-30 09:35:00
  */
 <template>
 	<div>
@@ -272,7 +272,6 @@ export default {
   },
   methods: {
      handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.query(null, val);		
     },
     //收藏房源
