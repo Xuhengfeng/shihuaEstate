@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-30 00:45:03
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-31 13:52:50
  */
 <template>
   <div class="sellRent">
@@ -438,21 +438,17 @@ export default {
         roomNum: this.houseThree, //房号
         address: this.address //详细地址
       };
-      if (
-        this.cityCode == "" ||
-        this.brokerId == "" ||
-        this.username == "" ||
-        this.telphone == "" ||
-        this.houseTyName == "" ||
-        this.houseOne == "" ||
-        this.houseThree == ""
-      ) {
-        this.$alert("信息不能为空!");
-      } else {
-        this.$http.post(this.IPS[this.IPSnum], params).then(response => {
-          console.log(response.data.data);
-        });
+      switch(true){
+        case !this.username:return this.$alert('姓名不能为空!');break;
+        case !this.telphone:return this.$alert('手机号码不能为空!');break;
+        case !/^1[34578]\d{9}$/.test(this.telphone):return this.$alert('手机号码格式不对!');break;
+        case !this.cityCode:return this.$alert('城市不能为空!');break;
+        case !this.brokerId:return this.$alert('小区不能为空!');break;
+        case !this.houseTyName,!this.houseOne,!this.houseThree: return this.$alert('信息填写不全!');break;
       }
+      this.$http.post(this.IPS[this.IPSnum], params).then(response => {
+        this.clearAllInput();
+      });
     }
   }
 };
