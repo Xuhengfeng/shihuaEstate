@@ -15,17 +15,15 @@
                         <span class="time">{{item.appointDate1}}</span> 
                         <span class="day">{{item.appointDate2}}</span>
                         <div class="status">
-                            <span v-for="(item,index) in spanList" 
+                            <!-- <span v-for="(item,index) in spanList" 
                                     :key="index"
                                     :class="index==num?'spanBgColor':''"
-                                    @click="selectItem(index)">{{item}}</span>
-                            <!-- <span>预约成功</span>
-                            <span>已取消</span> -->
+                                    @click="selectItem(index)">{{item}}</span> -->
+                            <span>{{item.status}}</span>
                         </div>
                     </div>
-                    <div>约看2套房</div>
-                    <div class=""><el-button type="danger" @click="open3">取消预约</el-button></div>
-                    
+                    <div>约看{{item.houseNum}}套房</div>
+                    <div class=""><el-button type="danger" v-if="cancel" @click="open(item)">取消预约</el-button></div>
                 </div>
                 <div class="broker">
                     <div class="image"><img :src="item.broker.photo"></div>
@@ -35,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <o-house-list></o-house-list>
+            <o-house-list :isShowNum="isShowNum" :list="item.houseList" ></o-house-list>
         </div>
     </div>
 </template>
@@ -45,9 +43,13 @@ import oHouseList from "../../base/houseList/houseList";
 export default {
     data() {
         return {
-            spanList: ['确认中','预约成功','已取消'],//状态
-            num:0,//默认第一个
+            // spanList: ['确认中','预约成功','已取消'],//状态
+            isShowNum:2,//默认第一个
             readyList: [],//约看日程
+            num: 0,//按钮
+            cancelCause:"", //取消原因
+            selectCity: JSON.parse(localStorage.selectCity),//当前城市
+            cancel:true  //取消预约
         };
     },
     created() {
@@ -67,26 +69,41 @@ export default {
                     //修正时间格式形如2018.01.01
                     item.appointDate1 = item.appointDate.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
                     item.appointDate2 = item.appointDate.split(' ')[1];
+                    // if(item.status == 0){
+                    //     item.status = '确认中'
+                    //      this.cancel = true
+                    // }if(item.status == 1){
+                    //     item.status = '预约成功'
+                    //      this.cancel = true
+                    // }if(item.status == 2){
+                    //     item.status = '已取消'
+                    //      this.cancel = false
+                    // }
                 });
                 this.readyList = response.data.data;
             });
         },
-        open3() {
+        open(item) {
             this.$prompt('请输入你取消的内容', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
+                // inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
                 inputErrorMessage: '内容不能为空!'
             }).then(({ value }) => {
-                this.$message({
-                    type: 'success',
-                    message: '提交成功'
-                });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '取消输入'
-                });       
+                this.cancelcause(item,value);
+            });
+        },
+        cancelcause(item,value) {
+            console.log(1121)
+            console.log(this)
+            this.$http
+            .post(this.$url.URL.APPOINT_CANCEL,{
+                scity:this.selectCity,
+                id:item.id,
+                cancelCause: value
+            })
+            .then(response => {
+                this.$message({type: 'success',message: '提交成功'});
             });
         }
     },

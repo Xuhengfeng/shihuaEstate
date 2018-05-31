@@ -18,7 +18,7 @@
                 background
                 layout="prev, pager, next"
                 prev-text="上一页"
-                            next-text="下一页"
+                 next-text="下一页"
                 :total="1000">
             </el-pagination>
         </div>
@@ -31,17 +31,18 @@ export default {
         return {
             list: [],//二手房数据
             isShowNum: 1,//模板1渲染
+            selectCity:JSON.parse(localStorage.selectCity),//当前城市
         };
     },
     created() {
         this.collectionListRequest();
     },
     methods: {
-        collectionListRequest() {
+        collectionListRequest(num) {
           this.$http
           .post(this.$url.URL.HOUSE_QUERY, {
             scity: JSON.parse(localStorage.selectCity).value,
-            pageNo: 1
+            pageNo: num
           })
           .then(response => {
              this.list = response.data.data;
@@ -51,7 +52,11 @@ export default {
               // });
               // this.datalist = response.data.data;
           });
-        }
+        },
+        handleCurrentChange(val) {
+           console.log(`当前页: ${val}`);
+        this.collectionListRequest( val);		
+        },
     },
     components: {
         oHouseList

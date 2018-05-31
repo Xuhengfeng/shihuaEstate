@@ -59,25 +59,25 @@
                     </div>
               </div>
           </li>
-          <li class="three"><img src="../../imgs/home/collection.png">
-              <div class="screenOuter">
+          <li class="three" @click="toCollect()"><img src="../../imgs/home/collection.png">
+              <!-- <div class="screenOuter">
                   我收藏的房源
-              </div>
+              </div> -->
           </li>
           <li class="four"><img src="../../imgs/home/calc.png">
-              <div class="screenOuter">
+              <!-- <div class="screenOuter">
                   计算器
-              </div>
+              </div> -->
           </li>
           <li class="five"><img src="../../imgs/home/ideaTick.png">
-              <div class="screenOuter">
+              <!-- <div class="screenOuter">
                   反馈
-              </div>
+              </div> -->
           </li>
           <li class="six"><img src="../../imgs/home/service.png">
-              <div class="screenOuter">
+              <!-- <div class="screenOuter">
                   客服
-              </div>
+              </div> -->
           </li>
       </ul>
   </div>
@@ -143,7 +143,12 @@ export default {
             this.id = item.id
          });
         this.$router.push({ path: "/mine/indexseeone"});
-      }
+      },
+      //跳转我的收藏
+      toCollect() {
+        let path = "/mine/indexcollection";
+        this.$router.push({ path: path });
+      },
   },
   _querys() {
     this.$http
@@ -185,6 +190,7 @@ export default {
     transform: translateY(-50%);
     //选项
     > li {
+      cursor: pointer;
       padding: 5px 0 3px;
       margin-bottom: 25px;
       text-align: center;

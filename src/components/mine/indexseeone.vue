@@ -44,8 +44,8 @@
                 <li class="date selected" v-for="item in datelist" @click="appoint(item,$event)">
                     <div class="week-day">{{item.w}}</div>
                     <div class="month-info">
-                    <div class="month-day">24</div>
-                    <div class="month">5月</div>
+                    <div class="month-day">{{item.d}}</div>
+                    <div class="month">{{item.m}}月</div>
                     </div>
                 </li>
                 </ul>
