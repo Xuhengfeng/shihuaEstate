@@ -122,13 +122,15 @@
         houseDetail: null,
         isCancel: true,//是否取消预约
         IPS:[this.$url.URL.MY_SELL_APPLYLIST, this.$url.URL.MY_RENT_APPLYLIST],//出售 出租
-        num: 0,//出售
+        IPS2:[this.$url.URL.MY_SELL_CANCEL, this.$url.URL.MY_RENT_CANCEL],//取消出售 取消出租
+        num: 0,//0出售 1出租
+        id: null,
       };
     },
     created() {
-      let id = parseInt(this.$route.params.id);
+      this.id = parseInt(this.$route.params.id);
       this.num = this.$route.query.num;
-      this.houseDetailRequest(id);
+      this.houseDetailRequest(this.id);
     },
     methods: {
       //状态检测
@@ -150,7 +152,24 @@
       },
       //取消委托
       cancel() {
-        this.isCancel = false;
+        this.$prompt('请输入邮箱', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+          this.cancelRequest(value)
+        });
+      },
+      cancelRequest(value) {
+        let params = {
+          cancelCause: value,
+            id: this.id
+        }
+        this.$http
+            .put(this.IPS2[this.num],params)
+            .then(res=>{
+              this.isCancel = false;
+              this.$message({type: 'success',message: '取消委托成功!'});
+            })
       }
     }
   }

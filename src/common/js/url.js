@@ -65,7 +65,8 @@ let URL = {
 	RENT_APPLYLIST:_host + '/houseEntrustApply/queryRentApplyList',     //我的出租申请列表
 	MY_SELL_APPLYLIST:_host + '/houseEntrustApply/sell/',     //我的出售申请详情
 	MY_RENT_APPLYLIST:_host + '/houseEntrustApply/rent/',     //我的出租申请详情
-
+	MY_SELL_CANCEL:_host + '/houseEntrustApply/sell/cancel/',    //取消卖房申请
+	MY_RENT_CANCEL:_host + '/houseEntrustApply/rent/cancel',     //取消出租申请
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
 	HOUSE_SECONDHOUSE:_host + "/map-house/coordinate/secondHouse", //坐标找房 二手房
 	HOUSE_RENTHOUSE:_host + "/map-house/coordinate/rentHouse",     //坐标找房 租房
