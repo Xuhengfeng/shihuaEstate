@@ -139,7 +139,7 @@
           case 'ZERO':this.active=0;break;//申请中
           case 'ONE':this.active=1;break;//核实中
           case 'TWO':this.active=2;break;//已发布
-          case 'CANCEL':this.active=3;break;//取消
+          case 'CANCEL':this.isCancel=false;break;//取消
         }
       },
       houseDetailRequest(id) {
@@ -152,11 +152,16 @@
       },
       //取消委托
       cancel() {
-        this.$prompt('请输入邮箱', '提示', {
+        this.$prompt('请输入取消委托的原因', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-          this.cancelRequest(value)
+          if(value){
+            this.cancelRequest(value);
+          }else{
+            this.$alert('请输入取消委托的原因');
+          }
+         
         });
       },
       cancelRequest(value) {

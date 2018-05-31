@@ -2,14 +2,14 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-30 23:14:18
+ * @Last Modified time: 2018-06-01 00:36:00
  */
 <template>
 	<div>
 		<o-header :houseTypeId="houseTypeId" 
               :keywordTypeId="keywordTypeId" 
               :keyword="keyword"
-              @query="query()"></o-header>
+              @query="query"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
@@ -143,7 +143,7 @@
 								</div> 
 							</li>
 						</ul>
-            <div class="noContent" v-show="!buyhouse.length">没有数据!</div>
+            <div class="noContent" v-show="!buyhouse.length">暂无数据!</div>
 					</div>
 
           <!-- 分页器 -->
@@ -472,7 +472,6 @@ export default {
         this.querycount = response.data.data;
       });
     },
-   
     changeshow() {
       this.showBtn = true;
     },
@@ -538,7 +537,10 @@ export default {
   color: #ff4343;
   font-weight: bold;
 }
-
+.item{
+  position: relative;
+  min-height: 50px;
+}
 //列表项 
 .item ul li{
   overflow: hidden;
@@ -620,11 +622,13 @@ export default {
 
 //没有搜索到任何数据
 .noContent{
-  height: 280px;
-  line-height: 280px;
-  text-align: center;
-  color: #333333;
-  font-size: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  color: #5e7382;
+  
 }
 
 .pageFooter{

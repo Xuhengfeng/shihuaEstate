@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:27:54 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-07 17:33:50
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-01 00:15:20
  */
 <template>
 	<div class="header">
@@ -11,8 +11,8 @@
 				<img src="../../imgs/buyhouse/logored.png" />
 			</div>
 			<div class="searchBox fl">
-				<input type="text" placeholder="请输入关键词进行检索" v-model="word"  @keyup.enter="query"/>
-				<div @click.stop="query()"></div>
+				<input ref="oInput" type="text" :placeholder="placeholder" v-model="word"  @keyup.enter="query()"/>
+				<div @click="query()"></div>
 			</div>
 			<div class="menu fr">
 				<ul class="menuright fl">
@@ -41,6 +41,10 @@ export default {
 		keywordTypeId: {
 			type: Number,
 			default: 0
+		},
+		placeholder: {
+			type: String,
+			default: '请输入关键词进行检索',
 		}
 	},
 	data() {
@@ -57,6 +61,7 @@ export default {
 				keyword: this.word,
 				keywordTypeId: this.keywordTypeId
 			}
+			this.$refs.oInput.blur();
 			return this.$emit('query', params);
 		}
 	}
