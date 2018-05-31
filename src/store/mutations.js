@@ -1,9 +1,10 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-30 22:51:34
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-31 17:46:56
  */
+import router from '../router/index'
 //同步处理
 export default {
 	//初始化登录状态, 防止刷新状态还原
@@ -40,6 +41,7 @@ export default {
 		//清空状态
 		state.logined = false;
 		state.LoginedUser = {};
+		router.push({path: "/"})
 	},
 	//清空对比清单列表
 	CLEARALL(state) {

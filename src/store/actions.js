@@ -1,7 +1,6 @@
 import API from '../common/js/url.js';
 import axios from 'axios';
 import Vue from 'vue'
-// import Router from 'vue-router'
 import {Message, MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框

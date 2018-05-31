@@ -6,41 +6,44 @@
         </ul>
     </div>
     <div class="step">
-      <el-steps :space="200" :active="active" finish-status="success">
+      <el-steps :space="200" :active="active" finish-status="success" v-if="isCancel">
         <el-step title="申请中"></el-step>
         <el-step title="核实中"></el-step>
         <el-step title="已发布"></el-step>
-        <el-button class="btn" @click="next">委托</el-button>
+        <el-button class="btn" @click="cancel()">取消委托</el-button>
       </el-steps>
+      <div class="cancelConfirm" v-if="!isCancel">委托已取消</div>
     </div>
     <div class="main">
        <div class="one">
           <h3>温馨小区房源委托申请</h3>
           <ul>
-            <li>姓名: 张三</li>
-            <li>城市: 深圳</li>
-            <li>电话: 12315446</li>
-            <li>具体地址: 深圳市高新园区</li>
+            <li>姓名: {{houseDetail.linkman}}</li>
+            <li>城市: {{houseDetail.cityCode}}</li>
+            <li>电话: {{houseDetail.phone}}</li>
+            <li>具体地址: {{houseDetail.address}}</li>
           </ul>
        </div>
        <!-- 申请中 核实中-->
-       <div class="two">
+       <div class="two" v-show="active==0||active==1">
          <h3>跟进人</h3>
          <div class="description">
-           <div class="image"><img src="../../imgs/home/avatar.png"></div>
+           <div class="image"><img :src="houseDetail.broker.phone"></div>
            <ul>
-              <li class="name"><span>张三</span>高级经纪人</li>
-              <li class="province"><span v-for="dataDetail in 2">{{dataDetail}}</span></li>
+              <li class="name"><span>{{houseDetail.broker.emplName}}</span>{{houseDetail.broker.positionName}}</li>
+              <li class="province"><span>{{houseDetail.broker.deptName}}</span></li>
               <li class="tags"><span v-for="dataDetail in 3">{{dataDetail}}</span></li>
            </ul>
            <div class="telphone">
              联系电话:<br>
-             123 1234 1234
+             {{houseDetail.broker.phone.slice(0,3)}} 
+             {{houseDetail.broker.phone.slice(3,8)}} 
+             {{houseDetail.broker.phone.slice(8,11)}} 
            </div>
          </div>
        </div>
        <!-- 已发布 -->
-       <div class="three">
+       <div class="three" v-show="active==2">
           <h3>委托房源</h3>
           <div>
             <div class="image">
@@ -66,7 +69,7 @@
     </div>
     
     <!-- 房源动态 -->
-    <div class="four">
+    <div class="four" v-show="active==2">
       <h3>房源动态</h3>
       <div>
         <div>
@@ -85,7 +88,7 @@
     </div>
     
     <!-- 带看记录 -->
-    <div class="five">
+    <div class="five" v-show="active==2">
         <h4>带看记录</h4>
         <ul>
           <li><div>看房日期</div><div>带看人</div><div>联系经纪人</div></li>
@@ -103,7 +106,6 @@
  export default {
     data() {
       return {
-        active: 0,
         dataDetail: {
           housePic: null,
           houseTitle: null,
@@ -115,13 +117,40 @@
           areaName: null,
           saleTotal: null,
           salePrice: null
-        } 
+        },
+        active: 0,
+        houseDetail: null,
+        isCancel: true,//是否取消预约
+        IPS:[this.$url.URL.MY_SELL_APPLYLIST, this.$url.URL.MY_RENT_APPLYLIST],//出售 出租
+        num: 0,//出售
       };
     },
-
+    created() {
+      let id = parseInt(this.$route.params.id);
+      this.num = this.$route.query.num;
+      this.houseDetailRequest(id);
+    },
     methods: {
-      next() {
-        if (this.active++ > 2) this.active = 0;
+      //状态检测
+      statusParse(status) {
+        switch(status){
+          case 'ZERO':this.active=0;break;//申请中
+          case 'ONE':this.active=1;break;//核实中
+          case 'TWO':this.active=2;break;//已发布
+          case 'CANCEL':this.active=3;break;//取消
+        }
+      },
+      houseDetailRequest(id) {
+        this.$http
+            .get(this.IPS[this.num]+`${id}`)
+            .then(res=>{
+              this.statusParse(res.data.data.status)
+              this.houseDetail = res.data.data;
+            })
+      },
+      //取消委托
+      cancel() {
+        this.isCancel = false;
       }
     }
   }
@@ -328,7 +357,12 @@
   }
 
 }
-
+.cancelConfirm{
+  line-height: 57px;
+  height: 57px;
+  font-size: 25px;
+  text-align: center;
+}
 
 
 
