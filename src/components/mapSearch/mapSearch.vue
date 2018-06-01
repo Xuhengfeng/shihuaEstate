@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-04-28 11:59:39
+ * @Last Modified time: 2018-06-01 16:05:24
  */
 <template>
     <!-- 地图找房 -->
@@ -461,115 +461,109 @@ export default {
 }
 </script>
 
-<style scoped="scoped">
-/* 第一块 */
+<style lang="less" scoped>
 .header {
   position: relative;
   z-index: 100;
   background: #ffffff;
-}
-.header .header-hd {
-  overflow: hidden;
-  width: 100%;
-  height: 59px;
-  border-bottom: 1px solid #eee;
-}
-.header-hd .logo {
-  float: left;
-  width: 240px;
-  height: 60px;
-  background: url("../../imgs/buyhouse/logored.png") no-repeat center center;
-}
-.header-hd .logo img {
-  vertical-align: middle;
-}
-.header-hd .menu {
-  overflow: hidden;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-}
-.header-hd ul li {
-  float: right;
-  width: 100px;
-  height: 100%;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-}
-.header-hd ul li:hover {
-  color: #ff4343;
-}
-.header-hd .sign > div {
-  font-size: 12px;
-  color: #666;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  margin-right: 12px;
-  margin-left: 40px;
-}
-.login,
-.logout {
-  color: #666;
-  padding: 0 10px;
+  /* 第一块 */
+  .header-hd {
+    overflow: hidden;
+    width: 100%;
+    height: 59px;
+    border-bottom: 1px solid #eee;
+    .logo {
+      float: left;
+      width: 240px;
+      height: 60px;
+      background: url("../../imgs/buyhouse/logored.png") no-repeat center center;
+      img {vertical-align: middle}
+    }
+    .sign{
+      div{
+        font-size: 12px;
+        color: #666;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        margin-right: 12px;
+        margin-left: 40px;
+        .login,.logout {
+          color: #666;
+          padding: 0 10px;
+        }
+      }
+    }
+    .menu {
+      overflow: hidden;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      ul li {
+        float: right;
+        width: 100px;
+        height: 100%;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        cursor: pointer;
+        &:hover{color: #ff4343}
+      }
+    }
+  }
+  /* 第二块 */
+  .header-bd {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #eee;
+    .search-bar {
+      position: relative;
+      vertical-align: middle;
+      height: 100%;
+      width: 438px;
+      border-right: 1px solid #eee;
+      input {
+        height: 100%;
+        width: 400px;
+        box-sizing: border-box;
+        margin-left: 20px;
+        padding: 13px 60px 10px 0;
+        outline: none;
+        border: 0;
+        font-size: 13px;
+      }
+      img {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+    }
+  }
+  .filters,.tools {height: 50px;line-height: 50px}
+  .filters > li {
+    float: left;
+    height: 100%;
+    width: 80px;
+    border-right: 1px solid #eee;
+    text-align: center;
+    position: relative;
+    .filters-content {
+      position: absolute;
+      left: 0;
+      z-index: 1100;
+    }
+  }
+  .tools > li {
+    float: right;
+    height: 100%;
+    padding: 0 20px;
+    cursor: pointer;
+  }
+
 }
 
-/* 第二块 */
-.header .header-bd {
-  width: 100%;
-  height: 50px;
-  border-bottom: 1px solid #eee;
-}
-.header .search-bar {
-  position: relative;
-  vertical-align: middle;
-  height: 100%;
-  width: 438px;
-  border-right: 1px solid #eee;
-}
-.header .search-bar input {
-  height: 100%;
-  width: 400px;
-  box-sizing: border-box;
-  margin-left: 20px;
-  padding: 13px 60px 10px 0;
-  outline: none;
-  border: 0;
-  font-size: 13px;
-}
-.header .search-bar img {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-.header-bd .filters,
-.header-bd .tools {
-  height: 50px;
-  line-height: 50px;
-}
-.header-bd .filters > li {
-  float: left;
-  height: 100%;
-  width: 80px;
-  border-right: 1px solid #eee;
-  text-align: center;
-  position: relative;
-}
-.header-bd .tools > li {
-  float: right;
-  height: 100%;
-  padding: 0 20px;
-  cursor: pointer;
-}
-.filters-content {
-  position: absolute;
-  left: 0;
-  z-index: 1100;
-}
 
 /* 房源列表 */
 .side {
@@ -581,56 +575,82 @@ export default {
   bottom: 0;
   transition: all 0.3s ease;
   z-index: 1000;
- 
+  .agent-info{
+    height: 112px;
+    padding-left: 24px;
+  }
+  .r-content{
+    height: 100%;
+    padding-left: 24px;
+    border-top: 1px solid #cacaca;
+    ul{
+      width: 400px;
+      height: 100%;
+      overflow-y: scroll;
+      li{
+        padding: 10px 0;
+        overflow: hidden;
+        border-bottom: 1px solid #cacaca;
+        margin: 0 10px;
+        .item-content{
+          overflow: hidden;
+          .image{
+            width: 120px;
+            height: 100px;
+            margin-right: 10px;
+            img{width: 100%; height: 100%}
+          } 
+        } 
+      }
+    }
+  }
+  .showController {
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    width: 40px;
+    height: 60px;
+    line-height: 60px;
+    background: #ffffff;
+    text-align: center;
+    transform: translateY(-50%);
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.3),
+      0 1px 0 rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
 }
-.side .showController {
-  position: absolute;
-  right: -40px;
-  top: 50%;
-  width: 40px;
-  height: 60px;
-  line-height: 60px;
-  background: #ffffff;
-  text-align: center;
-  transform: translateY(-50%);
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 1px 0 rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+
+
+
+.item-title{
+  font-size:16px;
+  color:#222222;
+  line-height:1.2;
+  text-align:justify;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
 }
-.side .agent-info{
-  height: 112px;
-  padding-left: 24px;
+.description,
+.houseTypeInfo,
+.housePrice{
+  font-size:12px;
+  color:#666666;
+  margin-top:9px;
+  line-height:1;
 }
-.side .r-content{
-  height: 100%;
-  padding-left: 24px;
-  border-top: 1px solid #cacaca;
+.houseTypeInfo{
+
 }
-.side ul{
-  width: 400px;
-  height: 100%;
-  overflow-y: scroll;
+.housePrice{
+  color: #ff4343;
+  span{color:#666666}
 }
-.side ul li{
-  padding: 10px 0;
-  overflow: hidden;
-  border-bottom: 1px solid #cacaca;
-  margin: 0 10px;
-}
-.side ul li .image{
-  width: 120px;
-  height: 100px;
-  margin-right: 10px;
-} 
-.side .image img{
-  width: 100%;
-  height: 100%;
-}
-.side ul li .item-content{
-  overflow: hidden;
-} 
+
+
 ::-webkit-scrollbar  
 {  
   width: 1px;  
