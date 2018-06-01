@@ -23,7 +23,8 @@
                         </div>
                     </div>
                     <div>约看{{item.houseNum}}套房</div>
-                    <div class=""><el-button type="danger" v-if="cancel" @click="open(item)">取消预约</el-button></div>
+                    <div class="" v-if="item.status=='已取消'||item.status=='已预约'?false:true" ><el-button type="danger"   @click="open(item)">取消预约</el-button></div>
+                     <!-- <div class="" v-if="!cancel" ><el-button type="danger"  @click="open(item)"></el-button></div> -->
                 </div>
                 <div class="broker">
                     <div class="image"><img :src="item.broker.photo"></div>
@@ -69,16 +70,11 @@ export default {
                     //修正时间格式形如2018.01.01
                     item.appointDate1 = item.appointDate.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
                     item.appointDate2 = item.appointDate.split(' ')[1];
-                    // if(item.status == 0){
-                    //     item.status = '确认中'
-                    //      this.cancel = true
-                    // }if(item.status == 1){
-                    //     item.status = '预约成功'
-                    //      this.cancel = true
-                    // }if(item.status == 2){
-                    //     item.status = '已取消'
-                    //      this.cancel = false
-                    // }
+                     switch(item.status){
+                        case 0:item.status = '确认中'; break;
+                        case 1:item.status = '预约成功';break;
+                        case 2: item.status = '已取消';break;
+                    }
                 });
                 this.readyList = response.data.data;
             });

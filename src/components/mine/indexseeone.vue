@@ -185,12 +185,13 @@ export default {
             }
             let  M = (newTime.getMonth()+1 < 10 ? '0'+(newTime.getMonth()+1) : newTime.getMonth()+1) ;
             let  D = newTime.getDate();
+            let num = this.PrefixInteger(D,2);
             return {
                 y: Y,
                 m: M,
                 w: W,
                 d: D,
-                all:Y+"-"+M +"-"+D
+                all:Y+"-"+M +"-"+num
             };            
         },
         //删除待看房源
@@ -243,8 +244,9 @@ export default {
         },
         commitRequest() {
             let scity = this.cityCode ? this.cityCode : this.currentCity.value;
+         
             let params = {
-                appointDate:this.appointDate, //预约时间
+                appointDate: this.appointDate, //预约时间
                 appointMobile: this.mobile, //手机号
                 appointName: this.username, //姓名
                 appointRange:this.rangetime ,//预约时段类型
@@ -272,7 +274,10 @@ export default {
         },
         appoint(item,e) {
          this.appointDate =item.all
-         console.log( this.appointDate )
+        },
+        //时间位数补齐  
+        PrefixInteger(num, n) {
+            return (Array(n).join(0) + num).slice(-n);
         },
         range(e,index) {
              this.rangetime = e.target.innerHTML
