@@ -2,15 +2,15 @@
     <div>
         <div class="collectlist">
             <ul>
-              <li@click="change(0)">二手房</li>
-                <li @click="change(1)">租房</li>
+              <li  :class="index==num?'bgColor':''" v-for="(item ,index) in tab" @click="change(index)">{{item.cillectlist}}</li>
+                <!-- <li @click="change(1)">租房</li>
                   <li @click="change(2)">小区</li>
-                   <li @click="change(3)">经纪人</li>
+                   <li @click="change(3)">经纪人</li> -->
              </ul>
           </div>
         <div class="main">
             <ul>
-                <li v-for="item in collecttwohouse " v-if="num==0">
+                <li v-for="item in collecttwohouse " v-if="index==0">
                     <div class="image">
                         <img :src="item.housePic">
                     </div>
@@ -30,11 +30,11 @@
                         <div class="sellPrice">单价<span>{{item.salePrice }}</span>元/平米</div>
                     </div>
                 </li>
-                 <li v-for="item in collecttwohouse "  v-if="num==1">
+                 <li v-for="item in collecttwohouse "  v-if="index==1">
                     <div class="image">
                         <img :src="item.housePic">
                     </div>
-                    <div class="description" v-if="num==1">
+                    <div class="description" v-if="index==1">
                         <div class="title">{{item.houseTitle}}</div>
                         <div class="info">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
                         <div class="attention">{{item.houseTag}}</div>
@@ -50,7 +50,7 @@
                         <div class="sellPrice">单价<span>{{item.rentPrice }}</span>元/平米</div>
                     </div>
                 </li>
-                  <li v-for="item in collecttwohouse "  v-if="num==2">
+                  <li v-for="item in collecttwohouse "  v-if="index==2">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.housePic"/>
 								</div>
@@ -68,7 +68,7 @@
                  				 </div>
 								</div> 
 							</li>
-               <li v-for="item in collecttwohouse "  v-if="num==3">
+               <li v-for="item in collecttwohouse "  v-if="index==3">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.photo"/>
 								</div>
@@ -76,7 +76,7 @@
 									<div class="introduce" @click="toSkip(item)"> {{item.emplName}}</div>
 									<div class="introduce">
                     				<span class="word">{{item.deptName}}</span>
-                            <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
+                            <span class="fr pricestwo">{{item.grade}}.0<span class="grade">评分</span></span>
                              <span class="fr call">联系电话：1111111111{{item.phone}}</span>
                  </div>
 									<div class="introduce">
@@ -99,16 +99,17 @@ export default {
           	num: 0,           //切换ip
             IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST,this.$url.URL.BROKERS_collectionlist],
             page: 1,
+            tab:[{cillectlist:"二手房"},{cillectlist:"租房"},{cillectlist:"小区"},{cillectlist:"经纪人"}]
         };
     },
     created() {
         this.collectionListRequest(0);
     },
     methods: {
-        collectionListRequest(num) {
-          this.num = num;
+        collectionListRequest(index) {
+          this.index = index;
           this.$http
-            .get(this.IPS[num]+"?pageNo="+this.page)
+            .get(this.IPS[index]+"?pageNo="+this.page)
             .then(response => {
                 this.collecttwohouse = response.data.data;
                 // //修正数据
@@ -118,9 +119,10 @@ export default {
                 // this.datalist = response.data.data;
             });
         },
-        change(num) {
+        change(index) {
 					//同小区二手房房源
-					this.collectionListRequest(num);
+          this.collectionListRequest(index);
+          this.num = index;
 			}
     }
 };
@@ -280,10 +282,22 @@ h3 {
 .prices {
      font-family: tahoma;
     position: relative;
-    right: 340px;
+    right:210px;
     font-size: 24px!important;
     color: rgba(239, 31, 31, 0.85);
     font-weight: bold;
+}
+.pricestwo{
+     font-family: tahoma;
+    position: relative;
+    right: 290px;
+    font-size: 24px!important;
+    color: rgba(239, 31, 31, 0.85);
+    font-weight: bold;
+}
+.bgColor{
+	background: red!important;
+	color: #ffffff;
 }
 .cout{
     font-size: 24px;
