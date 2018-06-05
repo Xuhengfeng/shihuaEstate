@@ -48,6 +48,7 @@ export default {
 				{name: '我的收藏', url: '/mine/indexcollection'},//我的收藏
 				{name: '我的委托', url: '/mine/indexdelegation'},//我的委托
 				{name: '我的经纪人', url: '/mine/indexbroker'},//我的经纪人
+				{name: '我的评论', url: '/mine/comment'},//我的评论
 				{name: '我的咨询', url: '/mine/indexconsult'},//我的咨询
 				{name: '消息', url: '/mine/indexmessage'},//消息
 				{name: '编辑资料', url: '/mine/indexeditInfo'},//编辑资料

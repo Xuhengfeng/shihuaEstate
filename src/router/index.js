@@ -44,6 +44,7 @@ const indexcollection = resolve => require(['components/mine/indexcollection'], 
 const indexdelegation = resolve => require(['components/mine/indexdelegation'], resolve)//我的委托
 const indexdelegationdetail = resolve => require(['components/mine/indexdelegationdetail'], resolve)//我的委托详情
 const indexbroker = resolve => require(['components/mine/indexbroker'], resolve)//我的经纪人
+const comment = resolve => require(['components/mine/comment'], resolve)//我的评论
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
@@ -100,7 +101,8 @@ const router = new Router({
 				path:"indexconsult",component:indexconsult,meta:{KeepAlive:false}},{//我的咨询
 				path:"indexmessage",component:indexmessage,meta:{KeepAlive:false}},{//消息
 				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}},{//编辑资料
-				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}}//我的委托详情
+				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
+				path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
 			]},
   	]
 })
