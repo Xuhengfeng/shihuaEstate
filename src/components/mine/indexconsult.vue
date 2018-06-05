@@ -33,7 +33,7 @@
 <script>
 </script>
 
-<style scoped="scoped">
+<style  lang="less" scoped>
 .wd-list ul {
     margin-top: 70px;
 }

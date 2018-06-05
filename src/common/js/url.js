@@ -81,6 +81,8 @@ let URL = {
 	DICTIONARY_CURRENTDATETIME:_host + '/dictionary/currentDateTime',  	   //获取当前时间
 	RENT_APPLYLIST:_host + '/houseEntrustApply/queryRentApplyList',  	   //我的出租申请列表
 	SELL_APPLYLIST:_host + '/houseEntrustApply/querySellApplyList',  	   //我的卖房申请列表
+	MY_COLLECTIONLIST:_host + "/my/collectionList",                   //我的经纪人
+	MY_COMMENT:_host + "/my/comment",                       //我的评论
 	
 };
 export default {URL}
