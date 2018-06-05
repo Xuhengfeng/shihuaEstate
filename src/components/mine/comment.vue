@@ -1,26 +1,29 @@
 <template>
 <div class="item">
         <ul>
-            <li v-for="item in broker">
-                <div class="image" @click="toSkip()">
-                    <img :src="item.photo" />
+            <li v-for="item in comment">
+                <div class="image" >
+                    <img :src="item.brokerPhoto" />
                 </div>
                 <div class="direciton">
-                    <div class="introduce" @click="toSkip()" >{{item.emplName}}  </div>
-                        <div class="introduce">
-                            <span class="word">{{item.deptName}}</span>
-                            <span class="fr prices" v-if="item.status == 0">{{item.grade}}.0<span class="grade">评分</span></span>
-                            <span class="fr prices" v-if="item.status == 1">离职</span>
-                            <span class="fr call">联系电话：{{item.phone}}</span>
-                        </div> 
+                    <div class="introduce"  > {{item.emplName}}  <span>{{item.commentTime}}</span> </div>
+                        <div class="text">
+                                {{item.content}}
+                        </div>
                     <div class="introduce ">
-                        <span class="intrspan one">销售达人</span>
-                        <span class="intrspan two">销售达人</span>
-                        <span class="intrspan three">销售达人</span>
+                        <span class="intrspan one">服务态度</span>
+                        <span class="intrspan two">专业知识</span>
                     </div>
                 </div> 
+                <div class="nametag">
+                    <div class="imggetwo">
+                        <img :src="item.brokerPhoto" />
+                    </div>
+            </div>
             </li>
+            
         </ul>
+         
         	<!--分页器-->
      <div class="oPagination">
         <el-pagination
@@ -40,7 +43,7 @@
 export default {
     data() {
         return {
-            broker:"",   //经纪人
+            comment:"",   //评论
             num:1,
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
         };
@@ -54,15 +57,14 @@ export default {
             this.render(null, val);		
         },
         render(num) {
-            //请求经纪人的列表
+            //请求评论的列表
             this.$http
-                .get(this.$url.URL.MY_COLLECTIONLIST +'?pageNo='+this.num, {
+                .get(this.$url.URL.MY_COMMENT +'?pageNo='+this.num, {
                     scity:this.selectCity.value,
-                    // pageNo:num
                 })
                 .then(response => {
-                this.broker = response.data.data;    
-                console.log(this.broker)
+                this.comment = response.data.data;    
+                console.log(this.comment)
              });
         }
     },
@@ -78,10 +80,10 @@ export default {
 .item ul li{
   overflow: hidden;
   display: flex;
-  height: 120px;
+  height: 230px;
   border-bottom: 1px solid #cacaca;
   margin-top: 30px;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   justify-content: flex-start;
   .image{
     flex: 90px 0 0;
@@ -113,27 +115,42 @@ export default {
         color:rgba(0,0,0,0.5);
         margin-left: 10px;
         padding: 5px;
+        float: right;
         font-size: 10px;
-        border: 1px solid #cacaca;
-        visibility: hidden;
-        &:hover{
-          color: #000000;
-        }
       }
     }
   }
-  &:hover .direciton>div:nth-of-type(1) span{
-    visibility: visible;
-  }
 }
+.nametag{
+    flex: 909px 0 0;
+    width: 909px;
+    height: 67px;
+    background: #e5e5e5;
+    >.imggetwo{
+        margin-top: 10px;
+       flex: 50px 0 0;
+        width: 50px;
+        height: 50px;
+        margin-right: 25px;
+        border-radius: 50%;
+        cursor: pointer; 
+    }img{
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+    }
 
-introduce span {
+}
+.introduce {
+    width: 750px;
+}
+.introduce span {
   font-size: 14px;
 }
 
-.introduce .word {
-  vertical-align: top;
-  color: rgba(0, 0, 0, 0.7);
+.text {
+    width: 800px;
+    word-break:break-all; 
 }
 .prices {
   font-family: tahoma;

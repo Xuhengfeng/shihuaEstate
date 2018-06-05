@@ -61,12 +61,6 @@ let URL = {
 	BROKERS_RENTHOUSELIST:_host +'/broker/rentHouseList/',  	//经纪人 -他的在售
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
-	SELL_APPLYLIST:_host + '/houseEntrustApply/querySellApplyList',  	//我的卖房申请列表
-	RENT_APPLYLIST:_host + '/houseEntrustApply/queryRentApplyList',     //我的出租申请列表
-	MY_SELL_APPLYLIST:_host + '/houseEntrustApply/sell/',     //我的出售申请详情
-	MY_RENT_APPLYLIST:_host + '/houseEntrustApply/rent/',     //我的出租申请详情
-	MY_SELL_CANCEL:_host + '/houseEntrustApply/sell/cancel/',    //取消卖房申请
-	MY_RENT_CANCEL:_host + '/houseEntrustApply/rent/cancel',     //取消出租申请
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
 	HOUSE_SECONDHOUSE:_host + "/map-house/coordinate/secondHouse", //坐标找房 二手房
 	HOUSE_RENTHOUSE:_host + "/map-house/coordinate/rentHouse",     //坐标找房 租房
@@ -77,7 +71,7 @@ let URL = {
 	CANCEL_CONTRAST:_host + "/contrast/cancel",                    //取消对比(二手房 新房)
 	APPOINT_READYLIST:_host + "/appoint/readyHouseList",            //待看日程列表
 	APPOINT_DETAILLIST:_host + "/appoint/detailLsit",              //待看列表
-	APPOINT_CANCEL:_host + "/appoint/cancel",                       //取消待看列表/appoint/delete/{id}
+	APPOINT_CANCEL:_host + "/appoint/cancel",                       //取消待看列表
 	APPOINT_ADD:_host + "/appoint/add",                             //加入待看
 	APPOINT_HOUSE:_host + "/appoint/house",                         //提交预约
 	APPOINT_DELETE:_host + "/appoint/delete/",                     //删除待看列表
@@ -85,7 +79,10 @@ let URL = {
 	APPOINT_READYHOUSELIST:_host + "/appoint/readyHouseList",      //待看房源列表
 	REPORT_LIST:_host + "/report/list",                            //看房报告
 	DICTIONARY_CURRENTDATETIME:_host + '/dictionary/currentDateTime',  	   //获取当前时间
-
+	RENT_APPLYLIST:_host + '/houseEntrustApply/queryRentApplyList',  	   //我的出租申请列表
+	SELL_APPLYLIST:_host + '/houseEntrustApply/querySellApplyList',  	   //我的卖房申请列表
+	MY_COLLECTIONLIST:_host + "/my/collectionList",                   //我的经纪人
+	MY_COMMENT:_host + "/my/comment",                       //我的评论
 	
 };
 export default {URL}

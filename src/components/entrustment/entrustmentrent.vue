@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-31 13:52:50
+ * @Last Modified time: 2018-06-01 10:38:23
  */
 <template>
   <div class="sellRent">
@@ -138,6 +138,7 @@
   </div>
 </template>
 <script>
+import {debounce} from "../../common/js/util"
 export default {
   data() {
     return {
@@ -190,7 +191,7 @@ export default {
   },
   watch: {
     cityCode() {
-      this.clearAllInput();
+      this.clearAboutCity();
       this.brokerListRequest();
       this.xiaoquListRequest();
     }
@@ -199,8 +200,25 @@ export default {
     close() {
       this.isSelectNum = null;
     },
-    //清空操作
+    //清空全部操作
     clearAllInput() {
+      this.username = null;
+      this.telphone = null;
+      this.cityValue = null;
+      this.brokerLists = null;
+      this.houseTyName = null;
+      this.houseTyNameList = null;
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.brokerValue = null;
+    },
+    //清空关于城市的
+    clearAboutCity() {
       this.brokerLists = null;
       this.houseTyName = null;
       this.houseTyNameList = null;
@@ -261,15 +279,9 @@ export default {
       this.address = null;
       this.dongzuoListRequest(item.id);
     },
+    //小区
     changeInput() {
-      this.throttle(this.xiaoquListRequest(this.houseTyName), null, 3000);
-    },
-    //函数节流
-    throttle(method, context, delay) {
-      clearTimeout(method.tId);
-      method.tId = setTimeout(function() {
-        method.call(context);
-      }, delay);
+      debounce(this.xiaoquListRequest(this.houseTyName), null, 1000);
     },
     //栋座号
     toggleDong() {
@@ -448,6 +460,7 @@ export default {
       }
       this.$http.post(this.IPS[this.IPSnum], params).then(response => {
         this.clearAllInput();
+        this.$alert('提交成功!')
       });
     }
   }
