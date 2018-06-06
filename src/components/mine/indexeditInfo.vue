@@ -2,9 +2,12 @@
     <div id="box">
         <div class="title">我的账户信息</div>
         <ul>
-            <li v-for="item in menu">{{item}}</li>
+            <li :class="index==num?'bgColor':''" 
+                :key="index"
+                v-for="(item,index) in menu" 
+                @click="change(index)">{{item}}</li>
         </ul>
-        <div class="main">
+        <div class="one" v-show="num == 0">
             <div class="bigimg"></div>
             <div class="size">
                 <div class="size-title">预览</div>
@@ -15,6 +18,28 @@
                 </div>
             </div>
         </div>
+        <div class="two oForm" v-show="num == 1">
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="昵称">
+                    <el-input v-model="username"></el-input>
+                </el-form-item>
+            </el-form>
+            <div class="save">保存</div>
+        </div>
+        <div class="three oForm" v-show="num == 2">
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="输入旧密码">
+                    <el-input v-model="username"></el-input>
+                </el-form-item>
+                <el-form-item label="输入新密码">
+                    <el-input v-model="username"></el-input>
+                </el-form-item>
+                <el-form-item label="输入新密码">
+                    <el-input v-model="username"></el-input>
+                </el-form-item>
+            </el-form>
+            
+        </div>
     </div>
 </template>
 
@@ -22,9 +47,16 @@
  export default {
     data() {
         return{
-            menu: ['上传头像','修改昵称','修改密码']
+            menu: ['上传头像','修改昵称','修改密码'],
+            num: 0,
+            username: null
         }
     },
+    methods: {
+        change(index) {
+            this.num = index;
+        }
+    }
 }
 </script>
 
@@ -46,9 +78,10 @@
             float: left;
             text-align: center;
             width: 100px;
+            cursor: pointer;
         }
     }
-    .main{
+    .one{
       display: flex;
       flex-flow: row nowrap;
       justify-content: flex-start;
@@ -105,5 +138,25 @@
       }
       
     }
+    .two,.three{
+        width: 380px;
+        padding: 110px 0 110px 150px;
+        overflow: hidden;
+        .save{
+            width: calc(100% - 120px);
+            float: right;
+            text-align: center;
+            font-size: 15px;
+            background: #ff4343;
+            border-radius: 5px;
+            height: 45px;
+            line-height: 45px;
+            color: #ffffff;
+        }
+    }
+}
+.bgColor{
+	background: red!important;
+	color: #ffffff;
 }
 </style>

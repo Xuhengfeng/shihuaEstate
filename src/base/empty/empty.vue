@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-06-06 10:56:46 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 15:31:24
+ * @Last Modified time: 2018-06-06 15:47:27
  */
 <template>
     <!-- 所有的空页面 -->
@@ -54,7 +54,7 @@ export default {
             case  2: this.picpath = require('./imgs/consult.png');break;//咨询
             case  3: this.picpath = require('./imgs/person.png');break;//人物
             case  4: this.picpath = require('./imgs/problem.png');break;//问题
-            case  4: this.picpath = require('./imgs/wechat.png');break;//微信
+            case  5: this.picpath = require('./imgs/wechat.png');break;//微信
         }
     },
     methods: {

@@ -166,7 +166,7 @@ export default {
     this.scity = this.selectCity.value;
     this.render();
   },
-   computed: {
+  computed: {
     logined() {
       return this.$store.state.logined;
     }
@@ -180,14 +180,14 @@ export default {
       }
       if(this.collectionFlag){
          this.$http
-        .post(this.$url.URL.BROKERS_ADD + "/"+ this.selectCity.value +"/"+ item.id)
+        .post(this.$url.URL.BROKERS_ADD + this.selectCity.value +"/"+ item.id)
         .then(response => {
             e.target.innerHTML = '已收藏'
         });
 
       }else{
            this.$http
-        .post(this.$url.URL.BROKERS_CANCEL + "/"+ this.selectCity.value +"/"+ item.id)
+        .post(this.$url.URL.BROKERS_CANCEL+ this.selectCity.value +"/"+ item.id)
         .then(response => {
             e.target.innerHTML = '收藏'
         });
