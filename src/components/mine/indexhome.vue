@@ -1,36 +1,43 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-31 00:53:27
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-06 15:30:12
  */
 <template>
     <div>
-        <h3>收藏小区动态</h3>
-        <div class="main">
-            <o-house-list :list="list" :isShowNum="isShowNum"></o-house-list>
+        <div v-show="list.length">
+            <h3>收藏小区动态</h3>
+            <div class="main">
+                <o-house-list :list="list" :isShowNum="0"></o-house-list>
+            </div>
+            <!-- 分页器 -->
+            <div class="oPagination">
+                <el-pagination 
+                    class="fr"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :total="1000">
+                </el-pagination>
+            </div>
         </div>
-        <!-- 分页器 -->
-        <div class="oPagination">
-            <el-pagination 
-                class="fr"
-                @current-change="handleCurrentChange"
-                background
-                layout="prev, pager, next"
-                prev-text="上一页"
-                 next-text="下一页"
-                :total="1000">
-            </el-pagination>
-        </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有收藏的房源'" 
+                 :isShow="false"
+                 v-show="!list.length"></o-empty>
+
     </div>
 </template>
 <script>
 import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
             list: [],//二手房数据
-            isShowNum: 1,//模板1渲染
             selectCity:JSON.parse(localStorage.selectCity),//当前城市
         };
     },
@@ -45,12 +52,11 @@ export default {
             pageNo: num
           })
           .then(response => {
-             this.list = response.data.data;
-              // //修正数据
-              // response.data.data.forEach(item => {
-              //     item.houseTag = item.houseTag.split(",");
-              // });
-              // this.datalist = response.data.data;
+              //修正数据
+              response.data.data.forEach(item => {
+                  item.houseTag = item.houseTag.split(",");
+              });
+              this.list = response.data.data;
           });
         },
         handleCurrentChange(val) {
@@ -59,7 +65,8 @@ export default {
         },
     },
     components: {
-        oHouseList
+        oHouseList,
+        oEmpty
     }
 }
 </script>

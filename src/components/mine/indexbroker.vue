@@ -1,46 +1,55 @@
 <template>
-<div class="item">
-        <ul>
-            <li v-for="item in broker">
-                <div class="image" @click="toSkip()">
-                    <img :src="item.photo" />
-                </div>
-                <div class="direciton">
-                    <div class="introduce" @click="toSkip()" >{{item.emplName}}  </div>
-                        <div class="introduce">
-                            <span class="word">{{item.deptName}}</span>
-                            <span class="fr prices" v-if="item.status == 0">{{item.grade}}.0<span class="grade">评分</span></span>
-                            <span class="fr prices" v-if="item.status == 1">离职</span>
-                            <span class="fr call">联系电话：{{item.phone}}</span>
-                        </div> 
-                    <div class="introduce ">
-                        <span class="intrspan one">销售达人</span>
-                        <span class="intrspan two">销售达人</span>
-                        <span class="intrspan three">销售达人</span>
+    <div class="item">
+        <div v-show="broker.length">
+            <ul>
+                <li v-for="item in broker">
+                    <div class="image" @click="toSkip()">
+                        <img :src="item.photo" />
                     </div>
-                </div> 
-            </li>
-        </ul>
-        	<!--分页器-->
-     <div class="oPagination">
-        <el-pagination
-            @current-change="handleCurrentChange"
-            background
-            layout="prev, pager, next"
-            prev-text="上一页"
-            next-text="下一页"
-            :total="1000"
-            class="fr pagination">
-        </el-pagination>
-     </div>
+                    <div class="direciton">
+                        <div class="introduce" @click="toSkip()" >{{item.emplName}}  </div>
+                            <div class="introduce">
+                                <span class="word">{{item.deptName}}</span>
+                                <span class="fr prices" v-if="item.status == 0">{{item.grade}}.0<span class="grade">评分</span></span>
+                                <span class="fr prices" v-if="item.status == 1">离职</span>
+                                <span class="fr call">联系电话：{{item.phone}}</span>
+                            </div> 
+                        <div class="introduce ">
+                            <span class="intrspan one">销售达人</span>
+                            <span class="intrspan two">销售达人</span>
+                            <span class="intrspan three">销售达人</span>
+                        </div>
+                    </div> 
+                </li>
+            </ul>
+            <!--分页器-->
+            <div class="oPagination">
+                <el-pagination
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :total="1000"
+                    class="fr pagination">
+                </el-pagination>
+            </div>
+        </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有添加经纪人'" 
+                 :picnum="3"
+                 :isShow="false"
+                 v-show="!broker.length"></o-empty>
+                 
     </div>
 </template>
 
 <script>
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
-            broker:"",   //经纪人
+            broker: [],   //经纪人
             num:1,
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
         };
@@ -50,15 +59,13 @@ export default {
     },
     methods:{
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
             this.render(null, val);		
         },
         render(num) {
             //请求经纪人的列表
             this.$http
                 .get(this.$url.URL.MY_COLLECTIONLIST +'?pageNo='+this.num, {
-                    scity:this.selectCity.value,
-                    // pageNo:num
+                    scity:this.selectCity.value
                 })
                 .then(response => {
                 this.broker = response.data.data;    
@@ -66,6 +73,9 @@ export default {
              });
         }
     },
+    components:{
+      oEmpty
+    }
    
 }
 

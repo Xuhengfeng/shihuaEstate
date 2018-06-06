@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-06-06 10:56:46 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 13:34:52
+ * @Last Modified time: 2018-06-06 15:31:24
  */
 <template>
     <!-- 所有的空页面 -->
@@ -76,7 +76,7 @@ export default {
         margin-bottom: 22px;
         .image{
             width: 143px;
-            height: 164px;
+            height: auto;
             margin: 100px auto 30px;
             img{width:100%;height:100%}
         }

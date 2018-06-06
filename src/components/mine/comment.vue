@@ -1,45 +1,52 @@
 <template>
-<div class="item">
-        <ul>
-            <li v-for="item in comment">
-                <div class="image" >
-                    <img :src="item.brokerPhoto" />
-                </div>
-                <div class="direciton">
-                    <div class="introduce"  > {{item.emplName}}  <span>{{item.commentTime}}</span> </div>
-                        <div class="text">
-                                {{item.content}}
-                        </div>
-                    <div class="introduce ">
-                        <span class="intrspan one">服务态度</span>
-                        <span class="intrspan two">专业知识</span>
-                    </div>
-                </div> 
-                <div class="nametag">
-                    <div class="imggetwo">
+    <div class="item">
+        <div v-show="comment.length">
+            <ul>
+                <li v-for="item in comment">
+                    <div class="image" >
                         <img :src="item.brokerPhoto" />
                     </div>
+                    <div class="direciton">
+                        <div class="introduce"  > {{item.emplName}}  <span>{{item.commentTime}}</span> </div>
+                            <div class="text">
+                                    {{item.content}}
+                            </div>
+                        <div class="introduce ">
+                            <span class="intrspan one">服务态度</span>
+                            <span class="intrspan two">专业知识</span>
+                        </div>
+                    </div> 
+                    <div class="nametag">
+                        <div class="imggetwo">
+                            <img :src="item.brokerPhoto" />
+                        </div>
+                </div>
+                </li>
+                
+            </ul>
+            <!--分页器-->
+            <div class="oPagination">
+                <el-pagination
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :total="1000"
+                    class="fr pagination">
+                </el-pagination>
             </div>
-            </li>
-            
-        </ul>
-         
-        	<!--分页器-->
-     <div class="oPagination">
-        <el-pagination
-            @current-change="handleCurrentChange"
-            background
-            layout="prev, pager, next"
-            prev-text="上一页"
-            next-text="下一页"
-            :total="1000"
-            class="fr pagination">
-        </el-pagination>
-     </div>
+        </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有评论信息'" 
+                 :isShow="false"
+                 :picnum="1"
+                 v-show="!comment.length"></o-empty>
     </div>
 </template>
 
 <script>
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
@@ -68,7 +75,9 @@ export default {
              });
         }
     },
-   
+    components: {
+      oEmpty
+    }
 }
 
 

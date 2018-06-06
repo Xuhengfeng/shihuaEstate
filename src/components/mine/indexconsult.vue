@@ -1,36 +1,87 @@
 <template>
-<div class="wd-list">
-        <ul>
-            <li>	
-                <div class="leftlist fl">
-                    <p class="question">
-                        <a href="">
-                            现在购买二手房最应该注意什么？
-                        </a>
-                    </p>
-                    
-                        <p class="answer">
-                            <a href="">描述：希望从专业的角度给一些实际的指导</a>
+    <div class="wd-list">
+        <div v-show="consult.length">
+            <ul>
+                <li>	
+                    <div class="leftlist fl">
+                        <p class="question">
+                            <a href="">
+                                现在购买二手房最应该注意什么？
+                            </a>
                         </p>
-                    
-                    <div>
-                        <span>提问时间：2018-03-30</span>
-                    </div>
-                </div>
-                <div class="rightlist fr">
-                    <div class="roundright">
-                        <div style="padding:12px;">
-                            <p class="striking">4</p>
-                            <p class="text">个回答</p>
+                        
+                            <p class="answer">
+                                <a href="">描述：希望从专业的角度给一些实际的指导</a>
+                            </p>
+                        
+                        <div>
+                            <span>提问时间：2018-03-30</span>
                         </div>
                     </div>
-                </div>
-            </li>
-        </ul>
-</div>
+                    <div class="rightlist fr">
+                        <div class="roundright">
+                            <div style="padding:12px;">
+                                <p class="striking">4</p>
+                                <p class="text">个回答</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <!--分页器-->
+            <div class="oPagination">
+                <el-pagination
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :total="1000"
+                    class="fr pagination">
+                </el-pagination>
+            </div>
+        </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有咨询的信息'" 
+                 :isShow="false"
+                 :picnum="2"
+                 v-show="!consult.length"></o-empty>
+    </div>
 </template>
 
 <script>
+import oEmpty from "../../base/empty/empty";
+export default {
+    data() {
+        return {
+            consult: [],   //咨询列表
+            num:1,
+            selectCity: JSON.parse(localStorage.selectCity),//当前城市
+        };
+    },
+    created(){
+        this.render();	
+    },
+    methods:{
+        handleCurrentChange(val) {
+            console.log(`当前页: ${val}`);
+            this.render(null, val);		
+        },
+        render(num) {
+            this.$http
+                .get(this.$url.URL.MY_COMMENT +'?pageNo='+this.num, {
+                    scity:this.selectCity.value,
+                })
+                .then(response => {
+                this.consult = response.data.data;    
+                console.log(this.consult)
+             });
+        }
+    },
+    components: {
+      oEmpty
+    }
+}
 </script>
 
 <style  lang="less" scoped>
