@@ -23,11 +23,18 @@
             </div>
             <o-house-list :list="item.houseList" :isShowNum="isShowNum"></o-house-list>
         </div>
+
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有已看记录'" 
+                 :btns="'去选房'"
+                 v-show="!completelist.length"
+                 @myEvent="myEvent"></o-empty>
     </div>
 </template>
 
 <script>
 import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
@@ -41,6 +48,10 @@ export default {
         this.seeHouseRecordRequest();
     },
     methods:{
+        //自定义事件 去选房
+        myEvent() {
+            this.$router.push({path: '/buyHouse'})
+        },
         selectItem(index){
             this.num=index;
         },
@@ -56,12 +67,12 @@ export default {
                     item.scheduleTime2 = item.scheduleTime.split(' ')[2];
                 });
                 this.completelist = newData;
-                console.log(newData)
             });
         }
     },
     components: {
-        oHouseList
+        oHouseList,
+        oEmpty
     }
 }
 </script>

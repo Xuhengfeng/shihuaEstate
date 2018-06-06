@@ -28,18 +28,15 @@ export default {
     beforeEnter(el) {
       console.log(this.targetEl)
         if(this.ballFlag) {
-          
           //终点位置
-          let compareImg = JSON.parse(localStorage.compareImg);
+          let imgTwo = JSON.parse(localStorage.imgTwo);
           this.$refs.ball.style.right = 0;
-          this.$refs.ball.style.top = compareImg.top+'px';
-          console.log( compareImg)
-
+          this.$refs.ball.style.top = imgTwo.top+'px';
 
           //起始位置
           let rect = this.targetEl.getBoundingClientRect(); 
           let x = -(window.innerWidth - rect.left-25);
-          let y = -(compareImg.top-rect.top);
+          let y = -(imgTwo.top-rect.top);
           if(y<=0) {
             /* y 轴 贝塞尔曲线*/
             this.$refs.ball.style.transition="all 0.6s cubic-bezier(0.49, -0.29, 0.75, 0.41)";

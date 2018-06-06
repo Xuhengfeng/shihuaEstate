@@ -2,15 +2,15 @@
     <div>
         <div class="collectlist">
             <ul>
-              <li  :class="index==num?'bgColor':''" v-for="(item ,index) in tab" @click="change(index)">{{item.cillectlist}}</li>
-                <!-- <li @click="change(1)">租房</li>
-                  <li @click="change(2)">小区</li>
-                   <li @click="change(3)">经纪人</li> -->
-             </ul>
-          </div>
+              <li :class="index==num?'bgColor':''" 
+                  :key="index" 
+                  v-for="(item ,index) in tab"
+                  @click="change(index)">{{item}}</li>
+            </ul>
+        </div>
         <div class="main">
             <ul>
-                <li v-for="item in collecttwohouse " v-if="index==0">
+                <!-- <li v-for="item in collecttwohouse " v-if="index==0">
                     <div class="image">
                         <img :src="item.housePic">
                     </div>
@@ -30,6 +30,7 @@
                         <div class="sellPrice">单价<span>{{item.salePrice }}</span>元/平米</div>
                     </div>
                 </li>
+
                  <li v-for="item in collecttwohouse "  v-if="index==1">
                     <div class="image">
                         <img :src="item.housePic">
@@ -67,8 +68,8 @@
                   					 <span class="word">在售{{item.saleCount}}套/在租{{item.rentCount}}套</span><span class="fr word">在售小区</span>
                  				 </div>
 								</div> 
-							</li>
-               <li v-for="item in collecttwohouse "  v-if="index==3">
+							</li> -->
+               <!-- <li v-for="item in collecttwohouse "  v-if="index==3">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.photo"/>
 								</div>
@@ -85,45 +86,51 @@
 										<span class="intrspan three">销售达人</span>
                  </div>
 								</div> 
-							</li>
+							</li> -->
             </ul>
         </div>
+        
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有收藏的房源'" 
+                 :isShow="false"
+                 v-show="!collecttwohouse.length"></o-empty>
     </div>
 </template>
 
 <script>
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
             collecttwohouse: [],//二手房收藏
-          	num: 0,           //切换ip
             IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST,this.$url.URL.BROKERS_collectionlist],
+          	num: 0,           //切换ip 模板
             page: 1,
-            tab:[{cillectlist:"二手房"},{cillectlist:"租房"},{cillectlist:"小区"},{cillectlist:"经纪人"}]
+            tab:["二手房","租房","小区","经纪人"],
         };
     },
     created() {
         this.collectionListRequest(0);
     },
     methods: {
-        collectionListRequest(index) {
-          this.index = index;
-          this.$http
-            .get(this.IPS[index]+"?pageNo="+this.page)
-            .then(response => {
-                this.collecttwohouse = response.data.data;
-                // //修正数据
-                // response.data.data.forEach(item => {
+      collectionListRequest(num) {
+        this.$http
+          .get(this.IPS[num]+"?pageNo="+this.page)
+          .then(response => {
+            this.collecttwohouse = response.data.data;
+              // //修正数据
+              // response.data.data.forEach(item => {
                 //     item.houseTag = item.houseTag.split(",");
-                // });
-                // this.datalist = response.data.data;
-            });
-        },
-        change(index) {
-					//同小区二手房房源
-          this.collectionListRequest(index);
-          this.num = index;
-			}
+              // });
+          });
+      },
+      change(num) {
+        this.index = num;
+        this.collectionListRequest(num);
+      },
+    },
+    components: {
+      oEmpty
     }
 };
 </script>

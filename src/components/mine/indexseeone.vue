@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="order">
+        <div v-show="order">
             <ul>
                 <li v-for="item in houseList" >
                     <input class="inpt" type="checkbox" v-model="item.checked" @click="check(item)"/>
@@ -24,14 +24,14 @@
                     </div>
                 </li>
              </ul>
-           <div class="orderdiv">
+           <div class="orderdiv" v-show="houseList.length">
              <input type="checkbox" v-model="allChecked"/>全选
               <span @click="del()">删除</span>
-            <button class="btn" @click="btn()">预约看房时间</button>
+             <button class="btn" @click="btn()">预约看房时间</button>
          </div> 
         </div>
 
-        <div v-else="order">
+        <div v-show="!order">
             <div class="book-time">
                 <div class="desc">个人信息</div>
                 <div class="mesg">
@@ -105,21 +105,26 @@
                 :total="1000">
             </el-pagination>
         </div>
+
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有待看房源'" 
+                 :btns="'去选房'"
+                 v-if="!houseList.length"
+                 @myEvent="myEvent"></o-empty>
     </div>
 
 </template>
 
 <script>
 import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
             appointRange:[{range:"全天"},{range:"上午"},{range:"下午"},{range:"晚上"}],
             username: "", //姓名
             datelist:[],
-            houseList: [{
-                checked:true
-            }],//待看房源列表
+            houseList: [],//待看房源列表
             id:"",
             brokerFlag: false, //经纪人
             brokerLists: [], //经纪人列表
@@ -154,6 +159,10 @@ export default {
         }
     },
     methods:{
+        //自定义事件 去选房
+        myEvent() {
+            this.$router.push({path: '/buyHouse'})
+        },
         //日期
         week(){
                 this.$http
@@ -216,7 +225,6 @@ export default {
 				})
             .then(response => {
                 response.data.data.forEach(item=>{
-                    // console.log(item)
                      item.checked = false
                 });
                 this.houseList = response.data.data;
@@ -304,7 +312,8 @@ export default {
         }
     },
     components: {
-        oHouseList
+        oHouseList,
+        oEmpty
     }
 }
 </script>

@@ -1,13 +1,13 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-30 22:48:44
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-06 13:54:29
  */
 <template>
   <div class="sideBar">
       <ul>
-          <li class="two"><img src="../../imgs/home/list.png">
+          <li class="two" ref="one"><img src="../../imgs/home/list.png">
             <div class="screenOuter">
                 <div class="content-hd title">
                         <span class="fl">待看清单</span>   
@@ -139,16 +139,25 @@ export default {
     },
     //立即预约 (待看)
     compareone() {
-       this.appinthouse.forEach(item => {
-            this.id = item.id
-         });
-        this.$router.push({ path: "/mine/indexseeone"});
-      },
-      //跳转我的收藏
-      toCollect() {
-        let path = "/mine/indexcollection";
-        this.$router.push({ path: path });
-      },
+      this.appinthouse.forEach(item => {
+          this.id = item.id
+        });
+      this.$router.push({ path: "/mine/indexseeone"});
+    },
+    //跳转我的收藏
+    toCollect() {
+      let path = "/mine/indexcollection";
+      this.$router.push({ path: path });
+    },
+    //计算元素位置
+    calcElt() {
+      let rectOne = this.$refs.one.getBoundingClientRect();
+      let rectTwo = this.$refs.two.getBoundingClientRect();
+      //对比清单img的位置
+      localStorage.imgOne = JSON.stringify(rectOne);
+      //待看清单img的位置
+      localStorage.imgTwo = JSON.stringify(rectTwo);
+    }
   },
   _querys() {
     this.$http
@@ -161,14 +170,8 @@ export default {
       });
   },
   mounted() {
-    window.onresize = window.onload = () => {
-      //对比清单img的位置
-      let rect = this.$refs.two.getBoundingClientRect();
-      localStorage.compareImg = JSON.stringify(rect);
-      //待看清单img的位置
-      let rectone = this.$refs.two.getBoundingClientRect();
-      localStorage.compareImg = JSON.stringify(rectone);
-    };
+    this.calcElt();
+    window.onresize = this.calcElt();
   }
 };
 </script>

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-19 13:32:30 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-21 12:55:25
+ * @Last Modified time: 2018-06-06 13:33:06
  * @description: 待看日程
  */
 <template>
@@ -36,11 +36,18 @@
             </div>
             <o-house-list :isShowNum="isShowNum" :list="item.houseList" ></o-house-list>
         </div>
+        
+         <!-- 空页面 -->
+        <o-empty :titles="'还没有待看日程'" 
+                 :btns="'去选房'"
+                 v-show="!readyList.length"
+                 @myEvent="myEvent"></o-empty>
     </div>
 </template>
 
 <script>
 import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
@@ -57,6 +64,10 @@ export default {
         this.readyListRequest();
     },
     methods:{
+        //自定义事件 去选房
+        myEvent() {
+            this.$router.push({path: '/buyHouse'})
+        },
         selectItem(index){
             this.num=index;
         },
@@ -104,7 +115,8 @@ export default {
         }
     },
     components: {
-        oHouseList
+        oHouseList,
+        oEmpty
     }
 }
 </script>

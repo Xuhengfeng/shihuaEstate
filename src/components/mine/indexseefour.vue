@@ -1,14 +1,22 @@
 <template>
     <div>
-        <h3>看房报告</h3>
-        <ul>
-            <li :key="index" v-for="(item,index) in reportList" @click="jump()">{{item.summary}}<span>2012.11.11 12:11</span></li>
-        </ul>
+        <div v-show="reportList.length">
+            <h3>看房报告</h3>
+            <ul>
+                <li :key="index" v-for="(item,index) in reportList" @click="jump()">{{item.summary}}<span>2012.11.11 12:11</span></li>
+            </ul>
+        </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有看房报告'" 
+                 :btns="'去选房'"
+                 v-show="!reportList.length"
+                 @myEvent="myEvent"></o-empty>
     </div>
 </template>
 
 <script>
 import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
@@ -19,6 +27,10 @@ export default {
         this.reportListRequest();
     },
     methods: {
+        //自定义事件 去选房
+        myEvent() {
+            this.$router.push({path: '/buyHouse'})
+        },
         jump(item) {
             let url = item.reportUrl;
             this.$route({path: url});
@@ -39,7 +51,8 @@ export default {
         }
     },
     components: {
-        oHouseList
+        oHouseList,
+        oEmpty
     }
 }
 </script>
