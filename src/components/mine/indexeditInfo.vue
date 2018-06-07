@@ -10,7 +10,7 @@
         <div class="one" v-show="num == 0">
             <div class="bigimg">
                 <!-- 承载预览图片 -->
-                <img :src="dataUrl" v-show="true">
+                <img :src="dataUrl" v-if="isShowImgs">
                 
                 <!-- 浮层文本 -->
                 <div>
@@ -42,21 +42,21 @@
                     <el-input v-model="username"></el-input>
                 </el-form-item>
             </el-form>
-            <div class="save">保存</div>
+            <div class="save" @click="saveUsername()">保存</div>
         </div>
         <div class="three oForm" v-show="num == 2">
             <el-form ref="form" label-width="80px">
                 <el-form-item label="输入旧密码">
-                    <el-input v-model="username"></el-input>
+                    <el-input v-model="oldpsw"></el-input>
                 </el-form-item>
-                <el-form-item label="输入新密码">
-                    <el-input v-model="username"></el-input>
+                <el-form-item label="设置新密码">
+                    <el-input v-model="newpsw1"></el-input>
                 </el-form-item>
-                <el-form-item label="输入新密码">
-                    <el-input v-model="username"></el-input>
+                <el-form-item label="确认新密码">
+                    <el-input v-model="newpsw2"></el-input>
                 </el-form-item>
             </el-form>
-            
+            <div class="save" @click="savePassword()">保存</div>
         </div>
     </div>
 </template>
@@ -67,12 +67,53 @@
         return{
             menu: ['上传头像','修改昵称','修改密码'],
             num: 0,
-            username: null,
             dataUrl: null, //图片
-            isShowImgs: false//不同格式的图片
+            isShowImgs: false,//不同格式的图片
+            username: null,//用户昵称
+            oldpsw: null,//旧密码
+            newpsw1: null,//新密码1
+            newpsw2: null,//新密码2
         }
     },
     methods: {
+        // 切换菜单
+        change(index) {
+            this.num = index;
+            //预览图清空
+            this.dataUrl = null;
+            this.isShowImgs = false;
+        },
+        // 修改用户名
+        saveUsername() {
+            this.$http
+            .post(this.$url.URL.UPDATE_NICKNAME,{nickname: this.username})
+            .then(res=>{
+                if(res.data.status == 1) {
+                    this.username = null;
+                    this.$alert(res.data.msg);
+                    //静默刷新用户头像
+                    this.$store.dispatch('getUserInfo');
+                }
+            })
+        },
+        // 修改密码
+        savePassword() {
+            let params = {
+                "confirmPassword": this.oldpsw,
+                "newPassword": this.newpsw1,
+                "password": this.newpsw2
+                }
+            this.$http
+            .post(this.$url.URL.UPDATE_PASSWORD,params)
+            .then(res=>{
+                if(res.data.status == 1) {
+                    this.$alert('修改密码成功!');
+                }else{
+                    this.$alert(res.data.msg);
+                }
+            })
+        },
+        // 上传头像
         getFile(e) {
             let files = e.target.files || e.dataTransfer.files
             this.createImg(files);
@@ -88,6 +129,8 @@
 
                 // 读取成功后的回调
                 reader.onload =  (e)=> {
+                    this.dataUrl = e.target.result;
+                    this.isShowImgs = true;
                     // 上传图片请求
                     this.imgUploadRequest(e.target.result);
                 }
@@ -98,14 +141,10 @@
             this.$http
             .post(this.$url.URL.UPDATE_HEADIMG,params)
             .then(res=>{
-                this.dataUrl = code;
-                this.isShowImgs = true;
+                //静默刷新用户头像
                 this.$store.dispatch('getUserInfo');
             })
         },
-        change(index) {
-            this.num = index;
-        }
     }
 }
 </script>
