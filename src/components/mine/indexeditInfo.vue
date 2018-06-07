@@ -8,18 +8,36 @@
                 @click="change(index)">{{item}}</li>
         </ul>
         <div class="one" v-show="num == 0">
-            <div class="bigimg"></div>
+            <div class="bigimg">
+                <!-- 承载预览图片 -->
+                <img :src="dataUrl" v-show="true">
+                
+                <!-- 浮层文本 -->
+                <div>
+                    <p>点击上传</p>
+                    <p>只支持jpg、png格式<br>大小不能超过1M</p>
+                </div>
+
+                <!-- input的file点击上传 -->
+                <label class="add-photo">
+                    <input class="add-photo" 
+                           type="file" 
+                           accept="image/jpg,image/png,image/jpeg" 
+                           v-show="false"
+                           @change="getFile"/>
+                </label>
+            </div>
             <div class="size">
                 <div class="size-title">预览</div>
-                <div class="size-style">
-                    <div><span>120px*120px</span></div>
-                    <div><span>80px*80px</span></div>
-                    <div><span>34px*34px</span></div>
+                <div class="size-style" ref="size-style">
+                    <div><img :src="dataUrl" v-if="isShowImgs"><span>120px*120px</span></div>
+                    <div><img :src="dataUrl" v-if="isShowImgs"><span>80px*80px</span></div>
+                    <div><img :src="dataUrl" v-if="isShowImgs"><span>34px*34px</span></div>
                 </div>
             </div>
         </div>
         <div class="two oForm" v-show="num == 1">
-            <el-form ref="form" :model="form" label-width="80px">
+            <el-form ref="form" label-width="80px">
                 <el-form-item label="昵称">
                     <el-input v-model="username"></el-input>
                 </el-form-item>
@@ -27,7 +45,7 @@
             <div class="save">保存</div>
         </div>
         <div class="three oForm" v-show="num == 2">
-            <el-form ref="form" :model="form" label-width="80px">
+            <el-form ref="form" label-width="80px">
                 <el-form-item label="输入旧密码">
                     <el-input v-model="username"></el-input>
                 </el-form-item>
@@ -49,10 +67,42 @@
         return{
             menu: ['上传头像','修改昵称','修改密码'],
             num: 0,
-            username: null
+            username: null,
+            dataUrl: null, //图片
+            isShowImgs: false//不同格式的图片
         }
     },
     methods: {
+        getFile(e) {
+            let files = e.target.files || e.dataTransfer.files
+            this.createImg(files);
+        },
+        createImg(file) {           
+            //判断是否支持
+            if (!file || !window.FileReader) return;
+            if (/^image/.test(file[0].type)) {
+                // 创建一个reader
+                var reader = new FileReader();
+                // 将图片将转成 base64 格式
+                reader.readAsDataURL(file[0]);
+
+                // 读取成功后的回调
+                reader.onload =  (e)=> {
+                    // 上传图片请求
+                    this.imgUploadRequest(e.target.result);
+                }
+            }
+        },
+        imgUploadRequest(code) {
+            let params = {base64Image:code};
+            this.$http
+            .post(this.$url.URL.UPDATE_HEADIMG,params)
+            .then(res=>{
+                this.dataUrl = code;
+                this.isShowImgs = true;
+                this.$store.dispatch('getUserInfo');
+            })
+        },
         change(index) {
             this.num = index;
         }
@@ -88,10 +138,39 @@
       margin-top: 58px;
       margin-left: 14px;
       .bigimg{
+        position: relative;
         width: 186px;
         height: 186px;
-        background: #e5e5e5;
         margin-right: 110px;
+        background:#e5e5e5 url("../../imgs/mine/yun.png") no-repeat center center;
+        img{
+            position:absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .add-photo{
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            opacity: 0;
+        }
+        div{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+            p{
+                white-space: nowrap;
+                line-height: 1.5;
+                &:nth-of-type(1){font-weight:bold;color: #ff4343}
+                &:nth-of-type(2){color: #171b1f}
+            }
+        }
       }  
       .size{
           position: relative;
@@ -115,6 +194,7 @@
                 position: relative;
                 background: #dadadb;
                 margin-right: 35px;
+                img{width: 100%;height: 100%}
                 &:nth-of-type(1){
                     width: 120px;
                     height: 120px;
@@ -155,6 +235,7 @@
         }
     }
 }
+
 .bgColor{
 	background: red!important;
 	color: #ffffff;

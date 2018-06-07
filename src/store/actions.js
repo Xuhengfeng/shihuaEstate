@@ -17,6 +17,16 @@ export default {
 	logout({commit}) {
 		commit('LOGOUT')
 	},
+	//获取最新用户信息
+	getUserInfo({commit}) {
+		axios.post(API.URL.USER_DETAILINFO)
+		.then((response) => {
+			let newData = response.data.data;
+			sessionStorage.userInfo = JSON.stringify(newData);
+			//静默刷新登录
+			this.dispatch('login');
+		});
+	},
 	//清空对比列表
 	clearAll({commit}) {
 		this.state.contrastList.forEach((item)=>{
@@ -60,7 +70,6 @@ export default {
 	},
 	//添加一个到对比清单(发请求)
 	addOne({commit}, item) {
-		// console.log(item)
 		let params = {
 			"houseId": item.id,
 			"houseSdid": item.sdid
