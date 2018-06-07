@@ -32,7 +32,7 @@
         <!-- 空页面 -->
         <o-empty :titles="'还没有收藏的房源'" 
                  :isShow="false"
-                 v-show="!collecttwohouse.length"></o-empty>
+                 :isEmpty="numbol"></o-empty>
         
     </div>
 </template>
@@ -43,6 +43,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol:false,
             collecttwohouse: [],//二手房收藏
             IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST,this.$url.URL.BROKERS_collectionlist],
           	num: 0,           //切换 ip 模板 样式
@@ -68,6 +69,7 @@ export default {
               console.log(err)
             }
             this.collecttwohouse = response.data.data;
+            this.collecttwohouse.length==0? this.numbol=true : this.numbol=false;
           });
       },
       change(num) {

@@ -1,8 +1,8 @@
 /*
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-31 00:48:23
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-07 14:23:05
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -161,27 +161,15 @@ export default {
         })
         .then(res => {
           if(res.data.status == 1) {
+            sessionStorage.token = code;
+            this.$message({message: "登录成功",type: 'success'});
+            this.$store.dispatch("getUserInfo");
             let code = res.data.data;
             this.phonenum1 = '';
             this.password1 = '';
-            sessionStorage.token = code;
-            this.$message({message: "登录成功",type: 'success'});
-            this.userDetailInfo();
+            this.cancel();
           }else{
             this.$alert(res.data.msg);
-          }
-        });
-    },
-    //获取用户详细信息
-    userDetailInfo() {
-      this.$http
-        .post(this.$url.URL.USER_DETAILINFO)
-        .then(res => {
-          if(res.data.status == 1) {
-            let newData = res.data.data;
-            sessionStorage.userInfo = JSON.stringify(newData);
-            this.cancel();
-            this.$store.dispatch('login');
           }
         });
     },
@@ -220,7 +208,8 @@ export default {
           if (res.data.status == 1) {
             sessionStorage.token = res.data.data;
             this.$message({message: "登录成功",type: 'success'});
-            this.userDetailInfo();
+            this.$store.dispatch("getUserInfo");
+            this.cancel();
           }else{
             this.$alert(res.data.msg);
           }

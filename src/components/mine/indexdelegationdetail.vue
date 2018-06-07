@@ -121,7 +121,7 @@
         active: 0,
         houseDetail: null,
         isCancel: true,//是否取消预约
-        IPS:[this.$url.URL.MY_SELL_APPLYLIST, this.$url.URL.MY_RENT_APPLYLIST],//出售 出租
+        IPS:[this.$url.URL.MY_SELL_APPLYLIST, this.$url.URL.MY_RENT_APPLYLIST],//出售详情 出租详情
         IPS2:[this.$url.URL.MY_SELL_CANCEL, this.$url.URL.MY_RENT_CANCEL],//取消出售 取消出租
         num: 0,//0出售 1出租
         id: null,
@@ -129,8 +129,8 @@
     },
     created() {
       this.id = parseInt(this.$route.params.id);
-      this.num = this.$route.query.num;
-      this.houseDetailRequest(this.id);
+      this.num = parseInt(this.$route.query.num);
+      this.houseDetailRequest();
     },
     methods: {
       //状态检测
@@ -142,9 +142,9 @@
           case 'CANCEL':this.isCancel=false;break;//取消
         }
       },
-      houseDetailRequest(id) {
+      houseDetailRequest() {
         this.$http
-            .get(this.IPS[this.num]+`${id}`)
+            .get(this.IPS[this.num]+this.id)
             .then(res=>{
               this.statusParse(res.data.data.status)
               this.houseDetail = res.data.data;

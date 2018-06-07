@@ -39,7 +39,7 @@
         <o-empty :titles="'还没有添加经纪人'" 
                  :picnum="3"
                  :isShow="false"
-                 v-show="!broker.length"></o-empty>
+                 :isEmpty="numbol"></o-empty>
                  
     </div>
 </template>
@@ -49,6 +49,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol: false,
             broker: [],   //经纪人
             num:1,
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -69,7 +70,7 @@ export default {
                 })
                 .then(response => {
                 this.broker = response.data.data;    
-                console.log(this.broker)
+                this.broker.length==0? this.numbol=true : this.numbol=false;
              });
         }
     },

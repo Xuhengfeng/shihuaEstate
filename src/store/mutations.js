@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-31 17:46:56
+ * @Last Modified time: 2018-06-07 14:03:21
  */
 import router from '../router/index'
 //同步处理
@@ -29,7 +29,7 @@ export default {
 		sessionStorage.logined = true;
 		//去sessionStorage取用户数据
 		//再把用户数据发下去
-		let user = JSON.parse(sessionStorage.getItem('userInfo'));
+		let user = JSON.parse(sessionStorage.userInfo);
 		state.LoginedUser = Object.assign({}, user);
 	},
 	//退出
@@ -74,7 +74,6 @@ export default {
 		state.appinthouse.splice(index, 1);
 	},	
 	ADDTWO(state, payload){
-		// console.log(payload)
 		state.appinthouse = payload;
 	},
 	

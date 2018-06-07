@@ -2,11 +2,11 @@
  * @Author: 徐横峰 
  * @Date: 2018-06-06 10:56:46 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 15:47:27
+ * @Last Modified time: 2018-06-07 17:25:44
  */
 <template>
     <!-- 所有的空页面 -->
-    <div class="empty">
+    <div class="empty" v-show="isEmpty">
         <div class="one">
             <div class="image"><img :src="picpath"/></div>
             <div class="title">{{titles}}</div>
@@ -35,11 +35,15 @@ export default {
         },
         btns: {//控制btn的内容
             type: String,
-            default: 'test3'
+            default: ''
         },
         isShow: {
             type: Boolean,
-            default: true,
+            default: false
+        },
+        isEmpty: {
+            type: Boolean,
+            default: false
         }
     },
     data() {

@@ -42,7 +42,7 @@
         <o-empty :titles="'还没有评论信息'" 
                  :isShow="false"
                  :picnum="1"
-                 v-show="!comment.length"></o-empty>
+                 :isEmpty="numbol"></o-empty>
     </div>
 </template>
 
@@ -51,6 +51,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol: false,
             comment:"",   //评论
             num:1,
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -74,7 +75,7 @@ export default {
                 })
                 .then(response => {
                 this.comment = response.data.data;    
-                console.log(this.comment)
+                this.comment.length==0?this.numbol=true:this.numbol=false;
              });
         }
     },

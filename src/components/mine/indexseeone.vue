@@ -109,7 +109,7 @@
         <!-- 空页面 -->
         <o-empty :titles="'还没有待看房源'" 
                  :btns="'去选房'"
-                 v-if="!houseList.length"
+                 :isEmpty="numbol"
                  @myEvent="myEvent"></o-empty>
     </div>
 
@@ -121,6 +121,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol: false,
             appointRange:[{range:"全天"},{range:"上午"},{range:"下午"},{range:"晚上"}],
             username: "", //姓名
             datelist:[],
@@ -210,8 +211,8 @@ export default {
                     this.$http
                        .delete(this.$url.URL.APPOINT_DELETE+  item.id)
                        .then(response => {
-                           location.reload()
-                            
+                        //    location.reload()
+                           this.$router.go(0);
                        });
                 }
             })
@@ -228,14 +229,13 @@ export default {
                      item.checked = false
                 });
                 this.houseList = response.data.data;
-               
+                this.houseList.length==0? this.numbol=true : this.numbol=false;
             });
         },
         selectBroker(item) {
             this.brokerFlag = false;
             this.brokerValue = item.emplName;
             this.brokerId = item.id;
-            console.log( this.brokerId )
         },
         handleCurrentChange(val) {
             this.brokerListRequest(val);		
