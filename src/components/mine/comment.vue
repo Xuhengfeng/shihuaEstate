@@ -4,10 +4,10 @@
             <ul>
                 <li v-for="item in comment">
                     <div class="image" >
-                        <img :src="item.brokerPhoto" />
+                        <img :src="headImage" />
                     </div>
                     <div class="direciton">
-                        <div class="introduce"  > {{item.emplName}}  <span>{{item.commentTime}}</span> </div>
+                        <div class="introduce"  >{{nickname}}  <span class="commentime">{{item.commentTime}}</span> </div>
                             <div class="text">
                                     {{item.content}}
                             </div>
@@ -17,9 +17,10 @@
                         </div>
                     </div> 
                     <div class="nametag">
-                        <div class="imggetwo">
-                            <img :src="item.brokerPhoto" />
+                        <div class="imggetwo fl">
+                            <img :src="item.brokerPhoto" /> 
                         </div>
+                        <span>{{item.emplName}}</span>
                 </div>
                 </li>
                 
@@ -53,6 +54,8 @@ export default {
             comment:"",   //评论
             num:1,
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
+            nickname: JSON.parse(sessionStorage.userInfo).nickname,
+            headImage: JSON.parse(sessionStorage.userInfo).headImage
         };
     },
     created(){
@@ -121,11 +124,9 @@ export default {
       font-weight: bold;
       cursor: pointer;
       span{
-        color:rgba(0,0,0,0.5);
         margin-left: 10px;
         padding: 5px;
         float: right;
-        font-size: 10px;
       }
     }
   }
@@ -153,12 +154,10 @@ export default {
 .introduce {
     width: 750px;
 }
-.introduce span {
-  font-size: 14px;
-}
 
 .text {
     width: 800px;
+    font-size: 14px;
     word-break:break-all; 
 }
 .prices {
@@ -200,5 +199,9 @@ export default {
 .three {
   background: #e1f5ed;
   color: #33be85;
+}
+.commentime{
+    font-size: 16px;
+    color: #000000;
 }
 </style>
