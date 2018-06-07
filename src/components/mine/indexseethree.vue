@@ -27,7 +27,7 @@
         <!-- 空页面 -->
         <o-empty :titles="'还没有已看记录'" 
                  :btns="'去选房'"
-                 v-show="!completelist.length"
+                 :isEmpty="numbol"
                  @myEvent="myEvent"></o-empty>
     </div>
 </template>
@@ -38,6 +38,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol:false,
             spanList: ['确认中','预约成功','已取消'],//状态
             num:0,//默认第一个
             completelist: [],//已看列表
@@ -67,6 +68,7 @@ export default {
                     item.scheduleTime2 = item.scheduleTime.split(' ')[2];
                 });
                 this.completelist = newData;
+                this.completelist.length==0? this.numbol=true : this.numbol=false;
             });
         }
     },

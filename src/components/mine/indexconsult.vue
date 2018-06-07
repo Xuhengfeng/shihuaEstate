@@ -45,7 +45,7 @@
         <o-empty :titles="'还没有咨询的信息'" 
                  :isShow="false"
                  :picnum="2"
-                 v-show="!consult.length"></o-empty>
+                 :isEmpty="numbol"></o-empty>
     </div>
 </template>
 
@@ -54,6 +54,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol:false,
             consult: [],   //咨询列表
             num:1,
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -74,7 +75,7 @@ export default {
                 })
                 .then(response => {
                 this.consult = response.data.data;    
-                console.log(this.consult)
+                this.consult.length==0? this.numbol=true : this.numbol=false;
              });
         }
     },

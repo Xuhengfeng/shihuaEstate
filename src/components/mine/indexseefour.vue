@@ -9,7 +9,7 @@
         <!-- 空页面 -->
         <o-empty :titles="'还没有看房报告'" 
                  :btns="'去选房'"
-                 v-show="!reportList.length"
+                 :isEmpty="numbol"
                  @myEvent="myEvent"></o-empty>
     </div>
 </template>
@@ -20,6 +20,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol:false,
             reportList:[],//看房列表
         };
     },
@@ -47,6 +48,7 @@ export default {
                     item.createDateTime2 = item.createDateTime.split(' ')[1];
                 });
                 this.reportList = response.data.data;
+                this.reportList.length==0? this.numbol=true : this.numbol=false;
             });
         }
     },

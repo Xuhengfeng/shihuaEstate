@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 15:30:12
+ * @Last Modified time: 2018-06-07 17:27:12
  */
 <template>
     <div>
@@ -26,8 +26,8 @@
         </div>
         <!-- 空页面 -->
         <o-empty :titles="'还没有收藏的房源'" 
-                 :isShow="false"
-                 v-show="!list.length"></o-empty>
+                 :isEmpty="numbol"
+                 :isShow="false"></o-empty>
 
     </div>
 </template>
@@ -38,6 +38,7 @@ export default {
     data() {
         return {
             list: [],//二手房数据
+            numbol:false,
             selectCity:JSON.parse(localStorage.selectCity),//当前城市
         };
     },
@@ -57,6 +58,7 @@ export default {
                   item.houseTag = item.houseTag.split(",");
               });
               this.list = response.data.data;
+              this.list.length==0? this.numbol=true : this.numbol=false;
           });
         },
         handleCurrentChange(val) {

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-19 13:32:30 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 13:33:06
+ * @Last Modified time: 2018-06-07 17:34:50
  * @description: 待看日程
  */
 <template>
@@ -40,7 +40,7 @@
          <!-- 空页面 -->
         <o-empty :titles="'还没有待看日程'" 
                  :btns="'去选房'"
-                 v-show="!readyList.length"
+                 :isEmpty="numbol"
                  @myEvent="myEvent"></o-empty>
     </div>
 </template>
@@ -51,6 +51,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            numbol:false,
             // spanList: ['确认中','预约成功','已取消'],//状态
             isShowNum:2,//默认第一个
             readyList: [],//约看日程
@@ -88,6 +89,7 @@ export default {
                     }
                 });
                 this.readyList = response.data.data;
+                this.readyList.length==0? this.numbol=true : this.numbol=false;
             });
         },
         open(item) {
