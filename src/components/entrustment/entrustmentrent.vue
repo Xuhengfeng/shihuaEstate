@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-01 10:38:23
+ * @Last Modified time: 2018-06-08 11:13:02
  */
 <template>
   <div class="sellRent">
@@ -722,18 +722,9 @@ input::-webkit-input-placeholder {
                 font-size: 12px;
                 margin-right: 10px;
                 padding: 5px;
-                &:nth-of-type(1) {
-                  background: #edf9ff;
-                  color: #00a8ff;
-                }
-                &:nth-of-type(2) {
-                  background: #fff2ed;
-                  color: #ff7f50;
-                }
-                &:nth-of-type(3) {
-                  background: #ebfff3;
-                  color: #00b969;
-                }
+                &:nth-of-type(1) {background: #edf9ff;color: #00a8ff}
+                &:nth-of-type(2) {background: #fff2ed;color: #ff7f50}
+                &:nth-of-type(3) {background: #ebfff3;color: #00b969}
               }
             }
           }
