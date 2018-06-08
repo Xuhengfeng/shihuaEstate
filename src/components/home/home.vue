@@ -74,7 +74,7 @@
 								<router-link tag="li" to="">房屋托管</router-link>
 								<router-link tag="li" to="">装修</router-link>
 								<router-link tag="li" to="">世华公益</router-link>
-								<router-link tag="li" to="">咨询</router-link>
+								<router-link tag="li" to="/consultant">咨询</router-link>
 								<router-link tag="li" to="">购房指南</router-link>
 								<router-link tag="li" to="">行业咨询</router-link>
 							</ul>
