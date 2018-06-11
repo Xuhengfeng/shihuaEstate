@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 13:54:29
+ * @Last Modified time: 2018-06-11 15:20:06
  */
 <template>
   <div class="sideBar">
@@ -183,7 +183,7 @@ export default {
   bottom: 0;
   width: 40px;
   background: #ffffff;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 10px rgba(0,0,0,0.2);
   z-index: 1000;
   > ul {
     width: 100%;

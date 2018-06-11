@@ -4,6 +4,7 @@ let localhostDev = false;
 let _host= localhostDev ? 'http://192.168.16.173:7031/custAppApi' : 'http://112.74.181.229:7031/custAppApi';
 
 let URL = {
+	// 首页
 	DEFAULT_CITY: _host + "/dictionary/defaultCity",            //默认城市
 	STATISTICS_HOUSEUSED: _host + '/statistics/houseUsed/',     //获取首页房价统计
     HOUSE_RECMDLIST: _host + '/house/recmdList/',               //获取首页二手为你精选列表GET 
@@ -12,6 +13,8 @@ let URL = {
    	DICTIONARY_CITYS:_host + '/dictionary/citys',	            //获取城市列表	
 	DICTIONARY_DEFAULTCITY:_host + '/dictionary/defaultCity',   //获取默认城市	
 	HOUSE_QUERYCOUNT:_host + '/house/queryCount ',              //获取搜索二手房总数量
+
+	// 数据字典
    	DICTIONARY_DICTYPE:_host + '/dictionary/',  				//获取二手房搜索条件字段
 	HOUSE_QUERY:_host + '/house/query',							//获取二手房列表全部数据
 	HOUSE_GETDETAILINFO:_host + '/house/getDetailInFo/',		//获取二手房详情
@@ -51,14 +54,20 @@ let URL = {
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
 	SHOPERS_LIST:_host +'/shop/shops',  					    //找门店
+
+	// 经纪人
+	BROKERS:_host +'/broker/',  		         			    //经纪人详情
 	BROKERS_LIST:_host +'/broker/brokers',  					//经纪人
-	BROKERS:_host +'/broker/',  		         			     //经纪人详情
 	BROKERS_ADD:_host +'/brokerCollection/add/',                //经纪人收藏
 	BROKERS_CANCEL:_host +'/brokerCollection/cancel/',           //取消经纪人收藏
 	BROKERS_collectionlist:_host +'/brokerCollection/collectionList', //经纪人收藏列表
 	BROKERS_LISTCOUNT:_host +'/broker/brokerCount',  			//经纪人数量
 	BROKERS_HOUSELIST:_host +'/broker/houseList/',  			//经纪人 -他的在售
 	BROKERS_RENTHOUSELIST:_host +'/broker/rentHouseList/',  	//经纪人 -他的在售
+	BROKERS_BROKEREVAL:_host +'/brokerEval/fillBrokerEvaluate', //经纪人评价
+	
+
+
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
@@ -83,6 +92,8 @@ let URL = {
 	SELL_APPLYLIST:_host + '/houseEntrustApply/querySellApplyList',  	   //我的卖房申请列表
 	MY_SELL_APPLYLIST:_host + '/houseEntrustApply/sell/',					//出售详情
 	MY_RENT_APPLYLIST:_host + '/houseEntrustApply/rent/',					//出租详情
+
+	// 我的
 	MY_COLLECTIONLIST:_host + "/my/collectionList",                  	//我的经纪人
 	MY_COMMENT:_host + "/my/comment",                       			//我的评论
 	UPDATE_HEADIMG:_host + "/member/updateHeadImage",                   //修改头像
@@ -98,3 +109,7 @@ let URL = {
 	CONSULTANT_SUB_PROBLEM:_host + "/consultant/sub_problem",                //向他咨询/提问
 };
 export default {URL}
+
+
+
+

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-30 20:50:23
+ * @Last Modified time: 2018-06-11 15:15:53
  */
 <template>
   <div id="app">
@@ -31,6 +31,10 @@
 			<o-footer></o-footer>
 		</div>
     <!-- 脚步end -->
+
+    <!-- 聊天 -->
+    <o-we-chat></o-we-chat>
+
   </div>
 </template>
 
@@ -38,6 +42,7 @@
 import oTopBar from "./base/topBar/topBar";
 import oFooter from "./base/footer/footer";
 import oSideBar from "./base/sideBar/sidebar";
+import oWeChat from "./base/weChat/weChat";
 export default {
   data() {
     return {
@@ -55,7 +60,8 @@ export default {
   components: {
     oTopBar,
     oSideBar,
-    oFooter
+    oFooter,
+    oWeChat
   },
   methods:{
     _mapquerys(){

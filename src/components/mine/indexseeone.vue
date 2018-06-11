@@ -25,9 +25,8 @@
                 </li>
              </ul>
            <div class="orderdiv" v-show="houseList.length">
-             <input type="checkbox" v-model="allChecked"/>全选
-              <span @click="del()">删除</span>
-             <button class="btn" @click="btn()">预约看房时间</button>
+               <el-checkbox v-model="allChecked">全选</el-checkbox><span style="margin-left:10px;font-size:14px" @click="del()">删除</span>
+               <button class="btn" @click="btn()">预约看房时间</button>
          </div> 
         </div>
 

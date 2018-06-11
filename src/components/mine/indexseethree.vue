@@ -30,12 +30,11 @@
             <div class="content">
                 <h3>评价经纪人<img src='../../imgs/mine/delete.png' @click="closeModel()"></h3>
                 <div class="model-hd">
-                    <img src="xx" ref="avatar" @error="imgError()">  
+                    <img :src="broker.photo" ref="avatar">  
                     <div class="description">
-                        <div class="name">234234<span>122</span></div>
+                        <div class="name">{{broker.deptName}}<span>{{broker.positionName}}</span></div>
                         <div class="des">
-                            <span>1</span>
-                            <span>1</span>
+                            <span>{{broker.sex}}</span>
                         </div>
                         <div class="tag">
                             <span>销售达人</span>
@@ -44,22 +43,29 @@
                         </div>
                         <div class="phone">
                             联系电话 : <br>
-                            121321321
+                            {{broker.phone}}
                         </div>
                     </div>
                 </div>
                 <div class="model-bd">
-                    <textarea id="" cols="30" rows="10" placeholder="舒适的看房体验,死我们的服务宗旨" ></textarea>
+                    <textarea v-model="textAreaVal"
+                            cols="30" 
+                            rows="10"  
+                            placeholder="舒适的看房体验,死我们的服务宗旨"
+                            style="resize: none"></textarea>
                     <p>星级
-                        <img :src="true?starOn:starOff" v-for="item in 5"/>
+                        <img :src="broker.isStar?starOn:starOff" v-for="item in broker.grade"/>
                     </p>
                 </div>
                 <div class="model-ft">
                     <div class="title">标签</div>
                     <div class="tags">
-                        <span v-for="item in 13">{{item}}</span>
+                        <span v-for="(item,index) in brokerAssesstags" 
+                            :key="index"
+                            :class="item.isClikeTag?'bgColor':''"
+                            @click="clickTag(item)">{{item.name}}</span>
                     </div>
-                    <div class="commit">提交</div>
+                    <div class="commit" @click="commit()">提交</div>
                 </div>
             </div>
         </div>
@@ -80,18 +86,24 @@ export default {
         return {
             numbol:false,
             spanList: ['确认中','预约成功','已取消'],//状态
-            num:0,//默认第一个
+            num:0,
             completelist: [],//已看列表
             isShowNum: 1,//考虑选择哪个模板渲染
             starOn: require('../../imgs/mine/star-on.png'),
             starOff: require('../../imgs/mine/star-off.png'),
-            broker: null,
+            broker: {
+                photo: null,
+            },
+            textAreaVal: null,
             isShowModel: true,
+            city: JSON.parse(localStorage.selectCity),
+            brokerAssesstags: null,//经纪人评价
         };
     },
     created() {
         this.seeHouseRecordRequest();
         this.brokerRequest();
+        this.brokerAssess();
     },
     methods:{
         //自定义事件 去选房
@@ -102,9 +114,8 @@ export default {
             this.num=index;
         },
         seeHouseRecordRequest() {
-            let city = JSON.parse(localStorage.selectCity).value;
             this.$http
-            .get(this.$url.URL.APPOINT_COMPLETE+"?pageNo="+1+"&scity="+city)
+            .get(this.$url.URL.APPOINT_COMPLETE+"?pageNo="+1+"&scity="+this.city.value)
             .then(response => {
                 let newData = response.data.data;
                 newData.forEach(item => {
@@ -113,30 +124,63 @@ export default {
                     item.scheduleTime2 = item.scheduleTime.split(' ')[2];
                 });
                 this.completelist = newData;
-                console.log(newData)
                 this.completelist.length==0? this.numbol=true : this.numbol=false;
             });
         },
         // 经纪人信息
         brokerRequest() {
-            console.log(this.$url.URL.BROKERS)
+            let isStar = [];
+            let brokerId = 1147;//假如经纪人的id是1147 后面再替换 
             this.$http
-            .get(this.$url.URL.BROKERS)
+            .get(this.$url.URL.BROKERS+this.city.value+"/"+brokerId)
             .then(response=>{
-                console.log(response)
+                this.broker = response.data.data;
+                for(let i=0;i<response.data.data.grade;i++){
+                    isStar.push(true);
+                }
+                this.broker.isStar = isStar;
             })
         },
-        // 监听图片加载错误
-        imgError() {
-            console.log(121212121)
+        // 经纪人评价
+        brokerAssess() {
+            this.$http
+            .get(this.$url.URL.DICTIONARY_DICTYPE+'BROKER_EVALUATE_TAG')
+            .then(response=>{
+                this.brokerAssesstags = response.data.data;
+                this.brokerAssesstags.forEach(item=>{
+                    item.isClikeTag = false;
+                })
+            })
         },
         // 关闭模态框
         closeModel() {
             this.isShowModel = false;
+        },
+        //点击标签
+        clickTag(item) {
+            // item.isClikeTag = !item.isClikeTag;
+            let a = !item.isClikeTag;
+            console.log(a)
+            this.$set(item, 'isClickTag', a);
+        },
+        // 提交
+        commit() {
+            let params = {
+                "appHouseRecId": this.data.item.id,
+                "brokerId": this.data.item.brokerId,
+                "content": this.data.content,
+                "grade": this.data.grade,
+                "tag": tagStr,
+                "unicode": wx.getStorageSync("userToken")
+            }
+            this.$http
+            .post(this.$url.URL.BROKERS_BROKEREVAL,params)
+            .then(response=>{
+                console.log(12121212)
+            })
         }
     },
     components: {
-        oHouseList,
         oEmpty
     }
 }
@@ -215,10 +259,6 @@ export default {
         
     }
 }
-.spanBgColor{
-    background: #e5e5e5;
-}
-
 .model{
     .shadow{
         position: fixed;
@@ -229,7 +269,7 @@ export default {
         background: rgba(0,0,0,0.8);
     }
     .content{
-        position: absolute;
+        position: fixed;
         top: 100px;
         left: 50%;
         width: 614px;
@@ -317,6 +357,7 @@ export default {
                     background: #cccccc;
                     margin: 0 15px 15px 0;
                     padding: 10px;
+                    cursor: pointer;
                     &:nth-of-type(1) {background: #edf9ff;color: #00a8ff}
                     &:nth-of-type(2) {background: #fff2ed;color: #ff7f50}
                     &:nth-of-type(3) {background: #ebfff3;color: #00b969}
@@ -335,5 +376,10 @@ export default {
             }      
         }
     }
+}
+
+.bgColor{
+    background: #ff4343!important;
+    color: #ffffff!important;
 }
 </style>
