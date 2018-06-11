@@ -1,15 +1,20 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
+<<<<<<< HEAD
  * @Last Modified by: mikey.zhaopeng
  * @Last Modified time: 2018-05-18 00:08:17
+=======
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-29 18:16:05
+>>>>>>> master
  */
 <template>
     <div class="topBar">
         <div class="container navmenu">
             <div class="fr">
                 <div v-if="!isLogin">
-                    <i class="iconfont icon-yonghu"></i>
+                    <i class="iconfont el-icon-own-yonghu"></i>
                     <span class="login" @click="login()">登录</span> 
                     <span>/</span>
                     <span class="register" @click="register()">立即注册</span>
@@ -34,8 +39,8 @@
                 <router-link tag="li" to="">更多
                     <ul class="item2">
                         <router-link tag="li" to="/houseestate">小区找房</router-link>
-                        <router-link tag="li" to="">代办贷款</router-link>
-                        <router-link tag="li" to="">异地服务</router-link>
+                        <router-link tag="li" to="">代办业务</router-link>
+						<router-link tag="li" to="">便民服务</router-link>
                         <router-link tag="li" to="">房屋托管</router-link>
                         <router-link tag="li" to="">装修</router-link>
                         <router-link tag="li" to="">世华公益</router-link>
@@ -123,7 +128,7 @@ export default {
             position: relative;
             float: right;
             text-align: right;
-            width: 150px;
+            width: 180px;
             &:hover ul{
                 visibility: visible;
                 li:hover{ color: red}
@@ -157,7 +162,7 @@ export default {
         >li{
             position: relative;
             float: right;
-            margin-left: 26px;
+            margin-right: 26px;
             cursor: pointer;
             >ul{
                 position: absolute;

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-07 18:26:42
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-01 00:36:00
  */
 <template>
 	<div>
@@ -143,20 +143,22 @@
 								</div> 
 							</li>
 						</ul>
-            <div class="noContent" v-show="!buyhouse.length">没有任何数据!</div>
+            <div class="noContent" v-show="!buyhouse.length">暂无数据!</div>
 					</div>
 
           <!-- 分页器 -->
-          <div class="pagination">
+          <div class="pageFooter">
               <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
                 <router-link to="home">世华易居网南宁二手房</router-link>>
                 <router-link to="buyhouse">南宁二手房</router-link>
               </div>
-              <el-pagination
-                background
-                layout="prev, pager, next"
-                :total="1000"
-                class="fr">
+              <el-pagination class="fr oPagination"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :total="1000">
               </el-pagination>
           </div>
 				</div>
@@ -268,6 +270,9 @@ export default {
     }
   },
   methods: {
+     handleCurrentChange(val) {
+      this.query(null, val);		
+    },
     //收藏房源
     collection(item,e) {
       if(!this.logined){
@@ -388,9 +393,9 @@ export default {
         });
     },
     //搜索
-    query(item) {
+    query(item , num) {
       if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      let params = {'keyword': this.keyword, 'pageNo': num, 'scity': this.selectCity.value};
       this.$http
       .post(this.$url.URL.HOUSE_QUERY, params)
       .then(response=>{
@@ -532,7 +537,10 @@ export default {
   color: #ff4343;
   font-weight: bold;
 }
-
+.item{
+  position: relative;
+  min-height: 50px;
+}
 //列表项 
 .item ul li{
   overflow: hidden;
@@ -614,19 +622,19 @@ export default {
 
 //没有搜索到任何数据
 .noContent{
-  height: 280px;
-  line-height: 280px;
-  text-align: center;
-  color: #333333;
-  font-size: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  color: #5e7382;
+  
 }
 
-//分页器
-.pagination{
-  height: 40px;
+.pageFooter{
+  overflow: hidden;
   padding-top: 20px;
 }
-
 //内容
 .content {
   margin-top: 26px;

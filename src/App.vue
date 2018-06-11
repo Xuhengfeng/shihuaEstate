@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-02 00:42:03
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-11 15:15:53
  */
 <template>
   <div id="app">
@@ -31,6 +31,10 @@
 			<o-footer></o-footer>
 		</div>
     <!-- 脚步end -->
+
+    <!-- 聊天 -->
+    <o-we-chat></o-we-chat>
+
   </div>
 </template>
 
@@ -38,22 +42,45 @@
 import oTopBar from "./base/topBar/topBar";
 import oFooter from "./base/footer/footer";
 import oSideBar from "./base/sideBar/sidebar";
+import oWeChat from "./base/weChat/weChat";
 export default {
   data() {
     return {
       isShowTop:  0, //显示1 隐藏0
       isShowSide: 1, //显示1 隐藏0
-      isShowFooter: 0 //显示1 隐藏0
+      isShowFooter: 0, //显示1 隐藏0
+      city: null,
     };
   },
   created() {
     //初始化
     this.$store.commit('FIRSTSTATUS');
+    this._mapquerys();
   },
   components: {
     oTopBar,
     oSideBar,
-    oFooter
+    oFooter,
+    oWeChat
+  },
+  methods:{
+    _mapquerys(){
+      this.$http.get(this.$url.URL.DEFAULT_CITY)
+				.then((response)=>{
+          localStorage.selectCity = JSON.stringify(response.data.data);
+          this.appinthouse();
+				})
+    },
+    appinthouse() {
+      this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+					scity: JSON.parse(localStorage.selectCity),//用户选定城市
+				})
+				.then(response =>{
+				let newData = response.data.data;
+				//初始化清单列表
+				this.$store.commit('CHUSHIHUA', newData);
+				})
+    }
   },
   watch: {
     $route(to, from) {
@@ -63,7 +90,7 @@ export default {
         this.isShowFooter = 0;
         this.isShowSide = 0;
       } 
-      else if(path == "/home"){
+      else if(path == "/home"||path == "/"){
         this.isShowTop = 0;
         this.isShowSide = 1;   
         this.isShowFooter = 1;
@@ -79,9 +106,11 @@ export default {
 </script>
 
 <style lang="less">
-@import "common/css/reset.css";/*重置样式*/
-@import 'common/css/base.less';/*base和iconfont样式*/
+@import "../static/css/reset.css";/*重置样式*/
+@import "../static/css/iconfont.css";/*字体图标*/
+@import 'common/css/base.less';/*base样式*/
 @import "common/css/variable.less";/*颜色和字体样式*/
+@import "common/css/resetElement.less";/*重置element样式*/
 html,body{
   width:100%;
   height:100%;

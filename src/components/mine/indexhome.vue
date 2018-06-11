@@ -1,11 +1,12 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 00:39:01 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-29 22:24:16
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-07 17:27:12
  */
 <template>
     <div>
+<<<<<<< HEAD
         <h3>收藏小区动态</h3>
         <div class="main">
             <ul>
@@ -30,21 +31,53 @@
                     </div>
                 </li>
             </ul>
+=======
+        <div v-show="list.length">
+            <h3>收藏小区动态</h3>
+            <div class="main">
+                <o-house-list :list="list" :isShowNum="0"></o-house-list>
+            </div>
+            <!-- 分页器 -->
+            <div class="oPagination">
+                <el-pagination 
+                    class="fr"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :total="1000">
+                </el-pagination>
+            </div>
+>>>>>>> master
         </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有收藏的房源'" 
+                 :isEmpty="numbol"
+                 :isShow="false"></o-empty>
+
     </div>
 </template>
-
 <script>
+import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+<<<<<<< HEAD
             indexhome: [],
+=======
+            list: [],//二手房数据
+            numbol:false,
+            selectCity:JSON.parse(localStorage.selectCity),//当前城市
+>>>>>>> master
         };
     },
     created() {
         this.collectionListRequest();
     },
     methods: {
+<<<<<<< HEAD
         collectionListRequest() {
           // this.$http
           //   .post(this.$url.URL.HOUSE_QUERY, {
@@ -74,8 +107,33 @@ export default {
                 // this.datalist = response.data.data;
             });
         }
+=======
+        collectionListRequest(num) {
+          this.$http
+          .post(this.$url.URL.HOUSE_QUERY, {
+            scity: JSON.parse(localStorage.selectCity).value,
+            pageNo: num
+          })
+          .then(response => {
+              //修正数据
+              response.data.data.forEach(item => {
+                  item.houseTag = item.houseTag.split(",");
+              });
+              this.list = response.data.data;
+              this.list.length==0? this.numbol=true : this.numbol=false;
+          });
+        },
+        handleCurrentChange(val) {
+           console.log(`当前页: ${val}`);
+        this.collectionListRequest( val);		
+        },
+    },
+    components: {
+        oHouseList,
+        oEmpty
+>>>>>>> master
     }
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -88,84 +146,9 @@ h3 {
 .main {
   padding: 20px;
   border: 1px solid #cacaca;
-  > ul > li {
-    display: flex;
-    flex-flow: row nowrap;
-    padding: 20px 0;
-    border-bottom: 1px solid #cacaca;
-    // 左边
-    .image {
-      flex: 232px 0 0;
-      width: 232px;
-      height: 175px;
-      margin-right: 35px;
-      background: red;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    // 中间
-    .description {
-      flex: 1;
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      .title {
-        font-size: 22px;
-        color: #000000;
-      }
-      .info {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.8);
-      }
-      .attention {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.8);
-      }
-      .tag > span {
-        padding: 5px;
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.8);
-        &:nth-of-type(1) {
-          background: #edf9ff;
-          color: #00a8ff;
-        }
-        &:nth-of-type(2) {
-          background: #fff2ed;
-          color: #ff7f50;
-        }
-        &:nth-of-type(3) {
-          background: #ebfff3;
-          color: #00b969;
-        }
-      }
-    }
-    // 右边
-    .r-content {
-      flex: 150px 0 0;
-      width: 150px;
-      text-align: right;
-      .collection {
-        font-size: 16px;
-        margin-bottom: 30px;
-        color: #000000;
-      }
-      .totalPrice {
-        color: red;
-        font-size: 14px;
-        margin-bottom: 30px;
-        span {
-          font-size: 24px;
-          margin-right: 10px;
-        }
-      }
-      .sellPrice {
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.3);
-      }
-    }
-  }
+}
+.oPagination{
+    padding-top: 20px;
+    border-top: 1px solid #eeeeee;
 }
 </style>

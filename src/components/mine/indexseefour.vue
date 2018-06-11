@@ -1,7 +1,9 @@
 <template>
     <div>
-        <div class="collectlist">
+        <div v-show="reportList.length">
+            <h3>看房报告</h3>
             <ul>
+<<<<<<< HEAD
               <li@click="change(0)">二手房</li>
                 <li @click="change(1)">租房</li>
                   <li @click="change(2)">小区</li>
@@ -68,53 +70,62 @@
                  				 </div>
 								</div> 
 							</li>
+=======
+                <li :key="index" v-for="(item,index) in reportList" @click="jump()">{{item.summary}}<span>2012.11.11 12:11</span></li>
+>>>>>>> master
             </ul>
         </div>
+        <!-- 空页面 -->
+        <o-empty :titles="'还没有看房报告'" 
+                 :btns="'去选房'"
+                 :isEmpty="numbol"
+                 @myEvent="myEvent"></o-empty>
     </div>
 </template>
 
 <script>
+import oHouseList from "../../base/houseList/houseList";
+import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
-            collecttwohouse: [],//二手房收藏
-          	num: 0,           //切换ip
-            IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST],
+            numbol:false,
+            reportList:[],//看房列表
         };
     },
     created() {
-        this.collectionListRequest(0);
+        this.reportListRequest();
     },
     methods: {
-        collectionListRequest(num) {
-          this.num = num;
-          this.$http
-            .get(this.IPS[num] , {
-                headers: {
-                    "Content-Type": "application/json",
-                    // "scity": JSON.parse(localStorage.selectCity).value,
-                    "unique-code": sessionStorage.token
-                },
-                params: {
-                    pageNo: 1
-                }
-            })
-            .then(response => {
-                this.collecttwohouse = response.data.data;
-                
-                // //修正数据
-                // response.data.data.forEach(item => {
-                //     item.houseTag = item.houseTag.split(",");
-                // });
-                // this.datalist = response.data.data;
-            });
+        //自定义事件 去选房
+        myEvent() {
+            this.$router.push({path: '/buyHouse'})
         },
-        change(num) {
-					//同小区二手房房源
-					this.collectionListRequest(num);
-			}
+        jump(item) {
+            let url = item.reportUrl;
+            this.$route({path: url});
+        },
+        reportListRequest() {
+            let city = JSON.parse(localStorage.selectCity).value;
+            this.$http
+            .get(this.$url.URL.REPORT_LIST+"?pageNo="+1+"&scity="+city)
+            .then(response => {
+                let data = response.data.data;
+                data.forEach(item => {
+                    //修正时间格式形如2018.01.01
+                    item.createDateTime1 = item.createDateTime.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
+                    item.createDateTime2 = item.createDateTime.split(' ')[1];
+                });
+                this.reportList = response.data.data;
+                this.reportList.length==0? this.numbol=true : this.numbol=false;
+            });
+        }
+    },
+    components: {
+        oHouseList,
+        oEmpty
     }
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -124,111 +135,16 @@ h3 {
   font-size: 30px;
   color: #000000;
 }
-.main {
-  padding: 35px;
-  border: 1px solid #cacaca;
-  > ul > li {
-    display: flex;
-    flex-flow: row nowrap;
-    padding: 20px 0;
-    border-bottom: 1px solid #cacaca;
-    // 左边
-    .image {
-      flex: 232px 0 0;
-      width: 232px;
-      height: 175px;
-      margin-right: 35px;
-      background: red;
-      img {
-        width: 100%;
-        height: 100%;
-      }
+ul{
+    background: #f7f7ff;
+    padding: 10px;
+    li{
+        height: 85px;
+        line-height: 85px;
+        padding: 0 30px;
+        border-bottom: 1px solid #cacaca; 
+        span{float: right;}
     }
-    // 中间
-    .description {
-      flex: 1;
-      display: flex;
-      flex-flow: column nowrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      .title {
-        font-size: 22px;
-        color: #000000;
-      }
-      .info {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.8);
-      }
-      .attention {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.8);
-      }
-      .tag > span {
-        padding: 5px;
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.8);
-        &:nth-of-type(1) {
-          background: #edf9ff;
-          color: #00a8ff;
-        }
-        &:nth-of-type(2) {
-          background: #fff2ed;
-          color: #ff7f50;
-        }
-        &:nth-of-type(3) {
-          background: #ebfff3;
-          color: #00b969;
-        }
-      }
-    }
-    // 右边
-    .r-content {
-      flex: 150px 0 0;
-      width: 150px;
-      text-align: right;
-      .collection {
-        font-size: 16px;
-        margin-bottom: 30px;
-        color: #000000;
-      }
-      .totalPrice {
-        color: red;
-        font-size: 14px;
-        margin-bottom: 30px;
-        span {
-          font-size: 24px;
-          margin-right: 10px;
-        }
-      }
-      .housetype {
-        margin-bottom: 30px;
-        margin-top: 50px;
-        span {
-          font-size: 12px;
-        }
-      }
-      .sellPrice {
-        font-size: 12px;
-        color: rgba(0, 0, 0, 0.3);
-      }
-    }
-  }
-}
-
-.collectlist{
-  >ul{
-    height: 35px;
-    background: rgba(0, 0, 0, 0.3);
-  }
-  >ul>li{
-    color: white;
-    float: left;
-    height: 35px;
-    width: 112px;
-    font-size: 16px;
-    text-align: center;
-    line-height: 35px;
-  }
 }
 
 

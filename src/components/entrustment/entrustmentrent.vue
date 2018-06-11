@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-04-27 00:38:54
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-08 11:13:02
  */
 <template>
   <div class="sellRent">
@@ -18,35 +18,59 @@
 						<ul>
 							<li>
 								<div>姓名</div>
-								<input type="username" placeholder="请输入你的姓名" v-model="username">
+								<input type="username" placeholder="请输入你的姓名" v-model="username" @click="close()">
 							</li>
 							<li>
 								<div>电话</div>
-								<input type="telphone"  placeholder="请输入你的电话" v-model="telphone">
+								<input type="telphone"  placeholder="请输入你的电话" minlength="11" maxlength="11" v-model="telphone" @click="close()">
 							</li>
-							<li>
+							<li class="city">
 								<div>城市</div>
-								<div class="city">
-									<input placeholder="选择你的城市" readonly v-model="cityValue" @click="toggleCity()">
-									<ul v-if="cityFlag">
-										<li v-for="item1 in cityList">
-											<ol v-for="item2 in item1.item">
-												<li @click="selectCity(item2)">{{item2.name}}</li>
-											</ol>
-										</li>
-									</ul>
-								</div>
+                <input type="text" placeholder="选择你的城市" readonly v-model="cityValue" @click="toggleCity()">
+                <ul v-show="isSelectNum == 0">
+                  <li v-for="item1 in cityList">
+                      <ol v-for="item2 in item1.item">
+                        <li @click="selectCity(item2)">{{item2.name}}</li>
+                      </ol>
+                  </li>
+                </ul>
 							</li>
-							<li>
+							<li class="xiaoqu">
 								<div>小区</div>
-								<input type="text"  placeholder="请输入房源小区名称" v-model="houseTyName">
+								<input type="text" placeholder="请输入房源小区名称" v-model="houseTyName" @input="changeInput()"  @click="toggleXiaoqu()">
+                <ul v-show="isSelectNum == 1">
+                  <li v-for="item in houseTyNameList" @click="selectXiaoqu(item)">
+                    {{item.buildName}}
+                  </li>
+                </ul>
 							</li>
 							<li>
 								<div>房屋编号</div>
 								<div class="houseNum">
-									<input type="text"  placeholder="栋座号" v-model="houseOne">
-									<input type="text"  placeholder="单元号" v-model="houseTwo">
-									<input type="text"  placeholder="门牌号" v-model="houseThree">
+                  <div class="houseNum1">
+									  <input type="text"  placeholder="栋座号" readonly v-model="houseOne" @click="toggleDong()">
+                    <ul v-show="isSelectNum == 2">
+                      <li v-for="item in houseOneList" @click="selectDong(item)">
+                        {{item.name}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="houseNum2">
+									  <input type="text"  placeholder="单元号" readonly v-model="houseTwo" @click="toggleDanyuan()">
+                    <ul v-show="isSelectNum == 3">
+                      <li v-for="item in houseTwoList" @click="selectDanyuan(item)">
+                        {{item}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="houseNum3">
+									  <input type="text"  placeholder="门牌号" readonly v-model="houseThree" @click="togglehouseNum()">
+                    <ul v-show="isSelectNum == 4">
+                      <li v-for="item in houseThreeList" @click="selecthouseNum(item)">
+                        {{item}}
+                      </li>
+                    </ul>
+                  </div>
 								</div>
 							</li>
 							<li>
@@ -56,7 +80,7 @@
 							<li>
 								<div>经纪人</div>
 								<div class="broker">
-									<input type="text" placeholder="选择你的经纪人" readonly v-model="brokerValue" @click="toggleBroker()">
+									<input type="text" placeholder="选择你的经纪人" v-model="brokerValue" @click="toggleBroker()">
 								</div>
 							</li>
 						</ul>
@@ -114,25 +138,41 @@
   </div>
 </template>
 <script>
+import {debounce} from "../../common/js/util"
 export default {
   data() {
     return {
       username: "", //用户名
       telphone: "", //手机号
+      isSelectNum: null, //展开项
+
       cityValue: "", //选择城市
-      brokerValue: "", //经纪人
-      brokerId: "", //经纪人id
-      cityFlag: false, //城市
-      brokerFlag: false, //经纪人
+      cityCode: "", //城市编码
       cityList: [], //城市列表
+      currentCity: JSON.parse(localStorage.selectCity).value, //首页默认点击的城市
+
+      brokerId: "", //经纪人id
+      brokerFlag: false, //经纪人
+      brokerValue: "", //经纪人
       brokerLists: [], //经纪人列表
+
       houseTyName: "", //小区名称
+      houseTyId: "", //小区id
+      houseTyNameList: [], //小区列表
+
       houseOne: "", //栋座号
+      houseOneId: "",//栋座号id
+      houseOneList: [], //栋座号列表
+
       houseTwo: "", //单元号
+      houseTwoList: [], //单元号列表
+      
+
       houseThree: "", //门牌号
+      houseThreeList: [], //门牌号列表
+
       address: "", //地址
       items: ["我要出售", "我要出租"],
-      options: [{ name: 1, id: 1 }],
       //出售 出租
       IPS: [
         this.$url.URL.HOUSE_ENTRUSTAPPLY_SELLHOUSE,
@@ -140,38 +180,153 @@ export default {
       ],
       checked: 0,
       IPSnum: 0,
-      cityCode: "", //城市编码
-      currentCity: JSON.parse(localStorage.selectCity),
-      pageSize: 0
+      page: 1,
     };
   },
   created() {
+    //初始化
     this.cityListRequest();
-    this.brokerListRequest(1);
+    this.brokerListRequest();
+    this.xiaoquListRequest();
+  },
+  watch: {
+    cityCode() {
+      this.clearAboutCity();
+      this.brokerListRequest();
+      this.xiaoquListRequest();
+    }
   },
   methods: {
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-        this.brokerListRequest(val);		
+    close() {
+      this.isSelectNum = null;
     },
+    //清空全部操作
+    clearAllInput() {
+      this.username = null;
+      this.telphone = null;
+      this.cityValue = null;
+      this.brokerLists = null;
+      this.houseTyName = null;
+      this.houseTyNameList = null;
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.brokerValue = null;
+    },
+    //清空关于城市的
+    clearAboutCity() {
+      this.brokerLists = null;
+      this.houseTyName = null;
+      this.houseTyNameList = null;
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.brokerValue = null;
+    },
+    //分页器
+    handleCurrentChange(val) {
+      this.brokerListRequest(val);
+    },
+    //卖房 租房
     changeItem(num) {
       this.checked = num;
       this.IPSnum = num;
     },
+    //城市
     toggleCity() {
-      this.cityFlag = !this.cityFlag;
+      this.isSelectNum = 0;
       this.brokerFlag = false;
     },
-    toggleBroker() {
-      this.cityFlag = false;
-      this.brokerFlag = !this.brokerFlag;
+    selectCity(item) {
+      this.isSelectNum = null;
+      this.cityCode = item.value; //拼音
+      this.cityValue = item.name; //中文
     },
+    //经纪人
+    toggleBroker() {
+      this.isSelectNum = null;
+      this.brokerFlag = true;
+    },
+    selectBroker(item) {
+      this.brokerFlag = false;
+      this.brokerValue = item.emplName;
+      this.brokerId = item.id;
+    },
+
+    //小区
+    toggleXiaoqu() {
+      this.isSelectNum = 1;
+    },
+    selectXiaoqu(item) {
+      this.isSelectNum = null;
+      this.houseTyName = item.buildName;
+      this.houseTyId = item.id;
+      //清空操作
+      this.houseOne = null;
+      this.houseOneList = null;
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.dongzuoListRequest(item.id);
+    },
+    //小区
+    changeInput() {
+      debounce(this.xiaoquListRequest(this.houseTyName), null, 1000);
+    },
+    //栋座号
+    toggleDong() {
+      this.houseTyId 
+      ? (this.isSelectNum = 2) 
+      : this.$alert("请先选取小区");
+    },
+    selectDong(item) {
+      this.isSelectNum = null;
+      this.houseOne = item.name;
+      this.houseOneId = item.id;
+      //清空操作
+      this.houseTwo = null;
+      this.houseTwoList = null;
+      this.houseThree = null;
+      this.houseThreeList = null;
+      this.address = null;
+      this.danyuanListRequest(item.id);
+    },
+    //单元号
+    toggleDanyuan() {
+       this.houseTyId 
+       ? (this.isSelectNum = 3) 
+       : this.$alert("请先选取小区");
+    },
+    selectDanyuan(item) {
+      this.isSelectNum = null;
+      this.houseTwo = item;
+      this.danyuanListRequest(this.houseOneId, item);
+    },
+    //门牌号
+    togglehouseNum() {
+      this.houseTyId 
+      ? (this.isSelectNum = 4) 
+      : this.$alert("请先选取小区");
+    },
+    selecthouseNum(item) {
+      this.isSelectNum = null;
+      this.houseThree = item;
+      //最后生具体地址
+      this.address = this.cityValue + this.houseTyName + this.houseOne + this.houseTwo + this.houseThree ;
+    },
+    //请求城市列表
     cityListRequest() {
-      //城市
-      //请求城市列表
-      let map = {
-        hot: { title: "热门", item: [] }
-      };
+      let map = { hot: { title: "热门", item: [] } };
       this.$http.get(this.$url.URL.DICTIONARY_CITYS).then(response => {
         response.data.data.forEach((obj, index) => {
           //城市数据 重新map排列
@@ -193,37 +348,99 @@ export default {
             return a.title.charCodeAt() - b.title.charCodeAt();
           });
           this.cityList = ret;
-          console.log(ret);
         });
       });
     },
-    brokerListRequest(num) {
-      let scity = this.cityCode ? this.cityCode : this.currentCity.value;
-      //经纪人
+    //请求经纪人
+    brokerListRequest() {
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
       this.$http
-        .post(this.$url.URL.BROKERS_LIST, {
-          scity: scity,
-          pageNo: num
-        })
+        .post(this.$url.URL.BROKERS_LIST, { scity: scity, pageNo: 1 })
         .then(response => {
-          console.log(response.data.data);
           this.brokerLists = response.data.data;
         });
     },
-    selectCity(item) {
-      this.cityFlag = false;
-      this.cityCode = item.value; //拼音
-      this.cityValue = item.name; //中文
+    //请求小区
+    xiaoquListRequest(keyword) {
+      let num = 1;
+      let scity = this.cityCode ? this.cityCode : this.currentCity;
+      const currentCity = localStorage.selectCity;//缓存当前城市
+      let midobj = {value: scity};
+      localStorage.selectCity = JSON.stringify(midobj);//替换缓存的当前城市  从而修改请求头里面的scity;
+
+      this.$http
+          .post(this.$url.URL.BUILDLIST, {scity: scity,pageNo: num,keyword: keyword})
+          .then(res => {
+              this.houseTyNameList = res.data.data;
+              localStorage.selectCity = currentCity;
+              this.$nextTick(() => {
+                  //滚动加载
+                  let el = document.querySelector(".xiaoqu ul");
+                  el.onscroll = () => {
+                    let scrollTop = el.scrollTop; //页面上卷的高度
+                    let wholeHeight = el.scrollHeight; //页面底部到顶部的距离
+                    let divHeight = el.clientHeight; //页面可视区域的高度
+                    if(scrollTop + divHeight+ 10 >= wholeHeight) {
+                      let page = num++;
+                      localStorage.selectCity = JSON.stringify(midobj);
+                      this.xiaoquListRequest2(scity, keyword, page, currentCity);
+                    }
+                  };
+              });
+          });
+ 
     },
-    selectBroker(item) {
-      this.brokerFlag = false;
-      this.brokerValue = item.emplName;
-      this.brokerId = item.id;
+    xiaoquListRequest2(scity, keyword, page,currentCity) {
+      this.$http
+          .post(this.$url.URL.BUILDLIST, {scity: scity,pageNo: page,keyword: keyword})
+          .then(res => {
+            localStorage.selectCity = currentCity;
+            this.houseTyNameList = this.houseTyNameList.concat(res.data.data);
+          });
     },
+    //滚动加载
+    scrollEvent(node, fn) {
+      let el = document.querySelector(node);
+      el.onscroll = () => {
+        let scrollTop = el.scrollTop; //页面上卷的高度
+        let wholeHeight = el.scrollHeight; //页面底部到顶部的距离
+        let divHeight = el.clientHeight; //页面可视区域的高度
+        (scrollTop + divHeight >= wholeHeight)&&fn();
+      };
+    },
+    //请求栋座号
+    dongzuoListRequest(id, keyword) {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http
+        .get(this.$url.URL.BUILDINGLISTDZ + id + "?pageNo=1&pageSize=10")
+        .then(res => {
+          this.houseOneList =  res.data.data;
+        });
+    },
+    //请求单元号或者门牌号
+    danyuanListRequest(id, item) {
+      let num = 1;
+      let scity = this.cityCode;
+      this.$http
+        .post(this.$url.URL.BUILDINGLISTDYFH, {
+          scity: scity,
+          pageNo: num,
+          buildId: this.houseTyId,
+          dyname: item,
+          dzId : id,
+        })
+        .then(res => {
+          item
+          ? (this.houseThreeList = res.data.data)
+          : (this.houseTwoList = res.data.data)
+        });
+    },
+
+    //提交
     commitRequest() {
-      let scity = this.cityCode ? this.cityCode : this.currentCity.value;
       let params = {
-        cityCode: scity, //城市编码
+        cityCode: this.cityCode, //城市编码
         brokerId: this.brokerId, //经纪人id
         linkman: this.username, //姓名
         phone: this.telphone, //联系电话
@@ -233,21 +450,18 @@ export default {
         roomNum: this.houseThree, //房号
         address: this.address //详细地址
       };
-      if (
-        scity == "" ||
-        this.brokerId == "" ||
-        this.username == "" ||
-        this.telphone == "" ||
-        this.houseTyName == "" ||
-        this.houseOne == "" ||
-        this.houseThree == ""
-      ) {
-        this.$alert("信息不能为空!");
-      } else {
-        this.$http.post(this.IPS[this.IPSnum], params).then(response => {
-          console.log(response.data.data);
-        });
+      switch(true){
+        case !this.username:return this.$alert('姓名不能为空!');break;
+        case !this.telphone:return this.$alert('手机号码不能为空!');break;
+        case !/^1[34578]\d{9}$/.test(this.telphone):return this.$alert('手机号码格式不对!');break;
+        case !this.cityCode:return this.$alert('城市不能为空!');break;
+        case !this.brokerId:return this.$alert('小区不能为空!');break;
+        case !this.houseTyName,!this.houseOne,!this.houseThree: return this.$alert('信息填写不全!');break;
       }
+      this.$http.post(this.IPS[this.IPSnum], params).then(response => {
+        this.clearAllInput();
+        this.$alert('提交成功!')
+      });
     }
   }
 };
@@ -270,10 +484,13 @@ export default {
     background: #ffffff;
   }
 }
-.city {
-  flex: 1;
+.city,
+.xiaoqu,
+.houseNum1,
+.houseNum2,
+.houseNum3 {
   position: relative;
-  >input{
+  input {
     width: 100%;
     height: 40px;
     line-height: 40px;
@@ -283,30 +500,36 @@ export default {
     border: 1px solid #cacaca;
     box-sizing: border-box;
   }
-  >ul{
+  ul {
     position: absolute;
     top: 40px;
-    left: 0;
-    width: 100%;
+    right: 0;
+    width: 294px;
     height: 200px;
     background: #ffffff;
     border: 1px solid #cacaca;
+    border-top: 0;
     box-sizing: border-box;
     text-indent: 10px;
     overflow-y: scroll;
     overflow-x: hidden;
     z-index: 1000;
-    li{
-      ol{
+    li {
+      cursor: pointer;
+      ol {
         width: 100%;
-        li{
+        li {
           border-bottom: 1px solid #cacaca;
-          &:hover{
-            background: red;
-          }
         }
       }
     }
+  }
+}
+.houseNum1,
+.houseNum2,
+.houseNum3 {
+  ul {
+    width: 90px !important;
   }
 }
 
@@ -318,18 +541,18 @@ export default {
   height: 105px;
   line-height: 105px;
   font-size: 20px;
-  >div{
+  > div {
     flex: 1;
     &:nth-of-type(1) input,
-    &:nth-of-type(2) input{
+    &:nth-of-type(2) input {
       cursor: pointer;
     }
-    &:nth-of-type(1)>div{
+    &:nth-of-type(1) > div {
       float: right;
       margin-right: 22px;
       cursor: pointer;
     }
-    &:nth-of-type(2)>div{
+    &:nth-of-type(2) > div {
       float: left;
       margin-left: 22px;
       cursor: pointer;
@@ -340,21 +563,21 @@ export default {
 /* form 身体 */
 .form-bd {
   margin: 0 114px 0 74px;
-  >ul{
-    >li{
+  > ul {
+    > li {
       height: 40px;
       line-height: 40px;
       display: flex;
       flex-flow: row nowrap;
       margin-bottom: 18px;
-      >div:nth-of-type(1){
+      > div:nth-of-type(1) {
         margin-right: 22px;
         text-align: right;
         width: 110px;
         font-size: 20px;
         color: #000000;
       }
-      >input{
+      > input {
         flex: 1;
         text-indent: 10px;
         font-size: 14px;
@@ -371,7 +594,7 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  input{
+  input {
     height: 40px;
     width: 90px;
     line-height: 40px;
@@ -388,8 +611,8 @@ input::-webkit-input-placeholder {
   font-size: 14px;
 }
 /* form 脚步 */
-.form-ft{
-  button{
+.form-ft {
+  button {
     display: block;
     width: 280px;
     height: 40px;
@@ -400,7 +623,7 @@ input::-webkit-input-placeholder {
     font-size: 18px;
     color: #ffffff;
   }
-  p{
+  p {
     text-align: center;
     font-size: 14px;
     color: #272c30;
@@ -410,10 +633,10 @@ input::-webkit-input-placeholder {
 }
 
 /* 经纪人 */
-.broker{
+.broker {
   flex: 1;
   position: relative;
-  input{
+  input {
     width: 100%;
     height: 40px;
     line-height: 40px;
@@ -432,22 +655,22 @@ input::-webkit-input-placeholder {
   height: 642px;
   transform: translateX(-50%);
   background: #efefef;
-  h3{
+  h3 {
     text-align: center;
     line-height: 50px;
     font-size: 20px;
     color: #ffffff;
     background: red;
   }
-  ul{
+  ul {
     max-height: 530px;
     overflow: auto;
-    >li{
+    > li {
       overflow: hidden;
       cursor: pointer;
       height: 124px;
       position: relative;
-      >div{
+      > div {
         margin: 0 10px;
         height: 124px;
         padding: 28px 0;
@@ -462,7 +685,7 @@ input::-webkit-input-placeholder {
           top: 20px;
           left: 20px;
           overflow: hidden;
-          img{
+          img {
             width: 100%;
             height: 100%;
           }
@@ -472,58 +695,49 @@ input::-webkit-input-placeholder {
           margin-left: 120px;
           display: flex;
           flex-flow: row nowrap;
-          >div{
+          > div {
             flex: 1;
           }
-          .one{
-            .name{
+          .one {
+            .name {
               font-size: 16px;
               margin-bottom: 10px;
-              span{
+              span {
                 font-size: 24px;
                 color: rgba(0, 0, 0, 0.8);
                 margin-right: 10px;
               }
             }
-            .decription{
+            .decription {
               margin: 0 15px 10px 0;
-              span{
+              span {
                 font-size: 14px;
               }
             }
-            .tag{
+            .tag {
               display: flex;
               flex-flow: row nowrap;
               white-space: nowrap;
-              span{
+              span {
                 font-size: 12px;
                 margin-right: 10px;
                 padding: 5px;
-                &:nth-of-type(1){
-                    background: #edf9ff;
-                    color: #00a8ff;
-                }
-                &:nth-of-type(2){
-                    background: #fff2ed;
-                    color: #ff7f50;
-                }
-                &:nth-of-type(3){
-                    background: #ebfff3;
-                    color: #00b969;
-                }
+                &:nth-of-type(1) {background: #edf9ff;color: #00a8ff}
+                &:nth-of-type(2) {background: #fff2ed;color: #ff7f50}
+                &:nth-of-type(3) {background: #ebfff3;color: #00b969}
               }
             }
           }
-          .two{
+          .two {
             font-size: 14px;
             color: rgba(0, 0, 0, 0.6);
-            span{
+            span {
               font-size: 24px;
               color: #ff0000;
             }
           }
-          .three{
-            div{
+          .three {
+            div {
               font-size: 16px;
               &:nth-of-type(1) {
                 margin-bottom: 10px;
@@ -532,17 +746,17 @@ input::-webkit-input-placeholder {
           }
         }
       }
-      &:hover{
+      &:hover {
         background: #ffffff;
       }
     }
   }
 }
 
-.pagination{
-	width: 360px;
-	margin-top: 20px;
-	margin-left: 15%;
+.pagination {
+  width: 360px;
+  margin-top: 20px;
+  margin-left: 15%;
 }
 </style>
 

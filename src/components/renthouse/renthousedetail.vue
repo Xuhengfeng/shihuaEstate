@@ -147,7 +147,7 @@
                   <ul>
                     <li v-for="item in rentrimhousing">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img src="item.housePic" />
+                        <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
                         <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" @click.stop="collection($event)"style="font-size: 16px;color: ">收藏</span></div>
@@ -169,7 +169,8 @@
         <!-- 右侧sidebar -->
         <div class="side">
             	<div class="btn">
-                <div @click="addCollection($event)">收藏房源</div>
+                <div @click="addCollection($event)" v-if="!sellrentdetail.isCollect" >收藏房源</div>
+                 <div @click="addCollection($event)"v-if="sellrentdetail.isCollect" >已收藏</div>
                 <div>预约看房</div> 
               </div>
 
@@ -345,7 +346,7 @@ export default {
 	  toSkip(item) {
 			document.body.scrollTop = 0
 			document.documentElement.scrollTop = 0
-      let path = "/sellrentdetail/" + item.sdid;
+      let path = "/rentHouseDetail/" + item.sdid;
       this.$router.push({ path: path });
       this.render();
     },

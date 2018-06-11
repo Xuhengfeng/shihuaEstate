@@ -26,11 +26,11 @@ module.exports = {
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
-   plugins: [ 
-       new webpack.ProvidePlugin({ 
-             $:"jquery", 
-             jQuery:"jquery", 
-            "windows.jQuery":"jquery"
+  plugins: [ 
+    new webpack.ProvidePlugin({ 
+          $:"jquery", 
+          jQuery:"jquery", 
+        "windows.jQuery":"jquery"
     }) 
   ], 
   resolve: {
@@ -53,7 +53,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

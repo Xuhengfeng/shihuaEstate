@@ -1,8 +1,13 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
+<<<<<<< HEAD
  * @Last Modified by: mikey.zhaopeng
  * @Last Modified time: 2018-05-18 00:37:34
+=======
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-05-30 10:38:23
+>>>>>>> master
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -42,7 +47,11 @@ const indexseethree = resolve => require(['components/mine/indexseethree'], reso
 const indexseefour = resolve => require(['components/mine/indexseefour'], resolve)//看房报告
 const indexcollection = resolve => require(['components/mine/indexcollection'], resolve)//我的收藏
 const indexdelegation = resolve => require(['components/mine/indexdelegation'], resolve)//我的委托
+const indexdelegationdetail = resolve => require(['components/mine/indexdelegationdetail'], resolve)//我的委托详情
 const indexbroker = resolve => require(['components/mine/indexbroker'], resolve)//我的经纪人
+const comment = resolve => require(['components/mine/comment'], resolve)//我的评论
+const consultant = resolve => require(['components/consultant/consultant'], resolve)//咨询
+const consultantindex = resolve => require(['components/consultant/consultantindex'], resolve)//咨询首页
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
@@ -54,9 +63,14 @@ const router = new Router({
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
   	routes: [
+<<<<<<< HEAD
 		{path:"/",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
 		{path:"/index",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
 		{path:"/home",component:home,meta:{KeepAlive:false}},//首页
+=======
+		{path:"*",redirect:'/',meta:{KeepAlive:false}},//重定向首页
+		{path:"/",component:home,meta:{KeepAlive:false}},//首页
+>>>>>>> master
 		{path:"/login",component:login,meta:{KeepAlive:false}},//登录
 		{path:"/register",component:register,meta:{KeepAlive:false}},//注册
 		{path:"/mapSearch",component:mapSearch,meta:{KeepAlive:false}},//地图找房
@@ -79,6 +93,10 @@ const router = new Router({
 		//小区
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
+
+		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[{////咨询
+			path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页
+		]},
 		
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
@@ -99,7 +117,9 @@ const router = new Router({
 				path:"indexbroker",component:indexbroker,meta:{KeepAlive:false}},{//我的经纪人
 				path:"indexconsult",component:indexconsult,meta:{KeepAlive:false}},{//我的咨询
 				path:"indexmessage",component:indexmessage,meta:{KeepAlive:false}},{//消息
-				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}}//编辑资料
+				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}},{//编辑资料
+				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
+				path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
 			]},
   	]
 })

@@ -6,12 +6,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.prototype.$alert = MessageBox.alert//弹出框
 Vue.prototype.$confirm = MessageBox.confirm//弹出框
 Vue.prototype.$message = Message//消息提示
-/*
- * @Author: 徐横峰 
- * @Date: 2018-04-28 00:21:14 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-03 22:31:47
- */
+
 //异步操作
 export default {
 	//登录
@@ -22,11 +17,29 @@ export default {
 	logout({commit}) {
 		commit('LOGOUT')
 	},
+	//获取最新用户信息
+	getUserInfo({commit}) {
+		axios.post(API.URL.USER_DETAILINFO)
+		.then((response) => {
+			let newData = response.data.data;
+			sessionStorage.userInfo = JSON.stringify(newData);
+			//静默刷新登录
+			this.dispatch('login');
+		});
+	},
 	//清空对比列表
 	clearAll({commit}) {
 		this.state.contrastList.forEach((item)=>{
 			axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {
-				commit('DELETEONE', item);
+				commit('CLEARALL', item);
+			});
+		})
+	},
+	//清空待看列表
+	clearDaikan({commit}) {
+		this.state.appinthouse.forEach((item)=>{
+			axios.delete(API.URL.APPOINT_DELETE+item.id).then((response) => {
+				commit('CLEARDAIKAN', item);
 			});
 		})
 	},
@@ -49,13 +62,19 @@ export default {
 		axios.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then((response) => {});
 		commit('DELETEONE', item);
 	},
-	//添加一个到对比清单
+	// //删除待看清单中一个
+	deleteTwo({commit}, item) {
+		console.log(item)
+		axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
+		commit('DELETETWO', item);
+	},
+	//添加一个到对比清单(发请求)
 	addOne({commit}, item) {
 		let params = {
 			"houseId": item.id,
 			"houseSdid": item.sdid
 		}
 		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {});
-	}
+	},
 }
 

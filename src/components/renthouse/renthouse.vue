@@ -102,14 +102,21 @@
 							</li>
 						</ul>
 					</div>
-					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
-					<!--分页器-->
-					<el-pagination
-					  background
-					  layout="prev, pager, next"
-					  :total="1000"
-					  class="fr">
-					</el-pagination>
+            <!-- 分页器 -->
+            <div class="pageFooter">
+                <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
+                  <router-link to="home">世华易居网南宁二手房</router-link>>
+                  <router-link to="buyhouse">南宁二手房</router-link>
+                </div>
+                <el-pagination class="fr oPagination"
+                    @current-change="handleCurrentChange"
+                    background
+                    layout="prev, pager, next"
+                    prev-text="上一页"
+                    next-text="下一页"
+                    :total="1000">
+                </el-pagination>
+            </div>
 				</div>
 			</div>
 		</div>
@@ -182,6 +189,10 @@ export default {
     }
   },
   methods: {
+     handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.query(null, val);		
+    },
     //收藏房源
     collection(item,e) {
       console.log(this.logined)
@@ -246,9 +257,9 @@ export default {
       
     },
     //搜索
-    query(item) {
+    query(item , num) {
       if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+      let params = {'keyword': this.keyword, 'pageNo': num, 'scity': this.selectCity.value};
       this.$http
       .post(this.$url.URL.RENTHOUSE_QUERY, params)
       .then(response=>{
@@ -433,7 +444,10 @@ export default {
   line-height: 18px;
   font-size: 13px;
 }
-
+.pageFooter{
+  overflow: hidden;
+  padding-top: 20px;
+}
 /*content部分css*/
 
 .content {

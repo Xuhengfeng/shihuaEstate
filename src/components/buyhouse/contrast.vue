@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-13 15:42:32
+ * @Last Modified time: 2018-05-31 00:13:31
  */
 <template>
 	<!-- 房源对比 -->
@@ -43,11 +43,11 @@
 					</tr>
 					<tr>
 						<td>建筑面积</td>
-						<td v-for="item in contrastList" :class="item.builtArea==builtAreaIndex?'fontColor':''">{{item.builtArea}} 平米</td>
+						<td v-for="item in contrastList" :class="item.builtArea==builtAreaIndex?'fontColor':''">{{item.builtArea}}<span v-if="item.builtArea">平米</span></td>
 					</tr>
 					<tr>
 						<td>单价</td>
-						<td v-for="item in contrastList" :class="item.saleprice==priceIndex?'fontColor':''">{{item.saleprice}}元 / 平</td>
+						<td v-for="item in contrastList" :class="item.saleprice==priceIndex?'fontColor':''">{{item.saleprice}}<span v-if="item.saleprice">元 / 平</span></td>
 					</tr>
 					<tr>
 						<td>户型</td>
@@ -170,7 +170,6 @@
 
 <script>
 import oHeader from "../../base/header/header";
-import "../../common/css/resetElement.less";
 
 export default {
 	data() {
@@ -231,9 +230,9 @@ export default {
 		comparePrice() {
 			let arr = [];
 			this.contrastList.forEach(item => {
-				if(item.saleprice!==undefined){
-					arr.push(item.saleprice)
-				}
+				item.saleprice
+				? arr.push(item.saleprice)
+				: arr.push(0);
 			});
 			this.priceIndex = Math.max(...arr);
 		},
@@ -241,9 +240,9 @@ export default {
 		compareBuiltArea() {
 			let arr = [];
 			this.contrastList.forEach(item => {
-				if(item.builtArea!==undefined){
-					arr.push(item.builtArea)
-				}
+				item.builtArea
+				? arr.push(item.builtArea)
+				: arr.push(0);
 			});
 			this.builtAreaIndex = Math.max(...arr);
 		},
@@ -255,9 +254,7 @@ export default {
 		compareBuildAgeIndex() {
 			let arr = [];
 			this.contrastList.forEach(item => {
-				if(item.buildAge!==undefined){
-					arr.push(parseInt(item.buildAge))
-				}
+				arr.push(parseInt(item.buildAge))
 			});
 			this.buildAgeIndex = Math.min(...arr);
 		},

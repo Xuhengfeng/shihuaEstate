@@ -7,7 +7,7 @@
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
-					<span class="iconfont icon-location location" @click="openCity()">{{selectCity}}</span>
+					<span class="iconfont el-icon-own-location location" @click="openCity()">{{selectCity}}</span>
 					<transition name="bounce">
 						<div class="city-change " v-if="cityChange">
 							<span class="close" @click="closeCity()"></span>
@@ -44,7 +44,7 @@
 					<ul class="item1">
 						<router-link tag="li" to="">
 							<div v-if="!isLogin">
-								<i class="iconfont icon-yonghu"></i>
+								<i class="iconfont el-icon-own-yonghu"></i>
 								<span class="login" @click="login()">登录</span> 
 								<span>/</span>
 								<span class="register" @click="register()">立即注册</span>
@@ -69,19 +69,19 @@
 						<router-link tag="li" to="/more">更多
 							<ul>
 								<router-link tag="li" to="/houseestate">小区找房</router-link>
-								<router-link tag="li" to="">代办贷款</router-link>
-								<router-link tag="li" to="">异地服务</router-link>
+								<router-link tag="li" to="">代办业务</router-link>
+								<router-link tag="li" to="">便民服务</router-link>
 								<router-link tag="li" to="">房屋托管</router-link>
 								<router-link tag="li" to="">装修</router-link>
 								<router-link tag="li" to="">世华公益</router-link>
-								<router-link tag="li" to="">咨询</router-link>
+								<router-link tag="li" to="/consultant">咨询</router-link>
 								<router-link tag="li" to="">购房指南</router-link>
 								<router-link tag="li" to="">行业咨询</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
 						<router-link tag="li" to="/broker">海外置业</router-link>
-						<router-link tag="li" to="/broker">找门店</router-link>
+						<router-link tag="li" to="/shoper">找门店</router-link>
 						<router-link tag="li" to="/broker">找经纪人</router-link>
 						<router-link tag="li" to="/">业主委托
 							<ul>
@@ -102,7 +102,7 @@
 						<span @click="placeholderText(2)">小区</span>
 					</div>
 					<div class="search-bd">
-						<i ref="sanjiao" class="tip iconfont icon-sanjiaoxing-up"></i>
+						<i ref="sanjiao" class="tip iconfont el-icon-own-sanjiaoxing-up"></i>
 						<input class="search-box" :placeholder="souText" v-model="searchinput" @keyup.enter="searchHouse()"></input>
 						<div class="search-box-btn fr" @click="searchHouse()">开始找房</div>
 					</div>
@@ -156,7 +156,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in hotBuilding">
+						<li  @click="toSkiptwo(item)"  v-for="item in hotBuilding" >
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
@@ -178,7 +178,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false">
+						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false"  @click="toSkipthree(item)" >
 							<div class="image">
 								<img :src= item.housePic />
 							</div>
@@ -266,7 +266,6 @@
 	export default {
 		data() {
 			return {
-				token:window.localStorage.token?false:true,
 				cityChange: false, //城市阴影
 				souText: '请输入区域丶商圈或小区名开始找房',
 				city: [], //城市列表
@@ -313,34 +312,59 @@
 			oDialog,
 		},
 		created() {
-			// let that = this;
-			// let geoc = new BMap.Geocoder(); 
-			// let geolocation = new BMap.Geolocation();
-			// let city = localStorage.selectCity?JSON.parse(localStorage.selectCity): null;
-			// //首次进入 判断是否选择了指定地址
-			// if(city) {
-			// 	that.selectCity = city.name;
-			// 	this.renderRequest(city.value);
-			// }else{
-			// 	//定位 初始城市
-			// 	geolocation.getCurrentPosition(function(r) {
-			// 		if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
-			// 			let point = new BMap.Point(r.point.lng,r.point.lat);
-			// 			geoc.getLocation(point, function(rs) {
-			// 				that.address = rs.addressComponents.city.slice(0, -1);
-			// 				that.changeAddress(that.address);
-			// 				localStorage.address = that.address;
-			// 			});    
-			// 		}else{//逆地址解析不成功
-			// 			that.selectCity = city.name?city.name:'北海';
-			// 		}    
-			// 	});
-			// }
-			this.selectCity = "北海";
-			this.changeAddress('北海');
-			localStorage.address = '北海';
+			this.defaultCityRequest();
+		},
+		watch: {
+			selectCity() {
+				this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+					scity: JSON.parse(localStorage.selectCity),//用户选定城市
+				})
+				.then(response =>{
+				let newData = response.data.data;
+				//初始化清单列表
+				this.$store.commit('CHUSHIHUA', newData);
+				})
+			}
 		},
 		methods: {
+			//默认定位
+			defaultCityRequest()  {
+				this.$http.get(this.$url.URL.DEFAULT_CITY)
+				.then((response)=>{
+					let cityName = response.data.data.name;
+					this.selectCity = cityName;
+					//这是页面所有请求的开始
+					this.changeAddress(cityName);
+					localStorage.address = cityName;
+					localStorage.selectCity = JSON.stringify(response.data.data);
+					//借助百度定位
+					if(!response.data.data){
+						this.baiduCityRequest();
+					}
+				})
+				.catch(error=>{
+					this.baiduCityRequest();
+				})
+			},
+			//百度定位
+			baiduCityRequest() {
+				let that = this;
+				let geoc = new BMap.Geocoder(); 
+				let geolocation = new BMap.Geolocation();
+				//定位 初始城市
+				geolocation.getCurrentPosition(function(r) {
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
+						let point = new BMap.Point(r.point.lng,r.point.lat);
+						geoc.getLocation(point, function(rs) {
+							that.address = rs.addressComponents.city.slice(0, -1);
+							that.changeAddress(that.address);
+							localStorage.address = that.address;
+						});    
+					}else{//逆地址解析不成功
+						that.selectCity = city.name?city.name:'北海';
+					}    
+				});
+			},
 			renderRequest(cityCode) {
 				//请求城市列表
 				let hot_city = "热门";
@@ -466,6 +490,16 @@
 				let path = "/buyhouse/twohandhousedetail/"+item.sdid;
 				this.$router.push({path:path});
 			},
+			//小区房的 更多
+			toSkiptwo(item) {  
+				let path = "/estatedetail/"+item.sdid;
+				this.$router.push({path:path});
+			},
+			//时尚租房的 更多
+			toSkipthree(item) {  
+				let path = "/rentHouseDetail/"+item.sdid;
+				this.$router.push({path:path});
+			},
 			//选定地址
 			changeAddress(item) {
 				//item是中文, name是拼音
@@ -479,12 +513,14 @@
 			},
 			//开始找房
 			searchHouse() {
-				let num = this.placeholderTextType;
-				switch(num) {
-					case 0:this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
-					case 1:this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
-					case 2:this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: this.placeholderTextType}});break;
-				}
+				// if(this.searchinput){
+					let num = this.placeholderTextType;
+					switch(num) {
+						case 0:this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+						case 1:this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+						case 2:this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: this.placeholderTextType}});break;
+					}
+				// }
 			}
 		}
 	}

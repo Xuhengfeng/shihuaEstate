@@ -41,7 +41,7 @@
             <div class="two">
                 <div class="title">房源位置</div>
                 <div class="map">
-				          <b-map></b-map>
+				          <b-map :addr="scity"></b-map>
                 </div>
             </div>
             <div class="three">
@@ -84,7 +84,7 @@
                     </div>
                   </div>
 
-                  <div class="daikan">
+                  <div class="recodr">
                     <div>带看记录</div>
                     <div>
                       <div> 看房日期 </div>
@@ -101,7 +101,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"><</div>
+                     <div @click="changeNum(1)"></div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
@@ -150,7 +150,7 @@
                   <ul>
                     <li v-for="item in rimhousing">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img src="item.housePic" />
+                        <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
                         <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
@@ -172,8 +172,10 @@
         <!-- 右侧sidebar -->
         <div class="side">
             	<div class="btn">
-                <div @click="addCollection($event)">收藏房源</div>
-                <div>预约看房</div> 
+                <div @click="addCollection($event)" v-if="!twohandhousedetail.isCollect" >收藏房源</div>
+                 <div @click="addCollection($event)" v-if="twohandhousedetail.isCollect" >已收藏</div>
+                <div  @click.stop="addContrast(twohandhousedetail, $event)" v-if="!twohandhousedetail.isAppoint">预约看房</div> 
+                <div  @click.stop="addContrast(twohandhousedetail, $event)" v-if="twohandhousedetail.isAppoint">已预约</div> 
               </div>
 
               <div class="content">
@@ -228,7 +230,7 @@
         </div>
     </div>
     <!-- 飞入的物体 -->
-    <!-- <o-fly class="fly" ref="fly"></o-fly> -->
+    <o-fly class="fly" ref="fly"></o-fly>
 	</div>
 
 </template>
@@ -269,9 +271,11 @@ export default {
   },
   components: {
     oHeader,
-    BMap
+    BMap,
+    oFly
   },
   created() {
+    // this.daikan =  localStorage.daikan?JSON.parse(localStorage.daikan): [];
 	  this.render();
   },
    computed: {
@@ -287,7 +291,6 @@ export default {
       this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id + "?pageNo=" + this.page)
       .then(response =>{
             this.housesee =  response.data.data
-            console.log(this.housesee)
       })
     },
     //上一页 下一页
@@ -303,7 +306,38 @@ export default {
         }
       }
     },
-
+    //加入待看清单
+    addContrast(item, e) {
+       if(!this.logined) return this.$alert('用户未登录!');
+       console.log(this.$store.state.appinthouse)
+        if( this.$store.state.appinthouse.length <= 3){
+          
+             this.$http.post(this.$url.URL.APPOINT_ADD,{
+                sdid:item.sdid,
+                scity:this.scity.value 
+              })
+              .then(response =>{
+                this.$refs.fly.drop(e.target);
+                this.twohandhousedetail.isAppoint = true
+                this.appintHouse();
+              })
+        }else{
+            this.$alert('对比清单最多4个!', '添加失败', {
+              confirmButtonText: '确定'
+            });
+          }
+    },
+    //待看列表
+    appintHouse() {
+        this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+          scity:this.scity.value
+        })
+        .then(response =>{
+            let newData = response.data.data;
+            //添加数据
+            this.$store.commit('ADDTWO', newData);
+        })
+    },
     //收藏房源
     addCollection(e) {
       if(!this.logined){
@@ -365,6 +399,15 @@ export default {
           this.py = response.data.data.py;
           this.id = response.data.data.id
            
+           //获取待看清单列表
+          // this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1")
+          // .then((res)=>{
+          //   if(res.data.data.length) {            
+          //     //初始化清单列表
+          //     this.$store.commit('FIRSTSTATUS', res.data.data);
+          //   }
+          // });
+
             //带看记录
             this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id+"?pageNo=1")
             .then(response =>{
@@ -553,7 +596,7 @@ export default {
           text-indent: 40px;
         }
       }
-      .daikan{
+      .recodr{
         >div:nth-of-type(1){
           font-size: 16px;
           padding: 20px 0;
