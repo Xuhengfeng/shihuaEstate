@@ -1,13 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
-<<<<<<< HEAD
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 00:37:34
-=======
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-30 10:38:23
->>>>>>> master
+ * @Last Modified time: 2018-06-11 17:13:12
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -63,14 +58,8 @@ const router = new Router({
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
   	routes: [
-<<<<<<< HEAD
-		{path:"/",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
-		{path:"/index",redirect:'/home',meta:{KeepAlive:false}},//重定向首页
-		{path:"/home",component:home,meta:{KeepAlive:false}},//首页
-=======
 		{path:"*",redirect:'/',meta:{KeepAlive:false}},//重定向首页
 		{path:"/",component:home,meta:{KeepAlive:false}},//首页
->>>>>>> master
 		{path:"/login",component:login,meta:{KeepAlive:false}},//登录
 		{path:"/register",component:register,meta:{KeepAlive:false}},//注册
 		{path:"/mapSearch",component:mapSearch,meta:{KeepAlive:false}},//地图找房

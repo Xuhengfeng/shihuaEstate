@@ -169,40 +169,19 @@ export default {
     this.render(this.selectCity.value);
   },
   methods: {
-<<<<<<< HEAD
-    toSkip(item) {
-      let path = "/buyhouse/twohandhousedetail/" + item.sdid;
-      this.$router.push({ path: path });
-=======
       handleCurrentChange(val) {
       this.query(null, val);		
->>>>>>> master
     },
     render(city) {
       //请求新房的列表(搜索)
       this.keyword = this.$route.query.word;
       this.keywordTypeId = parseInt(this.$route.query.type);
       this.query();
-<<<<<<< HEAD
-        
-      //请求搜索条件
-      this.$http
-        .get(this.$url.URL.DICTIONARY_CITYS) //区域
-        .then(response => {
-          console.log( this.listone)
-          this.listone = response.data.data;
-        });
-=======
->>>>>>> master
     },
     //搜索
     query(item, num) {
       if(item) this.keyword = item.keyword;
-<<<<<<< HEAD
-      let params = {'keyword': this.keyword,'pageNo': 1, 'scity': this.selectCity.value};
-=======
       let params = {'keyword': this.keyword,'pageNo': num, 'scity': this.selectCity.value};
->>>>>>> master
       this.$http
       .get(this.$url.URL.NEWBUILDING_QUERY + this.selectCity.value, params)
       .then(response=>{
@@ -212,19 +191,11 @@ export default {
     },
 
     //点击区域条件
-<<<<<<< HEAD
-    address(item, index, e) {
-      this.queryone = index;
-      this.params.areaId = item.id;
-      this.requestServerData(this.params);
-    },
-=======
     // address(item, index, e) {
     //   this.queryone = index;
     //   this.params.areaId = item.id;
     //   this.requestServerData(this.params);
     // },
->>>>>>> master
     changeshow() {
       this.showBtn = true;
     },
