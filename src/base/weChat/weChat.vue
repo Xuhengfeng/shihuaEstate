@@ -18,10 +18,19 @@
     <div class="lt-content" v-show="isShowItContent">
         <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
         <div class="chatArea">
-
+            <ul>
+                <li :key="index" v-for="(item,index) in 5">{{item}}</li>
+            </ul>
         </div>
         <div class="inputBox">
-
+            <textarea cols="30" 
+                    rows="10" 
+                    style="resize: none"
+                    placeholder="点击输入你要咨询的问题..."></textarea>
+            <div>
+                <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
+                <div class="sendBtn">发送</div>
+            </div>
         </div>
     </div>
 </div>    
@@ -58,10 +67,31 @@ export default {
             this.isShowItContent = false;
             this.flag = false;
         },
+        //发送
+        sendBtn() {
+            
+        },
         // 点击其中一项
         selectItem() {
             this.open();
         }
+    },
+    mounted() {
+        var that = this;
+        this.$imConn.listen({
+            onTextMessage: function ( message ) {
+                console.log(message);
+                that.chatCont.push({id: 2, cont: message.data});
+            },
+            onPresence: function ( message ) {
+                // 这里需要弹出面板标识有人要添加您为好友
+                console.log(message)
+                if(message.type == 'subscribe') {
+                    that.privateUser = message.from;
+                    that.privateUserPanel = true;
+                }
+            }
+        })
     }
 }
 </script>
@@ -177,6 +207,36 @@ export default {
         }
         .inputBox{
             height: 123px;
+            textarea{
+                width: 339px;
+                height: 28px;
+                margin: 10px 9px 0 10px;
+                padding: 10px 10px 23px 10px;
+                border: 1px solid #d9d9d9;
+                outline: none;
+            }
+            div{
+                a{
+                    float: left;
+                    margin: 10px 0 0 10px;
+                    line-height: 31px;
+                    font-size: 12px;
+                    color: #4285f4;
+                    &:hover{
+                        text-decoration: underline!important;
+                    }
+                }
+                .sendBtn{
+                    float: right;
+                    margin: 10px 10px 0 0;
+                    width: 80px;
+                    text-align: center;
+                    height: 31px;
+                    line-height: 31px;
+                    color: #fff;
+                    background: #4285f4;
+                }
+            }
         }
     }
 }
