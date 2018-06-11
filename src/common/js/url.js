@@ -88,5 +88,13 @@ let URL = {
 	UPDATE_HEADIMG:_host + "/member/updateHeadImage",                   //修改头像
 	UPDATE_NICKNAME:_host + "/member/updateNickName",                   //修改昵称
 	UPDATE_PASSWORD:_host + "/member/updatePassword",                   //修改密码
+	CONSULTANT_HOT:_host + "/consultant/hot",                         //热门咨询列表
+	CONSULTANT_INFO:_host + "/consultant/info",                         //顾问详情
+	CONSULTANT_LIST:_host + "/consultant/list",                         //顾问列表
+	CONSULTANT_MYCONCERN:_host + "/consultant/my_concern",                //我关注的问题 
+	CONSULTANT_MYPROBLEM:_host + "/consultant/my_problem",                //我的提问
+	CONSULTANT_PROBLEM_INFO:_host + "/consultant/problem_info",                //问题详情
+	CONSULTANT_REMD:_host + "/consultant/remd",                //顾问推荐列表
+	CONSULTANT_SUB_PROBLEM:_host + "/consultant/sub_problem",                //向他咨询/提问
 };
 export default {URL}

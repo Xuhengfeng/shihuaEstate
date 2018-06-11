@@ -1,160 +1,248 @@
 <template>
-    <div class="wd-list">
-        <div v-show="consult.length">
-            <ul>
-                <li>	
-                    <div class="leftlist fl">
-                        <p class="question">
-                            <a href="">
-                                现在购买二手房最应该注意什么？
-                            </a>
-                        </p>
-                        
-                            <p class="answer">
-                                <a href="">描述：希望从专业的角度给一些实际的指导</a>
-                            </p>
-                        
-                        <div>
-                            <span>提问时间：2018-03-30</span>
-                        </div>
-                    </div>
-                    <div class="rightlist fr">
-                        <div class="roundright">
-                            <div style="padding:12px;">
-                                <p class="striking">4</p>
-                                <p class="text">个回答</p>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <!--分页器-->
-            <div class="oPagination">
-                <el-pagination
-                    @current-change="handleCurrentChange"
-                    background
-                    layout="prev, pager, next"
-                    prev-text="上一页"
-                    next-text="下一页"
-                    :total="1000"
-                    class="fr pagination">
-                </el-pagination>
+    <div>
+       <div class="titlep">热门咨询</div>
+
+       <div class="hot-box">
+            <div class="hot-item">
+             <div class="h-box " style="border:0px;">
+                <ul class="fl">
+                    <li v-for="item in hotConsultant"><div class="curcle"></div><div class="bittel">{{item.problemTitle}}</div></li>
+                </ul>
+                <!-- <div class="clear"></div> -->
+             </div>
             </div>
         </div>
-        <!-- 空页面 -->
-        <o-empty :titles="'还没有咨询的信息'" 
-                 :isShow="false"
-                 :picnum="2"
-                 :isEmpty="numbol"></o-empty>
+        <div  class="advertisement">
+            <img src="../../imgs/home/ader.png"/>
+        </div>
+
+        <div class="titlep">世华顾问</div>
+
+        <div class="item">
+            <ul>
+                <li>
+                    <div class="image" @click="toSkip(item)">
+                        <img src="item.photo"/>
+                    </div>
+                    <div class="direciton">
+                        <div class="introduce" @click="toSkip(item)" >111 </div>
+                        <div class="introduce">
+                                <span class="word">1111111</span>
+                                <div class="fr call">向他咨询</div>
+                        </div> 
+                        <div class="introduce ">
+                            <span class="intrspan one">销售达人</span>
+                            <span class="intrspan two">销售达人</span>
+                            <span class="intrspan three">销售达人</span>
+                        </div>
+                    </div> 
+                </li>
+            </ul>
+        </div>
+
+         <div class="titlep" style="margin-top:35px;">热门咨询</div>
+
+       <div class="hot-box">
+            <div class="hot-item">
+             <div class="h-box " v-for="item in hotConsultant">
+                <div class="fl">
+                    <a href="" >{{item.problemTitle}}</a>
+                    <p>{{item.problemDescribe}}</p>
+                    <span>{{item.pubTime}}</span>
+                </div>
+                <div class="fr">
+                    <a href="">
+                        <i>{{item.answerNum}}</i>
+                        个回答
+                    </a>
+                </div>
+                <div class="clear"></div>
+             </div>
+            </div>
+        </div>
     </div>
+ 
 </template>
 
 <script>
-import oEmpty from "../../base/empty/empty";
-export default {
-    data() {
-        return {
-            numbol:false,
-            consult: [],   //咨询列表
-            num:1,
-            selectCity: JSON.parse(localStorage.selectCity),//当前城市
-        };
-    },
-    created(){
-        this.render();	
-    },
-    methods:{
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
-            this.render(null, val);		
-        },
-        render(num) {
-            this.$http
-                .get(this.$url.URL.MY_COMMENT +'?pageNo='+this.num, {
-                    scity:this.selectCity.value,
-                })
-                .then(response => {
-                this.consult = response.data.data;    
-                this.consult.length==0? this.numbol=true : this.numbol=false;
-             });
+        export default {
+            data() {
+                return {
+                     scity: JSON.parse(localStorage.selectCity),//当前城市
+                     hotConsultant:""   //热门咨询 
+                }
+            },
+            created(){
+                    this.hotconsultant();
+            },
+            methods: {
+                hotconsultant(){
+                                
+                //热门咨询
+                this.$http
+                    .get(this.$url.URL.CONSULTANT_HOT, {
+                    scity: this.scity.value,
+                    })
+                    .then(response => {
+                    this.hotConsultant = response.data.data;
+                    console.log(  this.hotConsultant )
+                    });
+
+                }
+            }
         }
-    },
-    components: {
-      oEmpty
-    }
-}
 </script>
 
 <style  lang="less" scoped>
-
-.wd-list ul li {
-    height: 80px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    padding-top: 0;
-    border-bottom: 1px dashed #e4e4e4;
-    position: relative;
-}
-.wd-list ul li .leftlist {
-    width: 500px;
-}
- .wd-list ul li .leftlist .question {
-    font-weight: 700;
+.titlep{
     font-size: 18px;
+    color: #000000;
+    width: 73px;
+    height: 18px;
+}
+.hot-item:first-child {
+    display: block;
+}
+ .h-box {
+    padding: 20px 0;
+    border-bottom: 1px dashed #e1e1e1;
+}
+.h-box .fl {
+    width:680px;
     line-height: 25px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-bottom: 3px;
 }
- .wd-list ul li a {
-    color: #555;
-}
-.wd-list ul li .leftlist .answer {
+.h-box>ul {
+    width: 588px;
     line-height: 25px;
+}
+.h-box .fr {
+    width: 75px;
+    height: 60px;
+    background-color: #f8f8f8;
+    border-radius: 50%;
+    color: #999;
     font-size: 12px;
+    text-align: center;
+    padding-top: 15px;
+    line-height: 22px;
+    margin-top: 7px;
+}
+ .h-box .fl a {
+    font-size: 16px;
+    color: #333;
+    font-weight: 700;
+}
+ .h-box .fl p {
     color: #555;
-}
- .wd-list ul li .leftlist .answer a {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-}
- .wd-list ul li .leftlist span {
-    margin-right: 25px;
     font-size: 12px;
-    color: #8b8b8b;
 }
-.wd-list ul li .leftlist {
-    width: 500px;
+.h-box>ul>li>{
+    border-bottom: 1px dashed #e1e1e1;
+    padding: 10px 0;
 }
-.wd-list ul li .rightlist {
+ .h-box>ul>li>.bittel {
+    color: #555;
+    font-size: 14px;
+    display: inline-block;
+    margin-left: 15px;
+}
+.h-box .fl span {
+    display: inline-block;
+    padding: 0 6px;
+    height: 22px;
+    background-color: #f1f1f1;
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 22px;
+    color: #9f9f9f;
+}
+.clear:after {
+    content: '.';
+    clear: both;
+    display: block;
+    height: 0;
+    visibility: hidden; 
+    font-size: 0; 
+    line-height: 0;
+}
+.curcle{
+    position: relative;
+    top: 5px;
+    height: 17px;
+    width: 17px;
+    border-radius: 100%;
+    background:#f1f1f1;
+    display:inline-block;
+}
+.advertisement {
+    margin-top: 50px;
+    padding-bottom:35px; 
+}
+.advertisement>img{
+    width: 100%;
     height: 100%;
 }
-.wd-list ul li .rightlist .roundright {
-    height: 76px;
-    width: 76px;
-    border-radius: 38px;
-    background-color: #f8f8f8;
+
+//列表项 
+.item ul li{
+  overflow: hidden;
+  display: flex;
+  height: 120px;
+  border-bottom: 1px solid #cacaca;
+  margin-top: 30px;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  .image{
+    flex: 90px 0 0;
+    width: 90px;
+    height: 90px;
+    margin-right: 25px;
+    background: #f5f5f5;
+     border-radius: 50%;
+    cursor: pointer;
+    img{
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+  .direciton{
+    flex: 1;
+    display: flex;
+    height: 90px;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    >div:nth-of-type(1){
+      font-size: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      cursor: pointer;
+      span{
+        color:rgba(0,0,0,0.5);
+        margin-left: 10px;
+        padding: 5px;
+        font-size: 10px;
+        border: 1px solid #cacaca;
+        visibility: hidden;
+        &:hover{
+          color: #000000;
+        }
+      }
+    }
+  }
+  &:hover .direciton>div:nth-of-type(1) span{
+    visibility: visible;
+  }
 }
-.wd-list ul li .rightlist .roundright .striking {
-    color: #555555;
-    font-weight: 700;
-    font-size: 18px;
+.call{
+    display: inline-block;
+    width: 116px;
+    height: 46px;
+    line-height: 46px;
+    background: red;
+    color: white;
     text-align: center;
+    font-size: 16px;
 }
-.wd-list ul li .rightlist .roundright .text {
-    color: #999999;
-    font-size: 12px;
-    text-align: center;
-    position: relative;
-    top: 8px;
-}
-.list {
-    margin-top: 20px;
-    overflow: hidden;
-    position: relative;
-}
-</style>
+</style>      
