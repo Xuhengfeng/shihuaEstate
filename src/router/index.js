@@ -47,6 +47,7 @@ const indexbroker = resolve => require(['components/mine/indexbroker'], resolve)
 const comment = resolve => require(['components/mine/comment'], resolve)//我的评论
 const consultant = resolve => require(['components/consultant/consultant'], resolve)//咨询
 const consultantindex = resolve => require(['components/consultant/consultantindex'], resolve)//咨询首页
+const consultantindexdetail = resolve => require(['components/consultant/consultantindexdetail'], resolve)//咨询详情
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
@@ -83,8 +84,9 @@ const router = new Router({
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
 
-		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[{////咨询
-			path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页
+		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[//咨询
+			{path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页
+			{path:"/consultantindexdetail/:id",component:consultantindexdetail,meta:{KeepAlive:false}},//咨询详情
 		]},
 		
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租

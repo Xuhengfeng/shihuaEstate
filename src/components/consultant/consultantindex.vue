@@ -20,20 +20,19 @@
 
         <div class="item">
             <ul>
-                <li>
+                <li v-for="item in remdConsultant ">
                     <div class="image" @click="toSkip(item)">
-                        <img src="item.photo"/>
+                        <img :src="item.photo"/>
                     </div>
                     <div class="direciton">
-                        <div class="introduce" @click="toSkip(item)" >111 </div>
+                        <div class="introduce" @click="toSkip(item)" >{{item.name}} </div>
                         <div class="introduce">
-                                <span class="word">1111111</span>
+                                <!-- <span class="word">1111111</span> -->
                                 <div class="fr call">向他咨询</div>
                         </div> 
                         <div class="introduce ">
-                            <span class="intrspan one">销售达人</span>
+                            <span class="intrspan one">{{item.label}}</span>
                             <span class="intrspan two">销售达人</span>
-                            <span class="intrspan three">销售达人</span>
                         </div>
                     </div> 
                 </li>
@@ -69,7 +68,8 @@
             data() {
                 return {
                      scity: JSON.parse(localStorage.selectCity),//当前城市
-                     hotConsultant:""   //热门咨询 
+                     hotConsultant:"" ,  //热门咨询 
+                     remdConsultant:""  //顾问推荐列表
                 }
             },
             created(){
@@ -78,16 +78,28 @@
             methods: {
                 hotconsultant(){
                                 
-                //热门咨询
-                this.$http
-                    .get(this.$url.URL.CONSULTANT_HOT, {
-                    scity: this.scity.value,
-                    })
-                    .then(response => {
-                    this.hotConsultant = response.data.data;
-                    console.log(  this.hotConsultant )
-                    });
-
+                    //热门咨询
+                    this.$http
+                        .get(this.$url.URL.CONSULTANT_HOT, {
+                         scity: this.scity.value,
+                        })
+                        .then(response => {
+                        this.hotConsultant = response.data.data;
+                        });
+                    //顾问推荐列表
+                    this.$http
+                        .get(this.$url.URL.CONSULTANT_REMD, {
+                          scity: this.scity.value,
+                        })
+                        .then(response => {
+                        this.remdConsultant = response.data.data;
+                        console.log(this.remdConsultant )
+                        });
+                },
+                toSkip() {
+                    // let path = "/consultantindexdetail/" + item.id;
+                    let path = "/consultantindexdetail/:id";
+                    this.$router.push({ path: path });
                 }
             }
         }
