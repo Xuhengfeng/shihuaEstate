@@ -19,7 +19,15 @@
         <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
         <div class="chatArea">
             <ul>
-                <li :key="index" v-for="(item,index) in 5">{{item}}</li>
+                <template v-for="item in 5">
+                    <li class="chat-time">昨天 15:08</li>
+                    <li class="chat-block">
+                        <a href=""><img src="./imgs/avatar.png"></a>
+                        <div class="chat-content">
+                            <div>内容内容内容内容内容内容内容内容内容</div>
+                        </div>
+                    </li>
+                </template>
             </ul>
         </div>
         <div class="inputBox">
@@ -204,6 +212,49 @@ export default {
             height: 270px;
             border-bottom: 1px solid #ddd;
             background: #f3f3f3;
+            ul{
+                height: 270px;
+                overflow-y: auto;
+                &::-webkit-scrollbar {
+                    width: 5px;
+                    height: 5px;
+                    background: #f3f3f3;
+                }
+                &::-webkit-scrollbar-thumb:vertical {
+                    height: 5px;
+                    background-color: rgba(125, 125, 125, 0.7);
+                    -webkit-border-radius: 6px;
+                }
+                .chat-time{
+                    padding: 0 10px;
+                    color: #aaa;
+                    font-size: 12px;
+                    text-align: center; 
+                }
+                .chat-block {
+                    margin: 16px 0;
+                    overflow: hidden;
+                    a{
+                        float: left;
+                        width: 59px;
+                        text-align: center;
+                        display: inline-block;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        img{
+                            display: inline-block;
+                            width: 34px;
+                            height: 34px;
+                            background: url('./imgs/avatar.png') no-repeat center center;
+                            background-size: cover;
+                        }
+                    }
+                    .chat-content{
+                        float: left;
+                    }
+                }
+            }
+            
         }
         .inputBox{
             height: 123px;
