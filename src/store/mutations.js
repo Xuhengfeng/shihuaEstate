@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-07 14:03:21
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-14 01:04:19
  */
 import router from '../router/index'
 //同步处理
@@ -10,9 +10,10 @@ export default {
 	//初始化登录状态, 防止刷新状态还原
 	FIRSTSTATUS(state) {
 		if(sessionStorage.logined) {
-			state.logined=true;
 			let user = JSON.parse(sessionStorage.userInfo);
+			state.logined=true;
 			state.LoginedUser=Object.assign({}, user);
+			state.userAuthJiGuang = JSON.parse(sessionStorage.userAuthJiGuang);
 		}
 	},
 	//初始化待看列表数据
@@ -27,20 +28,21 @@ export default {
 		//同时缓存登录状态
 		state.logined = true;
 		sessionStorage.logined = true;
-		//去sessionStorage取用户数据
-		//再把用户数据发下去
 		let user = JSON.parse(sessionStorage.userInfo);
+		//取登录之后缓存sessionStorage的信息
+		//然后分发下去
 		state.LoginedUser = Object.assign({}, user);
+		state.userAuthJiGuang = JSON.parse(sessionStorage.userAuthJiGuang);
 	},
 	//退出
 	LOGOUT(state) {
-		//及时清空缓存 提高用户安全 
-		sessionStorage.logined = '';
-		sessionStorage.token = '';
-		sessionStorage.userInfo = '';
+		//清空所有关于登录缓存
+		sessionStorage.clear();
+
 		//清空状态
 		state.logined = false;
-		state.LoginedUser = {};
+		state.LoginedUser = null;
+		state.userAuthJiGuang = null;
 		router.push({path: "/"})
 	},
 	//清空对比清单列表

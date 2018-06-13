@@ -3,7 +3,7 @@
     <div class="rt-list">
         <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
         <ul v-show="isShowBroker">
-            <li v-for="item in 1" @click="selectItem()">
+            <li v-for="item in brokerTalks" @click="selectItem()">
                 <div class="time">2018-12-02</div>
                 <div class="broker">
                     <img src="./imgs/avatar.png">
@@ -13,6 +13,9 @@
                     </div>   
                 </div>
             </li>
+            <div class="noBrokers" v-if="!brokerTalks.length">
+                <div>没有聊过的经纪人</div>
+            </div>
         </ul>
     </div>
     <div class="lt-content" v-show="isShowItContent">
@@ -57,12 +60,28 @@
 export default {
     data() {
         return {
+            brokerTalks: [],//聊过的经纪人
             isShowBroker: false,
             isShowItContent: false,
             flag: false,//用来记住 聊天窗口是否被打开
         }
     },
+    computed: {
+        userAuthJiGuang() {
+            return this.$store.state.userAuthJiGuang;
+        }
+    },
+    watch: {
+        userAuthJiGuang() {
+            this.JiguangInit();
+        }
+    },
     methods: {
+        //初始化极光IM
+        JiguangInit() {
+            console.log(this.userAuthJiGuang);
+            
+        },
         //更多
         upDown() {
             this.isShowBroker = !this.isShowBroker;
@@ -95,21 +114,7 @@ export default {
         }
     },
     mounted() {
-        var that = this;
-        this.$imConn.listen({
-            onTextMessage: function ( message ) {
-                console.log(message);
-                that.chatCont.push({id: 2, cont: message.data});
-            },
-            onPresence: function ( message ) {
-                // 这里需要弹出面板标识有人要添加您为好友
-                console.log(message)
-                if(message.type == 'subscribe') {
-                    that.privateUser = message.from;
-                    that.privateUserPanel = true;
-                }
-            }
-        })
+       
     }
 }
 </script>
@@ -185,6 +190,20 @@ export default {
                             line-height: 20px;                        
                         }
                     }
+                }
+            }
+            .noBrokers{
+                text-align: center;
+                margin-top: 50px;
+                padding-top: 160px;
+                background: url('./imgs/broker.png') no-repeat center center;
+                background-size: 40%;
+                div{
+                    padding-bottom: 10px;
+                    color: #5a5a5a;
+                    line-height: 16px;
+                    font-size: 16px;
+                    font-weight: 700;
                 }
             }
         }
@@ -274,15 +293,15 @@ export default {
                         float: left;
                         &::before{
                             position: absolute;
-                            left: -10px;
+                            left: -5px;
                             top: 0;
                             content: '';
                             display: block;
                             width: 0;
                             height: 0;
-                            border-width: 6px;
-                            border-style: solid;
-                            border-color: #ffffff #ffffff transparent transparent;
+                            border-left: 10px solid transparent;
+                            border-right: 0 solid transparent;
+                            border-top: 15px solid #ffffff;
                         }
                     }
                 }
@@ -292,15 +311,15 @@ export default {
                         float: right;
                         &::before{
                             position: absolute;
-                            right: -10px;
+                            right: -5px;
                             top: 0;
                             content: '';
                             display: block;
                             width: 0;
                             height: 0;
-                            border-width: 6px;
-                            border-style: solid;
-                            border-color: #ffffff transparent transparent #ffffff ;
+                            border-left: 0 solid transparent;
+                            border-right: 10px solid transparent;
+                            border-top: 15px solid #ffffff;
                         }
                     }
                 }

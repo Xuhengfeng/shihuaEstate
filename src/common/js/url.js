@@ -14,6 +14,7 @@ let URL = {
 	DICTIONARY_DEFAULTCITY:_host + '/dictionary/defaultCity',   //获取默认城市	
 	HOUSE_QUERYCOUNT:_host + '/house/queryCount ',              //获取搜索二手房总数量
 
+
 	// 数据字典
    	DICTIONARY_DICTYPE:_host + '/dictionary/',  				//获取二手房搜索条件字段
 	HOUSE_QUERY:_host + '/house/query',							//获取二手房列表全部数据
@@ -48,7 +49,11 @@ let URL = {
 	HOUSECOLLECTION_CANCEL:_host+'/houseCollection/cancel/',     //取消二手房收藏
 	RENTHCOLLECTION_ADD:_host+'/rentHCollection/add/',           //租房收藏
 	RENTHCOLLECTION_CANCEL:_host+'/rentHCollection/cancel/',     //取消租房收藏
-	USER_LOGIN:_host+'/member/login',                           //用户登录
+	
+	// 用户登录
+	USER_LOGIN:_host+'/member/login',                            //用户登录
+	USER_JIGUANGSIGN:_host+'/jiguang/signature',                 //用户极光IM鉴权
+	USER_LOGOUT:_host+'/member/logout',                          //用户退出
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录

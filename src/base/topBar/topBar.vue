@@ -1,13 +1,7 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
-<<<<<<< HEAD
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-18 00:08:17
-=======
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-29 18:16:05
->>>>>>> master
+ * @Last Modified time: 2018-06-14 00:21:39
  */
 <template>
     <div class="topBar">
@@ -98,7 +92,7 @@ export default {
 			this.showbox = 2;
 			this.$refs.odialog.show();
         },
-        logout() {
+        logout() {//退出
             this.$store.dispatch('logout');
         }
         

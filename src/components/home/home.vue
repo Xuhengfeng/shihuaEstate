@@ -414,7 +414,6 @@
 				this.$http.get(this.$url.URL.STATISTICS_HOUSEUSED + cityCode)
 				.then((response)=>{
 					this.houseUsed = response.data.data
-					console.log(this.houseUsed)
 				})
 				//获取首页二手房列表为你精选STATISTICS_HOUSEUSED
 				this.$http.get(this.$url.URL.HOUSE_RECMDLIST + cityCode)
@@ -452,7 +451,6 @@
 			},
 			//退出
 			logout() {
-				sessionStorage.token = "";
 				this.$store.dispatch('logout');
 			},
 			//打开城市列表

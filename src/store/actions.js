@@ -11,20 +11,30 @@ Vue.prototype.$message = Message//消息提示
 export default {
 	//登录
 	login({commit}) {
-		commit('LOGIN')
+		commit('LOGIN');
 	},
 	//退出
 	logout({commit}) {
-		commit('LOGOUT')
+		axios.post(API.URL.USER_LOGOUT)
+		.then(response => {
+			commit('LOGOUT');
+		});
 	},
-	//获取最新用户信息
-	getUserInfo({commit}) {
+	//获取最新用户信息(例如头像 昵称 等)
+	getUserInfo() {
 		axios.post(API.URL.USER_DETAILINFO)
-		.then((response) => {
-			console.log(response)
-			let newData = response.data.data;
-			console.log(newData)
-			sessionStorage.userInfo = JSON.stringify(newData);
+		.then(response => {
+			//缓存最新用户信息
+			sessionStorage.userInfo = JSON.stringify(response.data.data);
+			//极光IM信息鉴权
+			this.dispatch('auth_payload');
+		});
+	},
+	//极光IM信息鉴权
+	auth_payload({commit}) {
+		axios.get(API.URL.USER_JIGUANGSIGN)
+		.then(response => {
+			sessionStorage.userAuthJiGuang = JSON.stringify(response.data.data);
 			//静默刷新登录
 			this.dispatch('login');
 		});
