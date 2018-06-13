@@ -53,9 +53,10 @@
                             rows="10"  
                             placeholder="舒适的看房体验,死我们的服务宗旨"
                             style="resize: none"></textarea>
-                    <p>星级
-                        <img :src="broker.isStar?starOn:starOff" v-for="item in broker.grade"/>
-                    </p>
+                    <div class="star fr">
+                        <div class="title fl">星级</div>
+                        <el-rate v-model="value1"></el-rate>
+                    </div>
                 </div>
                 <div class="model-ft">
                     <div class="title">标签</div>
@@ -63,7 +64,7 @@
                         <span v-for="(item,index) in brokerAssesstags" 
                             :key="index"
                             :class="item.isClikeTag?'bgColor':''"
-                            @click="clickTag(item)">{{item.name}}</span>
+                            @click="clickTag(item,index)">{{item.name}}</span>
                     </div>
                     <div class="commit" @click="commit()">提交</div>
                 </div>
@@ -71,10 +72,10 @@
         </div>
 
         <!-- 空页面 -->
-        <!-- <o-empty :titles="'还没有已看记录'" 
+        <o-empty :titles="'还没有已看记录'" 
                  :btns="'去选房'"
                  :isEmpty="numbol"
-                 @myEvent="myEvent"></o-empty> -->
+                 @myEvent="myEvent"></o-empty>
     </div>
 </template>
 
@@ -84,17 +85,16 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            value1: null,//星星级别
             numbol:false,
             spanList: ['确认中','预约成功','已取消'],//状态
             num:0,
             completelist: [],//已看列表
             isShowNum: 1,//考虑选择哪个模板渲染
-            starOn: require('../../imgs/mine/star-on.png'),
-            starOff: require('../../imgs/mine/star-off.png'),
             broker: {
                 photo: null,
             },
-            textAreaVal: null,
+            textAreaVal: null,//用户评价的内容
             isShowModel: true,
             city: JSON.parse(localStorage.selectCity),
             brokerAssesstags: null,//经纪人评价
@@ -146,10 +146,10 @@ export default {
             this.$http
             .get(this.$url.URL.DICTIONARY_DICTYPE+'BROKER_EVALUATE_TAG')
             .then(response=>{
-                this.brokerAssesstags = response.data.data;
-                this.brokerAssesstags.forEach(item=>{
+                response.data.data.forEach(item=>{
                     item.isClikeTag = false;
                 })
+                this.brokerAssesstags = response.data.data;
             })
         },
         // 关闭模态框
@@ -157,26 +157,31 @@ export default {
             this.isShowModel = false;
         },
         //点击标签
-        clickTag(item) {
-            // item.isClikeTag = !item.isClikeTag;
-            let a = !item.isClikeTag;
-            console.log(a)
-            this.$set(item, 'isClickTag', a);
+        clickTag(item,index) {
+            this.brokerAssesstags[index].isClikeTag = !this.brokerAssesstags[index].isClikeTag;
         },
         // 提交
         commit() {
+            let tagStr = '';
+            this.brokerAssesstags.forEach(item=>{
+                if(item.isClikeTag){
+                    tagStr += item.value+'#';             
+                }
+            })
             let params = {
-                "appHouseRecId": this.data.item.id,
-                "brokerId": this.data.item.brokerId,
-                "content": this.data.content,
-                "grade": this.data.grade,
-                "tag": tagStr,
-                "unicode": wx.getStorageSync("userToken")
+                "appHouseRecId": this.broker.id,//已看记录id
+                "brokerId": this.broker.brokerId,//经纪人id
+                "content": this.textAreaVal,//评价内容
+                "grade": this.value1,//星级评分
+                "tag": tagStr,//评价标签
+                "unicode": sessionStorage.token//用户标识
             }
             this.$http
             .post(this.$url.URL.BROKERS_BROKEREVAL,params)
             .then(response=>{
-                console.log(12121212)
+                if(response.data.status !== 1) {
+                    this.$alert(response.data.msg);
+                }
             })
         }
     },
@@ -342,7 +347,14 @@ export default {
                 outline: none;
                 background: #e5e5e5;
             }
-            p{float: right}
+            .star{
+                width: 200px;
+                height: 20px;
+                line-height: 20px;
+                .title{
+                    margin-right: 10px;
+                }
+            }
         }
         .model-ft{
             padding: 0 30px 40px;      

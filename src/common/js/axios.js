@@ -2,13 +2,13 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-06 16:14:00
+ * @Last Modified time: 2018-06-13 20:29:15
  */
 //重新封装axios
 import Vue from 'vue'
 import axios from 'axios'
 
-import {Message, MessageBox, Dialog,Button, Pagination, Checkbox, Steps, Step,Tooltip,Table,TableColumn,Form,FormItem,Input } from 'element-ui';//导入elementjs
+import {Message, MessageBox, Dialog,Button, Pagination, Checkbox, Steps, Step,Tooltip,Table,TableColumn,Form,FormItem,Input,Rate} from 'element-ui';//导入elementjs
 import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.prototype.$alert = MessageBox.alert//弹出框
@@ -28,7 +28,7 @@ Vue.component(Tooltip.name, Tooltip);//tip提示
 Vue.component(Form.name, Form);//表单
 Vue.component(FormItem.name, FormItem);//表单项
 Vue.component(Input.name, Input);//输入框
-
+Vue.component(Rate.name, Rate);//星星
 
 
 let cancel ,promiseArr = {}
@@ -44,7 +44,7 @@ axios.interceptors.request.use(
       promiseArr[config.url] = cancel
     }
     config.headers = {
-      'unique-code': sessionStorage.token||null,
+      'unique-code': sessionStorage.token,
       'scity': JSON.parse(localStorage.selectCity).value
     }
     return config;
