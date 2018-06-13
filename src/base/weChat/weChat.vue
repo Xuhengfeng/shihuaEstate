@@ -18,10 +18,37 @@
     <div class="lt-content" v-show="isShowItContent">
         <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
         <div class="chatArea">
-
+            <ul>
+                <template v-for="item in 5">
+                    <li class="chat-time">昨天 15:08</li>
+                    <li class="chat-block chat-block-left">
+                        <a href=""><img src="./imgs/avatar.png"></a>
+                        <div class="chat-content">
+                            <div>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</div>
+                        </div>
+                    </li>
+                </template>
+                
+                <template v-for="item in 5">
+                    <li class="chat-time">昨天 15:08</li>
+                    <li class="chat-block chat-block-right">
+                        <a href=""><img src="./imgs/avatar.png"></a>
+                        <div class="chat-content">
+                            <div>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</div>
+                        </div>
+                    </li>
+                </template>
+            </ul>
         </div>
         <div class="inputBox">
-
+            <textarea cols="30" 
+                    rows="10" 
+                    style="resize: none"
+                    placeholder="点击输入你要咨询的问题..."></textarea>
+            <div>
+                <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
+                <div class="sendBtn">发送</div>
+            </div>
         </div>
     </div>
 </div>    
@@ -58,10 +85,31 @@ export default {
             this.isShowItContent = false;
             this.flag = false;
         },
+        //发送
+        sendBtn() {
+            
+        },
         // 点击其中一项
         selectItem() {
             this.open();
         }
+    },
+    mounted() {
+        var that = this;
+        this.$imConn.listen({
+            onTextMessage: function ( message ) {
+                console.log(message);
+                that.chatCont.push({id: 2, cont: message.data});
+            },
+            onPresence: function ( message ) {
+                // 这里需要弹出面板标识有人要添加您为好友
+                console.log(message)
+                if(message.type == 'subscribe') {
+                    that.privateUser = message.from;
+                    that.privateUserPanel = true;
+                }
+            }
+        })
     }
 }
 </script>
@@ -174,9 +222,123 @@ export default {
             height: 270px;
             border-bottom: 1px solid #ddd;
             background: #f3f3f3;
+            ul{
+                height: 270px;
+                overflow-y: auto;
+                &::-webkit-scrollbar {
+                    width: 5px;
+                    height: 5px;
+                    background: #f3f3f3;
+                }
+                &::-webkit-scrollbar-thumb:vertical {
+                    height: 5px;
+                    background-color: rgba(125, 125, 125, 0.7);
+                    -webkit-border-radius: 6px;
+                }
+                .chat-time{
+                    padding: 0 10px;
+                    color: #aaa;
+                    font-size: 12px;
+                    text-align: center; 
+                }
+                .chat-block {
+                    margin: 16px 0;
+                    overflow: hidden;
+                    a{
+                        width: 59px;
+                        text-align: center;
+                        display: inline-block;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        img{
+                            display: inline-block;
+                            width: 34px;
+                            height: 34px;
+                            background: url('./imgs/avatar.png') no-repeat center center;
+                            background-size: cover;
+                        }
+                    }
+                    .chat-content{
+                        position: relative;
+                        max-width: 220px;
+                        min-height: 20px;
+                        padding: 10px;
+                        border-radius: 5px;
+                        word-break: break-all;
+                        background: #ffffff;
+                    }
+                }
+                .chat-block-left{
+                    a{float: left}
+                    .chat-content{
+                        float: left;
+                        &::before{
+                            position: absolute;
+                            left: -10px;
+                            top: 0;
+                            content: '';
+                            display: block;
+                            width: 0;
+                            height: 0;
+                            border-width: 6px;
+                            border-style: solid;
+                            border-color: #ffffff #ffffff transparent transparent;
+                        }
+                    }
+                }
+                .chat-block-right{
+                    a{float: right}
+                    .chat-content{
+                        float: right;
+                        &::before{
+                            position: absolute;
+                            right: -10px;
+                            top: 0;
+                            content: '';
+                            display: block;
+                            width: 0;
+                            height: 0;
+                            border-width: 6px;
+                            border-style: solid;
+                            border-color: #ffffff transparent transparent #ffffff ;
+                        }
+                    }
+                }
+            }
+            
         }
         .inputBox{
             height: 123px;
+            textarea{
+                width: 339px;
+                height: 28px;
+                margin: 10px 9px 0 10px;
+                padding: 10px 10px 23px 10px;
+                border: 1px solid #d9d9d9;
+                outline: none;
+            }
+            div{
+                a{
+                    float: left;
+                    margin: 10px 0 0 10px;
+                    line-height: 31px;
+                    font-size: 12px;
+                    color: #4285f4;
+                    &:hover{
+                        text-decoration: underline!important;
+                    }
+                }
+                .sendBtn{
+                    float: right;
+                    margin: 10px 10px 0 0;
+                    width: 80px;
+                    text-align: center;
+                    height: 31px;
+                    line-height: 31px;
+                    color: #fff;
+                    background: #4285f4;
+                }
+            }
         }
     }
 }

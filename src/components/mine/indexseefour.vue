@@ -77,4 +77,56 @@ ul{
         span{float: right;}
     }
 }
+
+
+//列表项 
+
+  .direciton{
+    flex: 1;
+    display: flex;
+    height: 90px;
+    margin-top: 40px;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    >div:nth-of-type(1){
+      font-size: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      cursor: pointer;
+      span{
+        color:rgba(0,0,0,0.5);
+        margin-left: 10px;
+        padding: 5px;
+        font-size: 10px;
+        border: 1px solid #cacaca;
+        visibility: hidden;
+        &:hover{
+          color: #000000;
+        }
+      }
+    }
+  }
+  &:hover .direciton>div:nth-of-type(1) span{
+    visibility: visible;
+  }
+  .introduce .word {
+   font-size: 14px;
+  vertical-align: top;
+  margin-left: 10px;
+  color: rgba(0, 0, 0, 0.7);
+}
+.prices {
+  margin-right: 230px;
+  font-size: 24px;
+  color: rgba(239, 31, 31, 0.85);
+    font-weight: bold;
+}
+.cout{
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: bold;
+}
+.wan {
+  font-size: 14px;
+}
 </style>

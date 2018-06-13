@@ -5,9 +5,25 @@ import App from './App'
 import router from './router'
 import axios from './common/js/axios.js';
 import store from './store'//共享数据
-import Icon from './base/mySvg/mySvg'
-import "babel-polyfill";//兼容ie
 import $ from 'jquery'
+
+import websdk from 'easemob-websdk';
+let webIM = window.WebIM = websdk;
+Vue.prototype.$WebIM =  webIM;
+const imConn = new webIM.connection({
+  isMultiLoginSessions: webIM.config.isMultiLoginSessions,
+  https: typeof webIM.config.https === 'boolean' ? webIM.config.https : location.protocol === 'https:',
+  url: webIM.config.xmppURL,
+  isAutoLogin: true,
+  heartBeatWait: webIM.config.heartBeatWait,
+  autoReconnectNumMax: webIM.config.autoReconnectNumMax,
+  autoReconnectInterval: webIM.config.autoReconnectInterval,
+  apiUrl: webIM.config.apiURL
+})
+Vue.prototype.$imConn = imConn
+
+import "babel-polyfill";//兼容ie
+import Icon from './base/mySvg/mySvg'
 Vue.component('icon', Icon)
 
 //url路径

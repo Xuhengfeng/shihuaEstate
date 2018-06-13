@@ -2,7 +2,7 @@
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-07 14:23:05
+ * @Last Modified time: 2018-06-13 20:31:02
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -161,11 +161,11 @@ export default {
         })
         .then(res => {
           if(res.data.status == 1) {
+            let code = res.data.data;
             sessionStorage.token = code;
             this.$message({message: "登录成功",type: 'success'});
             console.log(1111)
             this.$store.dispatch("getUserInfo");
-            let code = res.data.data;
             this.phonenum1 = '';
             this.password1 = '';
             this.cancel();

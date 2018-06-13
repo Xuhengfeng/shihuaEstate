@@ -1,8 +1,13 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 13:08:55 
+<<<<<<< HEAD
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-05-18 00:08:17
+=======
  * @Last Modified by: 564297479@qq.com
  * @Last Modified time: 2018-05-29 18:16:05
+>>>>>>> master
  */
 <template>
     <div class="topBar">
