@@ -21,7 +21,7 @@
         <div class="item">
             <ul>
                 <li v-for="item in remdConsultant ">
-                    <div class="image">
+                    <div class="image" @click="toSkiptwo(item)">
                         <img :src="item.photo"/>
                     </div>
                     <div class="direciton">
@@ -87,6 +87,7 @@
                         .then(response => {
                         this.hotConsultant = response.data.data;
                         
+                        
                         });
                     //获取资讯子栏目列表
                         this.$http
@@ -112,6 +113,10 @@
                 },
                 toSkip(item) {
                     let path = "/consultantindexdetail/" + item.id;
+                    this.$router.push({ path: path });
+                },
+                toSkiptwo(item) {
+                     let path = "/listdetail/"+ item.employeeId;
                     this.$router.push({ path: path });
                 }
             }

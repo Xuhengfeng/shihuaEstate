@@ -26,26 +26,25 @@
 						<ul>
 							<li>
 								<div class="image">
-									<img :src="brokerdetail.photo"/>
+									<img :src="listdetail.photo"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" >{{brokerdetail.emplName}}</div>
+									<div class="introduce" >1111</div>
 									<div class="introduce">
-                      <span class="word">所属门店：{{brokerdetail.deptName}}</span>
-										 <span class="fr prices">{{brokerdetail.grade}}.0<span class="grade">评分</span></span>
-                     	 <span class="fr brokerccloect"   @click="addcollectborker(brokerdetail,$event)" v-if="!brokerdetail.isCollect">收藏</span>
-                        	 <span class="fr brokerccloect"  @click="addcollectborker(brokerdetail,$event)"  v-if="brokerdetail.isCollect">已收藏</span>
+                      <span class="word">所属门店：11111}</span>
+										 <span class="fr prices">5.0<span class="grade">评分</span></span>
+                     	 <span class="fr brokerccloect">向他咨询</span>
                                      </div> 
                                      <div class="introduce">
                                     	 <span class="word">收藏经纪人</span>
 						
                                      </div> 
                                      <div class="introduce">
-                                    	 <span class="word">世华工号：{{brokerdetail.emplAccNo}}</span>
+                                    	 <span class="word">世华工号：1</span>
 										 
                                      </div> 
                                      <div class="introduce">
-                                    	 <span class="word">联系电话：{{brokerdetail.phone}}</span>
+                                    	 <span class="word">联系电话：1</span>
 										
                                      </div> 
 								</div> 
@@ -55,26 +54,46 @@
                     <div class="peoplemes">
                         <div class="fl message">
                             <ul>
-                                <li>入职时间：{{brokerdetail.joinDate}}</li>
-                                  <li>综合评价：{{brokerdetail.emplFlag}}</li>
+                                <li>入职时间：1</li>
+                                  <li>综合评价：1</li>
                                     <li>主营板块：科技园区</li>
                             </ul> 
 				        </div> 
                         <div class="fr message">
                             <ul class="watchsee">
-                                <li>{{brokerdetail.historyDealNum}}</li>
+                                <li>1</li>
                                   <li>历史成交</li>
                             </ul> 
                              <ul class="watchsee">
-                                <li>{{brokerdetail.byCollectNum}}</li>
+                                <li>1</li>
                                   <li>被收藏</li>
                             </ul> 
                              <ul class="watchsee">
-                                <li>{{brokerdetail.houseSeeNum}}</li>
+                                <li>1</li>
                                   <li>带看量</li> 
                             </ul> 
 				        </div> 
                     </div>
+                     <div class="titlep" style="margin-top:35px;">热门咨询</div>
+
+                    <div class="hot-box">
+                            <div class="hot-item">
+                            <div class="h-box ">
+                                <div class="fl"  @click="toSkip(item)">
+                                    <span >1111111111111</span>
+                                    <p>11111111111111111</p>
+                                    <span>111111111111111111111</span>
+                                </div>
+                                <div class="fr">
+                                    <span>
+                                        <i>11</i>
+                                        个回答
+                                    </span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            </div>
+                        </div>
 				</div>
 			</div>
 		</div>
@@ -88,11 +107,7 @@ export default {
   data() {
     return {
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
-      brokerdetail:"",
-      brokerhouselist:"",
-      brokerrenthouselist:"",
-      scity:null,
-      collectionFlag: true, //收藏标识
+      listdetail:"",
     };
   },
   created() {
@@ -106,68 +121,18 @@ export default {
   },
   methods: {
 
-    //收藏经纪人
-    addcollectborker(item,e) {
-      if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
-      if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.BROKERS_ADD + this.selectCity.value +"/"+ item.id)
-        .then(response => {
-            e.target.innerHTML = '已收藏'
-        });
-
-      }else{
-           this.$http
-        .post(this.$url.URL.BROKERS_CANCEL+ this.selectCity.value +"/"+ item.id)
-        .then(response => {
-            e.target.innerHTML = '收藏'
-        });
-      }
-      this.collectionFlag = !this.collectionFlag;
-    },
-    //收藏房源
-    collection(item,e) {
-      if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
-      if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
-        .then(response => {
-            e.target.innerHTML = '已收藏'
-        });
-
-      }else{
-           this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
-        .then(response => {
-            e.target.innerHTML = '收藏'
-        });
-      }
-      this.collectionFlag = !this.collectionFlag;
-    },
+  
     render() {
        let id =  this.$route.params.id
-       //请求经纪人的详情
-      this.$http
-        .get(this.$url.URL.BROKERS + this.scity + "/" + id)
-        .then(response => {
-          this.brokerdetail = response.data.data;         
-        });
-        //请求他在售房源列表
-         this.$http
-        .get(this.$url.URL.BROKERS_HOUSELIST + this.scity + "/" + id + "?pageNo=1")
-        .then(response => {
-          this.brokerhouselist = response.data.data;         
-        });
-         //请求他在租房源列表
-         this.$http
-        .get(this.$url.URL.BROKERS_RENTHOUSELIST + this.scity + "/" + id + "?pageNo=1")
-        .then(response => {
-          this.brokerrenthouselist = response.data.data;           
-        });
+       //顾问详情
+        this.$http
+            .get(this.$url.URL.CONSULTANT_INFO +"?employeeId="+id, {
+                scity: this.scity,
+            })
+            .then(response => {
+            this.listdetail= response.data.data;
+            console.log(this.listdetail)
+            });
     },
     changeshow() {
       this.showBtn = true;
@@ -175,20 +140,7 @@ export default {
     changeshowone() {
       this.showBtnone = true;
     },
-    okbtnone(num) {
-      if (num == 1) {
-        this.params.minRentPrice = this.inputone;
-        this.params.maxRentPrice = this.inputtwo;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
-      } else {
-        this.params.minRentPrice = this.inputthree;
-        this.params.maxRentPrice = this.inputfour;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
-      }
-    }
-  },
+  }
 };
 </script>
 
@@ -211,7 +163,7 @@ export default {
   .image{
     flex: 127px 0 0;
     width: 127px;
-    height: 144px;
+    height: 120px;
     margin-right: 25px;
     background: #f5f5f5;
      border-radius: 50%;
@@ -223,7 +175,38 @@ export default {
       vertical-align: top;
     }
   }
- 
+  .direciton{
+    flex: 1;
+    display: flex;
+    height: 90px;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    >div:nth-of-type(1){
+      font-size: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      cursor: pointer;
+    }
+  }
+}
+.peoplemes{
+    margin-top: 32px;
+    height: 150px;
+  border: 1px solid #cacaca;
+    .message{
+        width:380px;
+        border-right: 1px solid #cacaca;
+        padding: 30px 40px;
+    ul>li{
+       
+        line-height: 30px;
+    }
+    .watchsee{
+        float: left;
+        margin-left: 70px;
+    }
+  }
+}
 
 .m-checkbox {
   display: inline-block;
@@ -396,77 +379,51 @@ export default {
   color: rgba(0, 0, 0, 0.5);
 }
 
-
-    .five{
-      .tongxiaoqu,
-      .zhoubian{
-        .title{
-          font-size: 20px;
-          padding: 60px 0  30px;
-          margin-bottom: 30px;
-          border-bottom: 1px solid #cacaca;
-        }
-        .image{
-          width: 232px;
-          height: 175px;
-          margin-right: 25px;
-          img{width: 100%;height: 100%}
-        }
-        .introduce {
-          margin-top: 25px;
-          span{font-size: 14px}
-          .word{
-            vertical-align: top;
-            margin-left: 10px;
-            color: rgba(0, 0, 0, 0.7);
-          }
-          .intrspan {
-            width: 70px;
-            display: inline-block;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-          }
-        }
-
-      }
-      .tongxiaoqu,
-      .zhoubian{
-        li{
-          margin: 50px 0 25px;
-          cursor: pointer;
-          overflow: hidden;
-        }
-      }
-       .direciton{
-    flex: 1;
-    display: flex;
-    height: 90px;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    >div:nth-of-type(1){
-      font-size: 22px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: bold;
-      cursor: pointer;
-      span{
-        color:rgba(0,0,0,0.5);
-        margin-left: 10px;
-        padding: 5px;
-        font-size: 10px;
-        border: 1px solid #cacaca;
-        visibility: hidden;
-        &:hover{
-          color: #000000;
-        }
-      }
-    }
-  }
-  &:hover .direciton>div:nth-of-type(1) span{
-    visibility: visible;
-  }
-    }
-
+.hot-item:first-child {
+    display: block;
+}
+ .h-box {
+    padding: 20px 0;
+    border-bottom: 1px dashed #e1e1e1;
+}
+.h-box .fl {
+    width:680px;
+    line-height: 25px;
+}
+.h-box>ul {
+    width: 588px;
+    line-height: 25px;
+}
+.h-box .fr {
+    width: 75px;
+    height: 60px;
+    background-color: #f8f8f8;
+    border-radius: 50%;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 15px;
+    line-height: 22px;
+    margin-top: 7px;
+}
+ .h-box .fl a {
+    font-size: 16px;
+    color: #333;
+    font-weight: 700;
+}
+ .h-box .fl p {
+    color: #555;
+    font-size: 12px;
+}
+.clear:after {
+    content: '.';
+    clear: both;
+    display: block;
+    height: 0;
+    visibility: hidden; 
+    font-size: 0; 
+    line-height: 0;
+}
 
 </style>
 

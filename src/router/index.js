@@ -48,6 +48,8 @@ const comment = resolve => require(['components/mine/comment'], resolve)//我的
 const consultant = resolve => require(['components/consultant/consultant'], resolve)//咨询
 const consultantindex = resolve => require(['components/consultant/consultantindex'], resolve)//咨询首页
 const consultantindexdetail = resolve => require(['components/consultant/consultantindexdetail'], resolve)//咨询详情
+const listdetail = resolve => require(['components/consultant/listdetail'], resolve)//咨询首页
+// const listdetail = resolve => require(['components/consultant/listdetail'], resolve)//gu详情
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
@@ -88,6 +90,7 @@ const router = new Router({
 			{path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页
 			{path:"/consultantindexdetail/:id",component:consultantindexdetail,meta:{KeepAlive:false}},//咨询详情
 		]},
+		{path:"/listdetail/:id",component:listdetail,meta:{KeepAlive:false}},//顾问详情
 		
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
