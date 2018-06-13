@@ -21,10 +21,20 @@
             <ul>
                 <template v-for="item in 5">
                     <li class="chat-time">昨天 15:08</li>
-                    <li class="chat-block">
+                    <li class="chat-block chat-block-left">
                         <a href=""><img src="./imgs/avatar.png"></a>
                         <div class="chat-content">
-                            <div>内容内容内容内容内容内容内容内容内容</div>
+                            <div>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</div>
+                        </div>
+                    </li>
+                </template>
+                
+                <template v-for="item in 5">
+                    <li class="chat-time">昨天 15:08</li>
+                    <li class="chat-block chat-block-right">
+                        <a href=""><img src="./imgs/avatar.png"></a>
+                        <div class="chat-content">
+                            <div>内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容</div>
                         </div>
                     </li>
                 </template>
@@ -235,7 +245,6 @@ export default {
                     margin: 16px 0;
                     overflow: hidden;
                     a{
-                        float: left;
                         width: 59px;
                         text-align: center;
                         display: inline-block;
@@ -250,7 +259,49 @@ export default {
                         }
                     }
                     .chat-content{
+                        position: relative;
+                        max-width: 220px;
+                        min-height: 20px;
+                        padding: 10px;
+                        border-radius: 5px;
+                        word-break: break-all;
+                        background: #ffffff;
+                    }
+                }
+                .chat-block-left{
+                    a{float: left}
+                    .chat-content{
                         float: left;
+                        &::before{
+                            position: absolute;
+                            left: -10px;
+                            top: 0;
+                            content: '';
+                            display: block;
+                            width: 0;
+                            height: 0;
+                            border-width: 6px;
+                            border-style: solid;
+                            border-color: #ffffff #ffffff transparent transparent;
+                        }
+                    }
+                }
+                .chat-block-right{
+                    a{float: right}
+                    .chat-content{
+                        float: right;
+                        &::before{
+                            position: absolute;
+                            right: -10px;
+                            top: 0;
+                            content: '';
+                            display: block;
+                            width: 0;
+                            height: 0;
+                            border-width: 6px;
+                            border-style: solid;
+                            border-color: #ffffff transparent transparent #ffffff ;
+                        }
                     }
                 }
             }
