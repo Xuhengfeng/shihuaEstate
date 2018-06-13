@@ -21,7 +21,9 @@ export default {
 	getUserInfo({commit}) {
 		axios.post(API.URL.USER_DETAILINFO)
 		.then((response) => {
+			console.log(response)
 			let newData = response.data.data;
+			console.log(newData)
 			sessionStorage.userInfo = JSON.stringify(newData);
 			//静默刷新登录
 			this.dispatch('login');

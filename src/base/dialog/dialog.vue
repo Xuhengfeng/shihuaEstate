@@ -163,6 +163,7 @@ export default {
           if(res.data.status == 1) {
             sessionStorage.token = code;
             this.$message({message: "登录成功",type: 'success'});
+            console.log(1111)
             this.$store.dispatch("getUserInfo");
             let code = res.data.data;
             this.phonenum1 = '';

@@ -6,7 +6,7 @@
             <div class="hot-item">
              <div class="h-box " style="border:0px;">
                 <ul class="fl">
-                    <li v-for="item in hotConsultant"><div class="curcle"></div><div class="bittel">{{item.problemTitle}}</div></li>
+                    <li v-for="item in infoquerychild"><div class="curcle"></div><div class="bittel">{{item.title}}</div></li>
                 </ul>
                 <!-- <div class="clear"></div> -->
              </div>
@@ -16,16 +16,16 @@
             <img src="../../imgs/home/ader.png"/>
         </div>
 
-        <div class="titlep">世华顾问</div>
+        <div class="titlep fl">世华顾问</div> <div class="fr">查看更多</div>
 
         <div class="item">
             <ul>
                 <li v-for="item in remdConsultant ">
-                    <div class="image" @click="toSkip(item)">
+                    <div class="image">
                         <img :src="item.photo"/>
                     </div>
                     <div class="direciton">
-                        <div class="introduce" @click="toSkip(item)" >{{item.name}} </div>
+                        <div class="introduce" >{{item.name}} </div>
                         <div class="introduce">
                                 <!-- <span class="word">1111111</span> -->
                                 <div class="fr call">向他咨询</div>
@@ -44,16 +44,16 @@
        <div class="hot-box">
             <div class="hot-item">
              <div class="h-box " v-for="item in hotConsultant">
-                <div class="fl">
-                    <a href="" >{{item.problemTitle}}</a>
+                <div class="fl"  @click="toSkip(item)">
+                    <span >{{item.problemTitle}}</span>
                     <p>{{item.problemDescribe}}</p>
                     <span>{{item.pubTime}}</span>
                 </div>
                 <div class="fr">
-                    <a href="">
+                    <span>
                         <i>{{item.answerNum}}</i>
                         个回答
-                    </a>
+                    </span>
                 </div>
                 <div class="clear"></div>
              </div>
@@ -69,7 +69,8 @@
                 return {
                      scity: JSON.parse(localStorage.selectCity),//当前城市
                      hotConsultant:"" ,  //热门咨询 
-                     remdConsultant:""  //顾问推荐列表
+                     remdConsultant:"" , //顾问推荐列表
+                     infoquerychild:"" //资讯子栏目列表
                 }
             },
             created(){
@@ -85,7 +86,20 @@
                         })
                         .then(response => {
                         this.hotConsultant = response.data.data;
+                        
                         });
+                    //获取资讯子栏目列表
+                        this.$http
+                        .get(this.$url.URL.INFOQUERY_CHILD, {
+                         scity: this.scity.value,
+                         code:13,
+                         pageNo:1
+                        })
+                        .then(response => {
+                        this.infoquerychild = response.data.data;
+                        console.log(this.infoquerychild )
+                        });
+
                     //顾问推荐列表
                     this.$http
                         .get(this.$url.URL.CONSULTANT_REMD, {
@@ -93,12 +107,11 @@
                         })
                         .then(response => {
                         this.remdConsultant = response.data.data;
-                        console.log(this.remdConsultant )
+                        
                         });
                 },
-                toSkip() {
-                    // let path = "/consultantindexdetail/" + item.id;
-                    let path = "/consultantindexdetail/:id";
+                toSkip(item) {
+                    let path = "/consultantindexdetail/" + item.id;
                     this.$router.push({ path: path });
                 }
             }
