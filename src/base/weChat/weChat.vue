@@ -40,7 +40,8 @@
                     rows="10" 
                     style="resize: none"
                     v-model="sendMsg"
-                    placeholder="点击输入你要咨询的问题..."></textarea>
+                    placeholder="点击输入你要咨询的问题..."
+                    @keyup.enter="sendBtn()"></textarea>
             <div>
                 <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
                 <div class="sendBtn" @click="sendBtn()">发送</div>
@@ -87,14 +88,15 @@ export default {
   },
   filters: {
     formatTime(val) {
-        let date = new Date(val);
-        let Y = date.getFullYear() + '-';
-        let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-        let D = date.getDate() + ' ';
-        let h = date.getHours() + ':';
-        let m = date.getMinutes() + ':';
-        let s = date.getSeconds();
-        return Y+M+D+h+m+s;
+        return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
+        // let date = new Date(val);
+        // let Y = date.getFullYear() + '-';
+        // let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        // let D = date.getDate() + ' ';
+        // let h = date.getHours() + ':';
+        // let m = date.getMinutes() + ':';
+        // let s = date.getSeconds();
+        // return Y+M+D+h+m+s;
         // if(hour < 6){console.log("凌晨好！")} 
         // else if (hour < 9){console.log("早上好！")} 
         // else if (hour < 12){console.log("上午好！")} 
@@ -106,11 +108,11 @@ export default {
     }
   },
   created() {
-    //极光IM 实例化
+     //极光IM 实例化
     window.JIM = new JMessage({ debug: true });
     //用户刷新时初始化极光IM
-    // this.AuthJiG = this.$store.state.userAuthJiGuang;
-    this.isLogin&&this.JiguangInit();
+    let isLogin = this.$store.state.logined;
+    isLogin&&this.JiguangInit();
   },
   methods: {
     //初始化极光IM
