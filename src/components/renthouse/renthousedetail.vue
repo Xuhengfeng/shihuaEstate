@@ -41,7 +41,7 @@
             <div class="two">
                 <div class="title">房源位置</div>
                 <div class="map">
-				          <b-map></b-map>
+				            <b-map :addr="scity"></b-map>
                 </div>
             </div>
             <div class="three">
@@ -98,7 +98,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"><</div>
+                     <div @click="changeNum(1)"></div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
@@ -170,14 +170,12 @@
         <div class="side">
             	<div class="btn">
                 <div @click="addCollection($event)" v-if="!sellrentdetail.isCollect" >收藏房源</div>
-                 <div @click="addCollection($event)"v-if="sellrentdetail.isCollect" >已收藏</div>
-                <div>预约看房</div> 
+                 <div @click="addCollection($event)" v-if="sellrentdetail.isCollect" >已收藏</div>
               </div>
 
               <div class="content">
                   <div class="price ">
                     <span class="total">{{sellrentdetail.saleTotal}}</span>
-                    </span>
                     <div class="text">
                       <div class="unitPrice"><span class="unitPriceValue">{{sellrentdetail.rentPrice }}<i>元/平米</i></span></div>
                     </div>
@@ -206,10 +204,6 @@
                       <a href="" class="supplement" title="" style="color:#394043;"></a>
                     </div>
                     <div class="visitTime"><i></i><span class="label">看房时间</span><span class="info">提前预约随时可看</span></div>
-                  </div>
-                  <div class="duibi">
-                      <div class="duibi_a">加入对比</div>
-                      <div class="duibi_a">分享房源</div>
                   </div>
                   <div class="callpeople">联系经纪人</div>
                   <div class="peopleintrode">
@@ -256,6 +250,7 @@ export default {
       samehouserent: [], //同小区房源列表
       rentrimhousing: "", //周边房源
       buildsdid: "", //同小区sdid
+      sdid:"", //租房详情sdid
       renthousesee:[],   //约看
       id:"",//带看id
       page: 1,//默认带看记录是第一页
@@ -283,7 +278,7 @@ export default {
       this.$http.get(this.$url.URL.HOUSE_RENTHOUSESEE  + this.id + "?pageNo=" + this.page)
       .then(response =>{
             this.renthousesee =  response.data.data
-            console.log(this.renthousesee)
+            // console.log(this.renthousesee)
       })
     },
     //上一页 下一页
@@ -306,18 +301,19 @@ export default {
         return this.$alert('用户未登录!');
       }
       if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.RENTHCOLLECTION_ADD + "/"+ this.scity.value +"/"+  this.buildsdid)
-        .then(response => {
-            e.target.innerHTML = '已收藏'
-        });
-
-      }else{
+        if(e.target.innerHTML=='已收藏') {
            this.$http
-        .post(this.$url.URL.RENTHCOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
-        .then(response => {
-            e.target.innerHTML = '收藏房源'
-        });
+            .post(this.$url.URL.RENTHCOLLECTION_CANCEL + this.scity.value +"/"+ this.sdid )
+            .then(response => {
+                e.target.innerHTML = '收藏房源'
+            });
+        }else{
+             this.$http
+            .post(this.$url.URL.RENTHCOLLECTION_ADD + this.scity.value +"/"+  this.sdid )
+            .then(response => {
+                e.target.innerHTML = '已收藏'
+            });
+        }
       }
       this.collectionFlag = !this.collectionFlag;
     },
@@ -356,9 +352,13 @@ export default {
       let city = this.scity.value;
       this.$http.get(this.$url.URL.RENTHOUSE_GETDATAILINFO + city + "/" + sdid)
         .then(response => {
-					console.log(response)
           this.sellrentdetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
+           this.sdid =  response.data.data.sdid;
+           	console.log(this.sellrentdetail)
+           console.log(this.sdid)
+           console.log( this.buildsdid )
+
           this.px = response.data.data.px;
           this.py = response.data.data.py;
           this.id = response.data.data.id
