@@ -1,7 +1,7 @@
-let localhostDev = false;
+let localhostDev = true;
 //如果是本地开发，就把localhostDev 设置成true，连接就是拼成‘http://localhost:8080/api/test’
 //生产环境，就把localhostDev 设置成false，连接就是拼成‘http://xxx.com/api/test’
-let _host= localhostDev ? 'http://192.168.16.173:7031/custAppApi' : 'http://112.74.181.229:7031/custAppApi';
+let _host= localhostDev ? 'http://112.74.181.229:7031/custAppApi' : 'http://custapi.shihua365.xin/custAppApi';
 
 let URL = {
 	// 首页
@@ -53,6 +53,7 @@ let URL = {
 	// 用户登录
 	USER_LOGIN:_host+'/member/login',                            //用户登录
 	USER_JIGUANGSIGN:_host+'/jiguang/signature',                 //用户极光IM鉴权
+	USER_JIGUANGBIND:_host+'/jiguang/binding',                   //用户极光账号和登录账号绑定
 	USER_LOGOUT:_host+'/member/logout',                          //用户退出
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码

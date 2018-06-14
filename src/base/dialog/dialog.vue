@@ -2,7 +2,7 @@
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-13 20:31:02
+ * @Last Modified time: 2018-06-14 14:48:56
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -135,6 +135,29 @@ export default {
     setPsd(e) {
       this.setpassword='password';
     },
+    //清空所有的文本框
+    clearAllInput() {
+      //登录的
+      this.phonenum1 = null;
+      this.password1 = null;
+
+      //注册的
+      this.phonenum2 = null;
+      this.password2 = null;
+      this.password3 = null;
+      this.msgcode1 = null;
+      this.agree = false;
+
+      //手机快捷登录的
+      this.phonenum3 = null;
+      this.msgcode2 = null;
+
+      //找回密码的
+      this.phonenum4 = null;
+      this.password4 = null;
+      this.password5 = null;
+      this.msgcode3 = null;      
+    },
     //显示
     show() {
       this.showFlag = true;
@@ -146,6 +169,7 @@ export default {
     //关闭
     cancel() {
       this.hide();
+      this.clearAllInput();
     },
     tab(e){
       console.log(e)
@@ -176,9 +200,18 @@ export default {
     },
     //注册
     register() {
+      
+      //手机号码非空校验 正则校验
+      if(this.phonenum2 == undefined) {
+        return this.$alert('手机不能为空!');
+      }else if(!(/^1[34578]\d{9}$/).test(this.phonenum2)) {
+        return this.$alert('手机格式不对!');
+      }
+      
+      //其他校验
       switch(true){
         case !this.phonenum2,!this.password2,!this.password3: return this.$alert("填写信息不能为空!");break;
-        case !this.password2 !== this.password3: return this.$alert("两次密码不一致!");break;
+        case this.password2 !== this.password3: return this.$alert("两次密码不一致!");break;
         case !this.agree: return this.$alert("请同意世华服务协议,谢谢配合!");break;
       }
       this.$http
@@ -298,6 +331,7 @@ export default {
     },
     //num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
     jump(num) {
+      this.clearAllInput();
       this.$emit("changeDialog", num);
     }
   }
@@ -420,6 +454,7 @@ input[type="checkbox"] {
 .fontColor {
   margin-top: 10px;
   color: #000000;
+  cursor: pointer;
 }
 
 // 发送验证码

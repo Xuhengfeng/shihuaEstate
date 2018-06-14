@@ -9,7 +9,7 @@ Vue.prototype.$message = Message//消息提示
 
 //异步操作
 export default {
-	//登录
+	//修改登录状态
 	login({commit}) {
 		commit('LOGIN');
 	},

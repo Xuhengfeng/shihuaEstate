@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-14 01:04:19
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-14 17:49:26
  */
 import router from '../router/index'
 //同步处理
@@ -43,7 +43,10 @@ export default {
 		state.logined = false;
 		state.LoginedUser = null;
 		state.userAuthJiGuang = null;
-		router.push({path: "/"})
+		router.push({path: "/"});
+		
+		//用户登出极光IM
+		window.JIM.loginOut();
 	},
 	//清空对比清单列表
 	CLEARALL(state) {

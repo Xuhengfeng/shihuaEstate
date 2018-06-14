@@ -3,11 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from './common/js/axios.js';
+import axios from './common/js/axios';
 import store from './store'//共享数据
 import $ from 'jquery';
 import "babel-polyfill";//兼容ie
-import Icon from './base/mySvg/mySvg'
+import Icon from './base/mySvg/mySvg';
+
 Vue.component('icon', Icon)
 
 //url路径
