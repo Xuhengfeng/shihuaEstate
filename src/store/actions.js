@@ -34,7 +34,7 @@ export default {
 	auth_payload({commit}) {
 		axios.get(API.URL.USER_JIGUANGSIGN)
 		.then(response => {
-			sessionStorage.userAuthJiGuang = JSON.stringify(response.data.data);
+			sessionStorage.AuthJiG = JSON.stringify(response.data.data);
 			//静默刷新登录
 			this.dispatch('login');
 		});

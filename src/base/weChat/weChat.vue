@@ -62,7 +62,6 @@ export default {
         { content: "fasdf asdf asdf", ctime_ms: null, val: 1 },
         { content: "fasdf asdf asdf", ctime_ms: null, val: 2 }
       ],
-      JgAuth: null,
       flag: false //用来记住 聊天窗口是否被打开
     };
   },
@@ -74,19 +73,21 @@ export default {
     //用户登录
     isLogin() {
       return this.$store.state.logined;
+    },
+    //极光IM
+    AuthJiG() {
+        return this.$store.state.AuthJiG;
     }
   },
   watch: {
     isLogin() {
-      if (this.isLogin) {
         //用户登录时初始化极光IM
-        this.JiguangInit();
-      }
+        this.isLogin&&this.JiguangInit();
     }
   },
   filters: {
     formatTime(val) {
-        let date = new Date(val * 1000);
+        let date = new Date(val);
         let Y = date.getFullYear() + '-';
         let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
         let D = date.getDate() + ' ';
@@ -107,17 +108,19 @@ export default {
   created() {
     //极光IM 实例化
     window.JIM = new JMessage({ debug: true });
-    this.JgAuth = this.$store.state.userAuthJiGuang;
+    //用户刷新时初始化极光IM
+    // this.AuthJiG = this.$store.state.userAuthJiGuang;
+    this.isLogin&&this.JiguangInit();
   },
   methods: {
     //初始化极光IM
     JiguangInit() {
       let that = this;
         JIM.init({
-            appkey: this.JgAuth.appkey,
-            random_str: this.JgAuth.random_str,
-            signature: this.JgAuth.signature,
-            timestamp: this.JgAuth.timestamp
+            appkey: this.AuthJiG.appkey,
+            random_str: this.AuthJiG.random_str,
+            signature: this.AuthJiG.signature,
+            timestamp: this.AuthJiG.timestamp
         })
         .onSuccess(data => {
             that.JiguangLogin();//极光登录
@@ -141,19 +144,19 @@ export default {
     JiguangUserInfo() {
       JIM.getUserInfo({
         username: this.userInfo.easemobUsername,
-        appkey: this.JgAuth.appkey
+        appkey: this.AuthJiG.appkey
       }).onSuccess(data => {
-        console.log("获取用户Im信息成功：" + data);
+        console.log("获取用户Im信息成功：" + JSON.stringify(data));
       });
     },
     //用户获取极光IM会话列表
     JiguangConversation() {
       JIM.getConversation()
         .onSuccess(data => {
-          console.log("会话列表成功:" + data);
+          console.log("会话列表成功:" + JSON.stringify(data));
         })
         .onFail(data => {
-          console.log("会话列表失败:" + data);
+          console.log("会话列表失败:" + JSON.stringify(data));
         });
     },
     //更多
@@ -186,32 +189,35 @@ export default {
     JiguangsendMsg() {
         JIM.sendSingleMsg({
             target_username:"13100000000",
-            appkey: this.JgAuth.appkey,
+            appkey: this.AuthJiG.appkey,
             content: this.sendMsg,
             no_offline: false,
             no_notification: false,
             need_receipt: true
         })
         .onSuccess((data,msg) => {
-            this.contents.push({
-                content: this.sendMsg,
-                ctime_ms: data.ctime_ms,
-                val: 2
-            });
-            setTimeout(()=>{
-                let boxcontent = document.querySelector(".scroll");
-                    boxcontent.scrollIntoView(false);
-            },100)
+            this.sendMsg = null;
+            this.appendContent(data,msg,2);
         })
-        .onFail(data => {
-            console.log(data)
-        });
+        .onFail(data => {});
     },
     //用户实时聊天监听
     JiguangOnMsg() {
       JIM.onMsgReceive(data => {
-        console.log("监听消息：" + data);
+           this.appendContent(data,msg,1);
       });
+    },
+    //添加聊天内容
+    appendContent(data,msg,num) {
+        this.contents.push({
+            content: msg.content.msg_body.text,
+            ctime_ms: data.ctime_ms,
+            val: num
+        });
+        setTimeout(()=>{
+            let boxcontent = document.querySelector(".scroll");
+                boxcontent.scrollIntoView(false);
+        },100)
     },
     // 点击其中一项
     selectItem() {
