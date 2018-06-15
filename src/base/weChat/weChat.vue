@@ -28,7 +28,7 @@
                         <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
                             <a href=""><img src="./imgs/avatar.png"></a>
                             <div class="chat-content">
-                                <div>{{item.content}}</div>
+                                <div>{{item.content.msg_body.text}}</div>
                             </div>
                         </li>
                     </template>
@@ -70,7 +70,8 @@ export default {
         // { content: "fasdf asdf asdf", ctime_ms: null, val: 1 },
         // { content: "fasdf asdf asdf", ctime_ms: null, val: 2 }
       ],
-      flag: false //用来记住 聊天窗口是否被打开
+      flag: false, //用来记住 聊天窗口是否被打开
+      ownId: null,//自己的id;
     };
   },
   computed: {
@@ -157,7 +158,8 @@ export default {
         username: this.userInfo.easemobUsername,
         appkey: this.AuthJiG.appkey
       }).onSuccess(data => {
-        // console.log("获取用户Im信息成功：" + JSON.stringify(data));
+        console.log("获取用户Im信息成功：" + JSON.stringify(data));
+        this.ownId = 15857009521;
       });
     },
     //用户获取极光IM会话列表
@@ -173,8 +175,15 @@ export default {
     //离线消息同步监听
     JiguangSyncConversation(){
       JIM.onSyncConversation(data=> {
-          console.table('onSyncConversation: '+JSON.stringify(data));
-          // appendToDashboard('onSyncConversation: ' +JSON.stringify(data));
+        console.log(data)
+        data[0].msgs.forEach(item=>{
+            if(item.content.from_id == this.ownId){
+              item.content.val = 2;
+            }else{
+              item.content.val = 1;
+            }
+        })
+        this.contents = data[0].msgs;
       });
     },
     //更多
