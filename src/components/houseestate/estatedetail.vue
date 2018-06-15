@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-07 18:13:41 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-30 23:28:15
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-15 11:05:29
  */
 <template>
 	<div>
@@ -115,7 +115,7 @@
 											</div>
 												<div class="callpeople">小区二手房</div>
 												<ul class="twohangul">
-													<li class="twohangright" v-for="item in bulidsecondlist">
+													<li class="twohangright" v-for="item in houseList">
 															<div  >
 																<div class="image_r">
 																<img :src="item.housePic">
@@ -155,7 +155,7 @@
 				buildsdid: "", //同小区sdid
 				cancel: false, //取消登陆阴影
 				samehouselist: [], //同小区二手房房源列表
-				bulidsecondlist:[],//小区二手房
+				houseList:[],//小区二手房
 				num: 0,           //切换ip
 				//二手房 租房
 				IPS: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
@@ -164,8 +164,11 @@
 			};
 		},
 		 watch: {
-			$route() {
-				this.render();
+			$route: {
+				handler(val){
+					this.keyword = val.query.word;
+					this.houseRequest();
+				}
 			}
 		},
 		 created() {
@@ -178,6 +181,11 @@
 			}
 		},
 		methods: {
+			//翻页
+			handleCurrentChange(val) {
+				this.page = val;
+				this.houseRequest();
+			},
 			//收藏房源
 			addCollection(e) {
 				if(!this.logined){
@@ -241,7 +249,7 @@
 					//小区二手房
 					this.$http.get(this.$url.URL.BUILDSECOND_HOUSELIST + city + "/" + this.buildsdid +"?pageNo=1")
 					.then(response => {
-						this.bulidsecondlist= response.data.data;
+						this.houseList= response.data.data;
 					});
 					//同小区二手房房源
 					this.neayHouseRequest(0, this.buildsdid);
@@ -249,15 +257,19 @@
 
 				
 			},
-			//搜索
-			query(item) {
-				if(item) this.keyword = item.keyword;
-				let params = {'keyword': this.keyword, 'pageNo': 1, 'scity': this.selectCity.value};
+			//房源列表请求
+			houseRequest() {
+				this.keyword = this.$route.query.word;
+				let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
 				this.$http
 				.post(this.$url.URL.BUILDLIST, params)
 				.then(response=>{
-					this.bulidsecondlist = response.data.data;
+					this.houseList = response.data.data;
 				})
+			},
+			//搜索
+			query(item) {
+				this.$router.push({path: "/rentHouse",query:{word: item.keyword,type: 1}})
 			},
 			//同小区二手房房源
 			neayHouseRequest(num, sdid) {
