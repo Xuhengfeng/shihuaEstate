@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-15 10:49:36
+ * @Last Modified time: 2018-06-15 16:43:39
  */
 <template>
 	<div>
@@ -157,7 +157,7 @@
                   layout="prev, pager, next"
                   prev-text="上一页"
                   next-text="下一页"
-                  :total="1000">
+                  :total="querycount.count">
               </el-pagination>
           </div>
 				</div>
@@ -189,8 +189,8 @@ export default {
       num: 0,
       showBtn: false,
       showBtnone: false,
-      querycount: {
-        count: ""//二手房总数量
+      querycount: {//二手房总数量
+        count: 0
       },
       queryone: null, //二手房区域
       querytwo: null, //二手房售价
@@ -274,11 +274,6 @@ export default {
     }
   },
   methods: {
-    //翻页
-    handleCurrentChange(val) {
-      this.page = val;
-      this.houseRequest();
-    },
     //收藏房源
     collection(item,e) {
       if(!this.logined){
@@ -409,6 +404,11 @@ export default {
     //搜索
     query(item) {
       this.$router.push({path: "/buyHouse",query:{word: item.keyword,type: 0}})
+    },
+    //翻页
+    handleCurrentChange(val) {
+      let newParams = Object.assign({}, this.params, {pageNo: val});
+      this.requestServerData(newParams);
     },
     //点击区域条件
     address(item, index, e) {

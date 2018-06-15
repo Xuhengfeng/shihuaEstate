@@ -31,17 +31,22 @@
                         </div>
                     </li>
                 </template>
+                <div ></div>
                 <!-- 滚动到底部 -->
                 <p class="scroll"></p>
             </ul>
         </div>
         <div class="inputBox">
-            <textarea cols="30" 
-                    rows="10" 
-                    style="resize: none"
-                    v-model="sendMsg"
-                    placeholder="点击输入你要咨询的问题..."
-                    @keyup.enter="sendBtn()"></textarea>
+            <div class="textBox">
+              <textarea cols="30" 
+                      rows="10" 
+                      style="resize: none"
+                      v-model="sendMsg"
+                      placeholder="点击输入你要咨询的问题..."
+                      @keyup.enter="sendBtn()">
+              </textarea>
+              <a class="im-input-pic" title="插入图片">插入图片</a>
+            </div>
             <div>
                 <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
                 <div class="sendBtn" @click="sendBtn()">发送</div>
@@ -122,7 +127,8 @@ export default {
             appkey: this.AuthJiG.appkey,
             random_str: this.AuthJiG.random_str,
             signature: this.AuthJiG.signature,
-            timestamp: this.AuthJiG.timestamp
+            timestamp: this.AuthJiG.timestamp,
+            flag: 1,
         })
         .onSuccess(data => {
             that.JiguangLogin();//极光登录
@@ -137,8 +143,9 @@ export default {
         })
         .onSuccess(data => {
             this.JiguangUserInfo();//用户信息
-            this.JiguangConversation();//对话列表
+            // this.JiguangConversation();//对话列表
             this.JiguangOnMsg();//监听消息
+            this.JiguangSyncConversation();
         })
         .onFail(data => {});
     },
@@ -148,18 +155,24 @@ export default {
         username: this.userInfo.easemobUsername,
         appkey: this.AuthJiG.appkey
       }).onSuccess(data => {
-        console.log("获取用户Im信息成功：" + JSON.stringify(data));
+        // console.log("获取用户Im信息成功：" + JSON.stringify(data));
       });
     },
     //用户获取极光IM会话列表
     JiguangConversation() {
       JIM.getConversation()
         .onSuccess(data => {
-          console.log("会话列表成功:" + JSON.stringify(data));
+          // console.table(data);
         })
         .onFail(data => {
-          console.log("会话列表失败:" + JSON.stringify(data));
+          // console.log("会话列表失败:" + JSON.stringify(data));
         });
+    },
+    //离线消息同步监听
+    JiguangSyncConversation(){
+      JIM.onSyncConversation(data=> {
+        console.log("test"+data)
+      })
     },
     //更多
     upDown() {
@@ -185,7 +198,11 @@ export default {
     },
     //发送
     sendBtn() {
-      this.JiguangsendMsg();
+      if(JIM.isLogin()){
+        this.JiguangsendMsg();
+      }else{
+        this.JiguangInit();
+      }
     },
     // 发送消息
     JiguangsendMsg() {
@@ -199,27 +216,33 @@ export default {
         })
         .onSuccess((data,msg) => {
             this.sendMsg = null;
-            this.appendContent(data,msg,2);
+            this.contents.push({
+                content: msg.content.msg_body.text,
+                ctime_ms: data.ctime_ms,
+                val: 2
+            });
+            setTimeout(()=>{
+                let boxcontent = document.querySelector(".scroll");
+                    boxcontent.scrollIntoView(false);
+            },100)
         })
         .onFail(data => {});
     },
     //用户实时聊天监听
     JiguangOnMsg() {
+      //离线消息同步监听
+      this.JiguangSyncConversation();
       JIM.onMsgReceive(data => {
-           this.appendContent(data,msg,1);
-      });
-    },
-    //添加聊天内容
-    appendContent(data,msg,num) {
         this.contents.push({
-            content: msg.content.msg_body.text,
-            ctime_ms: data.ctime_ms,
-            val: num
+            content: data.messages[0].content.msg_body.text,
+            ctime_ms: data.messages[0].content.create_time,
+            val: 1
         });
         setTimeout(()=>{
             let boxcontent = document.querySelector(".scroll");
                 boxcontent.scrollIntoView(false);
         },100)
+      });
     },
     // 点击其中一项
     selectItem() {
@@ -441,13 +464,37 @@ export default {
     }
     .inputBox {
       height: 123px;
-      textarea {
-        width: 339px;
-        height: 28px;
-        margin: 10px 9px 0 10px;
+      .textBox{
+        position: relative;
         padding: 10px 10px 23px 10px;
+        height: 28px;
+        width: 339px;
         border: 1px solid #d9d9d9;
-        outline: none;
+        margin: 10px 9px 0 10px;
+        textarea {
+          height: 28px;
+          width: 339px;
+          outline: none;
+          overflow-y: hidden;
+          border: none;
+          padding: 0;
+          &::selection {
+            background: #33be85; 
+            color:#ffffff;
+          }
+        }
+        .im-input-pic{
+          position: absolute;
+          right: 9px;
+          bottom: 10px;
+          display: block;
+          width: 14px;
+          height: 14px;
+          text-indent: 999em;
+          overflow: hidden;
+          background: url('./imgs/lianxi.png') no-repeat 0 -72px;
+          cursor: pointer;
+        }
       }
       div {
         a {
