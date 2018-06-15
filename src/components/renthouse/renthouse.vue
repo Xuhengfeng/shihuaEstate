@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<o-header :houseTypeId="houseTypeId" 
-              :keywordTypeId="keywordTypeId" 
               :keyword="keyword"
               @query="query"></o-header>
 		<div class="m-filter">

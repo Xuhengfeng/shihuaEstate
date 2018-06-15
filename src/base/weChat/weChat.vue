@@ -20,31 +20,38 @@
     </div>
     <div class="lt-content" v-show="isShowItContent">
         <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
-        <div class="chatArea">
-            <ul>
-                <template v-for="item in contents">
-                    <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                    <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
-                        <a href=""><img src="./imgs/avatar.png"></a>
-                        <div class="chat-content">
-                            <div>{{item.content}}</div>
-                        </div>
-                    </li>
-                </template>
-                <!-- 滚动到底部 -->
-                <p class="scroll"></p>
-            </ul>
-        </div>
-        <div class="inputBox">
-            <textarea cols="30" 
-                    rows="10" 
-                    style="resize: none"
-                    v-model="sendMsg"
-                    placeholder="点击输入你要咨询的问题..."
-                    @keyup.enter="sendBtn()"></textarea>
-            <div>
-                <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
-                <div class="sendBtn" @click="sendBtn()">发送</div>
+        <div class="box">
+            <div class="chatArea">
+                <ul>
+                    <template v-for="item in contents">
+                        <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
+                        <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
+                            <a href=""><img src="./imgs/avatar.png"></a>
+                            <div class="chat-content">
+                                <div>{{item.content}}</div>
+                            </div>
+                        </li>
+                    </template>
+                    <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
+                    <!-- 滚动到底部 -->
+                    <p class="scroll"></p>
+                </ul>
+            </div>
+            <div class="inputBox">
+                <div class="textBox">
+                  <textarea cols="30" 
+                          rows="10" 
+                          style="resize: none"
+                          v-model="sendMsg"
+                          placeholder="点击输入你要咨询的问题..."
+                          @keyup.enter="sendBtn()">
+                  </textarea>
+                  <a class="im-input-pic" title="插入图片">插入图片</a>
+                </div>
+                <div>
+                    <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
+                    <div class="sendBtn" @click="sendBtn()">发送</div>
+                </div>
             </div>
         </div>
     </div>
@@ -60,8 +67,8 @@ export default {
       sendMsg: null, //发送消息
       contents: [
         //聊天消息
-        { content: "fasdf asdf asdf", ctime_ms: null, val: 1 },
-        { content: "fasdf asdf asdf", ctime_ms: null, val: 2 }
+        // { content: "fasdf asdf asdf", ctime_ms: null, val: 1 },
+        // { content: "fasdf asdf asdf", ctime_ms: null, val: 2 }
       ],
       flag: false //用来记住 聊天窗口是否被打开
     };
@@ -122,7 +129,8 @@ export default {
             appkey: this.AuthJiG.appkey,
             random_str: this.AuthJiG.random_str,
             signature: this.AuthJiG.signature,
-            timestamp: this.AuthJiG.timestamp
+            timestamp: this.AuthJiG.timestamp,
+            flag: 1,
         })
         .onSuccess(data => {
             that.JiguangLogin();//极光登录
@@ -137,8 +145,9 @@ export default {
         })
         .onSuccess(data => {
             this.JiguangUserInfo();//用户信息
-            this.JiguangConversation();//对话列表
+            // this.JiguangConversation();//对话列表
             this.JiguangOnMsg();//监听消息
+            this.JiguangSyncConversation();//离线消息同步监听
         })
         .onFail(data => {});
     },
@@ -148,18 +157,25 @@ export default {
         username: this.userInfo.easemobUsername,
         appkey: this.AuthJiG.appkey
       }).onSuccess(data => {
-        console.log("获取用户Im信息成功：" + JSON.stringify(data));
+        // console.log("获取用户Im信息成功：" + JSON.stringify(data));
       });
     },
     //用户获取极光IM会话列表
     JiguangConversation() {
       JIM.getConversation()
         .onSuccess(data => {
-          console.log("会话列表成功:" + JSON.stringify(data));
+          // console.table(data);
         })
         .onFail(data => {
-          console.log("会话列表失败:" + JSON.stringify(data));
+          // console.log("会话列表失败:" + JSON.stringify(data));
         });
+    },
+    //离线消息同步监听
+    JiguangSyncConversation(){
+      JIM.onSyncConversation(data=> {
+          console.table('onSyncConversation: '+JSON.stringify(data));
+          // appendToDashboard('onSyncConversation: ' +JSON.stringify(data));
+      });
     },
     //更多
     upDown() {
@@ -185,7 +201,11 @@ export default {
     },
     //发送
     sendBtn() {
-      this.JiguangsendMsg();
+      if(JIM.isLogin()){
+        this.JiguangsendMsg();
+      }else{
+        this.JiguangInit();
+      }
     },
     // 发送消息
     JiguangsendMsg() {
@@ -199,27 +219,31 @@ export default {
         })
         .onSuccess((data,msg) => {
             this.sendMsg = null;
-            this.appendContent(data,msg,2);
+            this.contents.push({
+                content: msg.content.msg_body.text,
+                ctime_ms: data.ctime_ms,
+                val: 2
+            });
+            setTimeout(()=>{
+                let boxcontent = document.querySelector(".scroll");
+                    boxcontent.scrollIntoView(false);
+            },100)
         })
         .onFail(data => {});
     },
     //用户实时聊天监听
     JiguangOnMsg() {
       JIM.onMsgReceive(data => {
-           this.appendContent(data,msg,1);
-      });
-    },
-    //添加聊天内容
-    appendContent(data,msg,num) {
         this.contents.push({
-            content: msg.content.msg_body.text,
-            ctime_ms: data.ctime_ms,
-            val: num
+            content: data.messages[0].content.msg_body.text,
+            ctime_ms: data.messages[0].content.create_time,
+            val: 1
         });
         setTimeout(()=>{
             let boxcontent = document.querySelector(".scroll");
                 boxcontent.scrollIntoView(false);
         },100)
+      });
     },
     // 点击其中一项
     selectItem() {
@@ -347,129 +371,166 @@ export default {
         background-position: 12px -87px;
       }
     }
-    .chatArea {
-      height: 270px;
-      border-bottom: 1px solid #ddd;
-      background: #f3f3f3;
-      ul {
+    .box{
+      height: 400px;
+      max-height: 400px;
+      .chatArea {
         height: 270px;
-        overflow-y: auto;
-        &::-webkit-scrollbar {
-          width: 5px;
-          height: 5px;
-          background: #f3f3f3;
-        }
-        &::-webkit-scrollbar-thumb:vertical {
-          height: 5px;
-          background-color: rgba(125, 125, 125, 0.7);
-          -webkit-border-radius: 6px;
-        }
-        .chat-time {
-          padding: 0 10px;
+        border-bottom: 1px solid #ddd;
+        background: #f3f3f3;
+        .chat-tophint{
+          height: 12px;
           color: #aaa;
           font-size: 12px;
+          line-height: 12px;
           text-align: center;
         }
-        .chat-block {
-          margin: 16px 0;
-          overflow: hidden;
-          a {
-            width: 59px;
+        ul {
+          padding-top: 20px;
+          box-sizing: border-box;
+          height: 270px;
+          overflow-y: auto;
+          &::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+            background: #f3f3f3;
+          }
+          &::-webkit-scrollbar-thumb:vertical {
+            height: 5px;
+            background-color: rgba(125, 125, 125, 0.7);
+            -webkit-border-radius: 6px;
+          }
+          .chat-time {
+            padding: 0 10px;
+            color: #aaa;
+            font-size: 12px;
             text-align: center;
-            display: inline-block;
-            border-radius: 50%;
+          }
+          .chat-block {
+            margin: 16px 0;
             overflow: hidden;
-            img {
+            a {
+              width: 59px;
+              text-align: center;
               display: inline-block;
-              width: 34px;
-              height: 34px;
-              background: url("./imgs/avatar.png") no-repeat center center;
-              background-size: cover;
+              border-radius: 50%;
+              overflow: hidden;
+              img {
+                display: inline-block;
+                width: 34px;
+                height: 34px;
+                background: url("./imgs/avatar.png") no-repeat center center;
+                background-size: cover;
+              }
+            }
+            .chat-content {
+              position: relative;
+              max-width: 220px;
+              min-height: 20px;
+              padding: 10px;
+              border-radius: 5px;
+              word-break: break-all;
+              background: #ffffff;
             }
           }
-          .chat-content {
-            position: relative;
-            max-width: 220px;
-            min-height: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            word-break: break-all;
-            background: #ffffff;
-          }
-        }
-        .chat-block-left {
-          a {
-            float: left;
-          }
-          .chat-content {
-            float: left;
-            &::before {
-              position: absolute;
-              left: -5px;
-              top: 0;
-              content: "";
-              display: block;
-              width: 0;
-              height: 0;
-              border-left: 10px solid transparent;
-              border-right: 0 solid transparent;
-              border-top: 15px solid #ffffff;
+          .chat-block-left {
+            a {
+              float: left;
+            }
+            .chat-content {
+              float: left;
+              &::before {
+                position: absolute;
+                left: -5px;
+                top: 0;
+                content: "";
+                display: block;
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 0 solid transparent;
+                border-top: 15px solid #ffffff;
+              }
             }
           }
-        }
-        .chat-block-right {
-          a {
-            float: right;
-          }
-          .chat-content {
-            float: right;
-            &::before {
-              position: absolute;
-              right: -5px;
-              top: 0;
-              content: "";
-              display: block;
-              width: 0;
-              height: 0;
-              border-left: 0 solid transparent;
-              border-right: 10px solid transparent;
-              border-top: 15px solid #ffffff;
+          .chat-block-right {
+            a {
+              float: right;
+            }
+            .chat-content {
+              float: right;
+              &::before {
+                position: absolute;
+                right: -5px;
+                top: 0;
+                content: "";
+                display: block;
+                width: 0;
+                height: 0;
+                border-left: 0 solid transparent;
+                border-right: 10px solid transparent;
+                border-top: 15px solid #ffffff;
+              }
             }
           }
         }
       }
-    }
-    .inputBox {
-      height: 123px;
-      textarea {
-        width: 339px;
-        height: 28px;
-        margin: 10px 9px 0 10px;
-        padding: 10px 10px 23px 10px;
-        border: 1px solid #d9d9d9;
-        outline: none;
-      }
-      div {
-        a {
-          float: left;
-          margin: 10px 0 0 10px;
-          line-height: 31px;
-          font-size: 12px;
-          color: #4285f4;
-          &:hover {
-            text-decoration: underline !important;
+      .inputBox {
+        height: 123px;
+        .textBox{
+          position: relative;
+          padding: 10px 10px 23px 10px;
+          height: 28px;
+          width: 339px;
+          border: 1px solid #d9d9d9;
+          margin: 10px 9px 0 10px;
+          textarea {
+            height: 28px;
+            width: 339px;
+            outline: none;
+            overflow-y: hidden;
+            border: none;
+            padding: 0;
+            &::selection {
+              background: #33be85; 
+              color:#ffffff;
+            }
+          }
+          .im-input-pic{
+            position: absolute;
+            right: 9px;
+            bottom: 10px;
+            display: block;
+            width: 14px;
+            height: 14px;
+            text-indent: 999em;
+            overflow: hidden;
+            background: url('./imgs/lianxi.png') no-repeat 0 -72px;
+            cursor: pointer;
           }
         }
-        .sendBtn {
-          float: right;
-          margin: 10px 10px 0 0;
-          width: 80px;
-          text-align: center;
-          height: 31px;
-          line-height: 31px;
-          color: #fff;
-          background: #4285f4;
-          cursor: pointer;
+        div {
+          a {
+            float: left;
+            margin: 10px 0 0 10px;
+            line-height: 31px;
+            font-size: 12px;
+            color: #4285f4;
+            &:hover {
+              text-decoration: underline !important;
+            }
+          }
+          .sendBtn {
+            float: right;
+            margin: 10px 10px 0 0;
+            width: 80px;
+            text-align: center;
+            height: 31px;
+            line-height: 31px;
+            color: #fff;
+            background: #4285f4;
+            cursor: pointer;
+          }
         }
       }
     }
