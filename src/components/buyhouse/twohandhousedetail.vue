@@ -262,6 +262,7 @@ export default {
       samehouseused: [], //同小区房源列表
       rimhousing: "", //周边房源
       buildsdid: "", //同小区sdid
+      sdid:"" ,//  房源id
       housesee:[],   //约看
       id:"",//带看id
       page: 1,//默认带看记录是第一页
@@ -344,18 +345,19 @@ export default {
         return this.$alert('用户未登录!');
       }
       if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.scity.value +"/"+  this.buildsdid)
-        .then(response => {
-            e.target.innerHTML = '已收藏'
-        });
-
-      }else{
-           this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
-        .then(response => {
-            e.target.innerHTML = '收藏房源'
-        });
+        if(e.target.innerHTML=='已收藏'){
+            this.$http
+          .post(this.$url.URL.HOUSECOLLECTION_CANCEL + this.scity.value +"/"+ this.sdid)
+          .then(response => {
+              e.target.innerHTML = '收藏房源'
+          });
+        }else{
+          this.$http
+          .post(this.$url.URL.HOUSECOLLECTION_ADD +  this.scity.value +"/"+  this.sdid)
+          .then(response => {
+              e.target.innerHTML = '已收藏'
+          });
+        }
       }
       this.collectionFlag = !this.collectionFlag;
     },
@@ -395,6 +397,7 @@ export default {
         .then(response => {
           this.twohandhousedetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
+           this.sdid =  response.data.data.sdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
           this.id = response.data.data.id

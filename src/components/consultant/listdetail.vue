@@ -33,7 +33,7 @@
 									<div class="introduce">
                       <span class="word">所属门店：11111}</span>
 										 <span class="fr prices">5.0<span class="grade">评分</span></span>
-                     	 <span class="fr brokerccloect">向他咨询</span>
+                     	 <span class="fr brokerccloect" @click="toSkip()">向他咨询</span>
                                      </div> 
                                      <div class="introduce">
                                     	 <span class="word">收藏经纪人</span>
@@ -79,7 +79,7 @@
                     <div class="hot-box">
                             <div class="hot-item">
                             <div class="h-box ">
-                                <div class="fl"  @click="toSkip(item)">
+                                <div class="fl"  >
                                     <span >1111111111111</span>
                                     <p>11111111111111111</p>
                                     <span>111111111111111111111</span>
@@ -121,7 +121,11 @@ export default {
   },
   methods: {
 
-  
+    toSkip(item) {
+                  let path = "/myproblem/:id";
+                  this.$router.push({ path: path });
+              },
+      
     render() {
        let id =  this.$route.params.id
        //顾问详情

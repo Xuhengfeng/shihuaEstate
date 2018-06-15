@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-show="collecttwohouse.length">
+        <div>
           <div class="collectlist">
               <ul>
                 <li :class="index==num?'bgColor':''" 
@@ -19,7 +19,6 @@
           <div class="oPagination">
               <el-pagination 
                   class="fr"
-                  @current-change="handleCurrentChange"
                   background
                   layout="prev, pager, next"
                   prev-text="上一页"
@@ -30,9 +29,7 @@
         </div>
         
         <!-- 空页面 -->
-        <o-empty :titles="'还没有收藏的房源'" 
-                 :isShow="false"
-                 :isEmpty="numbol"></o-empty>
+        <!-- <o-empty :titles="'还没有收藏的房源'" ></o-empty> -->
         
     </div>
 </template>
@@ -43,17 +40,24 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
-            numbol:false,
+            // numbol:false,
             collecttwohouse: [],//二手房收藏
             IPS:[this.$url.URL.HOUSE_CLLECFTIONLIST, this.$url.URL.RENT_CLLECFTIONLIST, this.$url.URL.BULID_CLLECFTIONLIST,this.$url.URL.BROKERS_collectionlist],
           	num: 0,           //切换 ip 模板 样式
             page: 1,
+            myinfo:"",
             tab:["二手房","租房","小区","经纪人"]
         };
     },
     created() {
         this.collectionListRequest(0);
     },
+     computed: {
+    //获取用户登录状态
+    logined() {
+      return this.$store.state.logined;
+    }
+  },
     methods: {
       collectionListRequest(num) {
         this.$http
@@ -69,12 +73,22 @@ export default {
               console.log(err)
             }
             this.collecttwohouse = response.data.data;
-            this.collecttwohouse.length==0? this.numbol=true : this.numbol=false;
+            
           });
+
+            this.$http
+            .get(this.$url.URL.MEMBER_MYINFO ,{
+                'unique-code':this.logined
+            } )
+            .then(response => {
+                this.myinfo = response.data.data;
+                console.log(this.myinfo)
+            });
       },
       change(num) {
         this.num = num;
         this.collectionListRequest(num);
+        console.log(this.collecttwohouse )
       },
     },
     components: {
