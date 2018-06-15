@@ -22,6 +22,7 @@
 						<li>
 							<ol class="fl quyu">售价:</ol>
 							<ol class="fl quyu_kind">
+                <li>不限</li>
 								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
 									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>万</span>
@@ -32,6 +33,7 @@
 						<li>
 							<ol class="fl quyu">面积:</ol>
 							<ol class="fl quyu_kind">
+                <li>不限</li>
 								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="mianji(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputthree" @focus="changeshowone"  /><span>-</span>
 									<input type="text" value="" v-model="inputfour" @focus="changeshowone" />   <span>平</span>
@@ -42,18 +44,21 @@
 						<li>
 							<ol class="fl quyu">房型:</ol>
 							<ol class="fl quyu_kind">
+                 <li>不限</li>
 								<li :key="index" v-for="(item, index) in listfour"  :class="{querybtn:queryfour==index }" @click="fangxing(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">装修:</ol>
 							<ol class="fl quyu_kind">
+                 <li>不限</li>
 								<li :key="index" v-for="(item, index) in listfive"  :class="{querybtn:queryfive==index }" @click="zhuangxiu(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu">楼龄:</ol>
 							<ol class="fl quyu_kind">
+                 <li>不限</li>
 								<li :key="index" v-for="(item, index) in listsix"  :class="{querybtn:querysix==index }" @click="louling(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
@@ -66,6 +71,7 @@
 						<li>
 							<ol class="fl quyu">特色:</ol>
 							<ol class="fl quyu_kind">
+                 <li>不限</li>
 								<li :key="index" v-for="(item, index) in listeight"  :class="{querybtn:queryeight==index }" @click="teshe(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
