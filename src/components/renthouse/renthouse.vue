@@ -79,7 +79,7 @@
 					
 					<div class="item">
 						<ul>
-							<li :key="index" v-for="(item,index) in renthouse">
+							<li :key="index" v-for="(item,index) in houseList">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.housePic"/>
 								</div>
@@ -132,9 +132,8 @@ export default {
   data() {
     return {
       houseTypeId: 12, //地图 二手房 租房  小区 11 12 13
-      keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
       keyword: '',//关键词
-
+      
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
@@ -173,7 +172,8 @@ export default {
         scity: null,
         useYear:null
       },
-      renthouse: [], //租房列表
+      page: 1,
+      houseList: [], //租房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       collectionFlag: true, //收藏标识
     };
@@ -182,6 +182,14 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
+  watch: {
+    $route: {
+      handler(val){
+        this.keyword = val.query.word;
+        this.houseRequest();
+      }
+    }
+  },
   computed: {
     //获取用户登录状态
     logined() {
@@ -189,9 +197,10 @@ export default {
     }
   },
   methods: {
-     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.query(null, val);		
+    //翻页
+    handleCurrentChange(val) {
+      this.page = val;
+      this.houseRequest();
     },
     //收藏房源
     collection(item,e) {
@@ -220,10 +229,8 @@ export default {
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求租房的列表(搜索)
-      this.keyword = this.$route.query.word;
-      this.keywordTypeId = parseInt(this.$route.query.type);
-      this.query();
+      //房源列表请求
+      this.houseRequest();
       
       //获取搜索租房总数量
       this.$http
@@ -245,26 +252,27 @@ export default {
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_RENTAL") //房源售价
         .then(response => {
-		  this.listtwo = response.data.data;
-		  console.log(this.listtwo)
+    		  this.listtwo = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_HUXING") //房型
         .then(response => {
           this.listthree = response.data.data;
         });
-      
-      
     },
-    //搜索
-    query(item , num) {
-      if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword, 'pageNo': num, 'scity': this.selectCity.value};
+    //房源列表请求
+    houseRequest() {
+      this.keyword = this.$route.query.word;
+      let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
       this.$http
       .post(this.$url.URL.RENTHOUSE_QUERY, params)
       .then(response=>{
-        this.renthouse = response.data.data;
+        this.houseList = response.data.data;
       })
+    },
+    //搜索
+    query(item) {
+      this.$router.push({path: "/rentHouse",query:{word: item.keyword,type: 1}})
     },
     //点击区域条件
     address(item, index) {
@@ -291,7 +299,7 @@ export default {
     //请求过滤搜索条件数据
     requestServerData(params) {
       this.$http.post(this.$url.URL.RENTHOUSE_QUERY, params).then(response => {
-        this.renthouse = response.data.data;
+        this.houseList = response.data.data;
       });
     },
     //请求租房源数量
@@ -321,8 +329,8 @@ export default {
     }
   },
   components: {
-	oHeader,
-	oFly
+    oHeader,
+    oFly
   }
 };
 </script>

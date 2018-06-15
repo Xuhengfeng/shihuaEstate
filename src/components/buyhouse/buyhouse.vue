@@ -1,13 +1,12 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-01 00:36:00
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-15 10:49:36
  */
 <template>
 	<div>
 		<o-header :houseTypeId="houseTypeId" 
-              :keywordTypeId="keywordTypeId" 
               :keyword="keyword"
               @query="query"></o-header>
 		<div class="m-filter">
@@ -119,8 +118,8 @@
           
 					<!-- 列表 -->
 					<div class="item">
-						<ul v-show="buyhouse.length">
-							<li :key="index" v-for="(item,index) in buyhouse">
+						<ul v-show="houseList.length">
+							<li :key="index" v-for="(item,index) in houseList">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.housePic"/>
 								</div>
@@ -143,7 +142,7 @@
 								</div> 
 							</li>
 						</ul>
-            <div class="noContent" v-show="!buyhouse.length">暂无数据!</div>
+            <div class="noContent" v-show="!houseList.length">暂无数据!</div>
 					</div>
 
           <!-- 分页器 -->
@@ -176,9 +175,7 @@ export default {
   data() {
     return {
       houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
-      keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
       keyword: '',//关键词
-
       list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
@@ -227,7 +224,8 @@ export default {
         scity: null,
         useYear:null
       },
-      buyhouse: [], //二手房列表
+      page: 1, //页码
+      houseList: [], //二手房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       contrastList: [],//对比清单列表
       collectionFlag: true, //收藏标识
@@ -247,6 +245,12 @@ export default {
     }
   },
   watch: {
+    $route: {
+      handler(val){
+        this.keyword = val.query.word;
+        this.houseRequest();
+      }
+    },
     //监听计算属性
     refresh() {
       //请求二手的列表
@@ -270,8 +274,10 @@ export default {
     }
   },
   methods: {
-     handleCurrentChange(val) {
-      this.query(null, val);		
+    //翻页
+    handleCurrentChange(val) {
+      this.page = val;
+      this.houseRequest();
     },
     //收藏房源
     collection(item,e) {
@@ -325,10 +331,8 @@ export default {
       this.$router.push({ path: path });
     },
     render(city) {
-      //请求二手的列表(搜索)
-      this.keyword = this.$route.query.word;
-      this.keywordTypeId = parseInt(this.$route.query.type);
-      this.query();
+      //房源列表请求
+      this.houseRequest();
       
       //获取对比清单列表
       this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
@@ -392,15 +396,19 @@ export default {
           this.listeight = response.data.data;
         });
     },
-    //搜索
-    query(item , num) {
-      if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword, 'pageNo': num, 'scity': this.selectCity.value};
+    //房源列表请求
+    houseRequest() {
+      this.keyword = this.$route.query.word;
+      let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
       this.$http
       .post(this.$url.URL.HOUSE_QUERY, params)
       .then(response=>{
-        this.buyhouse = response.data.data;
+        this.houseList = response.data.data;
       })
+    },
+    //搜索
+    query(item) {
+      this.$router.push({path: "/buyHouse",query:{word: item.keyword,type: 0}})
     },
     //点击区域条件
     address(item, index, e) {
@@ -463,7 +471,7 @@ export default {
     //请求过滤搜索条件数据
     requestServerData(params) {
       this.$http.post(this.$url.URL.HOUSE_QUERY, params).then(response => {
-        this.buyhouse = response.data.data;
+        this.houseList = response.data.data;
       });
     },
     //请求二手房源数量

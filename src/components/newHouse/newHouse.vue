@@ -1,7 +1,6 @@
 <template>
 	<div>
 		<o-header :houseTypeId="houseTypeId" 
-              :keywordTypeId="keywordTypeId" 
               :keyword="keyword"
               @query="query"></o-header>
 		<div class="m-filter">
@@ -62,8 +61,8 @@
           
 					<!-- 列表 -->
 					<div class="item">
-						<ul v-show="buyhouse.length">
-							<li :key="index" v-for="(item,index) in buyhouse">
+						<ul v-show="houseList.length">
+							<li :key="index" v-for="(item,index) in houseList">
 								<div class="image" @click="toSkip(item)">
 									<img :src="item.imageUrl"/>
 								</div>
@@ -86,7 +85,7 @@
 								</div> 
 							</li>
 						</ul>
-            <div class="noContent" v-show="!buyhouse.length">没有任何数据!</div>
+            <div class="noContent" v-show="!houseList.length">没有任何数据!</div>
 					</div>
 
           <!-- 分页器 -->
@@ -119,7 +118,6 @@ export default {
   data() {
     return {
       houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
-      keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
       keyword: '',//关键词
 
       list:["默认排序", "最新", "总价", "房屋单价", "面积"],
@@ -158,7 +156,8 @@ export default {
         scity: null,
         useYear:null
       },
-      buyhouse: [], //二手房列表
+      page: 1,      
+      houseList: [], //新房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       contrastList: [],//对比清单列表
       collectionFlag: true, //收藏标识
@@ -168,34 +167,38 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
+  watch: {
+    $route: {
+      handler(val){
+        this.keyword = val.query.word;
+        this.houseRequest();
+      }
+    }
+  },
   methods: {
-      handleCurrentChange(val) {
-      this.query(null, val);		
+    //翻页
+    handleCurrentChange(val) {
+      this.page = val;
+      this.houseRequest();
     },
     render(city) {
-      //请求新房的列表(搜索)
-      this.keyword = this.$route.query.word;
-      this.keywordTypeId = parseInt(this.$route.query.type);
-      this.query();
+      //房源列表请求
+      this.houseRequest();
     },
-    //搜索
-    query(item, num) {
-      if(item) this.keyword = item.keyword;
-      let params = {'keyword': this.keyword,'pageNo': num, 'scity': this.selectCity.value};
+    //房源列表请求
+    houseRequest() {
+      this.keyword = this.$route.query.word;
+      let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
       this.$http
-      .get(this.$url.URL.NEWBUILDING_QUERY + this.selectCity.value, params)
+      .get(this.$url.URL.NEWBUILDING_QUERY+this.selectCity.value, params)
       .then(response=>{
-        this.buyhouse = response.data.data;
-          console.log(this.buyhouse)
+        this.houseList = response.data.data;
       })
     },
-
-    //点击区域条件
-    // address(item, index, e) {
-    //   this.queryone = index;
-    //   this.params.areaId = item.id;
-    //   this.requestServerData(this.params);
-    // },
+    //搜索
+    query(item) {
+      this.$router.push({path: "/newHouse",query:{word: item.keyword}})
+    },
     changeshow() {
       this.showBtn = true;
     },

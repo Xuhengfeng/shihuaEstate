@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-14 01:04:19
+ * @Last Modified time: 2018-06-14 21:11:06
  */
 import router from '../router/index'
 //同步处理
@@ -13,7 +13,7 @@ export default {
 			let user = JSON.parse(sessionStorage.userInfo);
 			state.logined=true;
 			state.LoginedUser=Object.assign({}, user);
-			state.userAuthJiGuang = JSON.parse(sessionStorage.userAuthJiGuang);
+			state.AuthJiG = JSON.parse(sessionStorage.AuthJiG);
 		}
 	},
 	//初始化待看列表数据
@@ -32,7 +32,7 @@ export default {
 		//取登录之后缓存sessionStorage的信息
 		//然后分发下去
 		state.LoginedUser = Object.assign({}, user);
-		state.userAuthJiGuang = JSON.parse(sessionStorage.userAuthJiGuang);
+		state.AuthJiG = JSON.parse(sessionStorage.AuthJiG);
 	},
 	//退出
 	LOGOUT(state) {
@@ -43,7 +43,10 @@ export default {
 		state.logined = false;
 		state.LoginedUser = null;
 		state.userAuthJiGuang = null;
-		router.push({path: "/"})
+		router.push({path: "/"});
+		
+		//用户退出极光IM
+		window.JIM.loginOut();
 	},
 	//清空对比清单列表
 	CLEARALL(state) {

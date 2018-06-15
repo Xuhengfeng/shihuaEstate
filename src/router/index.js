@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-14 00:32:57
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-14 10:29:18
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -53,7 +53,7 @@ const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], reso
 
 Vue.use(Router)
 const router = new Router({
-	mode: 'history', //历史模式, 取消地址栏"#"
+	// mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},

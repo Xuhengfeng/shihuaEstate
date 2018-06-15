@@ -37,11 +37,7 @@ export default {
 			type: String,
 			default: ''
 		},
-		//关键词类型 二手房 新房 租房 0 1 2
-		keywordTypeId: {
-			type: Number,
-			default: 0
-		},
+
 		placeholder: {
 			type: String,
 			default: '请输入关键词进行检索',
@@ -54,14 +50,13 @@ export default {
 	},
 	created() {
 		this.word = this.keyword;
+		console.log(this.word)
 	},
 	methods: {
 		query() {
 			let params = {
-				keyword: this.word,
-				keywordTypeId: this.keywordTypeId
+				keyword: this.word
 			}
-			this.$refs.oInput.blur();
 			return this.$emit('query', params);
 		}
 	}
