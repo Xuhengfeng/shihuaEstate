@@ -171,16 +171,20 @@
 		</div>
 		<!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
+    <!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
 import oFly from "../../base/fly/fly";
+import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
-      houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
+      showbox: null, //显示对应的dialog
+      houseTypeId: 11,//地图 二手房 租房  小区 11 12 13
       keyword: '',//关键词
       list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
@@ -212,7 +216,7 @@ export default {
       inputtwo: "",
       inputthree: "",
       inputfour: "",
-      params: {//这个是用来查询参数列表 不变的
+      params: {//查询参数列表 不变的
         areaId: null,
         districtId: null,
         houseDecor: "",
@@ -280,18 +284,22 @@ export default {
     }
   },
   methods: {
+    //显示对应的弹窗
+    changeDialog(num) {
+      this.showbox = num; 
+      this.$refs.odialog.show();
+    },
     //收藏房源
     collection(item,e) {
-      if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
+      //判断当前点击对象是否已收藏
       if(this.collectionFlag){
          this.$http
         .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
         .then(response => {
             e.target.innerHTML = '已收藏'
         });
-
       }else{
            this.$http
         .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
@@ -303,8 +311,9 @@ export default {
     },
     //加入对比清单
     addContrast(item, e) {
-      if(!this.logined) return this.$alert('用户未登录!');
-      //判断当前点击对象是否存在 
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
+      //判断当前点击对象是否已加入
       if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
         if(this.contrastList.length >= 4){
           if(item.contentFlag == '已加入对比') {
@@ -508,6 +517,7 @@ export default {
   },
   components: {
     oHeader,
+    oDialog,
     oFly
   }
 };

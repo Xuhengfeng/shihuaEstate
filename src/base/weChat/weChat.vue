@@ -28,7 +28,7 @@
                   <ul>
                       <template v-for="item in contents">
                           <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                          <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
+                          <li class="chat-block" :class="item.content.val==1?'chat-block-left':'chat-block-right'">
                               <a href=""><img src="./imgs/avatar.png"></a>
                               <div class="chat-content">
                                   <div>{{item.content.msg_body.text}}</div>
@@ -150,8 +150,8 @@ export default {
         })
         .onSuccess(data => {
             this.JiguangUserInfo();//用户信息
-            // this.JiguangConversation();//对话列表
             this.JiguangOnMsg();//监听消息
+            // this.JiguangConversation();//对话列表
             this.JiguangSyncConversation();//离线消息同步监听
         })
         .onFail(data => {});
@@ -179,7 +179,6 @@ export default {
     //离线消息同步监听
     JiguangSyncConversation(){
       JIM.onSyncConversation(data=> {
-        console.log(data)
         data[0].msgs.forEach(item=>{
             if(item.content.from_id == this.ownId){
               item.content.val = 2;
@@ -247,15 +246,16 @@ export default {
     //用户实时聊天监听
     JiguangOnMsg() {
       JIM.onMsgReceive(data => {
-        this.contents.push({
-            content: data.messages[0].content.msg_body.text,
-            ctime_ms: data.messages[0].content.create_time,
-            val: 1
-        });
-        setTimeout(()=>{
-            let boxcontent = document.querySelector(".scroll");
-                boxcontent.scrollIntoView(false);
-        },100)
+        console.log(data)
+        // this.contents.push({
+        //     content: data.messages[0].content.msg_body.text,
+        //     ctime_ms: data.messages[0].content.create_time,
+        //     val: 1
+        // });
+        // setTimeout(()=>{
+        //     let boxcontent = document.querySelector(".scroll");
+        //         boxcontent.scrollIntoView(false);
+        // },100)
       });
     },
     // 点击其中一项
@@ -395,6 +395,8 @@ export default {
         height: 270px;
         border-bottom: 1px solid #ddd;
         background: #f3f3f3;
+        box-sizing: border-box;
+        overflow: hidden;
         .chat-tophint{
           height: 12px;
           color: #aaa;
@@ -416,6 +418,7 @@ export default {
             height: 5px;
             background-color: rgba(125, 125, 125, 0.7);
             -webkit-border-radius: 6px;
+            border-radius: 6px;
           }
           .chat-time {
             padding: 0 10px;

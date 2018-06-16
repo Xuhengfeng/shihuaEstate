@@ -2,17 +2,17 @@
 	<div class="home">
 		<div class="header">
 			<transition name="fade">
-				<div class="shadowlay" v-if="cityChange" @click="closeCity()"></div>
+				<div class="shadowlay" v-if="cityChange" @click="toggleCity()"></div>
 			</transition>
 			<div class="container"  style="position:relative">
 				<div style="position:absolute;top:0px;left:0;">
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
-					<span class="iconfont el-icon-own-location location" @click="openCity()">{{selectCity}}</span>
+					<span class="iconfont el-icon-own-location location" @click="toggleCity()">{{selectCity}}</span>
 					<transition name="bounce">
 						<div class="city-change " v-if="cityChange">
-							<span class="close" @click="closeCity()"></span>
+							<span class="close" @click="toggleCity()"></span>
 							<div class="title">选择城市
 								<div class="city-tab">
 									<span class="code1">热门</span>
@@ -264,7 +264,7 @@
 
 <script>
 	import oDialog from "../../base/dialog/dialog";
-	let pinyin = require("chinese-to-pinyin");
+	const pinyin = require("chinese-to-pinyin");
 	export default {
 		data() {
 			return {
@@ -435,33 +435,28 @@
 					this.rentHouseRecmdlist = response.data.data
 				})
 			},
-			//显示对应的对话框
+			//显示对应的弹窗
 			changeDialog(num) {
 				this.showbox = num; 
+				this.$refs.odialog.show();
 			},
 			//登陆
 			login() {
-				this.showbox = 1; 
-				this.$refs.odialog.show();
+				this.changeDialog(1);
 				this.cityChange = false;
 			},
 			//注册
 			register() {
-				this.showbox = 2;
+				this.changeDialog(2);
 				this.cityChange = false;				
-				this.$refs.odialog.show();
 			},
 			//退出
 			logout() {
 				this.$store.dispatch('logout');
 			},
-			//打开城市列表
- 			openCity() {
-				this.cityChange = true;
-			},
-			//关闭城市列表
-			closeCity() {
-				this.cityChange = false;
+			//城市列表切换
+ 			toggleCity() {
+				this.cityChange = !this.cityChange;
 			},
 			//搜索placeholder内容
 			placeholderText(num) {
@@ -505,8 +500,8 @@
 				//item是中文, name是拼音
 				let name = pinyin(item, {noTone: true}).replace(/\s+/g,"");	
 				let selectCity = {value: name,name: item};
-				this.selectCity=item;
-				this.closeCity();
+				this.selectCity = item;
+				this.cityChange = false;
 				//刷新首页
 				this.renderRequest(name);
 				localStorage.selectCity = JSON.stringify(selectCity);	

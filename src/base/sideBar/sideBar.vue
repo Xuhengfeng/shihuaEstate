@@ -60,9 +60,9 @@
               </div>
           </li>
           <li class="three" @click="toCollect()"><img src="../../imgs/home/collection.png">
-              <!-- <div class="screenOuter">
+              <div class="screenOuter">
                   我收藏的房源
-              </div> -->
+              </div>
           </li>
           <li class="four"><img src="../../imgs/home/calc.png">
               <!-- <div class="screenOuter">
@@ -80,12 +80,16 @@
               </div> -->
           </li>
       </ul>
+      <!-- 对话框 登录 注册 修改密码  -->
+		  <o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
   </div>
 </template>
 <script>
+import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
+      showbox: null, //显示对应的dialog
       compareBtn: false,//对比
       compareBtntwo: false,//待看
       scity: JSON.parse(localStorage.selectCity),//用户选定城市
@@ -94,10 +98,9 @@ export default {
     };
   },
   computed: {
-  //   //监控store中的contrastList
+    //监控store中的contrastList
     contrastList() {
       let list = this.$store.state.contrastList;
-    //   console.log(list)
       if (list.length > 0) {
         this.compareBtn = true;
       } else {
@@ -112,9 +115,18 @@ export default {
      ? this.compareBtntwo = true
      : this.compareBtntwo = false;
      return list;
+    },
+    //监控登录状态
+    logined() {
+      return this.$store.state.logined;
     }
   },
   methods: {
+    //显示对应的弹窗
+    changeDialog(num) {
+      this.showbox = num; 
+      this.$refs.odialog.show();
+    },
     //清空对比
     clearAll() {
       this.compareBtn = false;
@@ -133,9 +145,9 @@ export default {
     deleteTwo(item) {
       this.$store.dispatch("deleteTwo", item);
     },
-     //立即比较(对比)
+    //立即比较(对比)
     compare() {
-      this.$router.push({ path: "/contrast" });
+      this.$router.push({path:"/contrast"});
     },
     //立即预约 (待看)
     compareone() {
@@ -146,8 +158,9 @@ export default {
     },
     //跳转我的收藏
     toCollect() {
-      let path = "/mine/indexcollection";
-      this.$router.push({ path: path });
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
+      this.$router.push({ path: "/mine/indexcollection"});
     },
     //计算元素位置
     calcElt() {
@@ -157,21 +170,22 @@ export default {
       localStorage.imgOne = JSON.stringify(rectOne);
       //待看清单img的位置
       localStorage.imgTwo = JSON.stringify(rectTwo);
+    },
+    _querys() {
+      this.$http
+        .post(this.$url.URL.APPOINT_ADD, {
+          scity: JSON.parse(localStorage.selectCity).value,
+          sdid: this.sdid
+        })
+        .then(response => {});
     }
-  },
-  _querys() {
-    this.$http
-      .post(this.$url.URL.APPOINT_ADD, {
-        scity: JSON.parse(localStorage.selectCity).value,
-        sdid: this.sdid
-      })
-      .then(response => {
-        //  location.reload()
-      });
   },
   mounted() {
     this.calcElt();
     window.onresize = this.calcElt();
+  },
+  components: {
+    oDialog,
   }
 };
 </script>
@@ -225,7 +239,7 @@ export default {
         &:after {
           position: absolute;
           right: -15px;
-          top: 10%;
+          top: 10px;
           content: "";
           width: 0;
           height: 0;
@@ -234,7 +248,7 @@ export default {
           border-color: transparent transparent transparent #ffffff;
         }
       }
-      //屏幕外第二个内容布局
+      //屏幕外第二个内容布局(和第一个内容布局一样)
       &.two > .screenOuter {
         width: 352px;
         height: auto;
@@ -242,9 +256,6 @@ export default {
         box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
         padding: 15px 0 22px;
         box-sizing: border-box;
-        &:after {
-          top: 10px;
-        }
         .title {
           height: 30px;
           margin: 0 25px;
@@ -352,6 +363,16 @@ export default {
             padding: 10px;
             color: #cacaca;
           }
+        }
+      }
+      &.three > .screenOuter {
+        background: #ff4343;
+        height: 38px;
+        line-height: 38px;
+        color: #ffffff;
+        padding: 0 10px;
+        &:after {
+          border-color: transparent transparent transparent #ff4343;
         }
       }
       //屏幕外第三个内容布局

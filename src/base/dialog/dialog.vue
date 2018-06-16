@@ -3,6 +3,7 @@
  * @Date: 2018-05-17 23:08:17 
  * @Last Modified by: mikey.zhaopeng
  * @Last Modified time: 2018-06-16 02:57:52
+ * @描述: 登录 注册 组件封装
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -132,12 +133,10 @@ export default {
       sendBtn2:'发送验证码',//手机快捷登录
       sendBtn3:'发送验证码',//忘记密码
       agree: false, //是否同意《世华服务协议》
+      times: 60,//计时器
     };
   },
   methods: {
-    setPsd(e) {
-      this.setpassword='password';
-    },
     //清空所有的文本框
     clearAllInput() {
       //登录的
@@ -174,8 +173,8 @@ export default {
       this.hide();
       this.clearAllInput();
     },
+    //切换
     tab(e){
-      console.log(e)
       e.keyCode=9;
     },
     //登录
@@ -191,7 +190,6 @@ export default {
             let code = res.data.data;
             sessionStorage.token = code;
             this.$message({message: "登录成功",type: 'success'});
-            console.log(1111)
             this.$store.dispatch("getUserInfo");
             this.phonenum1 = '';
             this.password1 = '';
@@ -203,19 +201,15 @@ export default {
     },
     //注册
     register() {
-      
-      //手机号码非空校验 正则校验
-      if(this.phonenum2 == undefined) {
-        return this.$alert('手机不能为空!');
-      }else if(!(/^1[34578]\d{9}$/).test(this.phonenum2)) {
-        return this.$alert('手机格式不对!');
-      }
-      
-      //其他校验
+      //校验
       switch(true){
-        case !this.phonenum2,!this.password2,!this.password3: return this.$alert("填写信息不能为空!");break;
-        case this.password2 !== this.password3: return this.$alert("两次密码不一致!");break;
-        case !this.agree: return this.$alert("请同意世华服务协议,谢谢配合!");break;
+        case !this.phonenum2: return this.$alert('手机不能为空!');
+        case !(/^1[34578]\d{9}$/).test(this.phonenum2): return this.$alert('手机格式不对!');
+        case !this.msgcode1: return this.$alert('验证码不能为空!');
+        case !this.password2,!this.password3: return this.$alert("密码不能为空!");
+        case !(/^[\w]{6,12}$/).test(this.password2)||!(/^[\w]{6,12}$/).test(this.password3): return this.$alert('密码的格式为6-12位，只能是字母、数字和下划线!');
+        case this.password2 !== this.password3: return this.$alert("两次密码不一致!");
+        case !this.agree: return this.$alert("请同意世华服务协议,谢谢配合!");
       }
       this.$http
         .post(this.$url.URL.USER_REGISTER, {
@@ -274,12 +268,13 @@ export default {
     },
     //倒计时
     countDown(num) {
-      let timer,times=60;
+      let timer;
+      this.times = 60;
       timer = setInterval(()=> {
-        times--;
-        if (times <= 0) {
-          times = 0; 
-          clearInterval(timer);
+        this.times--;
+        if (this.times <= 0) {
+          this.times = 0; 
+          clearInterval(timer);//清空定时器
           switch(num){
             case 1:this.sendBtn1='发送验证码';this.disabled1=false;break;
             case 2:this.sendBtn2='发送验证码';this.disabled2=false;break;
@@ -287,9 +282,9 @@ export default {
           }
         } else {
           switch(num){
-            case 1:this.sendBtn1=times + 's重试';this.disabled1=true;break;
-            case 2:this.sendBtn2=times + 's重试';this.disabled2=true;break;
-            case 3:this.sendBtn3=times + 's重试';this.disabled3=true;break;
+            case 1:this.sendBtn1=this.times + 's重试';this.disabled1=true;break;
+            case 2:this.sendBtn2=this.times + 's重试';this.disabled2=true;break;
+            case 3:this.sendBtn3=this.times + 's重试';this.disabled3=true;break;
           }
         }
       }, 1000);
@@ -332,9 +327,10 @@ export default {
         res.data.status!=1&&this.$alert(res.data.msg);
       });
     },
-    //num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
+    //弹框num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
     jump(num) {
-      this.clearAllInput();
+      this.clearAllInput();//清空文本域
+      this.times = 0;//清空定时器
       this.$emit("changeDialog", num);
     }
   }
