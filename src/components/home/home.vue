@@ -1,7 +1,9 @@
 <template>
 	<div class="home">
 		<div class="header">
-			<div class="shadowlay" v-if="cityChange" @click="closeCity()"></div>
+			<transition name="fade">
+				<div class="shadowlay" v-if="cityChange" @click="closeCity()"></div>
+			</transition>
 			<div class="container"  style="position:relative">
 				<div style="position:absolute;top:0px;left:0;">
 					<router-link to="" class="logo">
@@ -533,7 +535,13 @@
 	background: rgba(0, 0, 0, .5);
 	z-index: 995;
 }
-
+//阴影层动画
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
 .city-change {
 	width: 640px;
 	height: 440px;
@@ -592,6 +600,7 @@
 	font-weight: normal;
 	margin-left: 10px;
 	color: #394043;
+	cursor: pointer;
 }
 
 .city-change .title-line {
@@ -652,6 +661,7 @@
 	margin-left: 7px;
 	display: inline-block;
 	color: #333333;
+	cursor: pointer;
 }
 
 .city-change .fc-main li .city-enum {
@@ -1039,28 +1049,16 @@
 }
 /*动画*/
 @-webkit-keyframes pulse {
-	0% {
-		-webkit-transform: scale(1)
-	}
-	50% {
-		-webkit-transform: scale(1.2)
-	}
-	100% {
-		-webkit-transform: scale(1)
-	}
+  0%{transform: scale(1)}
+  50%{transform: scale(1.1)}
+  100%{transform: scale(1)}
 }
-.bounce-enter-active {
+.bounce-enter-active{
   animation: bounce-in .5s;
 }
 @keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  90%{
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0%{transform: scale(0)}
+  90%{transform: scale(1.05)}
+  100%{transform: scale(1)}
 }
 </style>

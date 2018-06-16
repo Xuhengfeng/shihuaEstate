@@ -1,22 +1,22 @@
 <template>
 <div class="wechatBox">
     <div class="rt-list">
-        <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
-        <ul v-show="isShowBroker">
-            <li v-for="item in brokerTalks" @click="selectItem()">
-                <div class="time">2018-12-02</div>
-                <div class="broker">
-                    <img src="./imgs/avatar.png">
-                    <div>
-                        <h4>徐横峰</h4>
-                        <p>你好。。。</p>
-                    </div>   
-                </div>
-            </li>
-            <div class="noBrokers" v-if="!brokerTalks.length">
-                <div>没有聊过的经纪人</div>
-            </div>
-        </ul>
+          <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
+          <ul ref="chatUbox">
+              <li :key="item" v-for="item in brokerTalks" @click="selectItem()">
+                  <div class="time">2018-12-02</div>
+                  <div class="broker">
+                      <img src="./imgs/avatar.png">
+                      <div>
+                          <h4>徐横峰</h4>
+                          <p>你好。。。</p>
+                      </div>   
+                  </div>
+              </li>
+              <div class="noBrokers" v-if="!brokerTalks.length">
+                  <div>没有聊过的经纪人</div>
+              </div>
+          </ul>
     </div>
     <div class="lt-content" v-show="isShowItContent">
         <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
@@ -191,10 +191,12 @@ export default {
       this.isShowBroker = !this.isShowBroker;
       //上一次聊天窗口
       if (this.isShowBroker) {
+        this.$refs.chatUbox.style.height = 400+'px';
         if (this.flag) {
           this.isShowItContent = true;
         }
       } else {
+        this.$refs.chatUbox.style.height = 0+'px';
         this.isShowItContent = false;
       }
     },
@@ -296,7 +298,8 @@ export default {
       }
     }
     ul {
-      height: 400px;
+      transition: all 0.3s ease;
+      height: 0;
       max-height: 400px;
       overflow-y: auto;
       li {
@@ -545,4 +548,5 @@ export default {
     }
   }
 }
+
 </style>

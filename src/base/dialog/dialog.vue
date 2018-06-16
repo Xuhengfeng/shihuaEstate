@@ -1,8 +1,8 @@
 /*
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-14 14:48:56
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-16 02:57:52
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -13,35 +13,36 @@
             <div class="panel_tab" v-if="showbox == 1">
               <!-- 账号密码登录 -->
               <div class="title">账号密码登录</div>
-              <div class="inputGroup">
-                <input type="text" 
+              <form class="inputGroup" autocomplete="off">
+                  <input type="text" 
                        v-model="phonenum1" 
                        placeholder="请输入手机号"
                        maxlength="11"/>
-                <input autocomplete="off" 
-                      :type="setpassword" 
+                  <input type="password" 
                       v-model="password1" 
                       maxlength="20" 
                       placeholder="请输入登录密码" 
-                      @focus="setPsd()"
                       @keyup.enter="login()"/>
                 <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                 <button @click="login()">登录</button>
                 <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
                 <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </div>
+              </form>
             </div>
             <!-- 手机号码注册 -->
             <div class="panel_tab" v-if="showbox == 2">
               <div class="title">手机号码注册</div>
-              <div class="inputGroup">
+               <form class="inputGroup" autocomplete="off">
                 <input type="text" 
                       v-model="phonenum2" 
                       placeholder="请输入手机号" 
                       maxlength="11"/>
-                <div class="AuthCode"><input type="text" 
-                                            v-model="msgcode1" 
-                                            placeholder="请输入验证码"/><button :class="disabled1?'sendCode':''" @click="sendMsgCode(1)">{{sendBtn1}}</button></div>
+                <div class="AuthCode">
+                <input type="text" 
+                       v-model="msgcode1" 
+                       placeholder="请输入验证码"/>
+                       <button :class="disabled1?'sendCode':''" @click="sendMsgCode(1)">{{sendBtn1}}</button>
+                </div>
                 <input type="password" 
                       v-model="password2" 
                       placeholder="请输入密码（最少六位，数字加字母）" 
@@ -51,27 +52,27 @@
                       placeholder="请再次输入密码" 
                       maxlength="11"/>
                 <div class="fontColor advantage">
-							    <el-checkbox v-model="agree">同意</el-checkbox><span style="color: red;font-size:14px">《世华服务协议》</span>
+							    <el-checkbox v-model="agree">同意</el-checkbox><span style="color:#ff4343;font-size:14px">《世华服务协议》</span>
                 </div>
                 <button @click="register()">注册</button>
                 <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
-              </div>
+              </form>
             </div>
             <!-- 手机快捷登陆 -->
             <div class="panel_tab" v-if="showbox == 3">
-                        <div class="title">手机快捷登陆</div>
-              <div class="inputGroup">
+              <div class="title">手机快捷登陆</div>
+              <form class="inputGroup" autocomplete="off">
                 <input type="text" v-model="phonenum3" placeholder="请输入手机号" maxlength="11">
-                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码"><button :class="disabled2?'sendCode':''" @click="sendMsgCode(2)">{{sendBtn2}}</button></div>
+                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码" @keyup.enter="rapid()"><button :class="disabled2?'sendCode':''" @click="sendMsgCode(2)">{{sendBtn2}}</button></div>
                 <button @click="rapid()">登录</button>
                 <div class="dl_login"  @click="jump(1)">账号密码登录</div>
-                <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </div>
+                <div class="come_login">没有账号？<span style="color:#ff4343;cursor:pointer;" @click="jump(2)">去注册</span></div>
+              </form>
             </div>
             <!-- 找回密码 -->
             <div class="panel_tab" v-if="showbox == 4">
               <div class="title">找回密码</div>
-              <div class="inputGroup">
+              <form class="inputGroup" autocomplete="off">
                 <input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
                 <div class="AuthCode">
                   <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled3?'sendCode':''" @click="sendMsgCode(3)">{{sendBtn3}}</button>
@@ -80,11 +81,13 @@
                 <input type="password" v-model="password5" placeholder="再次输入密码">
                             <button @click="findPassword()">确定</button>
                             <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </div>
+              </form>
             </div>
         </div>
     </transition>
-    <div class="shadowlay" v-if="showFlag" @click="cancel()"></div>
+    <transition name="fade">
+      <div class="shadowlay" v-if="showFlag" @click="cancel()"></div>
+    </transition>
   </div>
 </template>
 <script>
@@ -390,10 +393,17 @@ export default {
   margin-top: 10px;
   border-radius: 3px;
   border: 1px solid #999999;
+  transition: border-color ease-in-out .3s,box-shadow ease-in-out .3s;
+}
+input:focus{
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
 .inputGroup button {
   width: 100%;
-  background: red;
+  background: #ff4343;
   height: 45px;
   line-height: 43px;
   border-radius: 5px;
@@ -419,7 +429,7 @@ input::-webkit-input-placeholder {
 
 .AuthCode > button {
   float: right;
-  background: red;
+  background: #ff4343;
   width: 108px;
   height: 45px;
   line-height: 43px;
@@ -430,12 +440,7 @@ input::-webkit-input-placeholder {
   border: 0px;
   margin-top: 10px;
 }
-input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  float: left;
-  margin: 0 !important;
-}
+
 .dl_login {
   position: absolute;
   left: 50px;
@@ -462,20 +467,22 @@ input[type="checkbox"] {
   background: rgba(0, 0, 0, 0.3)!important;
 }
 
-// 动画
-.bounce-enter-active {
+//阴影层动画
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
+
+//注册和登录弹框动画
+.bounce-enter-active{
   animation: bounce-in .5s;
 }
 @keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  90%{
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0%{transform: scale(0)}
+  90%{transform: scale(1.05)}
+  100%{transform: scale(1)}
 }
 </style>
 
