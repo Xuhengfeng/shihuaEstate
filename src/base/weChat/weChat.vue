@@ -1,60 +1,64 @@
 <template>
 <div class="wechatBox">
-    <div class="rt-list">
-          <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
-          <ul ref="chatUbox">
-              <li :key="item" v-for="item in brokerTalks" @click="selectItem()">
-                  <div class="time">2018-12-02</div>
-                  <div class="broker">
-                      <img src="./imgs/avatar.png">
-                      <div>
-                          <h4>徐横峰</h4>
-                          <p>你好。。。</p>
-                      </div>   
-                  </div>
-              </li>
-              <div class="noBrokers" v-if="!brokerTalks.length">
-                  <div>没有聊过的经纪人</div>
+ 
+      <div class="rt-list" :class="isShowBroker?'slideUp':''">
+            <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
+            <ul>
+                <li :key="item" v-for="item in brokerTalks" @click="selectItem()">
+                    <div class="time">2018-12-02</div>
+                    <div class="broker">
+                        <img src="./imgs/avatar.png">
+                        <div>
+                            <h4>徐横峰</h4>
+                            <p>你好。。。</p>
+                        </div>   
+                    </div>
+                </li>
+                <div class="noBrokers" v-if="!brokerTalks.length">
+                    <div>没有聊过的经纪人</div>
+                </div>
+            </ul>
+      </div>
+      <!-- 动画层 -->
+      <div class="lt-content" :class="isShowBroker?'slideUp':''" >
+        <!-- 显隐层 -->
+        <div class="box" v-show="isShowItContent">
+          <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
+              <div class="chatArea">
+                  <ul>
+                      <template v-for="item in contents">
+                          <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
+                          <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
+                              <a href=""><img src="./imgs/avatar.png"></a>
+                              <div class="chat-content">
+                                  <div>{{item.content.msg_body.text}}</div>
+                              </div>
+                          </li>
+                      </template>
+                      <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
+                      <!-- 滚动到底部 -->
+                      <p class="scroll"></p>
+                  </ul>
               </div>
-          </ul>
-    </div>
-    <div class="lt-content" v-show="isShowItContent">
-        <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
-        <div class="box">
-            <div class="chatArea">
-                <ul>
-                    <template v-for="item in contents">
-                        <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                        <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
-                            <a href=""><img src="./imgs/avatar.png"></a>
-                            <div class="chat-content">
-                                <div>{{item.content.msg_body.text}}</div>
-                            </div>
-                        </li>
-                    </template>
-                    <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
-                    <!-- 滚动到底部 -->
-                    <p class="scroll"></p>
-                </ul>
+              <div class="inputBox">
+                  <div class="textBox">
+                    <textarea cols="30" 
+                            rows="10" 
+                            style="resize: none"
+                            v-model="sendMsg"
+                            placeholder="点击输入你要咨询的问题..."
+                            @keyup.enter="sendBtn()">
+                    </textarea>
+                    <a class="im-input-pic" title="插入图片">插入图片</a>
+                  </div>
+                  <div>
+                      <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
+                      <div class="sendBtn" @click="sendBtn()">发送</div>
+                  </div>
+              </div>
             </div>
-            <div class="inputBox">
-                <div class="textBox">
-                  <textarea cols="30" 
-                          rows="10" 
-                          style="resize: none"
-                          v-model="sendMsg"
-                          placeholder="点击输入你要咨询的问题..."
-                          @keyup.enter="sendBtn()">
-                  </textarea>
-                  <a class="im-input-pic" title="插入图片">插入图片</a>
-                </div>
-                <div>
-                    <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
-                    <div class="sendBtn" @click="sendBtn()">发送</div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </div>
+
 </div>    
 </template>
 <script>
@@ -191,12 +195,10 @@ export default {
       this.isShowBroker = !this.isShowBroker;
       //上一次聊天窗口
       if (this.isShowBroker) {
-        this.$refs.chatUbox.style.height = 400+'px';
         if (this.flag) {
           this.isShowItContent = true;
         }
       } else {
-        this.$refs.chatUbox.style.height = 0+'px';
         this.isShowItContent = false;
       }
     },
@@ -269,11 +271,13 @@ export default {
   position: fixed;
   bottom: 0;
   right: 40px;
-  background: #ffffff;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.45);
-  .rt-list {
+   .rt-list {
     float: right;
     width: 240px;
+    margin-bottom: -400px;
+    background: #ffffff;
+    transition: all 0.3s ease;
     .title {
       height: 40px;
       line-height: 40px;
@@ -298,8 +302,7 @@ export default {
       }
     }
     ul {
-      transition: all 0.3s ease;
-      height: 0;
+      height: 400px;
       max-height: 400px;
       overflow-y: auto;
       li {
@@ -355,37 +358,39 @@ export default {
     }
   }
   .lt-content {
+    overflow: hidden;
     float: right;
-    width: 380px;
-    border-right: 1px solid #ddd;
-    .title {
-      height: 40px;
-      line-height: 40px;
-      border-bottom: 1px solid #ddd;
-      span {
-        margin-left: 20px;
-        &::before {
-          content: "";
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background: #4285f4;
-          margin-right: 10px;
+    margin-bottom: -400px; 
+    transition: all 0.3s ease;
+    .box{   
+      width: 380px;
+      border-right: 1px solid #ddd;
+      background: #ffffff;   
+      .title {
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #ddd;
+        span {
+          margin-left: 20px;
+          &::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4285f4;
+            margin-right: 10px;
+          }
+        }
+        .close {
+          float: right;
+          width: 40px;
+          height: 20px;
+          margin-top: 10px;
+          background: url("./imgs/lianxi.png") no-repeat;
+          background-position: 12px -87px;
         }
       }
-      .close {
-        float: right;
-        width: 40px;
-        height: 20px;
-        margin-top: 10px;
-        background: url("./imgs/lianxi.png") no-repeat;
-        background-position: 12px -87px;
-      }
-    }
-    .box{
-      height: 400px;
-      max-height: 400px;
       .chatArea {
         height: 270px;
         border-bottom: 1px solid #ddd;
@@ -488,7 +493,8 @@ export default {
         }
       }
       .inputBox {
-        height: 123px;
+        height: 120px;
+        background: #ffffff;
         .textBox{
           position: relative;
           padding: 10px 10px 23px 10px;
@@ -522,6 +528,7 @@ export default {
           }
         }
         div {
+          overflow: hidden;
           a {
             float: left;
             margin: 10px 0 0 10px;
@@ -548,5 +555,7 @@ export default {
     }
   }
 }
-
+.slideUp{
+  margin-bottom: 0!important;
+}
 </style>
