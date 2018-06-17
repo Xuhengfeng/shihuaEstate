@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:27:54 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-01 00:15:20
+ * @Last Modified time: 2018-06-18 00:55:24
  */
 <template>
 	<div class="header">
@@ -10,7 +10,7 @@
 			<div class="logo fl">
 				<img src="../../imgs/buyhouse/logored.png" />
 			</div>
-			<div class="searchBox fl">
+			<div class="searchBox fl"  v-show="isShowQueryBox">
 				<input ref="oInput" type="text" :placeholder="placeholder" v-model="word"  @keyup.enter="query()"/>
 				<div @click="query()"></div>
 			</div>
@@ -37,10 +37,15 @@ export default {
 			type: String,
 			default: ''
 		},
-
+		//占位字符串
 		placeholder: {
 			type: String,
 			default: '请输入关键词进行检索',
+		},
+		//是否显示搜索框
+		isShowQueryBox: {
+			type: Boolean,
+			default: true,
 		}
 	},
 	data() {

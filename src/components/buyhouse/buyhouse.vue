@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-17 23:14:14
+ * @Last Modified time: 2018-06-18 01:19:01
  */
 <template>
 	<div>
@@ -23,7 +23,7 @@
 						<li>
 							<ol class="fl quyu_kind">
                 <li class="title">售价:</li>
-								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
 									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>万</span>
 									<button @click="okbtnone(1)" v-if="showBtn">确定</button>
@@ -33,7 +33,7 @@
 						<li>
 							<ol class="fl quyu_kind">
                 <li class="title">面积:</li>
-								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="mianji(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="mianji(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputthree" @focus="changeshowone"  /><span>-</span>
 									<input type="text" value="" v-model="inputfour" @focus="changeshowone" />   <span>平</span>
 									<button @click="okbtnone(2)" 	v-if="showBtnone">确定</button>
@@ -344,7 +344,7 @@ export default {
       //请求搜索条件
       this.tagsRequest(city);
       //获取搜索二手房总数量
-      this.countRequest(this.params);
+      this.countRequest();
       //获取对比清单列表
       this.contrastListRequest();
     },
@@ -432,6 +432,8 @@ export default {
     //翻页
     handleCurrentChange(val) {
       this.params.pageNo = val;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0
       this.houseRequest();
     },
     //点击区域条件

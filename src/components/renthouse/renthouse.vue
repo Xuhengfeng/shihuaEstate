@@ -10,13 +10,13 @@
 						<li>
 							<ol class="fl">
                 <li class="title">位置: 区域</li>
-								<li v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
 							<ol class="fl quyu_kind">
                 <li class="title">售价:</li>
-								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
 									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>万</span>
 									<button @click="okbtnone(1)" v-if="showBtn">确定</button>
@@ -26,7 +26,7 @@
 						<li>
 							<ol class="fl quyu_kind">
                 <li class="title">户型:</li>
-								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="fangxing(item, index)">{{item.name}}</li>
+								<li :key="index" v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="fangxing(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputthree" @focus="changeshowone"  /><span>-</span>
 									<input type="text" value="" v-model="inputfour" @focus="changeshowone" />   <span>平</span>
 									<button @click="okbtnone(2)" 	v-if="showBtnone">确定</button>
@@ -218,6 +218,8 @@ export default {
     //翻页
     handleCurrentChange(val) {
       this.params.pageNo = val;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0
       this.houseRequest();
     },
     //收藏房源
