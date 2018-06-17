@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:27:54 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 00:55:24
+ * @Last Modified time: 2018-06-18 02:12:36
  */
 <template>
 	<div class="header">
@@ -15,9 +15,9 @@
 				<div @click="query()"></div>
 			</div>
 			<div class="menu fr">
-				<ul class="menuright fl">
+				<ul class="menuright fl" @click="mapSearch()">
 					<li><img src="../../imgs/buyhouse/diwei.png" /></li>
-					<router-link  class="mapSearchHouse" tag="li" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">地图找房</router-link>
+					<li class="mapSearchHouse">地图找房</li>
 				</ul>
 			</div>
 		</div>
@@ -58,6 +58,9 @@ export default {
 		console.log(this.word)
 	},
 	methods: {
+		mapSearch() {
+			this.$router.push({path:'mapSearch',query:{houseType: this.houseTypeId}});
+		},
 		query() {
 			let params = {
 				keyword: this.word
@@ -99,6 +102,7 @@ export default {
 		height: 40px;
 		overflow: hidden;
 		font-size: 18px;
+		cursor: pointer;
 		li{
 			float: left;
 			line-height: 40px;
