@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-11 15:20:06
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-17 17:49:37
  */
 <template>
   <div class="sideBar">
@@ -152,8 +152,8 @@ export default {
     //立即预约 (待看)
     compareone() {
       this.appinthouse.forEach(item => {
-          this.id = item.id
-        });
+        this.id = item.id
+      });
       this.$router.push({ path: "/mine/indexseeone"});
     },
     //跳转我的收藏

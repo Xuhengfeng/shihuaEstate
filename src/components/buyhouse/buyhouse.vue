@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-15 16:43:39
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-17 18:36:13
  */
 <template>
 	<div>
@@ -14,15 +14,14 @@
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
+                <li class="title">位置: 区域</li>
 								<li :key="index" :data-id="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">售价:</ol>
 							<ol class="fl quyu_kind">
-                <li>不限</li>
+                <li class="title">售价:</li>
 								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
 									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>万</span>
@@ -31,9 +30,8 @@
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">面积:</ol>
 							<ol class="fl quyu_kind">
-                <li>不限</li>
+                <li class="title">面积:</li>
 								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="mianji(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputthree" @focus="changeshowone"  /><span>-</span>
 									<input type="text" value="" v-model="inputfour" @focus="changeshowone" />   <span>平</span>
@@ -42,36 +40,32 @@
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">房型:</ol>
 							<ol class="fl quyu_kind">
-                 <li>不限</li>
+                <li class="title">户型:</li>
 								<li :key="index" v-for="(item, index) in listfour"  :class="{querybtn:queryfour==index }" @click="fangxing(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">装修:</ol>
 							<ol class="fl quyu_kind">
-                 <li>不限</li>
+                <li class="title">装修:</li>
 								<li :key="index" v-for="(item, index) in listfive"  :class="{querybtn:queryfive==index }" @click="zhuangxiu(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">楼龄:</ol>
 							<ol class="fl quyu_kind">
-                 <li>不限</li>
+							  <li class="title">楼龄:</li>
 								<li :key="index" v-for="(item, index) in listsix"  :class="{querybtn:querysix==index }" @click="louling(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">朝向:</ol>
 							<ol class="fl quyu_kind">
+                <li class="title">朝向:</li>
 								<li :key="index" v-for="(item, index) in listseven"  :class="{querybtn:queryseven==index }" @click="chaoxiang(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">特色:</ol>
 							<ol class="fl quyu_kind">
-                 <li>不限</li>
+                <li class="title">特色:</li>
 								<li :key="index" v-for="(item, index) in listeight"  :class="{querybtn:queryeight==index }" @click="teshe(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
@@ -202,14 +196,14 @@ export default {
       querycount: {//检索总数量
         count: 0
       },
-      queryone: null, //二手房区域
-      querytwo: null, //二手房售价
-      querythree: null, //二手面积域
-      queryfour: null, //二手房房型
-      queryfive: null, //二手房装修
-      querysix: null, //二手房楼龄
-      queryseven: null, //二手房朝向
-      queryeight: null, //二手房特色
+      queryone: 0, //二手房区域
+      querytwo: 0, //二手房售价
+      querythree: 0, //二手面积域
+      queryfour: 0, //二手房房型
+      queryfive: 0, //二手房装修
+      querysix: 0, //二手房楼龄
+      queryseven: 0, //二手房朝向
+      queryeight: 0, //二手房特色
       inputresult: null,
       inputresulttwo: null,
       inputone: "",
@@ -242,11 +236,14 @@ export default {
     };
   },
   created() {
+    //初始化修正请求参数体
     this.params.scity = this.selectCity.value;
+    this.params.keyword = this.keyword;
+
     this.render(this.selectCity.value);
   },
   computed: {
-    //监控store的contrastList变化 声明一个计算属性控制刷新数据
+    //监控store的contrastList变化
     refresh() {
       return this.$store.state.contrastList;
     },
@@ -257,29 +254,33 @@ export default {
   watch: {
     $route: {
       handler(val){
+        //初始化文本域值
         this.keyword = val.query.word;
-        this.houseRequest();
+        //修正请求参数体的关键词
+        this.params.keyword = val.query.word;
+        //房源列表请求
+        this.houseRequest(); 
+        //房源总数量请求
+        this.countRequest(this.params);
       }
     },
     //监听计算属性
     refresh() {
       //请求二手的列表
       this.$http
-        .post(this.$url.URL.HOUSE_QUERY, {
-          scity: this.selectCity.value,
-          pageNo: 1
-        })
+        .post(this.$url.URL.HOUSE_QUERY, this.params)
         .then(response => {
-          //修正数据 根据本地缓存修正response数据
-          response.data.data.forEach((item)=>{
-            this.contrastList.forEach((item2)=>{
-              if(item.sdid == item2.sdid){
-                item.contentFlag = '已加入对比';
+          //每次对比清单操作的时候,修正对比清单列表
+          this.contrastList = this.refresh;
+          this.refresh.forEach(item=>{
+            response.data.data.forEach(item2=>{
+              if(item.sdid==item2.sdid){
                 item2.contentFlag = '已加入对比';
               }
             })
           })
-          this.buyhouse = response.data.data; 
+          //刷新列表
+          this.houseList = response.data.data;
         });
     }
   },
@@ -315,36 +316,38 @@ export default {
       if(!this.logined) return this.changeDialog(1);
       //判断当前点击对象是否已加入
       if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
+        //判断是否超过4条
         if(this.contrastList.length >= 4){
-          if(item.contentFlag == '已加入对比') {
-            return;
-          }else{
-            this.$alert('对比清单最多4个!', '添加失败', {
-              confirmButtonText: '确定'
-            });
-          }
+          if(item.contentFlag == '已加入对比') return; 
+          this.$alert('对比清单最多4个!', '添加失败', {
+            confirmButtonText: '确定'
+          });
+          
         }else{
-          if(item.contentFlag == '已加入对比') {
-            return;
-          }else{
-            this.contrastList.push(item);
-            this.$refs.fly.drop(e.target);
-            this.$set(item, 'contentFlag', '已加入对比');
-            this.$store.dispatch('addOne', item);
-            this.$store.dispatch('showlist', this.contrastList);
-          }
+          if(item.contentFlag == '已加入对比') return; 
+          this.contrastList.unshift(item);
+          this.$refs.fly.drop(e.target);
+          this.$set(item, 'contentFlag', '已加入对比');
+          this.$store.dispatch('addOne', item);
+          this.$store.dispatch('showlist', this.contrastList);
         }
       }
     },
     toSkip(item) {
-      let path = "/buyhouse/twohandhousedetail/" + item.sdid;
-      this.$router.push({ path: path });
+      this.$router.push({ path: "/buyhouse/twohandhousedetail/" + item.sdid});
     },
     render(city) {
       //房源列表请求
       this.houseRequest();
-      
+      //请求搜索条件
+      this.tagsRequest(city);
+      //获取搜索二手房总数量
+      this.countRequest(this.params);
       //获取对比清单列表
+      this.contrastListRequest();
+    },
+    //请求对比清单列表
+    contrastListRequest() {
       this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
       .then((res)=>{
         if(res.data.data.length) {
@@ -353,72 +356,75 @@ export default {
           this.$store.dispatch('showlist', res.data.data);
         }
       });
-
-      //获取搜索二手房总数量
-      this.$http
-        .post(this.$url.URL.HOUSE_QUERYCOUNT, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.querycount = response.data.data;
-        });
-        
-      //请求搜索条件
+    },
+    //搜索条件
+    tagsRequest(city) {
       this.$http
         .get(this.$url.URL.AREA_DISTRICTS + city) //区域
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listone = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "SELL_PRICE") //房源售价
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});          
           this.listtwo = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_AREA") //面积
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listthree = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_HUXING") //房型
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listfour = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_DECORATION") //装修
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listfive = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_AGE") //房源楼龄
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listsix = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_DIRECTION") //朝向
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listseven = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_FEATURE") //特色
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listeight = response.data.data;
         });
     },
     //房源列表请求
     houseRequest() {
       this.keyword = this.$route.query.word;
+      this.params.keyword = this.$route.query.word;
       let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
+      let newParams = Object.assign({}, this.params, params);
       this.$http
-      .post(this.$url.URL.HOUSE_QUERY, params)
+      .post(this.$url.URL.HOUSE_QUERY, newParams)
       .then(response=>{
         this.houseList = response.data.data;
       })
     },
     //搜索
     query(item) {
+      this.params.keyword = item.keyword;
       this.$router.push({path: "/buyHouse",query:{word: item.keyword,type: 0}})
+     
     },
     //翻页
     handleCurrentChange(val) {
@@ -430,58 +436,68 @@ export default {
       this.queryone = index;
       this.params.areaId = item.id;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //售价
     shoujia(item, index) {
       this.querytwo = index;
-      this.params.minPrice = item.value.split("-")[0];
-      this.params.maxPrice = item.value.split("-")[1];
+      if(item.value){
+        this.params.minPrice = item.value.split("-")[0];
+        this.params.maxPrice = item.value.split("-")[1];
+      }else{
+        this.params.minPrice = null;  
+        this.params.maxPrice = null;  
+      }
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //面积
     mianji(item, index) {
       this.querythree = index;
-      this.params.minBuildArea = item.value.split("-")[0];
-      this.params.maxBuildArea = item.value.split("-")[1];
+      if(item.value){
+        this.params.minBuildArea = item.value.split("-")[0];
+        this.params.maxBuildArea = item.value.split("-")[1];
+      }else{
+        this.params.minBuildArea = null;
+        this.params.maxBuildArea = null;
+      }
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //房型
     fangxing(item, index) {
       this.queryfour = index;
       this.params.roomsNum = item.value;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //装修
     zhuangxiu(item, index) {
       this.queryfive = index;
       this.params.houseDecor = item.value;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //楼龄
     louling(item, index) {
       this.querysix = index; 
       this.params.useYear = item.value;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //朝向
     chaoxiang(item, index) {
       this.queryseven = index;
       this.params.houseDirec = item.value;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //特色
     teshe(item, index) {
       this.queryeight = index;
       this.params.houseFeature = item.value;
       this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.countRequest(this.params);
     },
     //请求过滤搜索条件数据
     requestServerData(params) {
@@ -490,7 +506,7 @@ export default {
       });
     },
     //请求二手房源数量
-    requestCountData(params) {
+    countRequest(params) {
       this.$http.post(this.$url.URL.HOUSE_QUERYCOUNT, params).then(response => {
         this.querycount = response.data.data;
       });
@@ -506,12 +522,12 @@ export default {
         this.params.minPrice = this.inputone;
         this.params.maxPrice = this.inputtwo;
         this.requestServerData(this.params);
-        this.requestCountData(this.params);
+        this.countRequest(this.params);
       } else {
         this.params.minPrice = this.inputthree;
         this.params.maxPrice = this.inputfour;
         this.requestServerData(this.params);
-        this.requestCountData(this.params);
+        this.countRequest(this.params);
       }
     }
   },
@@ -532,25 +548,26 @@ export default {
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   position: relative;
   border-bottom: 1px solid #cacaca;
-  >ul{
-    margin-top: 24px;
-    margin-left: 35px;
+  box-sizing: border-box;
+  padding: 24px 0 0 35px;
+  ul{
     >li{
       overflow: hidden;
       height: 25px;
       line-height: 25px;
       margin-bottom: 24px;
-      >ol{
+      ol{
         >li{
           cursor: pointer;
           float: left;
           text-align: left;
-          width: 100px;
+          width: 90px;
           white-space: nowrap;
         }
-        &:nth-of-type(1){
+        .title{
           width: 110px;
-          font-size: 14px;
+          font-size: 12px;
+          font-weight: 700;
         }
       }
     }
@@ -561,58 +578,58 @@ export default {
   color: #ff4343;
   font-weight: bold;
 }
-.item{
-  position: relative;
-  min-height: 50px;
-}
+
 //列表项 
-.item ul li{
-  overflow: hidden;
-  display: flex;
-  height: 175px;
-  border-bottom: 1px solid #cacaca;
-  padding: 33px 0;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  .image{
-    flex: 232px 0 0;
-    width: 232px;
-    height: 175px;
-    margin-right: 25px;
-    background: #f5f5f5;
-    cursor: pointer;
-    img{
-      width: 100%;
-      height: 100%;
-      vertical-align: top;
-    }
-  }
-  .direciton{
-    flex: 1;
+.item {
+  position: relative;
+  ul li{
+    overflow: hidden;
     display: flex;
-    height: 100%;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    >div:nth-of-type(1){
-      font-size: 22px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: bold;
+    height: 175px;
+    border-bottom: 1px solid #cacaca;
+    padding: 33px 0;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    .image{
+      flex: 232px 0 0;
+      width: 232px;
+      height: 175px;
+      margin-right: 25px;
+      background: #f5f5f5;
       cursor: pointer;
-      span{
-        color:rgba(0,0,0,0.5);
-        margin-left: 10px;
-        padding: 5px;
-        font-size: 10px;
-        border: 1px solid #cacaca;
-        visibility: hidden;
-        &:hover{
-          color: #000000;
+      img{
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
+      }
+    }
+    .direciton{
+      flex: 1;
+      display: flex;
+      height: 100%;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+      >div:nth-of-type(1){
+        font-size: 22px;
+        color: rgba(0, 0, 0, 0.85);
+        font-weight: bold;
+        cursor: pointer;
+        span{
+          color:rgba(0,0,0,0.5);
+          margin-left: 10px;
+          padding: 5px;
+          font-size: 10px;
+          border: 1px solid #cacaca;
+          visibility: hidden;
+          &:hover{
+            color: #000000;
+          }
         }
       }
     }
-  }
-  &:hover .direciton>div:nth-of-type(1) span{
-    visibility: visible;
+    &:hover .direciton>div:nth-of-type(1) span{
+      visibility: visible;
+    }
   }
 }
 
@@ -646,18 +663,16 @@ export default {
 
 //没有搜索到任何数据
 .noContent{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -ms-transform: translate(-50%,-50%);
-  transform: translate(-50%,-50%);
   color: #5e7382;
-  
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
 }
 .pageFooter{
   overflow: hidden;
   padding-top: 20px;
 }
+
 //内容
 .content {
   margin-top: 26px;
@@ -666,6 +681,8 @@ export default {
   padding-bottom: 20px;
   overflow: hidden;
 }
+
+
 .sidebar {
   width: 180px;
   margin-left: 60px;
