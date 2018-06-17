@@ -51,7 +51,7 @@
 						</div> -->
 					</div>
 						<div class="resultDes">
-							<h2 class="total">共找到<span style="color: red;"> {{queryRentcount.count}} </span>位{{this.selectCity.name}}经纪人</h2>
+							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>位{{this.selectCity.name}}经纪人</h2>
 							<div class="listContentLine"></div>
 						</div>
 					
@@ -62,15 +62,12 @@
 									<img :src="item.photo" @error="avatar"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" @click="toSkip(item)" >{{item.emplName}} </div>
+									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a></a></h2>
 									<div class="introduce">
-                   	 <span class="word">{{item.deptName}}</span>
-										 <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
-                     	 <span class="fr call">联系电话：{{item.phone}}</span>
-                     </div> 
-									<!-- <div class="introduce">
-									<span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span>
-									</div> -->
+                   	  <span class="word">{{item.deptName}}</span>
+										  <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
+                     	<span class="fr call">联系电话：{{item.phone}}</span>
+                  </div> 
 									<div class="introduce ">
 										<span class="intrspan one">销售达人</span>
 										<span class="intrspan two">销售达人</span>
@@ -80,17 +77,22 @@
 							</li>
 						</ul>
 					</div>
-					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
-					<!--分页器-->
-					<el-pagination
-           @current-change="handleCurrentChange"
-					  background
-					  layout="prev, pager, next"
-             prev-text="上一页"
-					   next-text="下一页"
-					  :total="1000"
-					  class="fr pagination">
-					</el-pagination>
+
+					<!-- 分页器 -->
+          <div class="pageFooter">
+              <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
+                <router-link to="home">世华易居网南宁二手房</router-link>>
+                <router-link to="buyhouse">南宁二手房</router-link>
+              </div>
+              <el-pagination class="fr oPagination"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :total="querycount.count">
+              </el-pagination>
+          </div>
 				</div>
 			</div>
 		</div>
@@ -115,9 +117,8 @@ export default {
       num: 0,
       showBtn: false,
       showBtnone: false,
-      queryRentcount: {
-        //租房房总数量
-        count: ""
+      querycount: {//检索总数量
+        count: 0
       },
       queryone: null, //租房房区域
       inputresult: null,
@@ -153,11 +154,9 @@ export default {
   },
   methods: {
      handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
       this.render(null, val);		
     },
     avatar(item){
-      console.log(1111)
       item.photo = require('../../imgs/home/avatar.png')
     },
     toSkip(item) {
@@ -183,7 +182,7 @@ export default {
           pageNo: 1
         })
         .then(response => {
-          this.queryRentcount = response.data.data;
+          this.querycount = response.data.data;
         });
 
       //请求搜索条件
@@ -309,28 +308,56 @@ export default {
     height: 90px;
     flex-flow: column nowrap;
     justify-content: space-between;
-    >div:nth-of-type(1){
-      font-size: 22px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: bold;
-      cursor: pointer;
-      span{
-        color:rgba(0,0,0,0.5);
-        margin-left: 10px;
-        padding: 5px;
-        font-size: 10px;
-        border: 1px solid #cacaca;
-        visibility: hidden;
-        &:hover{
-          color: #000000;
-        }
+    h2{
+      .name{
+        color: rgb(85, 85, 85);
+        font-weight: 700;
+        float: left;
+        text-overflow: ellipsis;
+        font-size: 20px;
+        white-space: nowrap;
+        height: 32px;
+        line-height: 20px;
+        vertical-align: middle;
+        overflow: hidden;
+        margin-right: 10px;
+      }
+      .position{
+        background: #f1f1f1;
+        padding: 4px;
+        color: #888888;
+        margin-right: 5px;
+        border-radius: 2px;
+        font-size: 12px;
+      }
+      a{
+        display: inline-block;
+        height: 20px;
+        width: 76px;
+        background: url('../../imgs/chatInline.png') 0 0 no-repeat;
+        vertical-align: middle;
+        cursor: pointer;
       }
     }
   }
-  &:hover .direciton>div:nth-of-type(1) span{
-    visibility: visible;
-  }
 }
+
+//没有搜索到任何数据
+.noContent{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  color: #5e7382;
+  
+}
+.pageFooter{
+  overflow: hidden;
+  padding-top: 20px;
+}
+
+
 
 .m-checkbox {
   display: inline-block;
@@ -360,11 +387,6 @@ export default {
   font-size: 13px;
 }
 
-/*content部分css*/
-
-.content {
-  margin-top: 26px;
-}
 .leftContent {
   padding-bottom: 20px;
   overflow: hidden;
@@ -372,6 +394,10 @@ export default {
 .sidebar {
   width: 180px;
   margin-left: 60px;
+}
+
+.content {
+  margin-top: 26px;
 }
 .content .leftContent .orderFilter .orderTag {
   border-bottom: 2px solid red;
@@ -440,10 +466,6 @@ export default {
   font-size: 24px!important;
   color: rgba(239, 31, 31, 0.85);
   
-}
-.call{
-  position: relative;
-  right: 0px;
 }
 .grade{
   margin-left: 4px;

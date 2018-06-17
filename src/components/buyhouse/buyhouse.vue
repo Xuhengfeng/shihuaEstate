@@ -199,7 +199,7 @@ export default {
       num: 0,
       showBtn: false,
       showBtnone: false,
-      querycount: {//二手房总数量
+      querycount: {//检索总数量
         count: 0
       },
       queryone: null, //二手房区域
@@ -654,7 +654,6 @@ export default {
   color: #5e7382;
   
 }
-
 .pageFooter{
   overflow: hidden;
   padding-top: 20px;

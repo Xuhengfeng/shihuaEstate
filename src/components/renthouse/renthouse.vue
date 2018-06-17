@@ -113,7 +113,7 @@
                     layout="prev, pager, next"
                     prev-text="上一页"
                     next-text="下一页"
-                    :total="1000">
+                    :total="querycount.count">
                 </el-pagination>
             </div>
 				</div>
@@ -141,8 +141,8 @@ export default {
       num: 0,
       showBtn: false,
       showBtnone: false,
-      queryRentcount: {
-        count: ""//租房房总数量
+      querycount: {//检索总数量
+        count: 0
       },
       queryone: null, //租房房区域
       querytwo: null, //租房价格
@@ -304,7 +304,7 @@ export default {
     //请求租房源数量
     requestCountData(params) {
       this.$http.post(this.$url.URL.RENTHOUSE_QUERYCOUNT, params).then(response => {
-        this.queryRentcount = response.data.data;
+        this.querycount = response.data.data;
       });
     },
     changeshow() {
