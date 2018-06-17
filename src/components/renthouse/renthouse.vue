@@ -8,14 +8,14 @@
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
+                <li class="title">位置: 区域</li>
 								<li v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">价格:</ol>
 							<ol class="fl quyu_kind">
+                <li class="title">售价:</li>
 								<li v-for="(item, index) in listtwo" :class="{querybtn:querytwo==index }" @click="shoujia(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputone" @focus="changeshow" /><span>-</span>
 									<input type="text" value="" v-model="inputtwo" @focus="changeshow" /> <span>万</span>
@@ -24,8 +24,8 @@
 							</ol>
 						</li>
 						<li>
-							<ol class="fl quyu">房型:</ol>
 							<ol class="fl quyu_kind">
+                <li class="title">户型:</li>
 								<li v-for="(item, index) in listthree" :class="{querybtn:querythree==index }" @click="fangxing(item, index)">{{item.name}}</li>
 								<li><input type="text" value="" v-model="inputthree" @focus="changeshowone"  /><span>-</span>
 									<input type="text" value="" v-model="inputfour" @focus="changeshowone" />   <span>平</span>
@@ -72,7 +72,7 @@
 						</div> -->
 					</div>
 						<div class="resultDes">
-							<h2 class="total">共找到<span style="color: red;"> {{queryRentcount.count}} </span>套{{this.selectCity.name}}二手房</h2>
+							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>套{{this.selectCity.name}}二手房</h2>
 							<div class="listContentLine"></div>
 						</div>
 					
@@ -113,6 +113,7 @@
                     layout="prev, pager, next"
                     prev-text="上一页"
                     next-text="下一页"
+                    :current-page.sync="params.pageNo"
                     :total="querycount.count">
                 </el-pagination>
             </div>
@@ -121,17 +122,21 @@
 		</div>
 		<!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
+    <!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
 import oFly from "../../base/fly/fly";
+import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
+      showbox: null, //显示对应的dialog
       houseTypeId: 12, //地图 二手房 租房  小区 11 12 13
-      keyword: '',//关键词
+      keyword: '',//搜索框关键词
       
       // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
@@ -144,16 +149,16 @@ export default {
       querycount: {//检索总数量
         count: 0
       },
-      queryone: null, //租房房区域
-      querytwo: null, //租房价格
-      querythree: null, //租房房型
+      queryone: 0, //租房房区域
+      querytwo: 0, //租房价格
+      querythree: 0,//租房房型
       inputresult: null,
       inputresulttwo: null,
       inputone: "",
       inputtwo: "",
       inputthree: "",
       inputfour: "",
-      params: {//这个是用来查询参数列表 不变的
+      params: {//请求参数体
         areaId: null,
         districtId: null,
         houseDecor: "",
@@ -171,23 +176,17 @@ export default {
         scity: null,
         useYear:null
       },
-      page: 1,
       houseList: [], //租房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       collectionFlag: true, //收藏标识
     };
   },
   created() {
+    //初始化修正请求参数体
     this.params.scity = this.selectCity.value;
+    this.params.keyword = this.keyword;
+
     this.render(this.selectCity.value);
-  },
-  watch: {
-    $route: {
-      handler(val){
-        this.keyword = val.query.word;
-        this.houseRequest();
-      }
-    }
   },
   computed: {
     //获取用户登录状态
@@ -195,25 +194,42 @@ export default {
       return this.$store.state.logined;
     }
   },
+  watch: {
+    $route: {
+      handler(val){
+        //初始化搜索框关键词
+        this.keyword = val.query.word;
+        //修正请求参数体
+        this.params.pageNo = 1;
+        this.params.keyword = val.query.word;
+        //房源列表请求
+        this.houseRequest(); 
+        //房源总数量请求
+        this.countRequest();
+      }
+    }
+  },
   methods: {
+    //显示对应的弹窗
+    changeDialog(num) {
+      this.showbox = num; 
+      this.$refs.odialog.show();
+    },
     //翻页
     handleCurrentChange(val) {
-      this.page = val;
+      this.params.pageNo = val;
       this.houseRequest();
     },
     //收藏房源
     collection(item,e) {
-      console.log(this.logined)
-        if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
       if(this.collectionFlag){
          this.$http
         .post(this.$url.URL.RENTHCOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
         .then(response => {
             e.target.innerHTML = '已收藏'
         });
-
       }else{
            this.$http
         .post(this.$url.URL.RENTHCOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
@@ -224,86 +240,87 @@ export default {
       this.collectionFlag = !this.collectionFlag;
     },
     toSkip(item) {
-      let path = "/rentHouseDetail/" + item.sdid;
-      this.$router.push({ path: path });
+      this.$router.push({ path: "/rentHouseDetail/" + item.sdid});
     },
     render(city) {
       //房源列表请求
       this.houseRequest();
-      
-      //获取搜索租房总数量
-      this.$http
-        .post(this.$url.URL.RENTHOUSE_QUERYCOUNT, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.queryRentcount = response.data.data;
-        });
-
       //请求搜索条件
+      this.tagsRequest(city);
+      //获取搜索二手房总数量
+      this.countRequest();
+    },
+    //搜索条件
+    tagsRequest(city) {
       this.$http
-        .get(this.$url.URL.AREA_DISTRICTS + city
-        ) //区域
+        .get(this.$url.URL.AREA_DISTRICTS + city) //区域
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listone = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_RENTAL") //房源售价
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
     		  this.listtwo = response.data.data;
         });
       this.$http
         .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_HUXING") //房型
         .then(response => {
+          response.data.data.unshift({value: null, name: "不限"});
           this.listthree = response.data.data;
         });
     },
     //房源列表请求
     houseRequest() {
       this.keyword = this.$route.query.word;
-      let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
+      this.params.keyword = this.$route.query.word;
+      let params = {'keyword': this.keyword, 'scity': this.selectCity.value};
+      let newParams = Object.assign({}, this.params, params);
       this.$http
-      .post(this.$url.URL.RENTHOUSE_QUERY, params)
+      .post(this.$url.URL.RENTHOUSE_QUERY, newParams)
       .then(response=>{
         this.houseList = response.data.data;
       })
     },
     //搜索
     query(item) {
+      this.params.keyword = item.keyword;
       this.$router.push({path: "/rentHouse",query:{word: item.keyword,type: 1}})
     },
     //点击区域条件
     address(item, index) {
       this.queryone = index;
       this.params.areaId = item.id;
-      this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
     //售价
     shoujia(item, index) {
       this.querytwo = index;
-      this.params.minRentPrice = item.value.split("-")[0];
-      this.params.maxRentPrice = item.value.split("-")[1];
-      this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.params.pageNo = 1;
+      if(item.value){
+        this.params.minRentPrice = item.value.split("-")[0];
+        this.params.maxRentPrice = item.value.split("-")[1];
+      }else{
+        this.params.minRentPrice = null;  
+        this.params.maxRentPrice = null; 
+      }
+      this.houseRequest(); 
+      this.countRequest();
     },
     //房型
     fangxing(item, index) {
       this.querythree = index;
       this.params.roomsNum = item.value;
-      this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
-    //请求过滤搜索条件数据
-    requestServerData(params) {
-      this.$http.post(this.$url.URL.RENTHOUSE_QUERY, params).then(response => {
-        this.houseList = response.data.data;
-      });
-    },
-    //请求租房源数量
-    requestCountData(params) {
-      this.$http.post(this.$url.URL.RENTHOUSE_QUERYCOUNT, params).then(response => {
+    //请求房源数量
+    countRequest() {
+      this.$http.post(this.$url.URL.RENTHOUSE_QUERYCOUNT, this.params).then(response => {
         this.querycount = response.data.data;
       });
     },
@@ -314,21 +331,23 @@ export default {
       this.showBtnone = true;
     },
     okbtnone(num) {
+      this.params.pageNo = 1;
       if (num == 1) {
         this.params.minRentPrice = this.inputone;
         this.params.maxRentPrice = this.inputtwo;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
+        this.houseRequest(); 
+        this.countRequest();
       } else {
         this.params.minRentPrice = this.inputthree;
         this.params.maxRentPrice = this.inputfour;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
+        this.houseRequest(); 
+        this.countRequest();
       }
     }
   },
   components: {
     oHeader,
+    oDialog,
     oFly
   }
 };
@@ -343,25 +362,26 @@ export default {
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   position: relative;
   border-bottom: 1px solid #cacaca;
-  >ul{
-    margin-top: 24px;
-    margin-left: 35px;
+  box-sizing: border-box;
+  padding: 24px 0 0 35px;
+  ul{
     >li{
       overflow: hidden;
       height: 25px;
       line-height: 25px;
       margin-bottom: 24px;
-      >ol{
+      ol{
         >li{
           cursor: pointer;
           float: left;
           text-align: left;
-          width: 100px;
+          width: 90px;
           white-space: nowrap;
         }
-        &:nth-of-type(1){
+        .title{
           width: 110px;
-          font-size: 14px;
+          font-size: 12px;
+          font-weight: 700;
         }
       }
     }

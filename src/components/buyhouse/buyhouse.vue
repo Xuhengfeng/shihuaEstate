@@ -2,12 +2,13 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-17 18:36:13
+ * @Last Modified time: 2018-06-17 23:14:14
  */
 <template>
 	<div>
 		<o-header :houseTypeId="houseTypeId" 
               :keyword="keyword"
+              :placeholder="'请输入区域丶商圈或小区名开始找房'"
               @query="query"></o-header>
 		<div class="m-filter">
 			<div class="container">
@@ -157,6 +158,7 @@
                   layout="prev, pager, next"
                   prev-text="上一页"
                   next-text="下一页"
+                  :current-page.sync="params.pageNo"
                   :total="querycount.count">
               </el-pagination>
           </div>
@@ -179,7 +181,7 @@ export default {
     return {
       showbox: null, //显示对应的dialog
       houseTypeId: 11,//地图 二手房 租房  小区 11 12 13
-      keyword: '',//关键词
+      keyword: '',//搜索框关键词
       list:["默认排序", "最新", "总价", "房屋单价", "面积"],
       listone: [],
       listtwo: [],
@@ -210,7 +212,7 @@ export default {
       inputtwo: "",
       inputthree: "",
       inputfour: "",
-      params: {//查询参数列表 不变的
+      params: {//请求参数体
         areaId: null,
         districtId: null,
         houseDecor: "",
@@ -228,7 +230,6 @@ export default {
         scity: null,
         useYear:null
       },
-      page: 1, //页码
       houseList: [], //二手房列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       contrastList: [],//对比清单列表
@@ -254,14 +255,15 @@ export default {
   watch: {
     $route: {
       handler(val){
-        //初始化文本域值
+        //初始化搜索框关键词
         this.keyword = val.query.word;
-        //修正请求参数体的关键词
+        //修正请求参数体
+        this.params.pageNo = 1;
         this.params.keyword = val.query.word;
         //房源列表请求
         this.houseRequest(); 
         //房源总数量请求
-        this.countRequest(this.params);
+        this.countRequest();
       }
     },
     //监听计算属性
@@ -350,11 +352,13 @@ export default {
     contrastListRequest() {
       this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
       .then((res)=>{
-        if(res.data.data.length) {
-          this.contrastList = res.data.data;
-          //初始化清单列表
-          this.$store.dispatch('showlist', res.data.data);
-        }
+        try{
+          if(res.data.data.length) {
+            this.contrastList = res.data.data;
+            //初始化清单列表
+            this.$store.dispatch('showlist', res.data.data);
+          }
+        }catch(e){}
       });
     },
     //搜索条件
@@ -412,7 +416,7 @@ export default {
     houseRequest() {
       this.keyword = this.$route.query.word;
       this.params.keyword = this.$route.query.word;
-      let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
+      let params = {'keyword': this.keyword, 'scity': this.selectCity.value};
       let newParams = Object.assign({}, this.params, params);
       this.$http
       .post(this.$url.URL.HOUSE_QUERY, newParams)
@@ -424,23 +428,23 @@ export default {
     query(item) {
       this.params.keyword = item.keyword;
       this.$router.push({path: "/buyHouse",query:{word: item.keyword,type: 0}})
-     
     },
     //翻页
     handleCurrentChange(val) {
-      let newParams = Object.assign({}, this.params, {pageNo: val});
-      this.requestServerData(newParams);
+      this.params.pageNo = val;
+      this.houseRequest();
     },
     //点击区域条件
     address(item, index, e) {
       this.queryone = index;
       this.params.areaId = item.id;
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.houseRequest(); 
+      this.countRequest();
     },
     //售价
     shoujia(item, index) {
       this.querytwo = index;
+      this.params.pageNo = 1;
       if(item.value){
         this.params.minPrice = item.value.split("-")[0];
         this.params.maxPrice = item.value.split("-")[1];
@@ -448,66 +452,66 @@ export default {
         this.params.minPrice = null;  
         this.params.maxPrice = null;  
       }
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.houseRequest(); 
+      this.countRequest();
     },
     //面积
     mianji(item, index) {
       this.querythree = index;
-      if(item.value){
+      this.params.pageNo = 1;
+      try{
         this.params.minBuildArea = item.value.split("-")[0];
         this.params.maxBuildArea = item.value.split("-")[1];
-      }else{
+      }catch(e){
         this.params.minBuildArea = null;
         this.params.maxBuildArea = null;
       }
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.houseRequest(); 
+      this.countRequest();
     },
     //房型
     fangxing(item, index) {
       this.queryfour = index;
       this.params.roomsNum = item.value;
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
     //装修
     zhuangxiu(item, index) {
       this.queryfive = index;
       this.params.houseDecor = item.value;
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
     //楼龄
     louling(item, index) {
       this.querysix = index; 
       this.params.useYear = item.value;
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
     //朝向
     chaoxiang(item, index) {
       this.queryseven = index;
       this.params.houseDirec = item.value;
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
     //特色
     teshe(item, index) {
       this.queryeight = index;
       this.params.houseFeature = item.value;
-      this.requestServerData(this.params);
-      this.countRequest(this.params);
+      this.params.pageNo = 1;
+      this.houseRequest(); 
+      this.countRequest();
     },
-    //请求过滤搜索条件数据
-    requestServerData(params) {
-      this.$http.post(this.$url.URL.HOUSE_QUERY, params).then(response => {
-        this.houseList = response.data.data;
-      });
-    },
-    //请求二手房源数量
-    countRequest(params) {
-      this.$http.post(this.$url.URL.HOUSE_QUERYCOUNT, params).then(response => {
+    //请求房源数量
+    countRequest() {
+      this.$http.post(this.$url.URL.HOUSE_QUERYCOUNT, this.params).then(response => {
         this.querycount = response.data.data;
       });
     },
@@ -518,16 +522,17 @@ export default {
       this.showBtnone = true;
     },
     okbtnone(num) {
+      this.params.pageNo = 1;
       if (num == 1) {
         this.params.minPrice = this.inputone;
         this.params.maxPrice = this.inputtwo;
-        this.requestServerData(this.params);
-        this.countRequest(this.params);
+        this.houseRequest(); 
+        this.countRequest();
       } else {
         this.params.minPrice = this.inputthree;
         this.params.maxPrice = this.inputfour;
-        this.requestServerData(this.params);
-        this.countRequest(this.params);
+        this.houseRequest(); 
+        this.countRequest();
       }
     }
   },
@@ -638,10 +643,6 @@ export default {
   background-image: url(../../imgs/buyhouse/check.png);
   width: 12px;
   height: 12px;
-}
-.quyu {
-  font-size: 14px;
-  font-weight: bold;
 }
 .quyu_kind {
   cursor: pointer;
