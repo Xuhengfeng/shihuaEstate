@@ -50,7 +50,8 @@
                             placeholder="点击输入你要咨询的问题..."
                             @keyup.enter="sendBtn()">
                     </textarea>
-                    <a class="im-input-pic" title="插入图片">插入图片</a>
+                    <a class="im-input-pic" title="插入图片"><input type="file" @change="getFile"/></a>
+                    <div></div>
                   </div>
                   <div>
                       <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
@@ -184,6 +185,45 @@ export default {
               boxcontent.scrollIntoView(false);
         },100);
 
+      });
+    },
+    getFile(e) {
+      //构造图片FormData
+      let fd = new FormData();
+      let files = e.target.files || e.dataTransfer.files
+      if(!files[0]){
+        throw new Error('获取文件失败');
+      }
+      fd.append(files[0].name, files[0]);
+      //发送图片
+      this.Jiguang_sendPic(fd);
+    },
+    //发送图片
+    Jiguang_sendPic(fd) {
+      console.log(12121)
+      JIM.sendSinglePic({
+        target_username:"13100000000",
+        appkey: this.AuthJiG.appkey,
+        image: fd 
+      })
+      .onSuccess(data=> {
+        console.log(data);
+      })
+      .onFail(data=> {
+        console.log('error:' + JSON.stringify(data))
+      });
+    },
+    //获取资源(例如图片)
+    Jiguang_getResource() {
+      JIM.getResource({
+        'media_id' : '<media_id >',
+      }).onSuccess(data=> {
+          //data.code 返回码
+          //data.message 描述
+          //data.url 资源临时访问路径
+      }).onFail(data=> {
+          //data.code 返回码
+          //data.message 描述
       });
     },
     // 点击其中一项
@@ -458,9 +498,13 @@ export default {
             width: 14px;
             height: 14px;
             text-indent: 999em;
-            overflow: hidden;
-            background: url('./imgs/lianxi.png') no-repeat 0 -72px;
+            background: red url('./imgs/lianxi.png') no-repeat 0 -72px;
             cursor: pointer;
+            input{
+              float: left;
+              opacity: 0;
+              width: 24px;
+            }
           }
         }
         div {
