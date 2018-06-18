@@ -71,7 +71,7 @@
 									<img :src="item.photo" @error="avatar"/>
 								</div>
 								<div class="direciton">
-									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a></a></h2>
+									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a @click.stop="startChat()"></a></h2>
 									<div class="introduce">
                    	  <span class="word">{{item.deptName}}</span>
 										  <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
@@ -168,6 +168,10 @@ export default {
     }
   },
   methods: {
+    //打开聊天
+    startChat() {
+      this.$store.commit('STARTCHAT', true);
+    },
     //翻页
     handleCurrentChange(val) {
       this.params.pageNo = val;

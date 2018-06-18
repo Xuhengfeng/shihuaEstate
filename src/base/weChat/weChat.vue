@@ -31,6 +31,7 @@
                           <li class="chat-block" :class="item.content.val==1?'chat-block-left':'chat-block-right'">
                               <a href=""><img src="./imgs/avatar.png"></a>
                               <div class="chat-content">
+                                <!-- {{item.content.msg_body.text}} -->
                                   <div>{{item.content.msg_body.text}}</div>
                               </div>
                           </li>
@@ -63,140 +64,54 @@
 </template>
 <script>
 export default {
+  props: {
+    history: {//历史漫游消息
+      type: Array,
+      default: []
+    }
+  },
   data() {
     return {
       brokerTalks: [1], //聊过的经纪人
       isShowBroker: false,
       isShowItContent: false,
       sendMsg: null, //发送消息
-      contents: [
-        //聊天消息
-        // { content: "fasdf asdf asdf", ctime_ms: null, val: 1 },
-        // { content: "fasdf asdf asdf", ctime_ms: null, val: 2 }
-      ],
+      contents: [],//聊天消息
       flag: false, //用来记住 聊天窗口是否被打开
-      ownId: null,//自己的id;
     };
   },
   computed: {
-    //登录用户的信息
-    userInfo() {
-      return this.$store.state.LoginedUser;
-    },
-    //用户登录
-    isLogin() {
-      return this.$store.state.logined;
-    },
     //极光IM
     AuthJiG() {
-        return this.$store.state.AuthJiG;
+      return this.$store.state.AuthJiG;
+    },
+    //开始聊
+    chat() {
+      return this.$store.state.chat;
     }
   },
   watch: {
-    isLogin() {
-        //用户登录时初始化极光IM
-        this.isLogin&&this.JiguangInit();
+    chat() {
+      this.chat&&this.open();
     }
   },
   filters: {
     formatTime(val) {
-        return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
-        // let date = new Date(val);
-        // let Y = date.getFullYear() + '-';
-        // let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-        // let D = date.getDate() + ' ';
-        // let h = date.getHours() + ':';
-        // let m = date.getMinutes() + ':';
-        // let s = date.getSeconds();
-        // return Y+M+D+h+m+s;
-        // if(hour < 6){console.log("凌晨好！")} 
-        // else if (hour < 9){console.log("早上好！")} 
-        // else if (hour < 12){console.log("上午好！")} 
-        // else if (hour < 14){console.log("中午好！")} 
-        // else if (hour < 17){console.log("下午好！")} 
-        // else if (hour < 19){console.log("傍晚好！")} 
-        // else if (hour < 22){console.log("晚上好！")} 
-        // console.log((new Date()).$format(val))
+      return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
     }
   },
   created() {
-     //极光IM 实例化
-    window.JIM = new JMessage({ debug: true });
-    //用户刷新时初始化极光IM
-    let isLogin = this.$store.state.logined;
-    isLogin&&this.JiguangInit();
+    //历史漫游信息
+    this.contents = this.history;
   },
   methods: {
-    //初始化极光IM
-    JiguangInit() {
-      let that = this;
-        JIM.init({
-            appkey: this.AuthJiG.appkey,
-            random_str: this.AuthJiG.random_str,
-            signature: this.AuthJiG.signature,
-            timestamp: this.AuthJiG.timestamp,
-            flag: 1,
-        })
-        .onSuccess(data => {
-            that.JiguangLogin();//极光登录
-        })
-        .onFail(error => {});
-    },
-    //极光登录
-    JiguangLogin() {
-        JIM.login({
-            username: this.userInfo.easemobUsername,
-            password: this.userInfo.easemobPassword
-        })
-        .onSuccess(data => {
-            this.JiguangUserInfo();//用户信息
-            this.JiguangOnMsg();//监听消息
-            // this.JiguangConversation();//对话列表
-            this.JiguangSyncConversation();//离线消息同步监听
-        })
-        .onFail(data => {});
-    },
-    //用户获取极光IM信息
-    JiguangUserInfo() {
-      JIM.getUserInfo({
-        username: this.userInfo.easemobUsername,
-        appkey: this.AuthJiG.appkey
-      }).onSuccess(data => {
-        console.log("获取用户Im信息成功：" + JSON.stringify(data));
-        this.ownId = 15857009521;
-      });
-    },
-    //用户获取极光IM会话列表
-    JiguangConversation() {
-      JIM.getConversation()
-        .onSuccess(data => {
-          // console.table(data);
-        })
-        .onFail(data => {
-          // console.log("会话列表失败:" + JSON.stringify(data));
-        });
-    },
-    //离线消息同步监听
-    JiguangSyncConversation(){
-      JIM.onSyncConversation(data=> {
-        data[0].msgs.forEach(item=>{
-            if(item.content.from_id == this.ownId){
-              item.content.val = 2;
-            }else{
-              item.content.val = 1;
-            }
-        })
-        this.contents = data[0].msgs;
-      });
-    },
     //更多
     upDown() {
+      //经纪人列表
       this.isShowBroker = !this.isShowBroker;
       //上一次聊天窗口
       if (this.isShowBroker) {
-        if (this.flag) {
-          this.isShowItContent = true;
-        }
+        if (this.flag) this.isShowItContent = true;
       } else {
         this.isShowItContent = false;
       }
@@ -204,23 +119,25 @@ export default {
     // 打开聊天
     open() {
       this.isShowItContent = true;
+      this.isShowBroker = true;
       this.flag = true;
     },
     // 关闭聊天
     close() {
       this.isShowItContent = false;
       this.flag = false;
+      this.$store.commit('STARTCHAT', false);
     },
     //发送
     sendBtn() {
       if(JIM.isLogin()){
-        this.JiguangsendMsg();
+        this.Jiguang_sendMsg();
       }else{
-        this.JiguangInit();
+        console.log('未登录')
       }
     },
     // 发送消息
-    JiguangsendMsg() {
+    Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             target_username:"13100000000",
             appkey: this.AuthJiG.appkey,
@@ -230,32 +147,41 @@ export default {
             need_receipt: true
         })
         .onSuccess((data,msg) => {
+
             this.sendMsg = null;
             this.contents.push({
-                content: msg.content.msg_body.text,
+                content: {
+                  msg_body: {text: msg.content.msg_body.text}
+                },
                 ctime_ms: data.ctime_ms,
                 val: 2
             });
             setTimeout(()=>{
-                let boxcontent = document.querySelector(".scroll");
-                    boxcontent.scrollIntoView(false);
-            },100)
+              //滚动底部
+              let boxcontent = document.querySelector(".scroll");
+                  boxcontent.scrollIntoView(false);
+            },100);
+
         })
         .onFail(data => {});
     },
     //用户实时聊天监听
-    JiguangOnMsg() {
+    Jiguang_onMsg() {
       JIM.onMsgReceive(data => {
-        console.log(data)
-        // this.contents.push({
-        //     content: data.messages[0].content.msg_body.text,
-        //     ctime_ms: data.messages[0].content.create_time,
-        //     val: 1
-        // });
-        // setTimeout(()=>{
-        //     let boxcontent = document.querySelector(".scroll");
-        //         boxcontent.scrollIntoView(false);
-        // },100)
+
+        this.contents.push({ 
+            content: {
+              msg_body: {text: data.messages[0].content.msg_body.text}
+            },
+            ctime_ms: data.messages[0].content.create_time,
+            val: 1
+        });
+        setTimeout(()=>{
+          //滚动底部
+          let boxcontent = document.querySelector(".scroll");
+              boxcontent.scrollIntoView(false);
+        },100);
+
       });
     },
     // 点击其中一项
@@ -295,6 +221,7 @@ export default {
         height: 40px;
         background: url("./imgs/lianxi.png") no-repeat;
         background-position: 12px -108px;
+        cursor: pointer;
       }
       span {
         margin-right: 5px;
@@ -324,6 +251,7 @@ export default {
             border-radius: 50%;
             margin-right: 10px;
             background: url("./imgs/avatar.png") no-repeat center center;
+            cursor: pointer;
           }
           img + div {
             flex: 1;
@@ -389,6 +317,7 @@ export default {
           margin-top: 10px;
           background: url("./imgs/lianxi.png") no-repeat;
           background-position: 12px -87px;
+          cursor: pointer;
         }
       }
       .chatArea {
@@ -435,12 +364,14 @@ export default {
               display: inline-block;
               border-radius: 50%;
               overflow: hidden;
+              cursor: pointer;
               img {
                 display: inline-block;
                 width: 34px;
                 height: 34px;
                 background: url("./imgs/avatar.png") no-repeat center center;
                 background-size: cover;
+                cursor: pointer;
               }
             }
             .chat-content {

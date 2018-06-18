@@ -6,7 +6,7 @@
 <template>
     <div class="topBar">
         <div class="container navmenu">
-            <div class="fr">
+            <div class="one fr">
                 <div v-if="!isLogin">
                     <i class="iconfont el-icon-own-yonghu"></i>
                     <span class="login" @click="login()">登录</span> 
@@ -29,9 +29,9 @@
                 <div>热线电话0779-3837272</div>
             </div>
 
-            <ol class="fl">
+            <ul class="two fl">
                 <router-link tag="li" to="">更多
-                    <ul class="item2">
+                    <ol class="item2">
                         <router-link tag="li" to="/houseestate">小区找房</router-link>
                         <router-link tag="li" to="">代办业务</router-link>
 						<router-link tag="li" to="">便民服务</router-link>
@@ -41,23 +41,23 @@
                         <router-link tag="li" to="">咨询</router-link>
                         <router-link tag="li" to="">购房指南</router-link>
                         <router-link tag="li" to="">行业咨询</router-link>
-                    </ul>
+                    </ol>
                 </router-link>
                 <router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
                 <router-link tag="li" to="/buyhouseguide">海外置业</router-link>
                 <router-link tag="li" to="/shoper">找门店</router-link>
                 <router-link tag="li" to="/broker">找经纪人</router-link>
                 <router-link tag="li" to="">业主委托
-                    <ul class="item2">
+                    <ol class="item2">
                         <router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
 						<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
-                    </ul>
+                    </ol>
                 </router-link>
                 <router-link tag="li" to="/rentHouse">租房</router-link>
                 <router-link tag="li" to="/newHouse">新房</router-link>
                 <router-link tag="li" to="/buyHouse">二手房</router-link>
                 <router-link tag="li" to="/home">首页</router-link>
-            </ol>
+            </ul>
         </div>
         <!-- 对话框 登录 注册 修改密码  -->
 		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
@@ -95,8 +95,13 @@ export default {
         logout() {//退出
             this.$store.dispatch('logout');
         }
-        
-	},
+    },
+    mounted() {
+        $('.two>li').click(function() {
+            console.log(this)
+        $(this).addClass('fontColor').siblings().removeClass('fontColor');
+        })
+    },
     components: {
         oDialog
     }
@@ -114,7 +119,7 @@ export default {
 }
 .navmenu{
     overflow: visible!important;
-    >div{
+    .one{
         line-height: 70px;
         position: relative;
         font-size: 16px;
@@ -125,7 +130,7 @@ export default {
             width: 180px;
             &:hover ul{
                 visibility: visible;
-                li:hover{ color: red}
+                li:hover{ color: #ff4343}
             }
             ul{
                 position: absolute;
@@ -151,14 +156,14 @@ export default {
             float: right;
         }
     }
-    >ol{
+    .two{
         line-height: 70px;
         >li{
             position: relative;
             float: right;
             margin-right: 26px;
             cursor: pointer;
-            >ul{
+            ol{
                 position: absolute;
                 left: 0;
                 top: 70px;
@@ -177,25 +182,24 @@ export default {
                 }
             }
             &:hover{
-                color: red;
-                >ul{
+                color: #ff4343;
+                ol{
                     visibility: visible;
-                    li:hover{
-                        color: red;
-                        
-                    }
+                    li:hover{color: #ff4343}
                 }
             }
 
         }
     }
 }
-
+.fontColor{
+    color: #ff4343!important;
+}
 /* 登录/退出 */
 .navmenu .login:hover,
 .navmenu .register:hover,
 .navmenu .logout:hover{
-    color: red;
+    color: #ff4343;
     cursor: pointer;    
 }
 .icon-yonghu,
