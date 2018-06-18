@@ -208,6 +208,8 @@ export default {
     //分页
     handleCurrentChange(val) {
       this.params.pageNo = val;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0
       this.houseRequest();
     },
      //收藏房源

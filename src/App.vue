@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 16:58:08
+ * @Last Modified time: 2018-06-18 19:30:37
  */
 <template>
   <div id="app">
@@ -33,7 +33,7 @@
     <!-- 脚步end -->
 
     <!-- 聊天 -->
-    <o-we-chat ref="oChat" :history="history"></o-we-chat>
+    <o-we-chat ref="oChat" :history="history" @afresh="afresh"></o-we-chat>
 
   </div>
 </template>
@@ -99,7 +99,7 @@ export default {
         this.isShowFooter = 1;
       }
     },
-    isLogin(val) {
+    isLogin() {
       //用户登录时初始化极光IM
       this.isLogin&&this.Jiguang_Init();
     }
@@ -111,6 +111,10 @@ export default {
     oWeChat
   },
   methods:{
+    //重新初始化极光IM
+    afresh() {
+      this.Jiguang_Init();
+    },
     //初始化极光IM
     Jiguang_Init() {
       let that = this;

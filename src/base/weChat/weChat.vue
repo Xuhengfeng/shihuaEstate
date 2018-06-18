@@ -115,6 +115,7 @@ export default {
       } else {
         this.isShowItContent = false;
       }
+      this.$store.commit('STARTCHAT', false);
     },
     // 打开聊天
     open() {
@@ -133,7 +134,8 @@ export default {
       if(JIM.isLogin()){
         this.Jiguang_sendMsg();
       }else{
-        console.log('未登录')
+        console.log('未登录');
+        this.$emit('afresh');
       }
     },
     // 发送消息

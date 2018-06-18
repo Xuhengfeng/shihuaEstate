@@ -108,16 +108,20 @@
 		</div>
 		<!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
+    <!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
 import oFly from "../../base/fly/fly";
+import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
-      houseTypeId: 11, //二手房
+      showbox: null, //显示对应的dialog
+      houseTypeId: 11,//二手房
       keyword: '',//搜索框关键词
       queryone: 0, //城区样式
       querytwo: 0, //片区样式
@@ -154,6 +158,12 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
+  computed: {
+    //用户登录
+    logined() {
+      return this.$store.state.logined;
+    }
+  },
   watch: {
     $route: {
       handler(val){
@@ -168,8 +178,15 @@ export default {
     }
   },
   methods: {
+    //显示对应的弹窗
+    changeDialog(num) {
+      this.showbox = num; 
+      this.$refs.odialog.show();
+    },
     //打开聊天
     startChat() {
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
       this.$store.commit('STARTCHAT', true);
     },
     //翻页
@@ -272,8 +289,9 @@ export default {
     }
   },
   components: {
-	oHeader,
-	oFly
+    oHeader,
+    oDialog,
+    oFly
   }
 };
 </script>

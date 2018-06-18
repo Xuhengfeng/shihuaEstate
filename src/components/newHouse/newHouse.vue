@@ -221,6 +221,8 @@ export default {
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   position: relative;
   border-bottom: 1px solid #cacaca;
+  box-sizing: border-box;
+  padding: 24px 0 0 35px;
   ul{
     >li{
       overflow: hidden;
