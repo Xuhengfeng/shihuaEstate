@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 17:47:44
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-19 14:46:11
  */
 import router from '../router/index'
 //同步处理
@@ -86,8 +86,19 @@ export default {
 	//开始聊天
 	STARTCHAT(state, payload) {
 		state.chat = payload;
+	},
+	//历史漫游消息
+	HISTORY(state, payload) {
+		state.history[payload.index] = payload.data;
+	},
+	//会话列表(好友列表)
+	FIREND(state, payload) {
+		state.conversations = payload;
+	},
+	//会话列表(添加好友)
+	ADDFIREND(state, payload) {
+		state.conversations.unshift(payload);
 	}
-	
 	
 
 }

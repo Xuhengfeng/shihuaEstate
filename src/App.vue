@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 19:30:37
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-19 14:31:11
  */
 <template>
   <div id="app">
@@ -33,7 +33,7 @@
     <!-- 脚步end -->
 
     <!-- 聊天 -->
-    <o-we-chat ref="oChat" :history="history" @afresh="afresh"></o-we-chat>
+    <o-we-chat ref="oChat" @afresh="afresh"></o-we-chat>
 
   </div>
 </template>
@@ -50,7 +50,6 @@ export default {
       isShowSide: 1, //显示1 隐藏0
       isShowFooter: 0, //显示1 隐藏0
       city: null,
-      history: [],//历史漫游消息
       ownId: null,//自己的id;
     };
   },
@@ -111,8 +110,10 @@ export default {
     oWeChat
   },
   methods:{
-    //重新初始化极光IM
+    //重新用户登录 
     afresh() {
+      this.$store.dispatch('getUserInfo');
+      //重新初始化IM
       this.Jiguang_Init();
     },
     //初始化极光IM
@@ -139,7 +140,7 @@ export default {
         .onSuccess(data => {
             this.Jiguang_userInfo();//用户信息
             this.Jiguang_syncConversation();//离线消息同步监听
-            this.Jiguang_conversation();//对话列表
+            this.Jiguang_conversation();//会话列表
             this.$refs.oChat.Jiguang_onMsg();//监听消息
         })
         .onFail(data => {});
@@ -157,12 +158,12 @@ export default {
     //用户获取极光IM会话列表
     Jiguang_conversation() {
       JIM.getConversation()
-        .onSuccess(data => {
-          // console.table(data);
-        })
-        .onFail(data => {
-          // console.log("会话列表失败:" + JSON.stringify(data));
-        });
+      .onSuccess(data => {
+        this.$store.commit('FIREND', data.conversations);
+      })
+      .onFail(data => {
+        console.log("会话列表失败:" + JSON.stringify(data));
+      });
     },
     //离线消息同步监听
     Jiguang_syncConversation(){
@@ -175,8 +176,9 @@ export default {
               item.content.val = 1;
             }
         })
-        this.history = data[0].msgs;
-        console.log(this.history)
+        let history ={data: data[0].msgs, index: 0};
+        //缓存历史漫游消息
+        this.$store.commit('HISTORY', history);
       });
     },
     _mapquerys(){
@@ -191,9 +193,8 @@ export default {
 					scity: JSON.parse(localStorage.selectCity),//用户选定城市
 				})
 				.then(response =>{
-				let newData = response.data.data;
-				//初始化待看清单列表
-				this.$store.commit('CHUSHIHUA', newData);
+          //初始化待看清单列表
+          this.$store.commit('CHUSHIHUA', response.data.data);
 				})
     }
   }

@@ -204,6 +204,9 @@ export default {
     changeshowone() {
       this.showBtnone = true;
     },
+    toSkip() {
+      
+    }
   },
   components: {
     oHeader,

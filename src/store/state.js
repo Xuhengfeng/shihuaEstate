@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:18 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 17:03:22
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-19 14:05:29
  */
 const state = {
 	AuthJiG: null,      //极光IM鉴权信息
@@ -12,5 +12,7 @@ const state = {
 	appinthouse:[],     //待看清单
 	contrastDetailList: [], //缓存对比清单详情
 	chat: false,        //开始聊天
+	conversations: [],  //会话列表(好友列表)
+	history: [],        //历史漫游消息
 }
 export default state;

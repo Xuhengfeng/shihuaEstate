@@ -71,7 +71,7 @@
 									<img :src="item.photo" @error="avatar"/>
 								</div>
 								<div class="direciton">
-									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a @click.stop="startChat()"></a></h2>
+									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a @click.stop="startChat(item)"></a></h2>
 									<div class="introduce">
                    	  <span class="word">{{item.deptName}}</span>
 										  <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
@@ -184,10 +184,24 @@ export default {
       this.$refs.odialog.show();
     },
     //打开聊天
-    startChat() {
+    startChat(item) {
+      //装饰item
+      let newItem = {
+        avatar: item.photo,
+        appkey:"c7964847d9d85d68b388e239",
+        name: item.emplName,
+        nickName: item.emplName,
+        username: item.emplName,
+      }
+
       //未登录用户提示弹窗登录
       if(!this.logined) return this.changeDialog(1);
+      
+      //打开聊天窗口
       this.$store.commit('STARTCHAT', true);
+
+      //添加好友
+      this.$store.commit('ADDFIREND', newItem);      
     },
     //翻页
     handleCurrentChange(val) {
@@ -305,6 +319,8 @@ export default {
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   position: relative;
   border-bottom: 1px solid #cacaca;
+  box-sizing: border-box;
+  padding: 24px 0 0 35px;
   ul{
     >li{
       overflow: hidden;
@@ -388,8 +404,8 @@ export default {
       }
       a{
         display: inline-block;
-        height: 20px;
-        width: 76px;
+        height: 22px;
+        width: 80px;
         background: url('../../imgs/chatInline.png') 0 0 no-repeat;
         vertical-align: middle;
         cursor: pointer;

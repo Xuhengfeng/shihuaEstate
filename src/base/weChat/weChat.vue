@@ -1,16 +1,15 @@
 <template>
 <div class="wechatBox">
- 
       <div class="rt-list" :class="isShowBroker?'slideUp':''">
             <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
             <ul>
-                <li :key="item" v-for="item in brokerTalks" @click="selectItem()">
-                    <div class="time">2018-12-02</div>
+                <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
+                    <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
                         <img src="./imgs/avatar.png">
                         <div>
-                            <h4>徐横峰</h4>
-                            <p>你好。。。</p>
+                            <h4>{{item.nickName}}</h4>
+                            <p>测试</p>
                         </div>   
                     </div>
                 </li>
@@ -23,20 +22,19 @@
       <div class="lt-content" :class="isShowBroker?'slideUp':''" >
         <!-- 显隐层 -->
         <div class="box" v-show="isShowItContent">
-          <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
+          <div class="title"><span>{{nowName}}</span><div class="close" @click="close()"></div></div>
               <div class="chatArea">
                   <ul>
-                      <template v-for="item in contents">
-                          <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                          <li class="chat-block" :class="item.content.val==1?'chat-block-left':'chat-block-right'">
+                      <template v-for="(item,index) in contents">
+                          <li :key="item.ctime_ms" class="chat-time">{{item.ctime_ms|formatTime}}</li>
+                          <li :key="index" class="chat-block" :class="item.content.val==1?'chat-block-left':'chat-block-right'">
                               <a href=""><img src="./imgs/avatar.png"></a>
                               <div class="chat-content">
-                                <!-- {{item.content.msg_body.text}} -->
                                   <div>{{item.content.msg_body.text}}</div>
                               </div>
                           </li>
                       </template>
-                      <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
+                      <!-- <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div> -->
                       <!-- 滚动到底部 -->
                       <p class="scroll"></p>
                   </ul>
@@ -65,20 +63,16 @@
 </template>
 <script>
 export default {
-  props: {
-    history: {//历史漫游消息
-      type: Array,
-      default: []
-    }
-  },
   data() {
     return {
-      brokerTalks: [1], //聊过的经纪人
+      brokerTalks: [],//取第一次用户登录进来时候的已存在的会话列表(极光帮我们做的缓存)  之后操作针对每次当前聊天所产生的会话列表 vuex缓存
       isShowBroker: false,
       isShowItContent: false,
       sendMsg: null, //发送消息
       contents: [],//聊天消息
       flag: false, //用来记住 聊天窗口是否被打开
+      nowName: null,//当前聊天者
+
     };
   },
   computed: {
@@ -86,12 +80,29 @@ export default {
     AuthJiG() {
       return this.$store.state.AuthJiG;
     },
-    //开始聊
+    //登录用户的信息
+    userInfo() {
+      return this.$store.state.LoginedUser;
+    },
+    //开始聊天
     chat() {
       return this.$store.state.chat;
+    },
+    //会话列表(好友列表)
+    conversations() {
+      return this.$store.state.conversations;
+    },
+    //历史漫游消息
+    history() {
+      return this.$store.state.history;
     }
   },
   watch: {
+    //vuex中缓存的会话列表  添加到当前的聊过的经纪人(会话列表)
+    conversations() {
+      this.brokerTalks = this.conversations;
+    },
+    //开始聊天
     chat() {
       this.chat&&this.open();
     }
@@ -100,10 +111,6 @@ export default {
     formatTime(val) {
       return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
     }
-  },
-  created() {
-    //历史漫游信息
-    this.contents = this.history;
   },
   methods: {
     //更多
@@ -133,17 +140,21 @@ export default {
     //发送
     sendBtn() {
       if(JIM.isLogin()){
+        console.log(this.brokerTalks)
         this.Jiguang_sendMsg();
       }else{
-        console.log('未登录');
         this.$emit('afresh');
       }
     },
     // 发送消息
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
+            //测试目标demo
             target_username:"13100000000",
             appkey: this.AuthJiG.appkey,
+            //目标经纪人
+            // target_username:"13100000000",
+            // appkey: this.userInfo.brokerAppKey,
             content: this.sendMsg,
             no_offline: false,
             no_notification: false,
@@ -159,14 +170,16 @@ export default {
                 ctime_ms: data.ctime_ms,
                 val: 2
             });
-            setTimeout(()=>{
-              //滚动底部
-              let boxcontent = document.querySelector(".scroll");
-                  boxcontent.scrollIntoView(false);
-            },100);
-
+            this.toBottom();
         })
         .onFail(data => {});
+    },
+    //滚动底部
+    toBottom() {
+      setTimeout(()=>{
+        let boxcontent = document.querySelector(".scroll");
+            boxcontent.scrollIntoView(false);
+      },100);
     },
     //用户实时聊天监听
     Jiguang_onMsg() {
@@ -226,8 +239,11 @@ export default {
           //data.message 描述
       });
     },
-    // 点击其中一项
-    selectItem() {
+    //点击其中一个聊天者
+    selectItem(item,index) {
+      this.nowName = item.username;
+      this.contents = this.history[index];
+      this.toBottom();
       this.open();
     }
   },
