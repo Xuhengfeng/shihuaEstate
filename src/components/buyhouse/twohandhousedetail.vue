@@ -101,7 +101,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"><</div>
+                     <div @click="changeNum(1)"></div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
@@ -214,7 +214,8 @@
                     <div class="visitTime"><i></i><span class="label">看房时间</span><span class="info">提前预约随时可看</span></div>
                   </div>
                   <div class="duibi">
-                      <div class="duibi_a">加入对比</div>
+                      <div class="duibi_a" @click="addCompare(twohandhousedetail)" v-if="!twohandhousedetail.isComparison">加入对比</div>
+                      <div class="duibi_a" @click="addCompare(twohandhousedetail)"  v-if="twohandhousedetail.isComparison">已加对比</div>
                       <div class="duibi_a">分享房源</div>
                   </div>
                   <div class="callpeople">联系经纪人</div>
@@ -245,6 +246,7 @@ import "../../../static/js/swiper-3.3.1.min.js";
 export default {
   data() {
     return {
+      showbox: null, //显示对应的dialog
       datas: "",
       num: 0,
       dialogVisible: false,
@@ -307,6 +309,38 @@ export default {
         }
       }
     },
+    //加入对比
+      addCompare(twohandhousedetail){
+        if(!this.logined) return this.$alert('用户未登录!');
+          if( this.$store.state.contrastList.length <= 3){
+            
+              this.$http.put(this.$url.URL.JOIN_CONTRAST,{
+                  houseId: twohandhousedetail.id,
+                   houseSdid: twohandhousedetail.sdid
+                })
+                .then(response =>{
+                  this.$refs.fly.drop(e.target);
+                  this.twohandhousedetail.isComparison = true
+                  this.compareHouse();
+                })
+          }else{
+              this.$alert('对比清单最多4个!', '添加失败', {
+                confirmButtonText: '确定'
+              });
+            }
+      },
+      //对比列表
+      compareHouse() {
+          this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST +"?pageNo="+1,{
+            scity:this.scity.value
+          })
+          .then(response =>{
+              let newData = response.data.data;
+              //添加数据
+              this.$store.commit('SHOWLISTTWO', newData);
+          })
+      },
+   
     //加入待看清单
     addContrast(item, e) {
        if(!this.logined) return this.$alert('用户未登录!');
@@ -386,6 +420,8 @@ export default {
     //切换房源
 	  toSkip(item) {
       let path = "/buyhouse/twohandhousedetail/" + item.sdid;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0
       this.$router.push({ path: path });
       this.render();
     },

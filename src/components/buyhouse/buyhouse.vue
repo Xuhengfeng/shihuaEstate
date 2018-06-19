@@ -126,7 +126,7 @@
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.houseTitle}}
-                    <span class="fr" @click.stop="collection(item,$event)">收藏</span>
+                    <!-- <span class="fr" @click.stop="collection(item,$event)">收藏</span> -->
                     <span class="contrast fr" @click.stop="addContrast(item, $event)">{{item.contentFlag?item.contentFlag:'加入对比'}}</span>
                   </div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
@@ -293,25 +293,25 @@ export default {
       this.$refs.odialog.show();
     },
     //收藏房源
-    collection(item,e) {
-      //未登录用户提示弹窗登录
-      if(!this.logined) return this.changeDialog(1);
-      //判断当前点击对象是否已收藏
-      if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ item.sdid)
-        .then(response => {
-            e.target.innerHTML = '已收藏'
-        });
-      }else{
-           this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+ item.sdid)
-        .then(response => {
-            e.target.innerHTML = '收藏'
-        });
-      }
-      this.collectionFlag = !this.collectionFlag;
-    },
+    // collection(item,e) {
+    //   //未登录用户提示弹窗登录
+    //   if(!this.logined) return this.changeDialog(1);
+    //   //判断当前点击对象是否已收藏
+    //   if(this.collectionFlag){
+    //      this.$http
+    //     .post(this.$url.URL.HOUSECOLLECTION_ADD +this.selectCity.value +"/"+ item.sdid)
+    //     .then(response => {
+    //         e.target.innerHTML = '已收藏'
+    //     });
+    //   }else{
+    //        this.$http
+    //     .post(this.$url.URL.HOUSECOLLECTION_CANCEL + this.selectCity.value +"/"+ item.sdid)
+    //     .then(response => {
+    //         e.target.innerHTML = '收藏'
+    //     });
+    //   }
+    //   this.collectionFlag = !this.collectionFlag;
+    // },
     //加入对比清单
     addContrast(item, e) {
       //未登录用户提示弹窗登录
