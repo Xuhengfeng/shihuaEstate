@@ -1,16 +1,16 @@
 <template>
 	<div>
 		<o-header :houseTypeId="houseTypeId" 
-              :keyword="keyword"
-              @query="query"></o-header>
+              :isShowQueryBox="false"
+              ></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置: 城市</ol>
 							<ol class="fl">
-								<li :key="index" :data-id="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.name}}</li>
+                <li class="title">位置: 城市</li>
+								<li :key="index" v-for="(item,index) in cityList" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.cityName}}</li>
 							</ol>
 						</li>
 					</ul>
@@ -85,7 +85,7 @@
 								</div> 
 							</li>
 						</ul>
-            <div class="noContent" v-show="!houseList.length">没有任何数据!</div>
+            <div class="noContent" v-show="!houseList.length">暂无数据!</div>
 					</div>
 
           <!-- 分页器 -->
@@ -100,7 +100,8 @@
                   layout="prev, pager, next"
                   prev-text="上一页"
                   next-text="下一页"
-                  :total="1000">
+                  :current-page.sync="params.pageNo"
+                  :total="querycount.count">
               </el-pagination>
           </div>
 				</div>
@@ -118,19 +119,18 @@ export default {
   data() {
     return {
       houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
-      keyword: '',//关键词
 
       list:["默认排序", "最新", "总价", "房屋单价", "面积"],
-      listone: [],
+      cityList: [],
       listtwo: [],
       listnine:["随时看房", "新上", "满五年", "世华独家"],
       num: 0,
       showBtn: false,
       showBtnone: false,
-      querycount: {
-        count: ""//二手房总数量
+      querycount: {//检索总数量
+        count: 0
       },
-      queryone: null, //二手房区域
+      queryone: 0, //二手房区域
       inputresult: null,
       inputresulttwo: null,
       inputone: "",
@@ -138,66 +138,65 @@ export default {
       inputthree: "",
       inputfour: "",
       params: {//这个是用来查询参数列表 不变的
-        areaId: null,
-        districtId: null,
-        houseDecor: "",
-        houseDirec: "",
-        houseFeature: "",
-        houseForm: "",
-        keyword: "",
-        cityCode:"",
-        maxBuildArea: null,
-        maxPrice: null,
-        minBuildArea: null,
-        minPrice: null,
         pageNo: 1,
         pageSize: null,
-        roomsNum: null,
-        scity: null,
-        useYear:null
+        cityCode: null,
+        scity: null
       },
-      page: 1,      
       houseList: [], //新房列表
+      cityCode: null,//用来拼接url地址
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
       contrastList: [],//对比清单列表
       collectionFlag: true, //收藏标识
     };
   },
   created() {
+    //初始化修正请求参数体
     this.params.scity = this.selectCity.value;
+    this.cityCode = this.selectCity.value;
+
     this.render(this.selectCity.value);
-  },
-  watch: {
-    $route: {
-      handler(val){
-        this.keyword = val.query.word;
-        this.houseRequest();
-      }
-    }
   },
   methods: {
     //翻页
     handleCurrentChange(val) {
-      this.page = val;
+      this.params.pageNo = val;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0
       this.houseRequest();
     },
     render(city) {
       //房源列表请求
       this.houseRequest();
+      //新房城市列表
+      this.newCityListRequest()
     },
     //房源列表请求
     houseRequest() {
-      this.keyword = this.$route.query.word;
-      let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
+      let url = this.cityCode
+              ? this.$url.URL.NEWBUILDING_QUERY+this.cityCode
+              : this.$url.URL.NEWBUILDING_QUERY+this.selectCity.value;
       this.$http
-      .get(this.$url.URL.NEWBUILDING_QUERY+this.selectCity.value, params)
+      .get(url, this.params)
       .then(response=>{
         this.houseList = response.data.data;
       })
     },
-    //搜索
-    query(item) {
-      this.$router.push({path: "/newHouse",query:{word: item.keyword}})
+    //新房城市列表
+    newCityListRequest() {
+      this.$http
+        .get(this.$url.URL.NEWBUILDING_INDEX)
+        .then(response=>{
+          response.data.data.unshift({cityCode:null,cityName:"不限",dataList:[]});
+          this.cityList = response.data.data;
+        })
+    },
+    //点击区域条件
+    address(item, index) {
+      this.queryone = index;
+      this.params.cityCode = item.cityCode;
+      this.cityCode = item.cityCode;
+      this.houseRequest(); 
     },
     changeshow() {
       this.showBtn = true;
@@ -205,6 +204,9 @@ export default {
     changeshowone() {
       this.showBtnone = true;
     },
+    toSkip() {
+      
+    }
   },
   components: {
     oHeader,
@@ -222,25 +224,26 @@ export default {
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   position: relative;
   border-bottom: 1px solid #cacaca;
-  >ul{
-    margin-top: 24px;
-    margin-left: 35px;
+  box-sizing: border-box;
+  padding: 24px 0 0 35px;
+  ul{
     >li{
       overflow: hidden;
       height: 25px;
       line-height: 25px;
       margin-bottom: 24px;
-      >ol{
+      ol{
         >li{
           cursor: pointer;
           float: left;
           text-align: left;
-          width: 100px;
+          width: 90px;
           white-space: nowrap;
         }
-        &:nth-of-type(1){
+        .title{
           width: 110px;
-          font-size: 14px;
+          font-size: 12px;
+          font-weight: 700;
         }
       }
     }
@@ -333,11 +336,10 @@ export default {
 
 //没有搜索到任何数据
 .noContent{
-  height: 280px;
-  line-height: 280px;
+  color: #5e7382;
+  height: 100px;
+  line-height: 100px;
   text-align: center;
-  color: #333333;
-  font-size: 20px;
 }
 .pageFooter{
   overflow: hidden;

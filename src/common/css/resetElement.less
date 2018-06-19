@@ -18,13 +18,20 @@
     border:1px solid #dcdfe6!important;
 }
 // 分页器
-.oPagination .active{
-    background: #ff4343!important;
-}
 .oPagination li:hover{
     color: #606266!important;
 }
+.oPagination .active{
+    color: #ffffff!important;
+    background: #ff4343!important;
+}
+.oPagination .active:hover{
+    color: #ffffff!important;
+}
 .oPagination .disabled{
+    display: none;
+}
+.oPagination button[disabled="disabled"]{
     display: none;
 }
 
@@ -48,7 +55,7 @@
     text-align: center;
     color: #000000;
 }
-.oTable  .cell{
+.oTable .cell{
     text-align: center;
 }
 

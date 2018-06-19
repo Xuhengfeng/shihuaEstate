@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-07 18:13:41 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-15 11:05:29
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-18 19:29:47
  */
 <template>
 	<div>
@@ -174,7 +174,7 @@
 		 created() {
 			this.render();
 		},
-			computed: {
+		computed: {
 			//获取用户登录状态
 			logined() {
 				return this.$store.state.logined;
@@ -183,7 +183,9 @@
 		methods: {
 			//翻页
 			handleCurrentChange(val) {
-				this.page = val;
+				this.params.pageNo = val;
+				document.body.scrollTop = 0;
+				document.documentElement.scrollTop = 0
 				this.houseRequest();
 			},
 			//收藏房源
@@ -229,10 +231,7 @@
 				this.collectionFlag = !this.collectionFlag;
 			},
 			toSkip(item) {
-				document.body.scrollTop = 0
-				document.documentElement.scrollTop = 0
-				let path = "/sellrentdetail/" + item.sdid;
-				this.$router.push({ path: path });
+				this.$router.push({ path: "/sellrentdetail/" + item.sdid});
 			},
 			render() {
 				//小区详情BUILDSECOND_HOUSELIST
@@ -260,7 +259,7 @@
 			//房源列表请求
 			houseRequest() {
 				this.keyword = this.$route.query.word;
-				let params = {'keyword': this.keyword, 'pageNo': this.page, 'scity': this.selectCity.value};
+				let params = {'keyword': this.keyword, 'scity': this.selectCity.value};
 				this.$http
 				.post(this.$url.URL.BUILDLIST, params)
 				.then(response=>{

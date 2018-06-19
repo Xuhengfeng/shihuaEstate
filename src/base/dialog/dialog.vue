@@ -1,8 +1,9 @@
 /*
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-14 14:48:56
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-16 02:57:52
+ * @描述: 登录 注册 组件封装
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
@@ -13,35 +14,36 @@
             <div class="panel_tab" v-if="showbox == 1">
               <!-- 账号密码登录 -->
               <div class="title">账号密码登录</div>
-              <div class="inputGroup">
-                <input type="text" 
+              <form class="inputGroup" autocomplete="off">
+                  <input type="text" 
                        v-model="phonenum1" 
                        placeholder="请输入手机号"
                        maxlength="11"/>
-                <input autocomplete="off" 
-                      :type="setpassword" 
+                  <input type="password" 
                       v-model="password1" 
                       maxlength="20" 
                       placeholder="请输入登录密码" 
-                      @focus="setPsd()"
                       @keyup.enter="login()"/>
                 <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                 <button @click="login()">登录</button>
                 <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
                 <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </div>
+              </form>
             </div>
             <!-- 手机号码注册 -->
             <div class="panel_tab" v-if="showbox == 2">
               <div class="title">手机号码注册</div>
-              <div class="inputGroup">
+               <form class="inputGroup" autocomplete="off">
                 <input type="text" 
                       v-model="phonenum2" 
                       placeholder="请输入手机号" 
                       maxlength="11"/>
-                <div class="AuthCode"><input type="text" 
-                                            v-model="msgcode1" 
-                                            placeholder="请输入验证码"/><button :class="disabled1?'sendCode':''" @click="sendMsgCode(1)">{{sendBtn1}}</button></div>
+                <div class="AuthCode">
+                <input type="text" 
+                       v-model="msgcode1" 
+                       placeholder="请输入验证码"/>
+                       <button :class="disabled1?'sendCode':''" @click="sendMsgCode(1)">{{sendBtn1}}</button>
+                </div>
                 <input type="password" 
                       v-model="password2" 
                       placeholder="请输入密码（最少六位，数字加字母）" 
@@ -51,27 +53,27 @@
                       placeholder="请再次输入密码" 
                       maxlength="11"/>
                 <div class="fontColor advantage">
-							    <el-checkbox v-model="agree">同意</el-checkbox><span style="color: red;font-size:14px">《世华服务协议》</span>
+							    <el-checkbox v-model="agree">同意</el-checkbox><span style="color:#ff4343;font-size:14px">《世华服务协议》</span>
                 </div>
                 <button @click="register()">注册</button>
                 <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
-              </div>
+              </form>
             </div>
             <!-- 手机快捷登陆 -->
             <div class="panel_tab" v-if="showbox == 3">
-                        <div class="title">手机快捷登陆</div>
-              <div class="inputGroup">
+              <div class="title">手机快捷登陆</div>
+              <form class="inputGroup" autocomplete="off">
                 <input type="text" v-model="phonenum3" placeholder="请输入手机号" maxlength="11">
-                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码"><button :class="disabled2?'sendCode':''" @click="sendMsgCode(2)">{{sendBtn2}}</button></div>
+                <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码" @keyup.enter="rapid()"><button :class="disabled2?'sendCode':''" @click="sendMsgCode(2)">{{sendBtn2}}</button></div>
                 <button @click="rapid()">登录</button>
                 <div class="dl_login"  @click="jump(1)">账号密码登录</div>
-                <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </div>
+                <div class="come_login">没有账号？<span style="color:#ff4343;cursor:pointer;" @click="jump(2)">去注册</span></div>
+              </form>
             </div>
             <!-- 找回密码 -->
             <div class="panel_tab" v-if="showbox == 4">
               <div class="title">找回密码</div>
-              <div class="inputGroup">
+              <form class="inputGroup" autocomplete="off">
                 <input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
                 <div class="AuthCode">
                   <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled3?'sendCode':''" @click="sendMsgCode(3)">{{sendBtn3}}</button>
@@ -80,11 +82,13 @@
                 <input type="password" v-model="password5" placeholder="再次输入密码">
                             <button @click="findPassword()">确定</button>
                             <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </div>
+              </form>
             </div>
         </div>
     </transition>
-    <div class="shadowlay" v-if="showFlag" @click="cancel()"></div>
+    <transition name="fade">
+      <div class="shadowlay" v-if="showFlag" @click="cancel()"></div>
+    </transition>
   </div>
 </template>
 <script>
@@ -129,12 +133,10 @@ export default {
       sendBtn2:'发送验证码',//手机快捷登录
       sendBtn3:'发送验证码',//忘记密码
       agree: false, //是否同意《世华服务协议》
+      times: 60,//计时器
     };
   },
   methods: {
-    setPsd(e) {
-      this.setpassword='password';
-    },
     //清空所有的文本框
     clearAllInput() {
       //登录的
@@ -171,8 +173,8 @@ export default {
       this.hide();
       this.clearAllInput();
     },
+    //切换
     tab(e){
-      console.log(e)
       e.keyCode=9;
     },
     //登录
@@ -188,7 +190,6 @@ export default {
             let code = res.data.data;
             sessionStorage.token = code;
             this.$message({message: "登录成功",type: 'success'});
-            console.log(1111)
             this.$store.dispatch("getUserInfo");
             this.phonenum1 = '';
             this.password1 = '';
@@ -200,19 +201,15 @@ export default {
     },
     //注册
     register() {
-      
-      //手机号码非空校验 正则校验
-      if(this.phonenum2 == undefined) {
-        return this.$alert('手机不能为空!');
-      }else if(!(/^1[34578]\d{9}$/).test(this.phonenum2)) {
-        return this.$alert('手机格式不对!');
-      }
-      
-      //其他校验
+      //校验
       switch(true){
-        case !this.phonenum2,!this.password2,!this.password3: return this.$alert("填写信息不能为空!");break;
-        case this.password2 !== this.password3: return this.$alert("两次密码不一致!");break;
-        case !this.agree: return this.$alert("请同意世华服务协议,谢谢配合!");break;
+        case !this.phonenum2: return this.$alert('手机不能为空!');
+        case !(/^1[34578]\d{9}$/).test(this.phonenum2): return this.$alert('手机格式不对!');
+        case !this.msgcode1: return this.$alert('验证码不能为空!');
+        case !this.password2,!this.password3: return this.$alert("密码不能为空!");
+        case !(/^[\w]{6,12}$/).test(this.password2)||!(/^[\w]{6,12}$/).test(this.password3): return this.$alert('密码的格式为6-12位，只能是字母、数字和下划线!');
+        case this.password2 !== this.password3: return this.$alert("两次密码不一致!");
+        case !this.agree: return this.$alert("请同意世华服务协议,谢谢配合!");
       }
       this.$http
         .post(this.$url.URL.USER_REGISTER, {
@@ -271,12 +268,13 @@ export default {
     },
     //倒计时
     countDown(num) {
-      let timer,times=60;
+      let timer;
+      this.times = 60;
       timer = setInterval(()=> {
-        times--;
-        if (times <= 0) {
-          times = 0; 
-          clearInterval(timer);
+        this.times--;
+        if (this.times <= 0) {
+          this.times = 0; 
+          clearInterval(timer);//清空定时器
           switch(num){
             case 1:this.sendBtn1='发送验证码';this.disabled1=false;break;
             case 2:this.sendBtn2='发送验证码';this.disabled2=false;break;
@@ -284,9 +282,9 @@ export default {
           }
         } else {
           switch(num){
-            case 1:this.sendBtn1=times + 's重试';this.disabled1=true;break;
-            case 2:this.sendBtn2=times + 's重试';this.disabled2=true;break;
-            case 3:this.sendBtn3=times + 's重试';this.disabled3=true;break;
+            case 1:this.sendBtn1=this.times + 's重试';this.disabled1=true;break;
+            case 2:this.sendBtn2=this.times + 's重试';this.disabled2=true;break;
+            case 3:this.sendBtn3=this.times + 's重试';this.disabled3=true;break;
           }
         }
       }, 1000);
@@ -329,9 +327,10 @@ export default {
         res.data.status!=1&&this.$alert(res.data.msg);
       });
     },
-    //num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
+    //弹框num 1去登入 2去注册 3点击手机快捷登录 4点击找回密码
     jump(num) {
-      this.clearAllInput();
+      this.clearAllInput();//清空文本域
+      this.times = 0;//清空定时器
       this.$emit("changeDialog", num);
     }
   }
@@ -390,10 +389,17 @@ export default {
   margin-top: 10px;
   border-radius: 3px;
   border: 1px solid #999999;
+  transition: border-color ease-in-out .3s,box-shadow ease-in-out .3s;
+}
+input:focus{
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
 }
 .inputGroup button {
   width: 100%;
-  background: red;
+  background: #ff4343;
   height: 45px;
   line-height: 43px;
   border-radius: 5px;
@@ -419,7 +425,7 @@ input::-webkit-input-placeholder {
 
 .AuthCode > button {
   float: right;
-  background: red;
+  background: #ff4343;
   width: 108px;
   height: 45px;
   line-height: 43px;
@@ -430,12 +436,7 @@ input::-webkit-input-placeholder {
   border: 0px;
   margin-top: 10px;
 }
-input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  float: left;
-  margin: 0 !important;
-}
+
 .dl_login {
   position: absolute;
   left: 50px;
@@ -462,20 +463,22 @@ input[type="checkbox"] {
   background: rgba(0, 0, 0, 0.3)!important;
 }
 
-// 动画
-.bounce-enter-active {
+//阴影层动画
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
+
+//注册和登录弹框动画
+.bounce-enter-active{
   animation: bounce-in .5s;
 }
 @keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  90%{
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0%{transform: scale(0)}
+  90%{transform: scale(1.05)}
+  100%{transform: scale(1)}
 }
 </style>
 

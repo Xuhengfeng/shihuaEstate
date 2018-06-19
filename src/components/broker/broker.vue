@@ -1,15 +1,24 @@
 
 <template>
 	<div>
-		<o-header :houseTypeId="houseTypeId"></o-header>
+		<o-header :houseTypeId="houseTypeId" 
+              :keyword="keyword"
+              :placeholder="'请输入经纪人姓名'"
+              @query="query"></o-header>
 		<div class="m-filter">
 			<div class="container">
 				<div class="filter">
 					<ul>
 						<li>
-							<ol class="fl quyu">位置: 区域</ol>
 							<ol class="fl">
-								<li v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
+                <li class="title">位置: 区域</li>
+								<li :key="index" v-for="(item, index) in citylist" :class="{querybtn:queryone==index}" @click="address(item, index)">{{item.name}}</li>
+							</ol>
+						</li>
+            <li>
+							<ol class="fl">
+                <li class="title">片区:</li>
+								<li :key="index" v-for="(item, index) in district" :class="{querybtn:querytwo==index}" @click="districtBtn(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
 					</ul>
@@ -51,7 +60,7 @@
 						</div> -->
 					</div>
 						<div class="resultDes">
-							<h2 class="total">共找到<span style="color: red;"> {{queryRentcount.count}} </span>位{{this.selectCity.name}}经纪人</h2>
+							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>位{{this.selectCity.name}}经纪人</h2>
 							<div class="listContentLine"></div>
 						</div>
 					
@@ -62,15 +71,12 @@
 									<img :src="item.photo" @error="avatar"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" @click="toSkip(item)" >{{item.emplName}} </div>
+									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a @click.stop="startChat(item)"></a></h2>
 									<div class="introduce">
-                   	 <span class="word">{{item.deptName}}</span>
-										 <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
-                     	 <span class="fr call">联系电话：{{item.phone}}</span>
-                     </div> 
-									<!-- <div class="introduce">
-									<span class="word">{{item.houseType}}   {{item.builtArea}}平米</span><span class="fr">{{item.houseType}}</span>
-									</div> -->
+                   	  <span class="word">{{item.deptName}}</span>
+										  <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
+                     	<span class="fr call">联系电话：{{item.phone}}</span>
+                  </div> 
 									<div class="introduce ">
 										<span class="intrspan one">销售达人</span>
 										<span class="intrspan two">销售达人</span>
@@ -80,68 +86,69 @@
 							</li>
 						</ul>
 					</div>
-					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
-					<!--分页器-->
-					<el-pagination
-           @current-change="handleCurrentChange"
-					  background
-					  layout="prev, pager, next"
-             prev-text="上一页"
-					   next-text="下一页"
-					  :total="1000"
-					  class="fr pagination">
-					</el-pagination>
+
+					<!-- 分页器 -->
+          <div class="pageFooter">
+              <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
+                <router-link to="home">世华易居网南宁二手房</router-link>>
+                <router-link to="buyhouse">南宁二手房</router-link>
+              </div>
+              <el-pagination class="fr oPagination"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :current-page.sync="params.pageNo"
+                  :total="querycount.count">
+              </el-pagination>
+          </div>
 				</div>
 			</div>
 		</div>
 		<!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
+    <!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
 import oFly from "../../base/fly/fly";
+import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
-      
-      houseTypeId: 11, //二手房
-      // list:["默认排序", "最新", "总价", "房屋单价", "面积"],
-      listone: [],
-      listtwo: [],
-      listthree: [],
-      // listnine:["随时看房", "新上", "满五年", "世华独家"],
-      num: 0,
+      showbox: null, //显示对应的dialog
+      houseTypeId: 11,//二手房
+      keyword: '',//搜索框关键词
+      queryone: 0, //城区样式
+      querytwo: 0, //片区样式
+      citylist: null,//城区
+      district: null,//片区
+      num: 0,//城区id
+      districtNum: 0,//片区id
       showBtn: false,
       showBtnone: false,
-      queryRentcount: {
-        //租房房总数量
-        count: ""
+      querycount: {//检索总数量
+        count: 0
       },
-      queryone: null, //租房房区域
       inputresult: null,
       inputresulttwo: null,
       inputone: "",
       inputtwo: "",
       inputthree: "",
       inputfour: "",
-      params: {
-        areaId: null,
-        districtId: null,
-        houseDecor: "",
-        houseDirec: "",
-        houseFeature: "",
-        houseForm: "",
-        keyword: "",
-        maxBuildArea: null,
-        maxRentPrice: null,
-        minBuildArea: null,
-        minRentPrice: null,
+      params: {//请求参数体
+        areaId: 1,
+        districtId: 1,
+        keyword: null,
         pageNo: 1,
         pageSize: null,
-        roomsNum: null,
-        scity: null
+        positiId: 0,
+        scity: null,
+        sortMode: null
       },
       broker: [], //经纪人列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -151,67 +158,128 @@ export default {
     this.params.scity = this.selectCity.value;
     this.render(this.selectCity.value);
   },
+  computed: {
+    //用户登录
+    logined() {
+      return this.$store.state.logined;
+    }
+  },
+  watch: {
+    $route: {
+      handler(val){
+        //初始化搜索框关键词
+        this.keyword = val.query.word;
+        //修正请求参数体
+        this.params.pageNo = 1;
+        this.params.keyword = val.query.word;
+        this.brokerRequest();
+        this.countRequest();
+      }
+    }
+  },
   methods: {
-     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.render(null, val);		
+    //显示对应的弹窗
+    changeDialog(num) {
+      this.showbox = num; 
+      this.$refs.odialog.show();
+    },
+    //打开聊天
+    startChat(item) {
+      //装饰item
+      let newItem = {
+        avatar: item.photo,
+        appkey:"c7964847d9d85d68b388e239",
+        name: item.emplName,
+        nickName: item.emplName,
+        username: item.emplName,
+      }
+
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
+      
+      //打开聊天窗口
+      this.$store.commit('STARTCHAT', true);
+
+      //添加好友
+      this.$store.commit('ADDFIREND', newItem);      
+    },
+    //翻页
+    handleCurrentChange(val) {
+      this.params.pageNo = val;
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0
+      this.brokerRequest();
     },
     avatar(item){
-      console.log(1111)
       item.photo = require('../../imgs/home/avatar.png')
     },
     toSkip(item) {
       let path = "/brokerdetail/" + item.id;
       this.$router.push({ path: path });
     },
-    render(city , num) {
+    render(city) {
       //请求经纪人的列表
-      this.$http
-        .post(this.$url.URL.BROKERS_LIST, {
-          scity: city,
-          pageNo: num
-        })
-        .then(response => {
-          this.broker = response.data.data;    
-          console.log(this.broker )        
-        });
-
+      this.brokerRequest();
       //获取搜索经纪人总数量
-      this.$http
-        .post(this.$url.URL.BROKERS_LISTCOUNT, {
-          scity: city,
-          pageNo: 1
-        })
-        .then(response => {
-          this.queryRentcount = response.data.data;
-        });
-
+      this.countRequest();
       //请求搜索条件
+      this.tagsRequest(city);
+    },
+    //搜索条件
+    tagsRequest(city) {
       this.$http
-        .get(this.$url.URL.AREA_DISTRICTS + city
-        ) //区域
+        .get(this.$url.URL.AREA_DISTRICTS + city) //区域
         .then(response => {
-          this.listone = response.data.data;
+          // 初始化城区和片区
+          this.citylist = response.data.data;
+          this.district = response.data.data[0].districts;
         });
     },
     //点击区域条件
     address(item, index) {
+      //修正城区
       this.queryone = index;
       this.params.areaId = item.id;
-      this.requestServerData(this.params);
-      this.requestCountData(this.params);
+      //修正片区
+      this.querytwo = 0;
+      this.district = item.districts;
+      //修正页数
+      this.params.pageNo = 1;
+      //请求
+      this.brokerRequest();
+      this.countRequest();
     },
-    //请求过滤搜索条件数据
-    requestServerData(params) {
-      this.$http.post(this.$url.URL.BROKERS_LIST, params).then(response => {
+    //点击片区
+    districtBtn(item, index) {
+      this.querytwo = index;
+      this.params.districtId = item.id;
+      this.params.pageNo = 1;
+      //请求
+      this.brokerRequest();
+      this.countRequest();
+    },
+    //房源列表请求
+    brokerRequest() {
+      this.keyword = this.$route.query.word;
+      this.params.keyword = this.$route.query.word;
+      let params = {'keyword': this.keyword, 'scity': this.selectCity.value};
+      let newParams = Object.assign({}, this.params, params);
+      this.$http
+      .post(this.$url.URL.BROKERS_LIST, newParams)
+      .then(response=>{
         this.broker = response.data.data;
+      })
+    },
+    //请求经纪人数量
+    countRequest() {
+      this.$http.post(this.$url.URL.BROKERS_LISTCOUNT, this.params).then(response => {
+        this.querycount = response.data.data;
       });
     },
-    //请求租房源数量
-    requestCountData(params) {
-      this.$http.post(this.$url.URL.BROKERS_LISTCOUNT, params).then(response => {
-        this.queryRentcount = response.data.data;
-      });
+    //搜索
+    query(item) {
+      this.params.keyword = item.keyword;
+      this.$router.push({path: "/broker",query:{word: item.keyword,type: 0}})
     },
     changeshow() {
       this.showBtn = true;
@@ -220,22 +288,24 @@ export default {
       this.showBtnone = true;
     },
     okbtnone(num) {
+      this.params.pageNo = 1;
       if (num == 1) {
-        this.params.minRentPrice = this.inputone;
-        this.params.maxRentPrice = this.inputtwo;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
+        this.params.minPrice = this.inputone;
+        this.params.maxPrice = this.inputtwo;
+        this.brokerRequest(); 
+        this.countRequest();
       } else {
-        this.params.minRentPrice = this.inputthree;
-        this.params.maxRentPrice = this.inputfour;
-        this.requestServerData(this.params);
-        this.requestCountData(this.params);
+        this.params.minPrice = this.inputthree;
+        this.params.maxPrice = this.inputfour;
+        this.brokerRequest(); 
+        this.countRequest();
       }
     }
   },
   components: {
-	oHeader,
-	oFly
+    oHeader,
+    oDialog,
+    oFly
   }
 };
 </script>
@@ -249,25 +319,26 @@ export default {
   box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.2);
   position: relative;
   border-bottom: 1px solid #cacaca;
-  >ul{
-    margin-top: 24px;
-    margin-left: 35px;
+  box-sizing: border-box;
+  padding: 24px 0 0 35px;
+  ul{
     >li{
       overflow: hidden;
       height: 25px;
       line-height: 25px;
       margin-bottom: 24px;
-      >ol{
+      ol{
         >li{
           cursor: pointer;
           float: left;
           text-align: left;
-          width: 100px;
+          width: 90px;
           white-space: nowrap;
         }
-        &:nth-of-type(1){
+        .title{
           width: 110px;
-          font-size: 14px;
+          font-size: 12px;
+          font-weight: 700;
         }
       }
     }
@@ -309,28 +380,56 @@ export default {
     height: 90px;
     flex-flow: column nowrap;
     justify-content: space-between;
-    >div:nth-of-type(1){
-      font-size: 22px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: bold;
-      cursor: pointer;
-      span{
-        color:rgba(0,0,0,0.5);
-        margin-left: 10px;
-        padding: 5px;
-        font-size: 10px;
-        border: 1px solid #cacaca;
-        visibility: hidden;
-        &:hover{
-          color: #000000;
-        }
+    h2{
+      .name{
+        color: rgb(85, 85, 85);
+        font-weight: 700;
+        float: left;
+        text-overflow: ellipsis;
+        font-size: 20px;
+        white-space: nowrap;
+        height: 32px;
+        line-height: 20px;
+        vertical-align: middle;
+        overflow: hidden;
+        margin-right: 10px;
+      }
+      .position{
+        background: #f1f1f1;
+        padding: 4px;
+        color: #888888;
+        margin-right: 5px;
+        border-radius: 2px;
+        font-size: 12px;
+      }
+      a{
+        display: inline-block;
+        height: 22px;
+        width: 80px;
+        background: url('../../imgs/chatInline.png') 0 0 no-repeat;
+        vertical-align: middle;
+        cursor: pointer;
       }
     }
   }
-  &:hover .direciton>div:nth-of-type(1) span{
-    visibility: visible;
-  }
 }
+
+//没有搜索到任何数据
+.noContent{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  color: #5e7382;
+  
+}
+.pageFooter{
+  overflow: hidden;
+  padding-top: 20px;
+}
+
+
 
 .m-checkbox {
   display: inline-block;
@@ -360,11 +459,6 @@ export default {
   font-size: 13px;
 }
 
-/*content部分css*/
-
-.content {
-  margin-top: 26px;
-}
 .leftContent {
   padding-bottom: 20px;
   overflow: hidden;
@@ -372,6 +466,10 @@ export default {
 .sidebar {
   width: 180px;
   margin-left: 60px;
+}
+
+.content {
+  margin-top: 26px;
 }
 .content .leftContent .orderFilter .orderTag {
   border-bottom: 2px solid red;
@@ -440,10 +538,6 @@ export default {
   font-size: 24px!important;
   color: rgba(239, 31, 31, 0.85);
   
-}
-.call{
-  position: relative;
-  right: 0px;
 }
 .grade{
   margin-left: 4px;

@@ -1,252 +1,249 @@
 <template>
 <div class="wechatBox">
-    <div class="rt-list">
-        <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
-        <ul v-show="isShowBroker">
-            <li v-for="item in brokerTalks" @click="selectItem()">
-                <div class="time">2018-12-02</div>
-                <div class="broker">
-                    <img src="./imgs/avatar.png">
-                    <div>
-                        <h4>徐横峰</h4>
-                        <p>你好。。。</p>
-                    </div>   
+      <div class="rt-list" :class="isShowBroker?'slideUp':''">
+            <div class="title" @click="upDown()"><div class="avatar"></div><span>在线咨询</span><div class="upDown" v-show="isShowBroker"></div></div>
+            <ul>
+                <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
+                    <div class="time">{{item.mtime|formatTime}}</div>
+                    <div class="broker">
+                        <img src="./imgs/avatar.png">
+                        <div>
+                            <h4>{{item.nickName}}</h4>
+                            <p>测试</p>
+                        </div>   
+                    </div>
+                </li>
+                <div class="noBrokers" v-if="!brokerTalks.length">
+                    <div>没有聊过的经纪人</div>
                 </div>
-            </li>
-            <div class="noBrokers" v-if="!brokerTalks.length">
-                <div>没有聊过的经纪人</div>
+            </ul>
+      </div>
+      <!-- 动画层 -->
+      <div class="lt-content" :class="isShowBroker?'slideUp':''" >
+        <!-- 显隐层 -->
+        <div class="box" v-show="isShowItContent">
+          <div class="title"><span>{{nowName}}</span><div class="close" @click="close()"></div></div>
+              <div class="chatArea">
+                  <ul>
+                      <template v-for="(item,index) in contents">
+                          <li :key="item.ctime_ms" class="chat-time">{{item.ctime_ms|formatTime}}</li>
+                          <li :key="index" class="chat-block" :class="item.content.val==1?'chat-block-left':'chat-block-right'">
+                              <a href=""><img src="./imgs/avatar.png"></a>
+                              <div class="chat-content">
+                                  <div>{{item.content.msg_body.text}}</div>
+                              </div>
+                          </li>
+                      </template>
+                      <!-- <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div> -->
+                      <!-- 滚动到底部 -->
+                      <p class="scroll"></p>
+                  </ul>
+              </div>
+              <div class="inputBox">
+                  <div class="textBox">
+                    <textarea cols="30" 
+                            rows="10" 
+                            style="resize: none"
+                            v-model="sendMsg"
+                            placeholder="点击输入你要咨询的问题..."
+                            @keyup.enter="sendBtn()">
+                    </textarea>
+                    <a class="im-input-pic" title="插入图片"><input type="file" @change="getFile"/></a>
+                    <div></div>
+                  </div>
+                  <div>
+                      <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
+                      <div class="sendBtn" @click="sendBtn()">发送</div>
+                  </div>
+              </div>
             </div>
-        </ul>
-    </div>
-    <div class="lt-content" v-show="isShowItContent">
-        <div class="title"><span>徐横峰</span><div class="close" @click="close()"></div></div>
-        <div class="box">
-            <div class="chatArea">
-                <ul>
-                    <template v-for="item in contents">
-                        <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                        <li class="chat-block" :class="item.val==1?'chat-block-left':'chat-block-right'">
-                            <a href=""><img src="./imgs/avatar.png"></a>
-                            <div class="chat-content">
-                                <div>{{item.content}}</div>
-                            </div>
-                        </li>
-                    </template>
-                    <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
-                    <!-- 滚动到底部 -->
-                    <p class="scroll"></p>
-                </ul>
-            </div>
-            <div class="inputBox">
-                <div class="textBox">
-                  <textarea cols="30" 
-                          rows="10" 
-                          style="resize: none"
-                          v-model="sendMsg"
-                          placeholder="点击输入你要咨询的问题..."
-                          @keyup.enter="sendBtn()">
-                  </textarea>
-                  <a class="im-input-pic" title="插入图片">插入图片</a>
-                </div>
-                <div>
-                    <a href="http://www.baidu.com">立即下载世华地产app,随时随地聊~</a>
-                    <div class="sendBtn" @click="sendBtn()">发送</div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </div>
+
 </div>    
 </template>
 <script>
 export default {
   data() {
     return {
-      brokerTalks: [1], //聊过的经纪人
+      brokerTalks: [],//取第一次用户登录进来时候的已存在的会话列表(极光帮我们做的缓存)  之后操作针对每次当前聊天所产生的会话列表 vuex缓存
       isShowBroker: false,
       isShowItContent: false,
       sendMsg: null, //发送消息
-      contents: [
-        //聊天消息
-        // { content: "fasdf asdf asdf", ctime_ms: null, val: 1 },
-        // { content: "fasdf asdf asdf", ctime_ms: null, val: 2 }
-      ],
-      flag: false //用来记住 聊天窗口是否被打开
+      contents: [],//聊天消息
+      flag: false, //用来记住 聊天窗口是否被打开
+      nowName: null,//当前聊天者
+
     };
   },
   computed: {
+    //极光IM
+    AuthJiG() {
+      return this.$store.state.AuthJiG;
+    },
     //登录用户的信息
     userInfo() {
       return this.$store.state.LoginedUser;
     },
-    //用户登录
-    isLogin() {
-      return this.$store.state.logined;
+    //开始聊天
+    chat() {
+      return this.$store.state.chat;
     },
-    //极光IM
-    AuthJiG() {
-        return this.$store.state.AuthJiG;
+    //会话列表(好友列表)
+    conversations() {
+      return this.$store.state.conversations;
+    },
+    //历史漫游消息
+    history() {
+      return this.$store.state.history;
     }
   },
   watch: {
-    isLogin() {
-        //用户登录时初始化极光IM
-        this.isLogin&&this.JiguangInit();
+    //vuex中缓存的会话列表  添加到当前的聊过的经纪人(会话列表)
+    conversations() {
+      this.brokerTalks = this.conversations;
+    },
+    //开始聊天
+    chat() {
+      this.chat&&this.open();
     }
   },
   filters: {
     formatTime(val) {
-        return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
-        // let date = new Date(val);
-        // let Y = date.getFullYear() + '-';
-        // let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-        // let D = date.getDate() + ' ';
-        // let h = date.getHours() + ':';
-        // let m = date.getMinutes() + ':';
-        // let s = date.getSeconds();
-        // return Y+M+D+h+m+s;
-        // if(hour < 6){console.log("凌晨好！")} 
-        // else if (hour < 9){console.log("早上好！")} 
-        // else if (hour < 12){console.log("上午好！")} 
-        // else if (hour < 14){console.log("中午好！")} 
-        // else if (hour < 17){console.log("下午好！")} 
-        // else if (hour < 19){console.log("傍晚好！")} 
-        // else if (hour < 22){console.log("晚上好！")} 
-        // console.log((new Date()).$format(val))
+      return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
     }
   },
-  created() {
-     //极光IM 实例化
-    window.JIM = new JMessage({ debug: true });
-    //用户刷新时初始化极光IM
-    let isLogin = this.$store.state.logined;
-    isLogin&&this.JiguangInit();
-  },
   methods: {
-    //初始化极光IM
-    JiguangInit() {
-      let that = this;
-        JIM.init({
-            appkey: this.AuthJiG.appkey,
-            random_str: this.AuthJiG.random_str,
-            signature: this.AuthJiG.signature,
-            timestamp: this.AuthJiG.timestamp,
-            flag: 1,
-        })
-        .onSuccess(data => {
-            that.JiguangLogin();//极光登录
-        })
-        .onFail(error => {});
-    },
-    //极光登录
-    JiguangLogin() {
-        JIM.login({
-            username: this.userInfo.easemobUsername,
-            password: this.userInfo.easemobPassword
-        })
-        .onSuccess(data => {
-            this.JiguangUserInfo();//用户信息
-            // this.JiguangConversation();//对话列表
-            this.JiguangOnMsg();//监听消息
-            this.JiguangSyncConversation();//离线消息同步监听
-        })
-        .onFail(data => {});
-    },
-    //用户获取极光IM信息
-    JiguangUserInfo() {
-      JIM.getUserInfo({
-        username: this.userInfo.easemobUsername,
-        appkey: this.AuthJiG.appkey
-      }).onSuccess(data => {
-        // console.log("获取用户Im信息成功：" + JSON.stringify(data));
-      });
-    },
-    //用户获取极光IM会话列表
-    JiguangConversation() {
-      JIM.getConversation()
-        .onSuccess(data => {
-          // console.table(data);
-        })
-        .onFail(data => {
-          // console.log("会话列表失败:" + JSON.stringify(data));
-        });
-    },
-    //离线消息同步监听
-    JiguangSyncConversation(){
-      JIM.onSyncConversation(data=> {
-          console.table('onSyncConversation: '+JSON.stringify(data));
-          // appendToDashboard('onSyncConversation: ' +JSON.stringify(data));
-      });
-    },
     //更多
     upDown() {
+      //经纪人列表
       this.isShowBroker = !this.isShowBroker;
       //上一次聊天窗口
       if (this.isShowBroker) {
-        if (this.flag) {
-          this.isShowItContent = true;
-        }
+        if (this.flag) this.isShowItContent = true;
       } else {
         this.isShowItContent = false;
       }
+      this.$store.commit('STARTCHAT', false);
     },
     // 打开聊天
     open() {
       this.isShowItContent = true;
+      this.isShowBroker = true;
       this.flag = true;
     },
     // 关闭聊天
     close() {
       this.isShowItContent = false;
       this.flag = false;
+      this.$store.commit('STARTCHAT', false);
     },
     //发送
     sendBtn() {
       if(JIM.isLogin()){
-        this.JiguangsendMsg();
+        console.log(this.brokerTalks)
+        this.Jiguang_sendMsg();
       }else{
-        this.JiguangInit();
+        this.$emit('afresh');
       }
     },
     // 发送消息
-    JiguangsendMsg() {
+    Jiguang_sendMsg() {
         JIM.sendSingleMsg({
+            //测试目标demo
             target_username:"13100000000",
             appkey: this.AuthJiG.appkey,
+            //目标经纪人
+            // target_username:"13100000000",
+            // appkey: this.userInfo.brokerAppKey,
             content: this.sendMsg,
             no_offline: false,
             no_notification: false,
             need_receipt: true
         })
         .onSuccess((data,msg) => {
+
             this.sendMsg = null;
             this.contents.push({
-                content: msg.content.msg_body.text,
+                content: {
+                  msg_body: {text: msg.content.msg_body.text}
+                },
                 ctime_ms: data.ctime_ms,
                 val: 2
             });
-            setTimeout(()=>{
-                let boxcontent = document.querySelector(".scroll");
-                    boxcontent.scrollIntoView(false);
-            },100)
+            this.toBottom();
         })
         .onFail(data => {});
     },
+    //滚动底部
+    toBottom() {
+      setTimeout(()=>{
+        let boxcontent = document.querySelector(".scroll");
+            boxcontent.scrollIntoView(false);
+      },100);
+    },
     //用户实时聊天监听
-    JiguangOnMsg() {
+    Jiguang_onMsg() {
       JIM.onMsgReceive(data => {
-        this.contents.push({
-            content: data.messages[0].content.msg_body.text,
+
+        this.contents.push({ 
+            content: {
+              msg_body: {text: data.messages[0].content.msg_body.text}
+            },
             ctime_ms: data.messages[0].content.create_time,
             val: 1
         });
         setTimeout(()=>{
-            let boxcontent = document.querySelector(".scroll");
-                boxcontent.scrollIntoView(false);
-        },100)
+          //滚动底部
+          let boxcontent = document.querySelector(".scroll");
+              boxcontent.scrollIntoView(false);
+        },100);
+
       });
     },
-    // 点击其中一项
-    selectItem() {
+    getFile(e) {
+      //构造图片FormData
+      let fd = new FormData();
+      let files = e.target.files || e.dataTransfer.files
+      if(!files[0]){
+        throw new Error('获取文件失败');
+      }
+      fd.append(files[0].name, files[0]);
+      //发送图片
+      this.Jiguang_sendPic(fd);
+    },
+    //发送图片
+    Jiguang_sendPic(fd) {
+      console.log(12121)
+      JIM.sendSinglePic({
+        target_username:"13100000000",
+        appkey: this.AuthJiG.appkey,
+        image: fd 
+      })
+      .onSuccess(data=> {
+        console.log(data);
+      })
+      .onFail(data=> {
+        console.log('error:' + JSON.stringify(data))
+      });
+    },
+    //获取资源(例如图片)
+    Jiguang_getResource() {
+      JIM.getResource({
+        'media_id' : '<media_id >',
+      }).onSuccess(data=> {
+          //data.code 返回码
+          //data.message 描述
+          //data.url 资源临时访问路径
+      }).onFail(data=> {
+          //data.code 返回码
+          //data.message 描述
+      });
+    },
+    //点击其中一个聊天者
+    selectItem(item,index) {
+      this.nowName = item.username;
+      this.contents = this.history[index];
+      this.toBottom();
       this.open();
     }
   },
@@ -258,11 +255,13 @@ export default {
   position: fixed;
   bottom: 0;
   right: 40px;
-  background: #ffffff;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.45);
-  .rt-list {
+   .rt-list {
     float: right;
     width: 240px;
+    margin-bottom: -400px;
+    background: #ffffff;
+    transition: all 0.3s ease;
     .title {
       height: 40px;
       line-height: 40px;
@@ -280,6 +279,7 @@ export default {
         height: 40px;
         background: url("./imgs/lianxi.png") no-repeat;
         background-position: 12px -108px;
+        cursor: pointer;
       }
       span {
         margin-right: 5px;
@@ -309,6 +309,7 @@ export default {
             border-radius: 50%;
             margin-right: 10px;
             background: url("./imgs/avatar.png") no-repeat center center;
+            cursor: pointer;
           }
           img + div {
             flex: 1;
@@ -343,41 +344,46 @@ export default {
     }
   }
   .lt-content {
+    overflow: hidden;
     float: right;
-    width: 380px;
-    border-right: 1px solid #ddd;
-    .title {
-      height: 40px;
-      line-height: 40px;
-      border-bottom: 1px solid #ddd;
-      span {
-        margin-left: 20px;
-        &::before {
-          content: "";
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          background: #4285f4;
-          margin-right: 10px;
+    margin-bottom: -400px; 
+    transition: all 0.3s ease;
+    .box{   
+      width: 380px;
+      border-right: 1px solid #ddd;
+      background: #ffffff;   
+      .title {
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #ddd;
+        span {
+          margin-left: 20px;
+          &::before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4285f4;
+            margin-right: 10px;
+          }
+        }
+        .close {
+          float: right;
+          width: 40px;
+          height: 20px;
+          margin-top: 10px;
+          background: url("./imgs/lianxi.png") no-repeat;
+          background-position: 12px -87px;
+          cursor: pointer;
         }
       }
-      .close {
-        float: right;
-        width: 40px;
-        height: 20px;
-        margin-top: 10px;
-        background: url("./imgs/lianxi.png") no-repeat;
-        background-position: 12px -87px;
-      }
-    }
-    .box{
-      height: 400px;
-      max-height: 400px;
       .chatArea {
         height: 270px;
         border-bottom: 1px solid #ddd;
         background: #f3f3f3;
+        box-sizing: border-box;
+        overflow: hidden;
         .chat-tophint{
           height: 12px;
           color: #aaa;
@@ -399,6 +405,7 @@ export default {
             height: 5px;
             background-color: rgba(125, 125, 125, 0.7);
             -webkit-border-radius: 6px;
+            border-radius: 6px;
           }
           .chat-time {
             padding: 0 10px;
@@ -415,12 +422,14 @@ export default {
               display: inline-block;
               border-radius: 50%;
               overflow: hidden;
+              cursor: pointer;
               img {
                 display: inline-block;
                 width: 34px;
                 height: 34px;
                 background: url("./imgs/avatar.png") no-repeat center center;
                 background-size: cover;
+                cursor: pointer;
               }
             }
             .chat-content {
@@ -476,7 +485,8 @@ export default {
         }
       }
       .inputBox {
-        height: 123px;
+        height: 120px;
+        background: #ffffff;
         .textBox{
           position: relative;
           padding: 10px 10px 23px 10px;
@@ -504,12 +514,17 @@ export default {
             width: 14px;
             height: 14px;
             text-indent: 999em;
-            overflow: hidden;
-            background: url('./imgs/lianxi.png') no-repeat 0 -72px;
+            background: red url('./imgs/lianxi.png') no-repeat 0 -72px;
             cursor: pointer;
+            input{
+              float: left;
+              opacity: 0;
+              width: 24px;
+            }
           }
         }
         div {
+          overflow: hidden;
           a {
             float: left;
             margin: 10px 0 0 10px;
@@ -535,5 +550,8 @@ export default {
       }
     }
   }
+}
+.slideUp{
+  margin-bottom: 0!important;
 }
 </style>

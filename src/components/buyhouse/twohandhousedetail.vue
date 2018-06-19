@@ -101,7 +101,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"></div>
+                     <div @click="changeNum(1)"><</div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
