@@ -1,11 +1,6 @@
 import API from '../common/js/url.js';
 import axios from 'axios';
-import Vue from 'vue'
-import {Message, MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.prototype.$alert = MessageBox.alert//弹出框
-Vue.prototype.$confirm = MessageBox.confirm//弹出框
-Vue.prototype.$message = Message//消息提示
+import router from '../router/index'
 
 //异步操作
 export default {
@@ -18,6 +13,9 @@ export default {
 		axios.post(API.URL.USER_LOGOUT)
 		.then(response => {
 			commit('LOGOUT');
+			//用户退出极光IM
+			window.JIM.loginOut();
+			router.push({path: "/"});
 		});
 	},
 	//获取最新用户信息(例如头像 昵称 等)
