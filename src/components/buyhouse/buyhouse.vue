@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-19 17:53:20
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-20 01:35:11
  */
 <template>
 	<div>
@@ -293,46 +293,44 @@ export default {
       this.$refs.odialog.show();
     },
     //收藏房源
-    // collection(item,e) {
-    //   //未登录用户提示弹窗登录
-    //   if(!this.logined) return this.changeDialog(1);
-    //   //判断当前点击对象是否已收藏
-    //   if(this.collectionFlag){
-    //      this.$http
-    //     .post(this.$url.URL.HOUSECOLLECTION_ADD +this.selectCity.value +"/"+ item.sdid)
-    //     .then(response => {
-    //         e.target.innerHTML = '已收藏'
-    //     });
-    //   }else{
-    //        this.$http
-    //     .post(this.$url.URL.HOUSECOLLECTION_CANCEL + this.selectCity.value +"/"+ item.sdid)
-    //     .then(response => {
-    //         e.target.innerHTML = '收藏'
-    //     });
-    //   }
-    //   this.collectionFlag = !this.collectionFlag;
-    // },
+    collection(item,e) {
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
+      //判断当前点击对象是否已收藏
+      if(this.collectionFlag){
+         this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_ADD +this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '已收藏'
+        });
+      }else{
+           this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + this.selectCity.value +"/"+ item.sdid)
+        .then(response => {
+            e.target.innerHTML = '收藏'
+        });
+      }
+      this.collectionFlag = !this.collectionFlag;
+    },
     //加入对比清单
     addContrast(item, e) {
       //未登录用户提示弹窗登录
       if(!this.logined) return this.changeDialog(1);
-      //判断当前点击对象是否已加入
-      if(JSON.stringify(this.contrastList).indexOf(JSON.stringify(item)) == '-1') {
-        //判断是否超过4条
-        if(this.contrastList.length >= 4){
-          if(item.contentFlag == '已加入对比') return; 
+      let payload = {
+        contrastList: this.refresh,
+        item: item
+      }
+      if(item.contentFlag == '已加入对比') {
+        return;
+      }else{
+        if(this.refresh.length<4){
+          this.$set(item, 'contentFlag', '已加入对比');
+          this.$refs.fly.drop(e.target);
+          this.$store.dispatch('addOne', payload);
+        }else{
           this.$alert('对比清单最多4个!', '添加失败', {
             confirmButtonText: '确定'
           });
-          
-        }else{
-          if(item.contentFlag == '已加入对比') return; 
-          this.contrastList.unshift(item);
-          this.$refs.fly.drop(e.target);
-          this.$set(item, 'contentFlag', '已加入对比');
-          let payload = {data: this.contrastList,item: item};
-          //添加一个
-          this.$store.dispatch('addOne', payload);
         }
       }
     },

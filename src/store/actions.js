@@ -1,6 +1,7 @@
 import API from '../common/js/url.js';
 import axios from 'axios';
 import router from '../router/index'
+import Vue from 'vue';
 
 //异步操作
 export default {
@@ -80,13 +81,20 @@ export default {
 	},
 	//添加一个到对比清单(发请求)
 	addOne({commit}, payload) {
-		let params = {
-			"houseId": payload.item.id,
-			"houseSdid": payload.item.sdid
+		if(payload.contrastList.length >= 4){
+			Vue.prototype.$alert('对比清单最多4个!', '添加失败', {
+				confirmButtonText: '确定'
+			});
+		}else{
+			let params = {
+				"houseId": payload.item.id,
+				"houseSdid": payload.item.sdid
+			}
+			axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {
+				payload.contrastList.unshift(payload.item);
+				this.dispatch('showlist', payload.contrastList);
+			});
 		}
-		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {
-			this.dispatch('showlist', payload.data);
-		});
-	},
+	}
 }
 
