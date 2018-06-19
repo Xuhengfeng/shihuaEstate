@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 01:19:01
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-19 17:53:20
  */
 <template>
 	<div>
@@ -330,8 +330,9 @@ export default {
           this.contrastList.unshift(item);
           this.$refs.fly.drop(e.target);
           this.$set(item, 'contentFlag', '已加入对比');
-          this.$store.dispatch('addOne', item);
-          this.$store.dispatch('showlist', this.contrastList);
+          let payload = {data: this.contrastList,item: item};
+          //添加一个
+          this.$store.dispatch('addOne', payload);
         }
       }
     },

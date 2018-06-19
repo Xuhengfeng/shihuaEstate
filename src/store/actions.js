@@ -56,14 +56,14 @@ export default {
 		})
 	},
 	//显示对比列表
-	showlist({commit}, data) {
+	showlist({commit}, payload) {
 		let sdidStr = '';
 		let city = JSON.parse(localStorage.selectCity).value;
-			data.forEach((item)=> {
-				sdidStr += item.sdid+'-';
-			});
+		payload.forEach((item)=> {
+			sdidStr += item.sdid+'-';
+		});
 		//对比列表清单
-		commit('SHOWLIST', data);
+		commit('SHOWLIST', payload);
 		//对比列表详情
 		axios.get(API.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then((response) => {
 			commit('SHOWDEITALLIST', response.data.data);
@@ -81,12 +81,14 @@ export default {
 		commit('DELETETWO', item);
 	},
 	//添加一个到对比清单(发请求)
-	addOne({commit}, item) {
+	addOne({commit}, payload) {
 		let params = {
-			"houseId": item.id,
-			"houseSdid": item.sdid
+			"houseId": payload.item.id,
+			"houseSdid": payload.item.sdid
 		}
-		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {});
+		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {
+			this.dispatch('showlist', payload.data);
+		});
 	},
 }
 
