@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-19 21:59:53
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-20 18:30:29
  */
 //同步处理
 export default {
@@ -89,6 +89,14 @@ export default {
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
 		state.conversations.push(payload);
+	},
+	//注册极光
+	Jiguang_register(state, payload) {
+		JIM.register(payload)
+		.onSuccess(data=> {
+			console.log(data);
+		})
+		.onFail(data=> {});
 	}
 	
 

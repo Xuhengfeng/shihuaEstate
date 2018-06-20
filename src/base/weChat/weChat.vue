@@ -6,7 +6,7 @@
                 <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
                     <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
-                        <div class="img"><img src="./imgs/avatar.png"></div>
+                        <div class="img"><img :src="item.avatar"></div>
                         <div>
                             <h4>{{item.nickName}}</h4>
                             <p>测试</p>
@@ -25,20 +25,22 @@
           <div class="title"><span>{{nowName}}</span><div class="close" @click="close()"></div></div>
               <div class="chatArea">
                   <ul>
-                      <template v-for="(item,index) in contents">
-                          <li :key="item.ctime_ms" class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                          <li :key="index" class="chat-block" :class="item.content.val==2?'chat-block-left':'chat-block-right'">
+                      <template v-for="item in contents">
+                          <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
+                          <li class="chat-block" :class="item.content.from_id==ownId?'chat-block-right':'chat-block-left'">
                               <a href=""><img src="./imgs/avatar.png"></a>
                               <div class="chat-content">
                                   <!-- 内容 -->
-                                  <div v-if="!item.isPic">{{item.content.msg_body.text}}</div>
+                                  <div>{{item.content.msg_body.text?item.content.msg_body.text:''}}</div>
                                   
                                   <!-- 图片 -->
-                                  <img :src="item.url" v-if="item.isPic" alt="图片">
+                                  <img class="chatPic" v-if="item.content.msg_type=='image'" :src="item.url?item.url:item.content.msg_body.media_id"  alt="图片" >
+                                  {{'测试图片'+item.url}}
                               </div>
                           </li>
                       </template>
-                      <!-- <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div> -->
+                      
+                      <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
                       <!-- 滚动到底部 -->
                       <p class="scroll"></p>
                   </ul>
@@ -76,7 +78,7 @@ export default {
       contents: [],//聊天消息
       flag: false, //用来记住 聊天窗口是否被打开
       nowName: null,//当前聊天者
-
+      ownId: null
     };
   },
   computed: {
@@ -102,7 +104,10 @@ export default {
     }
   },
   watch: {
-    //vuex中缓存的会话列表  添加到当前的聊过的经纪人(会话列表)
+    userInfo() {
+      this.ownId = this.userInfo.easemobUsername;
+    },
+    //会话列表
     conversations() {
       this.brokerTalks = this.conversations;
     },
@@ -144,13 +149,12 @@ export default {
     //发送
     sendBtn() {
       if(JIM.isLogin()){
-        console.log(this.brokerTalks)
         this.Jiguang_sendMsg();
       }else{
         this.$emit('afresh');
       }
     },
-    // 发送消息 val 的1表示左边,2表示右边
+    // 发送消息
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             //测试目标demo
@@ -168,10 +172,10 @@ export default {
             this.sendMsg = null;
             this.contents.push({
                 content: {
-                  msg_body: {text: msg.content.msg_body.text}
+                  msg_body: {text: msg.content.msg_body.text},
+                  from_id: this.userInfo.easemobUsername
                 },
                 ctime_ms: data.ctime_ms,
-                val: 2,
                 isPic: false
             });
             this.toBottom();
@@ -183,9 +187,9 @@ export default {
       setTimeout(()=>{
         let boxcontent = document.querySelector(".scroll");
             boxcontent.scrollIntoView(false);
-      },100);
+      },500);
     },
-    //用户实时聊天监听
+    //用户实时聊天消息监听
     Jiguang_onMsg() {
       JIM.onMsgReceive(data => {
         this.contents.push({ 
@@ -193,25 +197,16 @@ export default {
               msg_body: {text: data.messages[0].content.msg_body.text}
             },
             ctime_ms: data.messages[0].content.create_time,
-            val: 1
         });
-        setTimeout(()=>{
-          //滚动底部
-          let boxcontent = document.querySelector(".scroll");
-              boxcontent.scrollIntoView(false);
-        },100);
-
+        this.toBottom();
       });
     },
     getFile(e) {
       //构造图片FormData
       let fd = new FormData();
       let files = e.target.files || e.dataTransfer.files
-      if(!files[0]){
-        throw new Error('获取文件失败');
-      }
+      if(!files[0]) throw new Error('获取文件失败');
       fd.append(files[0].name, files[0]);
-      //发送图片
       this.Jiguang_sendPic(fd);
     },
     //发送图片
@@ -220,46 +215,37 @@ export default {
         target_username:"13100000000",
         appkey: this.AuthJiG.appkey,
         image: fd,
-        msg_type: 'image'
+        nead_receipt: true
       })
-      .onSuccess(data=> {
-        //获取图片
-        this.Jiguang_getResource();
+      .onSuccess((data, msg)=> {
+        this.Jiguang_getResource(msg);
       })
-      .onFail(data=> {
-        console.log('error:' + JSON.stringify(data))
-      });
+      .onFail(data=> {});
     },
     //获取资源(例如图片)
-    Jiguang_getResource() {
+    Jiguang_getResource(msg) {
       JIM.getResource({
-        'media_id' : 'qiniu/image/j/CB2C7EF9E099ECAD1767C88C8BFA95D3.jpg',
+        'media_id': msg.content.msg_body.media_id,
       }).onSuccess(data=> {
-        this.contents.push({ 
-            
-            ctime_ms: data.messages[0].content.create_time,
-            url: data.url,
-            isPic: true //是否有图片
-        });
-        console.log(data)
-        console.log(data.url)
-          //data.code 返回码
-          //data.message 描述
-          //data.url 资源临时访问路径
-      }).onFail(data=> {
-          //data.code 返回码
-          //data.message 描述
-      });
+          msg.url = data.url;
+          msg.ctime_ms = msg.content.create_time;
+          this.contents.push(msg);
+          this.toBottom();
+      }).onFail(data=> {});
     },
     //点击其中一个聊天者
     selectItem(item,index) {
       this.nowName = item.username;
       this.contents = this.history[index];
+      let payload = {
+        data: this.history[index]?this.history[index]:[],
+        index: index
+      }
+      this.$store.commit('HISTORY',payload);
       this.toBottom();
       this.open();
     }
-  },
-  mounted() {}
+  }
 };
 </script>
 <style lang="less">
@@ -326,6 +312,7 @@ export default {
               height: 40px;
               border-radius: 50%;
               background: url("./imgs/avatar.png") no-repeat center center;
+              background-size: cover; 
             }
             &::before{
               position: absolute;
@@ -468,6 +455,10 @@ export default {
               border-radius: 5px;
               word-break: break-all;
               background: #ffffff;
+              .chatPic{
+                max-width: 120px;
+                background: #f5f5f5;
+              }
             }
           }
           .chat-block-left {

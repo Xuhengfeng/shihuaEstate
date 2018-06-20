@@ -202,6 +202,8 @@ export default {
 
       //添加好友
       this.$store.commit('ADDFIREND', newItem);      
+      //经纪人注册极光
+      
     },
     //翻页
     handleCurrentChange(val) {

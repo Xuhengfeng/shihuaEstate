@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-19 21:56:59
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-20 16:43:29
  */
 <template>
   <div id="app">
@@ -49,8 +49,7 @@ export default {
       isShowTop:  0, //显示1 隐藏0
       isShowSide: 1, //显示1 隐藏0
       isShowFooter: 0, //显示1 隐藏0
-      city: null,
-      ownId: null,//自己的id;
+      city: null
     };
   },
   created() {
@@ -58,8 +57,9 @@ export default {
     this.$store.commit('FIRSTSTATUS');
     this._mapquerys();
 
-    //极光IM 全局挂载
+    //极光IM 全局挂载 刷新
     window.JIM = new JMessage({debug: true});
+    this.isLogin&&this.afresh();
   },
   computed: {
     //登录用户的信息
@@ -149,7 +149,6 @@ export default {
         appkey: this.AuthJiG.appkey
       }).onSuccess(data => {
         console.log("获取用户Im信息成功：" + JSON.stringify(data));
-        this.ownId = 15857009521;
       });
     },
     //用户获取极光IM会话列表
@@ -165,14 +164,6 @@ export default {
     //离线消息同步监听
     Jiguang_syncConversation(){
       JIM.onSyncConversation(data=> {
-        //扩展属性
-        data[0].msgs.forEach(item=>{
-            if(item.content.from_id == this.ownId){
-              item.content.val = 2;
-            }else{
-              item.content.val = 1;
-            }
-        })
         let history ={data: data[0].msgs, index: 0};
         //缓存历史漫游消息
         this.$store.commit('HISTORY', history);
