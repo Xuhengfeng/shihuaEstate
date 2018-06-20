@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-19 14:31:11
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-19 21:56:59
  */
 <template>
   <div id="app">
@@ -54,28 +54,25 @@ export default {
     };
   },
   created() {
-    //初始化
+    //初始化vuex
     this.$store.commit('FIRSTSTATUS');
     this._mapquerys();
 
-    // 极光IM 全局挂载
-    window.JIM = new JMessage({ debug: true });
-    //用户刷新时初始化极光IM
-    let isLogin = this.$store.state.logined;
-    isLogin&&this.Jiguang_Init();
+    //极光IM 全局挂载
+    window.JIM = new JMessage({debug: true});
   },
   computed: {
     //登录用户的信息
     userInfo() {
       return this.$store.state.LoginedUser;
     },
-    //用户登录
-    isLogin() {
-      return this.$store.state.logined;
-    },
     //极光IM
     AuthJiG() {
       return this.$store.state.AuthJiG;
+    },
+    //是否登录
+    isLogin() {
+      return this.$store.state.logined;
     }
   },
   watch: {
@@ -98,8 +95,8 @@ export default {
         this.isShowFooter = 1;
       }
     },
+    //是否登录
     isLogin() {
-      //用户登录时初始化极光IM
       this.isLogin&&this.Jiguang_Init();
     }
   },
@@ -110,7 +107,7 @@ export default {
     oWeChat
   },
   methods:{
-    //重新用户登录 
+    //聊天掉线重新用户登录 
     afresh() {
       this.$store.dispatch('getUserInfo');
       //重新初始化IM

@@ -1,11 +1,7 @@
 import API from '../common/js/url.js';
 import axios from 'axios';
-import Vue from 'vue'
-import {Message, MessageBox, Dialog,Button, Pagination} from 'element-ui';//导入elementjs
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.prototype.$alert = MessageBox.alert//弹出框
-Vue.prototype.$confirm = MessageBox.confirm//弹出框
-Vue.prototype.$message = Message//消息提示
+import router from '../router/index'
+import Vue from 'vue';
 
 //异步操作
 export default {
@@ -18,6 +14,9 @@ export default {
 		axios.post(API.URL.USER_LOGOUT)
 		.then(response => {
 			commit('LOGOUT');
+			//用户退出极光IM
+			window.JIM.loginOut();
+			router.push({path: "/"});
 		});
 	},
 	//获取最新用户信息(例如头像 昵称 等)
@@ -56,14 +55,14 @@ export default {
 		})
 	},
 	//显示对比列表
-	showlist({commit}, data) {
+	showlist({commit}, payload) {
 		let sdidStr = '';
 		let city = JSON.parse(localStorage.selectCity).value;
-			data.forEach((item)=> {
-				sdidStr += item.sdid+'-';
-			});
+		payload.forEach((item)=> {
+			sdidStr += item.sdid+'-';
+		});
 		//对比列表清单
-		commit('SHOWLIST', data);
+		commit('SHOWLIST', payload);
 		//对比列表详情
 		axios.get(API.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then((response) => {
 			commit('SHOWDEITALLIST', response.data.data);
@@ -81,12 +80,21 @@ export default {
 		commit('DELETETWO', item);
 	},
 	//添加一个到对比清单(发请求)
-	addOne({commit}, item) {
-		let params = {
-			"houseId": item.id,
-			"houseSdid": item.sdid
+	addOne({commit}, payload) {
+		if(payload.contrastList.length >= 4){
+			Vue.prototype.$alert('对比清单最多4个!', '添加失败', {
+				confirmButtonText: '确定'
+			});
+		}else{
+			let params = {
+				"houseId": payload.item.id,
+				"houseSdid": payload.item.sdid
+			}
+			axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {
+				payload.contrastList.unshift(payload.item);
+				this.dispatch('showlist', payload.contrastList);
+			});
 		}
-		axios.put(API.URL.JOIN_CONTRAST, params).then((response) => {});
-	},
+	}
 }
 

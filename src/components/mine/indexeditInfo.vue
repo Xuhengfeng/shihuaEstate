@@ -30,9 +30,9 @@
             <div class="size">
                 <div class="size-title">预览</div>
                 <div class="size-style" ref="size-style">
-                    <div><img :src="dataUrl" v-if="isShowImgs"><span>120px*120px</span></div>
-                    <div><img :src="dataUrl" v-if="isShowImgs"><span>80px*80px</span></div>
-                    <div><img :src="dataUrl" v-if="isShowImgs"><span>34px*34px</span></div>
+                    <div :key="index" v-for="(item,index) in size" @click="selectPic(index)" :class="selectNum==index?'borderColor':''">
+                        <img :src="dataUrl" v-if="isShowImgs" ><span>{{item}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,7 +67,9 @@
         return{
             menu: ['上传头像','修改昵称','修改密码'],
             num: 0,
+            size: ['120px*120px','80px*80px','34px*34px'],
             dataUrl: null, //图片
+            selectNum: null,
             isShowImgs: false,//不同格式的图片
             username: null,//用户昵称
             oldpsw: null,//旧密码
@@ -82,6 +84,7 @@
             //预览图清空
             this.dataUrl = null;
             this.isShowImgs = false;
+            this.selectNum = null;
         },
         // 修改用户名
         saveUsername() {
@@ -116,25 +119,27 @@
         // 上传头像
         getFile(e) {
             let files = e.target.files || e.dataTransfer.files
-            this.createImg(files);
+            this.base64Img(files);
         },
-        createImg(file) {           
+        base64Img(file) {           
             //判断是否支持
             if (!file || !window.FileReader) return;
             if (/^image/.test(file[0].type)) {
-                // 创建一个reader
-                var reader = new FileReader();
-                // 将图片将转成 base64 格式
+                //创建一个reader
+                let reader = new FileReader();
+                //将图片将转成 base64 格式
                 reader.readAsDataURL(file[0]);
-
                 // 读取成功后的回调
                 reader.onload =  (e)=> {
                     this.dataUrl = e.target.result;
                     this.isShowImgs = true;
-                    // 上传图片请求
-                    this.imgUploadRequest(e.target.result);
                 }
             }
+        },
+        selectPic(index) {
+            this.selectNum = index;
+            //上传图片请求
+            this.imgUploadRequest(this.dataUrl);
         },
         imgUploadRequest(code) {
             let params = {base64Image:code};
@@ -233,7 +238,11 @@
                 position: relative;
                 background: #dadadb;
                 margin-right: 35px;
-                img{width: 100%;height: 100%}
+                img{
+                    width: 100%;
+                    height: 100%;
+                    vertical-align: top;
+                }
                 &:nth-of-type(1){
                     width: 120px;
                     height: 120px;
@@ -275,8 +284,18 @@
     }
 }
 
+//高亮样式
 .bgColor{
 	background: red!important;
 	color: #ffffff;
+}
+.borderColor::after{
+    content: '';
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 1px solid #ff4343;
 }
 </style>

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-05 16:10:12
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-20 01:51:33
  */
 <template>
 	<div>
@@ -10,7 +10,7 @@
     <div class="section container">
         <!-- 左侧main内容 -->
         <div class="main">
-            <h3>{{twohandhousedetail.houseTitle}}</h3>
+            <h3>{{housedetail.houseTitle}}</h3>
             <div>世华易居真房源 <span>更多房源信息请联系经纪人</span></div>
             <div class="one">
               <div class="pc-slide">
@@ -19,7 +19,7 @@
                     <a class="arrow-left" href="#"></a>
                     <a class="arrow-right" href="#"></a>
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide " v-for="item in twohandhousedetail.housePicList">
+                      <div class="swiper-slide " v-for="item in housedetail.housePicList">
                           <img :src="item">
                       </div>
                     </div>
@@ -30,7 +30,7 @@
                   <a class="arrow-right" href="#"></a>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in twohandhousedetail.housePicList">
+                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList">
                           <img :src="item">
                       </div>
                     </div>
@@ -51,17 +51,17 @@
                       <div class="name">基本属性</div>
                       <div class="contents">
                         <ul>
-                          <li><span class="label">房屋户型</span>{{twohandhousedetail.houseType}}</li>
-                          <li><span class="label">所在楼层</span>{{twohandhousedetail.houseForm}} (共{{twohandhousedetail.floorNum}}层)</li>
-                          <li><span class="label">建筑面积</span>{{twohandhousedetail.builtArea}}㎡</li>
-                          <li><span class="label">户型结构</span>{{twohandhousedetail.houseForm}}</li>
+                          <li><span class="label">房屋户型</span>{{housedetail.houseType}}</li>
+                          <li><span class="label">所在楼层</span>{{housedetail.houseForm}} (共{{housedetail.floorNum}}层)</li>
+                          <li><span class="label">建筑面积</span>{{housedetail.builtArea}}㎡</li>
+                          <li><span class="label">户型结构</span>{{housedetail.houseForm}}</li>
                           <li><span class="label">套内面积</span></li>
-                          <li><span class="label">建筑类型</span>{{twohandhousedetail.houseRight}}</li>
-                          <li><span class="label">房屋朝向</span>{{twohandhousedetail.houseDirection}}</li>
-                          <li><span class="label">建筑结构</span>{{twohandhousedetail.houseStruc}}</li>
-                          <li><span class="label">装修情况</span>{{twohandhousedetail.houseDecoration}}</li>
+                          <li><span class="label">建筑类型</span>{{housedetail.houseRight}}</li>
+                          <li><span class="label">房屋朝向</span>{{housedetail.houseDirection}}</li>
+                          <li><span class="label">建筑结构</span>{{housedetail.houseStruc}}</li>
+                          <li><span class="label">装修情况</span>{{housedetail.houseDecoration}}</li>
                           <li><span class="label">梯户比例</span></li>
-                          <li><span class="label">配备电梯</span>{{twohandhousedetail.elevator}}</li>
+                          <li><span class="label">配备电梯</span>{{housedetail.elevator}}</li>
                           <li><span class="label">产权年限</span></li>
                         </ul>
                       </div>
@@ -78,9 +78,9 @@
                       <div>收藏房源(人)</div> 
                     </div>
                     <div class="num">
-                      <div>{{twohandhousedetail.day7Num }}</div>
-                      <div>{{twohandhousedetail.day30Num }}</div>
-                      <div>{{twohandhousedetail.collectNum }}</div>
+                      <div>{{housedetail.day7Num }}</div>
+                      <div>{{housedetail.day30Num }}</div>
+                      <div>{{housedetail.collectNum }}</div>
                     </div>
                   </div>
 
@@ -172,35 +172,35 @@
         <!-- 右侧sidebar -->
         <div class="side">
             	<div class="btn">
-                <div @click="addCollection($event)" v-if="!twohandhousedetail.isCollect" >收藏房源</div>
-                 <div @click="addCollection($event)" v-if="twohandhousedetail.isCollect" >已收藏</div>
-                <div  @click.stop="addContrast(twohandhousedetail, $event)" v-if="!twohandhousedetail.isAppoint">预约看房</div> 
-                <div  @click.stop="addContrast(twohandhousedetail, $event)" v-if="twohandhousedetail.isAppoint">已预约</div> 
+                <div @click="addCollection($event)" v-if="!housedetail.isCollect" >收藏房源</div>
+                <div @click="addCollection($event)" v-if="housedetail.isCollect" >已收藏</div>
+                <div  @click.stop="addContrast(housedetail, $event)" v-if="!housedetail.isAppoint">预约看房</div> 
+                <div  @click.stop="addContrast(housedetail, $event)" v-if="housedetail.isAppoint">已预约</div> 
               </div>
 
               <div class="content">
                   <div class="price ">
-                    <span class="total">{{twohandhousedetail.saleTotal}}</span>
+                    <span class="total">{{housedetail.saleTotal}}</span>
                     <span class="unit"><span>万</span>
                     </span>
                     <div class="text">
-                      <div class="unitPrice"><span class="unitPriceValue">{{twohandhousedetail.saleprice }}<i>元/平米</i></span></div>
+                      <div class="unitPrice"><span class="unitPriceValue">{{housedetail.saleprice }}<i>元/平米</i></span></div>
                       <div class="tax" id="tax-text">首付及贷款情况请咨询经纪人</div>
                     </div>
                     <div class="removeIcon"></div>
                   </div>
                   <div class="houseInfo">
                     <div class="room">
-                      <div class="mainInfo">{{twohandhousedetail.houseType}}</div>
-                      <div class="subInfo">{{twohandhousedetail.houseForm }}</div>
+                      <div class="mainInfo">{{housedetail.houseType}}</div>
+                      <div class="subInfo">{{housedetail.houseForm }}</div>
                     </div>
                     <div class="type">
-                      <div class="mainInfo" title="南">{{twohandhousedetail.houseDirection }}</div>
-                      <div class="subInfo">{{twohandhousedetail.houseForm }}/{{twohandhousedetail.houseDecoration }}</div>
+                      <div class="mainInfo" title="南">{{housedetail.houseDirection }}</div>
+                      <div class="subInfo">{{housedetail.houseForm }}/{{housedetail.houseDecoration }}</div>
                     </div>
                     <div class="area">
-                      <div class="mainInfo">{{twohandhousedetail.builtArea }}平米</div>
-                      <div class="subInfo">{{twohandhousedetail.buildAge }}年建/塔楼</div>
+                      <div class="mainInfo">{{housedetail.builtArea }}平米</div>
+                      <div class="subInfo">{{housedetail.buildAge }}年建/塔楼</div>
                     </div>
                   </div>
                   <div class="aroundInfo">
@@ -208,22 +208,22 @@
                       <a href="/xiaoqu/2411048689454/" target="_blank" class="info ">帝港海湾豪园</a>
                       <a href="#around" class="map">地图</a>
                     </div>
-                    <div class="areaName"><i></i><span class="label">所在区域</span><span class="info">&nbsp;<a>{{twohandhousedetail.areaName }}</a></span>
+                    <div class="areaName"><i></i><span class="label">所在区域</span><span class="info">&nbsp;<a>{{housedetail.areaName }}</a></span>
                       <a href="" class="supplement" title="" style="color:#394043;"></a>
                     </div>
                     <div class="visitTime"><i></i><span class="label">看房时间</span><span class="info">提前预约随时可看</span></div>
                   </div>
                   <div class="duibi">
-                      <div class="duibi_a" @click="addCompare(twohandhousedetail)" v-if="!twohandhousedetail.isComparison">加入对比</div>
-                      <div class="duibi_a" @click="addCompare(twohandhousedetail)"  v-if="twohandhousedetail.isComparison">已加对比</div>
+                      <div class="duibi_a" @click="addCompare(housedetail, $event)" v-if="!housedetail.isComparison">加入对比</div>
+                      <div class="duibi_a" @click="addCompare(housedetail, $event)"  v-if="housedetail.isComparison">已加对比</div>
                       <div class="duibi_a">分享房源</div>
                   </div>
                   <div class="callpeople">联系经纪人</div>
                   <div class="peopleintrode">
-                      <div class="fl"><img :src="twohandhousedetail.broker.photo"></div>
+                      <div class="fl"><img :src="housedetail.broker.photo"></div>
                       <ul>
-                        <li class="broker">{{twohandhousedetail.broker.emplName}}</li>
-                        <li class="telphone">{{twohandhousedetail.broker.phone}}</li>
+                        <li class="broker">{{housedetail.broker.emplName}}</li>
+                        <li class="telphone">{{housedetail.broker.phone}}</li>
                         <li class="decription">亲自勘察，真实房源，竭诚为您服务</li>
                       </ul>
                   </div>
@@ -253,7 +253,7 @@ export default {
       loginshow: null, //登陆注册阴影层
       rightnow: true, //登陆注册判断条件
       cancel: false, //取消登陆阴影
-      twohandhousedetail: {
+      housedetail: {
         //二手房详情
         broker: {
           emplName: "",
@@ -272,19 +272,17 @@ export default {
       collectionFlag: true//收藏标识
     };
   },
-  components: {
-    oHeader,
-    BMap,
-    oFly
-  },
   created() {
-    // this.daikan =  localStorage.daikan?JSON.parse(localStorage.daikan): [];
 	  this.render();
   },
-   computed: {
+  computed: {
     //获取用户登录状态
     logined() {
       return this.$store.state.logined;
+    },
+    //对比列表
+    contrastList() {
+      return this.$store.state.contrastList;
     }
   },
   methods: {
@@ -309,42 +307,31 @@ export default {
         }
       }
     },
-    //加入对比
-      addCompare(twohandhousedetail){
-        if(!this.logined) return this.$alert('用户未登录!');
-          if( this.$store.state.contrastList.length <= 3){
-            
-              this.$http.put(this.$url.URL.JOIN_CONTRAST,{
-                  houseId: twohandhousedetail.id,
-                   houseSdid: twohandhousedetail.sdid
-                })
-                .then(response =>{
-                  this.$refs.fly.drop(e.target);
-                  this.twohandhousedetail.isComparison = true
-                  this.compareHouse();
-                })
-          }else{
-              this.$alert('对比清单最多4个!', '添加失败', {
-                confirmButtonText: '确定'
-              });
-            }
-      },
-      //对比列表
-      compareHouse() {
-          this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST +"?pageNo="+1,{
-            scity:this.scity.value
-          })
-          .then(response =>{
-              let newData = response.data.data;
-              //添加数据
-              this.$store.commit('SHOWLISTTWO', newData);
-          })
-      },
-   
+    //加入对比清单
+    addCompare(item, e) {
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.changeDialog(1);
+      let payload = {
+        contrastList: this.contrastList,
+        item: item
+      }
+      if(item.isComparison == true) {
+        return;
+      }else{
+        if(this.contrastList.length<4){
+          this.render();
+          this.$refs.fly.drop(e.target);
+          this.$store.dispatch('addOne', payload);
+        }else{
+          this.$alert('对比清单最多4个!', '添加失败', {
+            confirmButtonText: '确定'
+          });
+        }
+      }
+    },
     //加入待看清单
     addContrast(item, e) {
        if(!this.logined) return this.$alert('用户未登录!');
-       console.log(this.$store.state.appinthouse)
         if( this.$store.state.appinthouse.length <= 3){
           
              this.$http.post(this.$url.URL.APPOINT_ADD,{
@@ -353,7 +340,7 @@ export default {
               })
               .then(response =>{
                 this.$refs.fly.drop(e.target);
-                this.twohandhousedetail.isAppoint = true
+                this.housedetail.isAppoint = true
                 this.appintHouse();
               })
         }else{
@@ -431,28 +418,18 @@ export default {
       let city = this.scity.value;
       this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
         .then(response => {
-          this.twohandhousedetail = response.data.data;
+          this.housedetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
            this.sdid =  response.data.data.sdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
           this.id = response.data.data.id
            
-           //获取待看清单列表
-          // this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1")
-          // .then((res)=>{
-          //   if(res.data.data.length) {            
-          //     //初始化清单列表
-          //     this.$store.commit('FIRSTSTATUS', res.data.data);
-          //   }
-          // });
-
             //带看记录
             this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id+"?pageNo=1")
             .then(response =>{
                 this.housesee =  response.data.data
             })
-       
 
             //二手房周边
             this.$http.post(this.$url.URL.HOUSE_RIMHOUSING, {
@@ -542,7 +519,12 @@ export default {
         }
       }
     }, 1000);
-  }
+  },
+  components: {
+    oHeader,
+    BMap,
+    oFly
+  },
 };
 </script>
 

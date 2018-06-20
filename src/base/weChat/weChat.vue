@@ -6,7 +6,7 @@
                 <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
                     <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
-                        <img src="./imgs/avatar.png">
+                        <div class="img"><img src="./imgs/avatar.png"></div>
                         <div>
                             <h4>{{item.nickName}}</h4>
                             <p>测试</p>
@@ -27,10 +27,14 @@
                   <ul>
                       <template v-for="(item,index) in contents">
                           <li :key="item.ctime_ms" class="chat-time">{{item.ctime_ms|formatTime}}</li>
-                          <li :key="index" class="chat-block" :class="item.content.val==1?'chat-block-left':'chat-block-right'">
+                          <li :key="index" class="chat-block" :class="item.content.val==2?'chat-block-left':'chat-block-right'">
                               <a href=""><img src="./imgs/avatar.png"></a>
                               <div class="chat-content">
-                                  <div>{{item.content.msg_body.text}}</div>
+                                  <!-- 内容 -->
+                                  <div v-if="!item.isPic">{{item.content.msg_body.text}}</div>
+                                  
+                                  <!-- 图片 -->
+                                  <img :src="item.url" v-if="item.isPic" alt="图片">
                               </div>
                           </li>
                       </template>
@@ -146,7 +150,7 @@ export default {
         this.$emit('afresh');
       }
     },
-    // 发送消息
+    // 发送消息 val 的1表示左边,2表示右边
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             //测试目标demo
@@ -161,14 +165,14 @@ export default {
             need_receipt: true
         })
         .onSuccess((data,msg) => {
-
             this.sendMsg = null;
             this.contents.push({
                 content: {
                   msg_body: {text: msg.content.msg_body.text}
                 },
                 ctime_ms: data.ctime_ms,
-                val: 2
+                val: 2,
+                isPic: false
             });
             this.toBottom();
         })
@@ -184,7 +188,6 @@ export default {
     //用户实时聊天监听
     Jiguang_onMsg() {
       JIM.onMsgReceive(data => {
-
         this.contents.push({ 
             content: {
               msg_body: {text: data.messages[0].content.msg_body.text}
@@ -213,14 +216,15 @@ export default {
     },
     //发送图片
     Jiguang_sendPic(fd) {
-      console.log(12121)
       JIM.sendSinglePic({
         target_username:"13100000000",
         appkey: this.AuthJiG.appkey,
-        image: fd 
+        image: fd,
+        msg_type: 'image'
       })
       .onSuccess(data=> {
-        console.log(data);
+        //获取图片
+        this.Jiguang_getResource();
       })
       .onFail(data=> {
         console.log('error:' + JSON.stringify(data))
@@ -229,8 +233,16 @@ export default {
     //获取资源(例如图片)
     Jiguang_getResource() {
       JIM.getResource({
-        'media_id' : '<media_id >',
+        'media_id' : 'qiniu/image/j/CB2C7EF9E099ECAD1767C88C8BFA95D3.jpg',
       }).onSuccess(data=> {
+        this.contents.push({ 
+            
+            ctime_ms: data.messages[0].content.create_time,
+            url: data.url,
+            isPic: true //是否有图片
+        });
+        console.log(data)
+        console.log(data.url)
           //data.code 返回码
           //data.message 描述
           //data.url 资源临时访问路径
@@ -302,16 +314,32 @@ export default {
         .broker {
           display: flex;
           flex-flow: row nowrap;
-          img {
+          .img {
+            position: relative;
             flex: 40px 0 0;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
             margin-right: 10px;
-            background: url("./imgs/avatar.png") no-repeat center center;
             cursor: pointer;
+            img{
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background: url("./imgs/avatar.png") no-repeat center center;
+            }
+            &::before{
+              position: absolute;
+              right: -2px;
+              top: -2px;
+              content: "";
+              display: block;
+              width: 10px;
+              height: 10px;
+              background: red;
+              border-radius: 50%;
+            }
           }
-          img + div {
+          .img + div {
             flex: 1;
             h4 {
               color: #333;

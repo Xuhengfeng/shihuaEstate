@@ -2,12 +2,12 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-05-31 00:13:31
+ * @Last Modified time: 2018-06-19 22:04:13
  */
 <template>
 	<!-- 房源对比 -->
 	<div class="houseContrast">
-		<o-header></o-header>
+		<o-header :isShowQueryBox="false"></o-header>
 		<div class="section">
 			<div class="container">
 				<div class="one">
