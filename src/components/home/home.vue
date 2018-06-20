@@ -154,7 +154,7 @@
 				<div class="goods-hd">
 					<span class="twohandhouse">优质小区</span>
 					<span class="foryouselect">为你推荐</span>
-					<span class="morehouse fr"><router-link tag="li" to="">更多二手好房</router-link></span>
+					<span class="morehouse fr"><router-link tag="li" to="/houseestate">更多小区</router-link></span>
 				</div>
 				<div class="goods-bd">
 					<ul>
@@ -176,7 +176,7 @@
 				<div class="goods-hd">
 					<span class="twohandhouse">时尚租房</span>
 					<span class="foryouselect">品质生活</span>
-					<span class="morehouse fr"><router-link tag="li" to="">更多二手好房</router-link></span>
+					<span class="morehouse fr"><router-link tag="li" to="">更多好房</router-link></span>
 				</div>
 				<div class="goods-bd">
 					<ul>
