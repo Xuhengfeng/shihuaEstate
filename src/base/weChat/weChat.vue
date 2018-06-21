@@ -16,6 +16,8 @@
                 <div class="noBrokers" v-if="!brokerTalks.length">
                     <div>没有聊过的经纪人</div>
                 </div>
+                <!-- 滚动到底部 -->
+                <p class="brokerslist"></p>
             </ul>
       </div>
       <!-- 动画层 -->
@@ -79,7 +81,8 @@ export default {
       contents: [],//聊天消息
       flag: false, //用来记住 聊天窗口是否被打开
       nowName: null,//当前聊天者
-      ownId: null
+      ownId: null,
+      mediaPc: null,
     };
   },
   computed: {
@@ -159,7 +162,7 @@ export default {
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             //测试目标demo
-            target_username:"13100000000",
+            target_username:"57_13766494582",
             // target_username:"user01",
             appkey: this.AuthJiG.appkey,
             //目标经纪人
@@ -180,7 +183,7 @@ export default {
                 ctime_ms: data.ctime_ms,
                 isPic: false
             });
-            this.toBottom();
+            this.toBottom(".scroll");
         })
         .onFail(data => {
           //经纪人未注册的情况下 帮经纪人进行注册
@@ -202,25 +205,29 @@ export default {
         })
     },
     //滚动底部
-    toBottom() {
+    toBottom(className) {
       setTimeout(()=>{
-        let boxcontent = document.querySelector(".scroll");
+        let boxcontent = document.querySelector(className);
             boxcontent.scrollIntoView(false);
       },500);
     },
     //用户实时聊天消息监听
     Jiguang_onMsg() {
       JIM.onMsgReceive(data => {
-        console.log(data)
         this.contents.push({ 
             content: {
-              msg_body: {text: data.messages[0].content.msg_body.text}
+              msg_body: {
+                media_id: data.messages[0].content.msg_body.media_id,
+                text: data.messages[0].content.msg_body.text
+              },
             },
             ctime_ms: data.messages[0].content.create_time,
         });
-        this.toBottom();
+        this.toBottom(".scroll");
       });
     },
+
+
     getFile(e) {
       //构造图片FormData
       let fd = new FormData();
@@ -232,32 +239,40 @@ export default {
     //发送图片
     Jiguang_sendPic(fd) {
       JIM.sendSinglePic({
-        target_username:"13100000000",
+        target_username:"57_13766494582",
         appkey: this.AuthJiG.appkey,
         image: fd,
         nead_receipt: true
       })
       .onSuccess((data, msg)=> {
-        this.Jiguang_getResource(msg);
+        this.Jiguang_getResource(msg, this.fn);
       })
       .onFail(data=> {});
     },
+
     //获取资源(例如图片)
-    Jiguang_getResource(msg) {
+    Jiguang_getResource(msg, callback) {
+      let mediaId = msg.content.msg_body.media_id||msg;
       JIM.getResource({
-        'media_id': msg.content.msg_body.media_id,
+        'media_id': mediaId,
       }).onSuccess(data=> {
-          msg.url = data.url;
-          msg.ctime_ms = msg.content.create_time;
-          this.contents.push(msg);
-          this.toBottom();
+        callback(data,msg);
       }).onFail(data=> {});
     },
+    //callback
+    fn(data,msg) {
+      msg.url = data.url;
+      msg.ctime_ms = msg.content.create_time;
+      this.contents.push(msg);
+      this.toBottom(".scroll");
+    },
+
+
     //点击其中一个聊天者
     selectItem(item,index) {
       this.nowName = item.username;
       this.contents = this.history[index].msgs;
-      this.toBottom();
+      this.toBottom('.brokerslist');
       this.open();
     }
   }
