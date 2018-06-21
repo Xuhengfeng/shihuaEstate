@@ -162,11 +162,7 @@ export default {
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             //测试目标demo
-<<<<<<< HEAD
             target_username:"15857009521",
-=======
-            target_username:"57_13766494582",
->>>>>>> 1a4df1f31a747772ef9264528dc96811387afce9
             // target_username:"user01",
             appkey: this.AuthJiG.appkey,
             //目标经纪人
@@ -243,11 +239,7 @@ export default {
     //发送图片
     Jiguang_sendPic(fd) {
       JIM.sendSinglePic({
-<<<<<<< HEAD
         target_username:"15857009521",
-=======
-        target_username:"57_13766494582",
->>>>>>> 1a4df1f31a747772ef9264528dc96811387afce9
         appkey: this.AuthJiG.appkey,
         image: fd,
         nead_receipt: true
