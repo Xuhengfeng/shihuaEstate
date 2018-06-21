@@ -146,8 +146,18 @@ export default {
     // 发送消息
     Jiguang_sendMsg(params) {
         JIM.sendSingleMsg({
+<<<<<<< HEAD
             target_username: params.username,
             appkey: params.appkey,
+=======
+            //测试目标demo
+            target_username:"15857009521",
+            // target_username:"user01",
+            appkey: this.AuthJiG.appkey,
+            //目标经纪人
+            // target_username:"13100000000",
+            // appkey: this.userInfo.brokerAppKey,
+>>>>>>> 8fff36fea2fe972dff4d664ce33d6e4573e669b6
             content: this.sendMsg,
             no_offline: false,
             no_notification: false,
@@ -199,8 +209,13 @@ export default {
     //发送图片
     Jiguang_sendPic(fd) {
       JIM.sendSinglePic({
+<<<<<<< HEAD
         target_username: this.targetObj.username,
         appkey: this.targetObj.appkey,
+=======
+        target_username:"15857009521",
+        appkey: this.AuthJiG.appkey,
+>>>>>>> 8fff36fea2fe972dff4d664ce33d6e4573e669b6
         image: fd,
         nead_receipt: true
       })
