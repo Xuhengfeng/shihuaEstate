@@ -81,7 +81,7 @@
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}
-									<span class="fr" @click.stop="collection(item,$event)">收藏</span>
+									<!-- <span class="fr" @click.stop="collection(item,$event)">收藏</span> -->
               		 </div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
                     				<span class="word">{{item.areaName}}{{item.districtName}}/在{{item.buildAge}}年建成</span>

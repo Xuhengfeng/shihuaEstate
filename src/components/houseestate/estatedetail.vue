@@ -39,7 +39,9 @@
 							</div>
 						</div>
 							<div class="headtitle">小区位置</div>
-								<b-map></b-map>
+									<div class="map">
+				          <b-map :addr="selectCity"></b-map>
+                </div>
 							<div class="headtitle">小区信息</div>
 									<div class="base" style="border-bottom: 0;">
 									<div class="name">基本属性</div>
@@ -195,14 +197,14 @@
 				}
 				if(this.collectionFlag){
 					this.$http
-					.post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.selectCity.value +"/"+ 	this.buildsdid)
+					.post(this.$url.URL.BUILDCOLLECTION_ADD +this.selectCity.value +"/"+this.buildsdid)
 					.then(response => {
 							e.target.innerHTML = '已收藏'
 					});
 
 				}else{
 						this.$http
-					.post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.selectCity.value +"/"+	this.buildsdid)
+					.post(this.$url.URL.BUILDCOLLECTION_CANCEL +this.selectCity.value +"/"+this.buildsdid)
 					.then(response => {
 							e.target.innerHTML = '收藏房源'
 					});
