@@ -2,11 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
-<<<<<<< HEAD
- * @Last Modified time: 2018-06-20 18:30:29
-=======
- * @Last Modified time: 2018-06-20 18:35:53
->>>>>>> 7d866eb0507ae3c06e330f349f7449a2cf31635d
+ * @Last Modified time: 2018-06-21 10:40:41
  */
 import router from '../router/index'
 //同步处理
@@ -97,7 +93,7 @@ export default {
 	},
 	//历史漫游消息
 	HISTORY(state, payload) {
-		state.history[payload.index] = payload.data;
+		state.history = [...state.history , ...payload];
 	},
 	//会话列表(好友列表)
 	FIREND(state, payload) {
@@ -105,16 +101,11 @@ export default {
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
-		state.conversations.push(payload);
-	},
-	//注册极光
-	Jiguang_register(state, payload) {
-		JIM.register(payload)
-		.onSuccess(data=> {
-			console.log(data);
-		})
-		.onFail(data=> {});
+		if(JSON.stringify(state.conversations).indexOf(JSON.stringify(payload))==-1){
+			//当前经纪人是否已经存在于会话列表中
+			state.conversations.push(payload);
+			state.history.push([]);
+		}
+		this.commit('STARTCHAT', true);
 	}
-	
-
 }

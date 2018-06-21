@@ -193,17 +193,10 @@ export default {
         nickName: item.emplName,
         username: item.emplName,
       }
-
       //未登录用户提示弹窗登录
       if(!this.logined) return this.changeDialog(1);
-      
-      //打开聊天窗口
-      this.$store.commit('STARTCHAT', true);
-
-      //添加好友
-      this.$store.commit('ADDFIREND', newItem);      
-      //经纪人注册极光
-      
+      //添加经纪人到会话列表中
+      this.$store.commit('ADDFIREND', newItem);         
     },
     //翻页
     handleCurrentChange(val) {

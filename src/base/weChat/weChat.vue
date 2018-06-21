@@ -6,7 +6,7 @@
                 <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
                     <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
-                        <div class="img"><img :src="item.avatar"></div>
+                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.avatar"></div>
                         <div>
                             <h4>{{item.nickName}}</h4>
                             <p>测试</p>
@@ -34,8 +34,9 @@
                                   <div>{{item.content.msg_body.text?item.content.msg_body.text:''}}</div>
                                   
                                   <!-- 图片 -->
-                                  <img class="chatPic" v-if="item.content.msg_type=='image'" :src="item.url?item.url:item.content.msg_body.media_id"  alt="图片" >
+                                  <img class="chatPic"  :src="item.url?item.url:'http://dl.im.jiguang.cn/'+item.content.msg_body.media_id"  alt="图片" >
                                   {{'测试图片'+item.url}}
+                                  <!-- v-if="item.content.msg_type=='image'" -->
                               </div>
                           </li>
                       </template>
@@ -159,6 +160,7 @@ export default {
         JIM.sendSingleMsg({
             //测试目标demo
             target_username:"13100000000",
+            // target_username:"user01",
             appkey: this.AuthJiG.appkey,
             //目标经纪人
             // target_username:"13100000000",
@@ -180,7 +182,24 @@ export default {
             });
             this.toBottom();
         })
-        .onFail(data => {});
+        .onFail(data => {
+          //经纪人未注册的情况下 帮经纪人进行注册
+          if(data.code==880103){
+            this.Jiguang_register();
+          }
+        });
+    },
+    Jiguang_register() {
+      let params = {
+        username: '1310000005',	
+        password: '1310000005',
+        nickname: 'test5'
+      }
+      this.$http.get(this.$url.URL.USER_JIGUANGREG+"?username="+params.username+"&password="+params.password+"&nickname="+params.nickname)
+        .then(data=>{
+          //主动回调一次发送消息
+          this.Jiguang_sendMsg();
+        })
     },
     //滚动底部
     toBottom() {
@@ -192,6 +211,7 @@ export default {
     //用户实时聊天消息监听
     Jiguang_onMsg() {
       JIM.onMsgReceive(data => {
+        console.log(data)
         this.contents.push({ 
             content: {
               msg_body: {text: data.messages[0].content.msg_body.text}
@@ -236,12 +256,7 @@ export default {
     //点击其中一个聊天者
     selectItem(item,index) {
       this.nowName = item.username;
-      this.contents = this.history[index];
-      let payload = {
-        data: this.history[index]?this.history[index]:[],
-        index: index
-      }
-      this.$store.commit('HISTORY',payload);
+      this.contents = this.history[index].msgs;
       this.toBottom();
       this.open();
     }
@@ -314,17 +329,18 @@ export default {
               background: url("./imgs/avatar.png") no-repeat center center;
               background-size: cover; 
             }
-            &::before{
-              position: absolute;
-              right: -2px;
-              top: -2px;
-              content: "";
-              display: block;
-              width: 10px;
-              height: 10px;
-              background: red;
-              border-radius: 50%;
-            }
+          }
+          //point 红点
+          .imgPoint::before{
+            position: absolute;
+            right: -2px;
+            top: -2px;
+            content: "";
+            display: block;
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
           }
           .img + div {
             flex: 1;
