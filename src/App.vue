@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-20 16:43:29
+ * @Last Modified time: 2018-06-21 14:19:14
  */
 <template>
   <div id="app">
@@ -142,7 +142,7 @@ export default {
         })
         .onFail(data => {});
     },
-    //用户获取极光IM信息
+    //获取极光IM信息
     Jiguang_userInfo() {
       JIM.getUserInfo({
         username: this.userInfo.easemobUsername,
@@ -151,10 +151,13 @@ export default {
         console.log("获取用户Im信息成功：" + JSON.stringify(data));
       });
     },
-    //用户获取极光IM会话列表
+    //获取极光IM会话列表
     Jiguang_conversation() {
       JIM.getConversation()
       .onSuccess(data => {
+        console.log('会话列表', data);
+        console.log('会话列表', data.conversations);
+      
         this.$store.commit('FIREND', data.conversations);
       })
       .onFail(data => {
@@ -164,9 +167,8 @@ export default {
     //离线消息同步监听
     Jiguang_syncConversation(){
       JIM.onSyncConversation(data=> {
-        let history ={data: data[0].msgs, index: 0};
         //缓存历史漫游消息
-        this.$store.commit('HISTORY', history);
+        this.$store.commit('HISTORY', data);
       });
     },
     _mapquerys(){
