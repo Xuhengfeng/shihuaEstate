@@ -159,7 +159,7 @@ export default {
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             //测试目标demo
-            target_username:"13100000000",
+            target_username:"15857009521",
             // target_username:"user01",
             appkey: this.AuthJiG.appkey,
             //目标经纪人
@@ -232,7 +232,7 @@ export default {
     //发送图片
     Jiguang_sendPic(fd) {
       JIM.sendSinglePic({
-        target_username:"13100000000",
+        target_username:"15857009521",
         appkey: this.AuthJiG.appkey,
         image: fd,
         nead_receipt: true
