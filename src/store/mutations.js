@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-21 10:40:41
+ * @Last Modified time: 2018-06-21 17:52:54
  */
 import router from '../router/index'
 //同步处理
@@ -101,6 +101,7 @@ export default {
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
+		state.currentLineBroker = payload;
 		if(JSON.stringify(state.conversations).indexOf(JSON.stringify(payload))==-1){
 			//当前经纪人是否已经存在于会话列表中
 			state.conversations.push(payload);

@@ -192,6 +192,8 @@ export default {
         name: item.emplName,
         nickName: item.emplName,
         username: item.emplName,
+        id: item.id,
+        date: new Date().getTime()
       }
       //未登录用户提示弹窗登录
       if(!this.logined) return this.changeDialog(1);
