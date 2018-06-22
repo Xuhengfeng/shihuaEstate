@@ -6,10 +6,10 @@
                 <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
                     <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
-                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.avatar"></div>
-                        <div>
+                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.name|newBrokerUrl"></div>
+                        <div class="row">
                             <h4>{{item.nickName}}</h4>
-                            <p>测试</p>
+                            <p>{{item.lastMsg.text?item.lastMsg.text:null}}</p>
                         </div>   
                     </div>
                 </li>
@@ -28,14 +28,16 @@
                       <template v-for="item in contents">
                           <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
                           <li class="chat-block" :class="item.content.from_id==ownId?'chat-block-right':'chat-block-left'">
-                              <a href=""><img src="./imgs/avatar.png"></a>
+                              
+                              <a href="#" v-if="item.content.from_id==ownId"><img :src="userInfo.headImage"></a>
+                              <a href="#" v-else><img :src="item.content.target_id|newBrokerUrl"></a>
+                              
                               <div class="chat-content">
                                   <!-- 内容 -->
                                   <div>{{item.content.msg_body.text?item.content.msg_body.text:''}}</div>
                                   
-                                  <!-- 图片 -->
-                                  <img class="chatPic"  :src="item.url?item.url:'http://dl.im.jiguang.cn/'+item.content.msg_body.media_id"  alt="图片" >
-                                  <!-- v-if="item.content.msg_type=='image'" -->
+                                  <!-- 发送图片 -->
+                                  <img class="chatPic" :src="item.content.msg_body.media_id|getPicUrl">
                               </div>
                           </li>
                       </template>
@@ -79,7 +81,7 @@ export default {
       flag: false, //用来记住 聊天窗口是否被打开
       nowName: null,//当前聊天者
       ownId: null,
-      targetObj: null,//目标用户      
+      targetObj: null,//当前聊天的经纪人
     };
   },
   computed: {
@@ -109,8 +111,14 @@ export default {
     }
   },
   watch: {
+
     userInfo() {
-      this.ownId = this.userInfo.easemobUsername;
+      try{
+        var id = this.userInfo.easemobUsername;
+      }catch(e){
+        this.ownId = null;
+      }
+      this.ownId = id;
     },
     //会话列表
     conversations() {
@@ -119,45 +127,48 @@ export default {
     //开始聊天
     chat() {
       this.chat&&this.open();
+    },
+    //当前聊天的经纪人
+    currentLineBroker() {
+      //当前聊天的经纪人
+      this.targetObj = {
+        username: this.currentLineBroker.username,//经纪人极光账户
+        nickname: this.currentLineBroker.nickName,//中文
+        appkey: this.userInfo.brokerAppKey
+      }
+      this.nowName = this.currentLineBroker.nickName;//经纪人极光账户昵称
     }
   },
   filters: {
     formatTime(val) {
       return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
+    },
+    newBrokerUrl(val) {
+      try{
+        return 'http://dichan-test.oss-cn-shenzhen.aliyuncs.com/'+val.split("_")[0]+'/Empl/PIC/'+val.split('_')[1]+'/'+val.split('_')[1]+'.jpg'
+      }catch(e){}
+      return 'imgs/avatar.png';
+    },
+    getPicUrl(val) {
+      let baseUrl = 'http://dl.im.jiguang.cn/';
+      if(val && val.indexOf(baseUrl)==-1){
+        return baseUrl+val;
+      }else{
+        return val;
+      }
     }
   },
   methods: {
-    
-    //发送
+    //发送文本消息------------------------------------------------------
     sendBtn() {
-      //目标用户
-      this.targetObj = {
-        username: this.currentLineBroker.username,
-        password: this.currentLineBroker.password,
-        nickname: this.currentLineBroker.nickname,
-        appkey: this.userInfo.brokerAppKey
-      }
-      if(JIM.isLogin()){
-        this.Jiguang_sendMsg(this.targetObj);
-      }else{
-        this.$emit('afresh');
-      }
+      this.Jiguang_sendMsg(this.targetObj);
     },
-    // 发送消息
     Jiguang_sendMsg(params) {
         JIM.sendSingleMsg({
-<<<<<<< HEAD
-            target_username: params.username,
-            appkey: params.appkey,
-=======
-            //测试目标demo
-            target_username:"15857009521",
-            // target_username:"user01",
-            appkey: this.AuthJiG.appkey,
-            //目标经纪人
-            // target_username:"13100000000",
-            // appkey: this.userInfo.brokerAppKey,
->>>>>>> 8fff36fea2fe972dff4d664ce33d6e4573e669b6
+            // target_username: params.username,
+            target_username: 'jituan_2033_180042',
+            
+            appkey: params.appkey,//跨应用聊天
             content: this.sendMsg,
             no_offline: false,
             no_notification: false,
@@ -186,36 +197,13 @@ export default {
           this.Jiguang_sendMsg(params);
         })
     },
-   
-    //用户实时聊天消息监听
-    Jiguang_onMsg() {
-      JIM.onMsgReceive(data => {
-        console.log(data.messages[0].content.msg_body.media_id)
-        this.contents.push({ 
-            content: {
-              msg_body: {
-                media_id: data.messages[0].content.msg_body.media_id,
-                text: data.messages[0].content.msg_body.text
-              },
-            },
-            ctime_ms: data.messages[0].content.create_time,
-        });
-        this.toBottom();
-      });
-    },
-
-
-    
-    //发送图片
-    Jiguang_sendPic(fd) {
+       
+    //发送图片-----------------------------------------------------------
+    Jiguang_sendPic(fd, targetObj) {
+      console.log(targetObj)
       JIM.sendSinglePic({
-<<<<<<< HEAD
-        target_username: this.targetObj.username,
-        appkey: this.targetObj.appkey,
-=======
-        target_username:"15857009521",
-        appkey: this.AuthJiG.appkey,
->>>>>>> 8fff36fea2fe972dff4d664ce33d6e4573e669b6
+        target_username: targetObj.username,
+        appkey: targetObj.appkey,
         image: fd,
         nead_receipt: true
       })
@@ -230,7 +218,7 @@ export default {
       let files = e.target.files || e.dataTransfer.files
       if(!files[0]) throw new Error('获取文件失败');
       fd.append(files[0].name, files[0]);
-      this.Jiguang_sendPic(fd);
+      this.Jiguang_sendPic(fd, this.targetObj);
     },
     //获取资源(例如图片)
     Jiguang_getResource(msg) {
@@ -238,7 +226,7 @@ export default {
       JIM.getResource({
         'media_id': mediaId,
       }).onSuccess(data=> {
-        msg.url = data.url;
+        msg.content.msg_body.media_id = data.url;
         msg.ctime_ms = msg.content.create_time;
         this.contents.push(msg);
         this.toBottom();
@@ -252,10 +240,29 @@ export default {
       },500);
     },
 
+    //用户实时聊天消息监听
+    Jiguang_onMsg() {
+      JIM.onMsgReceive(data => {
+        this.contents.push({ 
+            content: {
+              msg_body: {
+                media_id: data.messages[0].content.msg_body.media_id,
+                text: data.messages[0].content.msg_body.text
+              },
+            },
+            ctime_ms: data.messages[0].content.create_time,
+        });
+        this.toBottom();
+      });
+    },
+
     //点击其中一个聊天者
     selectItem(item,index) {
-      this.nowName = item.username;
+      this.nowName = item.nickName;
+      //当前聊天的内容
       this.contents = this.history[index].msgs;
+      //当前聊天的经纪人
+      this.targetObj = this.conversations[index];
       this.toBottom();
       this.open();
     },
@@ -365,8 +372,11 @@ export default {
             background: red;
             border-radius: 50%;
           }
-          .img + div {
+          .row {
             flex: 1;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
             h4 {
               color: #333;
               font-size: 14px;

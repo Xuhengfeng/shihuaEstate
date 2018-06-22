@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-21 14:19:14
+ * @Last Modified time: 2018-06-22 15:36:16
  */
 <template>
   <div id="app">
@@ -139,8 +139,23 @@ export default {
             this.Jiguang_syncConversation();//离线消息同步监听
             this.Jiguang_conversation();//会话列表
             this.$refs.oChat.Jiguang_onMsg();//监听消息
+            this.Jiguang_onDisconnect();//监听是否在线
+            this.Jiguang_resetUnreadCount();//重置小红点
         })
         .onFail(data => {});
+    },
+    //监听是否在线
+    Jiguang_onDisconnect() {
+      console.log('掉线,重新初始化....')
+      JIM.onDisconnect(()=>{
+        this.afresh();
+      })
+    },
+    //重置小红点
+    Jiguang_resetUnreadCount() {
+      JIM.resetUnreadCount({
+        username: this.datamine.username
+      })
     },
     //获取极光IM信息
     Jiguang_userInfo() {

@@ -162,7 +162,11 @@ export default {
     //用户登录
     logined() {
       return this.$store.state.logined;
-    }
+    },
+    //登录用户的信息
+    userInfo() {
+      return this.$store.state.LoginedUser;
+    },
   },
   watch: {
     $route: {
@@ -188,12 +192,12 @@ export default {
       //装饰item
       let newItem = {
         avatar: item.photo,
-        appkey:"c7964847d9d85d68b388e239",
+        appkey: this.userInfo.brokerAppKey,
         name: item.emplName,
         nickName: item.emplName,
-        username: item.emplName,
+        username: item.chatUsername,
         id: item.id,
-        date: new Date().getTime()
+        mtime: new Date().getTime()
       }
       //未登录用户提示弹窗登录
       if(!this.logined) return this.changeDialog(1);

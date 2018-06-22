@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-21 17:52:54
+ * @Last Modified time: 2018-06-22 17:38:31
  */
 import router from '../router/index'
 //同步处理
@@ -97,13 +97,25 @@ export default {
 	},
 	//会话列表(好友列表)
 	FIREND(state, payload) {
+		// 好友遍历
+		payload.forEach(item => {
+			// 历史漫游遍历
+			state.history.forEach(item2 => {
+				item.lastMsg = item2.msgs.pop().content.msg_body;
+			})
+		});
 		state.conversations = payload;
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
+		//当前聊天的经纪人
 		state.currentLineBroker = payload;
-		if(JSON.stringify(state.conversations).indexOf(JSON.stringify(payload))==-1){
-			//当前经纪人是否已经存在于会话列表中
+		
+		let index = state.conversations.findIndex(item=>{
+			return item.username == payload.username;
+		})
+		//当前经纪人不存在于会话列表中
+		if(index==-1) {
 			state.conversations.push(payload);
 			state.history.push([]);
 		}
