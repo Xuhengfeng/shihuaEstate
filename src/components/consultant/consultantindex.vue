@@ -6,7 +6,7 @@
             <div class="hot-item">
              <div class="h-box " style="border:0px;">
                 <ul class="fl">
-                    <li v-for="item in infoquerychild"><div class="curcle"></div><div class="bittel">{{item.title}}</div></li>
+                    <li v-for="item in infoquerychild" @click="toSkipone(item)"><div class="curcle"></div><div class="bittel">{{item.title}}</div></li>
                 </ul>
                 <!-- <div class="clear"></div> -->
              </div>
@@ -91,10 +91,8 @@
                         });
                     //获取资讯子栏目列表
                         this.$http
-                        .get(this.$url.URL.INFOQUERY_CHILD, {
+                        .get(this.$url.URL.INFOQUERY +"13"+"?pageNo=1", {
                          scity: this.scity.value,
-                         code:13,
-                         pageNo:1
                         })
                         .then(response => {
                         this.infoquerychild = response.data.data;
@@ -108,11 +106,14 @@
                         })
                         .then(response => {
                         this.remdConsultant = response.data.data;
-                        
                         });
                 },
                 toSkip(item) {
                     let path = "/consultantindexdetail/" + item.id;
+                    this.$router.push({ path: path });
+                },
+                toSkipone(item){
+                    let path = "/queryinfodetail/" + item.id;
                     this.$router.push({ path: path });
                 },
                 toSkiptwo(item) {

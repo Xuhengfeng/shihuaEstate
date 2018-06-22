@@ -45,6 +45,7 @@ const comment = resolve => require(['components/mine/comment'], resolve)//我的
 const consultant = resolve => require(['components/consultant/consultant'], resolve)//咨询
 const consultantindex = resolve => require(['components/consultant/consultantindex'], resolve)//咨询首页
 const consultantindexdetail = resolve => require(['components/consultant/consultantindexdetail'], resolve)//咨询详情
+const queryinfodetail = resolve => require(['components/consultant/queryinfodetail'], resolve)//资讯详情
 const listdetail = resolve => require(['components/consultant/listdetail'], resolve)//咨询首页
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const myproblem = resolve => require(['components/consultant/myproblem'], resolve)//我要咨询
@@ -87,6 +88,7 @@ const router = new Router({
 			{path:"consultantbuyhouse",component:consultantbuyhouse,meta:{KeepAlive:false}},//买房咨询
 		]},
 		{path:"/listdetail/:id",component:listdetail,meta:{KeepAlive:false}},//顾问详情
+		{path:"/queryinfodetail/:id",component:queryinfodetail,meta:{KeepAlive:false}},//资讯详情
 		{path:"/myproblem/:id",component:myproblem,meta:{KeepAlive:false}},//我要咨询
 		
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租

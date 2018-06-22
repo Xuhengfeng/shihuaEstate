@@ -114,6 +114,8 @@ let URL = {
 	CONSULTANT_REMD:_host + "/consultant/remd",                //顾问推荐列表
 	CONSULTANT_SUB_PROBLEM:_host + "/consultant/sub_problem",                //向他咨询/提问
 	INFOQUERY_CHILD:_host + "/info/query/child",               //获取资讯子栏目列表
+	INFOQUERY:_host + "/info/query/",               //获取资讯内容信息列表
+	INFO:_host + "/info/",               //获取资讯详情
 	MEMBER_MYINFO:_host + "/member/myinfo",                //获取会员用户信息
 };
 export default {URL}
