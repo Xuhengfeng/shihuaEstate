@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-22 15:36:16
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-23 02:26:39
  */
 <template>
   <div id="app">
@@ -135,12 +135,12 @@ export default {
             password: this.userInfo.easemobPassword
         })
         .onSuccess(data => {
+            this.Jiguang_onDisconnect();//监听是否在线
             this.Jiguang_userInfo();//用户信息
-            this.Jiguang_syncConversation();//离线消息同步监听
+            this.Jiguang_syncConversation();//同步监听离线消息
             this.Jiguang_conversation();//会话列表
             this.$refs.oChat.Jiguang_onMsg();//监听消息
-            this.Jiguang_onDisconnect();//监听是否在线
-            this.Jiguang_resetUnreadCount();//重置小红点
+            this.$refs.oChat.Jiguang_resetUnreadCount();//重置小红点
         })
         .onFail(data => {});
     },
@@ -151,12 +151,7 @@ export default {
         this.afresh();
       })
     },
-    //重置小红点
-    Jiguang_resetUnreadCount() {
-      JIM.resetUnreadCount({
-        username: this.datamine.username
-      })
-    },
+   
     //获取极光IM信息
     Jiguang_userInfo() {
       JIM.getUserInfo({

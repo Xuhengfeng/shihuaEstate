@@ -2,7 +2,7 @@
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-16 02:57:52
+ * @Last Modified time: 2018-06-23 01:36:07
  * @描述: 登录 注册 组件封装
  */
 <template>
@@ -179,6 +179,7 @@ export default {
     },
     //登录
     login() {
+      console.log('111')
       this.$http
         .post(this.$url.URL.USER_LOGIN, {
           deviceCode: "web",
