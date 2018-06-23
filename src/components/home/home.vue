@@ -9,7 +9,7 @@
 					<router-link to="" class="logo">
 						<img src="../../imgs/home/logo1.png" />
 					</router-link>
-					<span class="iconfont el-icon-own-location location" @click="toggleCity()">{{selectCity}}</span>
+					<span class="iconfont xhf-icon-location location" @click="toggleCity()">{{selectCity}}</span>
 					<transition name="bounce">
 						<div class="city-change " v-if="cityChange">
 							<span class="close" @click="toggleCity()"></span>
@@ -46,7 +46,7 @@
 					<ul class="item1">
 						<router-link tag="li" to="">
 							<div v-if="!isLogin">
-								<i class="iconfont el-icon-own-yonghu"></i>
+								<i class="iconfont xhf-icon-yonghu"></i>
 								<span class="login" @click="login()">登录</span> 
 								<span>/</span>
 								<span class="register" @click="register()">立即注册</span>
@@ -104,7 +104,7 @@
 						<span @click="placeholderText(2)">小区</span>
 					</div>
 					<div class="search-bd">
-						<i ref="sanjiao" class="tip iconfont el-icon-own-sanjiaoxing-up"></i>
+						<i ref="sanjiao" class="tip iconfont xhf-icon-sanjiaoxing-up"></i>
 						<input class="search-box" :placeholder="souText" v-model="searchinput" @keyup.enter="searchHouse()"></input>
 						<div class="search-box-btn fr" @click="searchHouse()">开始找房</div>
 					</div>
@@ -257,13 +257,10 @@
 				</div>
 			</div>
 		</div>
-		<!-- 对话框 登录 注册 修改密码  -->
-		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
-	import oDialog from "../../base/dialog/dialog";
 	const pinyin = require("chinese-to-pinyin");
 	export default {
 		data() {
@@ -299,7 +296,6 @@
 				  "roomsNum": null,
 				  "scity": null
 				}
-
 			};
 		},
 		computed: {
@@ -309,9 +305,6 @@
 			userInfo() {
             	return this.$store.state.LoginedUser;
         	}
-		},
-		components:{
-			oDialog,
 		},
 		created() {
 			this.defaultCityRequest();
@@ -332,7 +325,7 @@
 			//默认定位
 			defaultCityRequest()  {
 				this.$http.get(this.$url.URL.DEFAULT_CITY)
-				.then((response)=>{
+				.then(response=>{
 					let cityName = response.data.data.name;
 					this.selectCity = cityName;
 					//这是页面所有请求的开始
@@ -375,7 +368,7 @@
 					"hot": {title: hot_city,item: []}
 				}
 				this.$http.get(this.$url.URL.DICTIONARY_CITYS)
-				.then((response) => {
+				.then(response => {
 					response.data.data.forEach((obj, index) => {//城市数据 重新map排列
 						if(index < hot_city_len) {
 							map['hot'].item.push({
@@ -435,20 +428,13 @@
 					this.rentHouseRecmdlist = response.data.data
 				})
 			},
-			//显示对应的弹窗
-			changeDialog(num) {
-				this.showbox = num; 
-				this.$refs.odialog.show();
-			},
 			//登陆
 			login() {
-				this.changeDialog(1);
-				this.cityChange = false;
+				this.$store.commit('OPENLOGINDIALOG', 1);
 			},
 			//注册
 			register() {
-				this.changeDialog(2);
-				this.cityChange = false;				
+				this.$store.commit('OPENLOGINDIALOG', 2);			
 			},
 			//退出
 			logout() {

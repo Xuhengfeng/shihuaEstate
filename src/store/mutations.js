@@ -1,13 +1,17 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-22 17:38:31
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-23 15:07:07
  */
 import router from '../router/index'
 //同步处理
 export default {
-	//初始化登录状态, 防止刷新状态还原
+	//打开登录 注册对话框
+	OPENLOGINDIALOG(state, num) {
+		state.loginDialogNum = num;
+	},
+ 	//初始化登录状态, 防止刷新状态还原
 	FIRSTSTATUS(state) {
 		if(sessionStorage.logined) {
 			let user = JSON.parse(sessionStorage.userInfo);

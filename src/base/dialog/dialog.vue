@@ -2,14 +2,14 @@
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 01:36:07
+ * @Last Modified time: 2018-06-23 17:00:21
  * @描述: 登录 注册 组件封装
  */
 <template>
   <!-- 用户登录 、注册dialog组件 -->
   <div class="dialog">
     <transition name="bounce">
-        <div class="panel_login " v-show="showFlag">
+        <div class="panel_login " v-if="showFlag">
             <i class="close_login" @click.stop="cancel()">×</i>
             <div class="panel_tab" v-if="showbox == 1">
               <!-- 账号密码登录 -->
@@ -22,8 +22,7 @@
                   <input type="password" 
                       v-model="password1" 
                       maxlength="20" 
-                      placeholder="请输入登录密码" 
-                      @keyup.enter="login()"/>
+                      placeholder="请输入登录密码"/>
                 <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                 <button @click="login()">登录</button>
                 <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
@@ -172,10 +171,7 @@ export default {
     cancel() {
       this.hide();
       this.clearAllInput();
-    },
-    //切换
-    tab(e){
-      e.keyCode=9;
+      this.$store.commit('OPENLOGINDIALOG', null);
     },
     //登录
     login() {
@@ -202,6 +198,7 @@ export default {
     },
     //注册
     register() {
+      console.log('222')
       //校验
       switch(true){
         case !this.phonenum2: return this.$alert('手机不能为空!');
@@ -332,7 +329,8 @@ export default {
     jump(num) {
       this.clearAllInput();//清空文本域
       this.times = 0;//清空定时器
-      this.$emit("changeDialog", num);
+      // this.$emit("changeDialog", num);
+      this.$store.commit('OPENLOGINDIALOG', num);
     }
   }
 };

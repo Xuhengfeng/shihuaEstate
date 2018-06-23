@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 02:26:39
+ * @Last Modified time: 2018-06-23 16:40:25
  */
 <template>
   <div id="app">
@@ -35,6 +35,8 @@
     <!-- 聊天 -->
     <o-we-chat ref="oChat" @afresh="afresh"></o-we-chat>
 
+    <!-- 对话框 登录 注册 修改密码  -->
+		<o-dialog ref="odialog" :showbox="loginDialogNum"></o-dialog>	
   </div>
 </template>
 
@@ -43,6 +45,7 @@ import oTopBar from "./base/topBar/topBar";
 import oFooter from "./base/footer/footer";
 import oSideBar from "./base/sideBar/sidebar";
 import oWeChat from "./base/weChat/weChat";
+import oDialog from "./base/dialog/dialog";
 export default {
   data() {
     return {
@@ -51,6 +54,13 @@ export default {
       isShowFooter: 0, //显示1 隐藏0
       city: null
     };
+  },
+  components: {
+    oTopBar,
+    oSideBar,
+    oFooter,
+    oWeChat,
+    oDialog
   },
   created() {
     //初始化vuex
@@ -62,6 +72,10 @@ export default {
     this.isLogin&&this.afresh();
   },
   computed: {
+    //打开登录 注册对话框
+    loginDialogNum() {
+      return this.$store.state.loginDialogNum;
+    },
     //登录用户的信息
     userInfo() {
       return this.$store.state.LoginedUser;
@@ -76,6 +90,14 @@ export default {
     }
   },
   watch: {
+    //打开登录 注册对话框
+    loginDialogNum() {
+      if(this.loginDialogNum==null){
+        this.$refs.odialog.hide();  
+      }else{
+        this.$refs.odialog.show();
+      }
+    },
     //监听路由路径
     $route(to, from) {
       let path = to.path;
@@ -99,12 +121,6 @@ export default {
     isLogin() {
       this.isLogin&&this.Jiguang_Init();
     }
-  },
-  components: {
-    oTopBar,
-    oSideBar,
-    oFooter,
-    oWeChat
   },
   methods:{
     //聊天掉线重新用户登录 

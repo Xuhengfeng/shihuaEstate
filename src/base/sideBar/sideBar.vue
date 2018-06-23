@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-17 17:49:37
+ * @Last Modified time: 2018-06-23 16:37:03
  */
 <template>
   <div class="sideBar">
@@ -80,12 +80,9 @@
               </div> -->
           </li>
       </ul>
-      <!-- 对话框 登录 注册 修改密码  -->
-		  <o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
   </div>
 </template>
 <script>
-import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
@@ -122,11 +119,6 @@ export default {
     }
   },
   methods: {
-    //显示对应的弹窗
-    changeDialog(num) {
-      this.showbox = num; 
-      this.$refs.odialog.show();
-    },
     //清空对比
     clearAll() {
       this.compareBtn = false;
@@ -159,7 +151,7 @@ export default {
     //跳转我的收藏
     toCollect() {
       //未登录用户提示弹窗登录
-      if(!this.logined) return this.changeDialog(1);
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       this.$router.push({ path: "/mine/indexcollection"});
     },
     //计算元素位置
@@ -183,9 +175,6 @@ export default {
   mounted() {
     this.calcElt();
     window.onresize = this.calcElt();
-  },
-  components: {
-    oDialog,
   }
 };
 </script>

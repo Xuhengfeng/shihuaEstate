@@ -8,7 +8,7 @@
         <div class="container navmenu">
             <div class="one fr">
                 <div v-if="!isLogin">
-                    <i class="iconfont el-icon-own-yonghu"></i>
+                    <i class="iconfont xhf-icon-yonghu"></i>
                     <span class="login" @click="login()">登录</span> 
                     <span>/</span>
                     <span class="register" @click="register()">立即注册</span>
