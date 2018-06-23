@@ -347,6 +347,7 @@
 				let geoc = new BMap.Geocoder(); 
 				let geolocation = new BMap.Geolocation();
 				//定位 初始城市
+				geolocation.enableSDKLocation();//开启SDK辅助定位
 				geolocation.getCurrentPosition(function(r) {
 					if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
 						let point = new BMap.Point(r.point.lng,r.point.lat);

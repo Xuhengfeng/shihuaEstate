@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 16:40:25
+ * @Last Modified time: 2018-06-23 18:09:21
  */
 <template>
   <div id="app">
@@ -46,6 +46,8 @@ import oFooter from "./base/footer/footer";
 import oSideBar from "./base/sideBar/sidebar";
 import oWeChat from "./base/weChat/weChat";
 import oDialog from "./base/dialog/dialog";
+import "../static/js/jmessage-sdk-web.2.6.0.min.js";
+
 export default {
   data() {
     return {
@@ -156,7 +158,6 @@ export default {
             this.Jiguang_syncConversation();//同步监听离线消息
             this.Jiguang_conversation();//会话列表
             this.$refs.oChat.Jiguang_onMsg();//监听消息
-            this.$refs.oChat.Jiguang_resetUnreadCount();//重置小红点
         })
         .onFail(data => {});
     },
@@ -183,7 +184,6 @@ export default {
       .onSuccess(data => {
         console.log('会话列表', data);
         console.log('会话列表', data.conversations);
-      
         this.$store.commit('FIREND', data.conversations);
       })
       .onFail(data => {

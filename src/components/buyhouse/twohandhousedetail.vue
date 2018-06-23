@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-20 01:51:33
+ * @Last Modified time: 2018-06-23 17:22:38
  */
 <template>
 	<div>
@@ -101,7 +101,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"></div>
+                     <div @click="changeNum(1)"><</div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
@@ -362,9 +362,8 @@ export default {
     },
     //收藏房源
     addCollection(e) {
-      if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       if(this.collectionFlag){
         if(e.target.innerHTML=='已收藏'){
             this.$http
@@ -382,12 +381,10 @@ export default {
       }
       this.collectionFlag = !this.collectionFlag;
     },
-      //收藏房源
+    //收藏房源
     collection(e) {
-      console.log(111)
-      if(!this.logined){
-        return this.$alert('用户未登录!');
-      }
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       if(this.collectionFlag){
          this.$http
         .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.scity.value +"/"+  this.buildsdid)
@@ -470,7 +467,7 @@ export default {
     }
   },
   mounted() {
-    setTimeout(function() {
+    setTimeout(()=> {
       var viewSwiper = new Swiper(".view .swiper-container", {
         onSlideChangeStart: function() {
           updateNavPosition();
@@ -495,10 +492,11 @@ export default {
       });
 
       var previewSwiper = new Swiper(".preview .swiper-container", {
-        //visibilityFullFit: true,
+        visibilityFullFit: true,
         slidesPerView: "auto",
         allowTouchMove: false,
         onTap: function() {
+          console.log(1111)
           viewSwiper.slideTo(previewSwiper.clickedIndex);
         }
       });

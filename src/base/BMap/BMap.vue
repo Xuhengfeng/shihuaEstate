@@ -20,46 +20,46 @@ export default {
     };
   },
   props: {
-    //里面存放的也是数据，与data里面的数据不同的是，这里的数据是从其他地方得到的数据
-    height: {type: Number,default: 300},
-    longitude: {}, //定义经度
-    latitude: {}, //定义纬度
-    addr: {type:Object,default:{}}, //地址
+    longitude: {//定义经度
+      type: Number,
+      default: 0,
+    }, 
+    latitude: {//定义纬度
+      type: Number,
+      default: 0,
+    }, 
+    addr: {//地址
+      type: Object,
+      default: ()=>{return {}}
+    }, 
     chengshi: {}
   },
   mounted() {
     this.ready();
+    this.tabMap(1);
   },
   methods: {
     ready() {
       let that = this;
       that.map = new BMap.Map("bMap");
-      var point = new BMap.Point(116.331398, 39.897445);//城市的坐标
+      let point = new BMap.Point(116.331398, 39.897445);//城市的坐标
       that.map.centerAndZoom(point, 12);
 
-      var geolocation = new BMap.Geolocation();
-      // 开启SDK辅助定位
-      geolocation.enableSDKLocation();
+      let geolocation = new BMap.Geolocation();
+      geolocation.enableSDKLocation();//开启SDK辅助定位
       geolocation.getCurrentPosition(function(r) {
         if (this.getStatus() == BMAP_STATUS_SUCCESS) {
           var mk = new BMap.Marker(r.point);
           that.map.addOverlay(mk);
           that.map.panTo(r.point);
-          //						alert('您的位置：' + r.point.lng + ',' + r.point.lat);
-        } else {
-          //						alert('failed' + this.getStatus());
-        }
+        } 
       });
     },
     tabMap(num) {
       var local = new BMap.LocalSearch(this.map, {
-        renderOptions: {
-          map: this.map,
-          autoViewport: true
-        }
+        renderOptions: {map: this.map,autoViewport: true}
       });
-            console.log(typeof num)
-            console.log(this.addr.name)
+      console.log(this.addr.name)
       switch(num){
         case 1:local.searchNearby('交通',this.addr.name);break;
         case 2:local.searchNearby('购物',this.addr.name);break;

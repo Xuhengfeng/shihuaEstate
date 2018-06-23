@@ -140,8 +140,9 @@ export default {
     brokerHeadImg(val) {
       try{
         return 'http://dichan-test.oss-cn-shenzhen.aliyuncs.com/'+val.split("_")[0]+'/Empl/PIC/'+val.split('_')[1]+'/'+val.split('_')[1]+'.jpg'
-      }catch(e){}
-      return 'imgs/avatar.png';
+      }catch(e){
+        return 'imgs/avatar.png';
+      }
     },
     chatImg(val) {
       let baseUrl = 'http://dl.im.jiguang.cn/';
@@ -227,7 +228,7 @@ export default {
       setTimeout(()=>{
         let boxcontent = document.querySelector(".scroll");
             boxcontent.scrollIntoView(false);
-      },500);
+      },300);
     },
     //用户实时聊天消息监听
     Jiguang_onMsg() {
@@ -281,18 +282,25 @@ export default {
     },
     //点击其中一个聊天者
     selectItem(item,index) {
+      console.log(item.username)
+
+      //回到底部
+      this.toBottom();
       //当前聊天的内容
       this.contents = this.history[index].msgs;
       //当前聊天的经纪人
       this.nowName = item.nickName;
       this.targetObj = this.conversations[index];
-      this.toBottom();
+      //重置小红点
+      this.Jiguang_resetUnreadCount();
+      //打开聊天窗口
       this.open();
     },
     //重置小红点
     Jiguang_resetUnreadCount() {
+      console.log(this.targetObj.username)
       JIM.resetUnreadCount({
-        // username: this.datamine.username
+        username: this.targetObj.username
       })
     },
   }

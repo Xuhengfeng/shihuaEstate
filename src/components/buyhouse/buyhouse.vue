@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-20 01:35:11
+ * @Last Modified time: 2018-06-23 17:04:56
  */
 <template>
 	<div>
@@ -167,15 +167,12 @@
 		</div>
 		<!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
-    <!-- 对话框 登录 注册 修改密码  -->
-		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
 import oFly from "../../base/fly/fly";
-import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
@@ -287,11 +284,6 @@ export default {
     }
   },
   methods: {
-    //显示对应的弹窗
-    changeDialog(num) {
-      this.showbox = num; 
-      this.$refs.odialog.show();
-    },
     //收藏房源
     collection(item,e) {
       //未登录用户提示弹窗登录
@@ -315,7 +307,7 @@ export default {
     //加入对比清单
     addContrast(item, e) {
       //未登录用户提示弹窗登录
-      if(!this.logined) return this.changeDialog(1);
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       let payload = {
         contrastList: this.refresh,
         item: item
@@ -539,7 +531,6 @@ export default {
   },
   components: {
     oHeader,
-    oDialog,
     oFly
   }
 };
