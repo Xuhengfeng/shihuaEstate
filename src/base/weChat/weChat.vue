@@ -38,8 +38,7 @@
                                   <!-- 内容 -->
                                   <div>{{item.content.msg_body.text?item.content.msg_body.text:''}}</div>
                                   <!-- 图片 -->
-                                  <!-- <input type="text" :value="item.content.msg_body.media_id"> -->
-                                  <img class="chatPic"  :src="item.content.msg_body.media_id">
+                                  <img class="chatPic" v-if="item.content.msg_body.media_id" :src="item.content.msg_body.media_id">
                               </div>
                           </li>
                       </template>
@@ -139,12 +138,9 @@ export default {
       return (new Date(val)).$format("yyyy-MM-dd E hh:mm:ss");
     },
     brokerHeadImg(val) {
-      console.log(val)
       try{
         return 'http://dichan-test.oss-cn-shenzhen.aliyuncs.com/'+val.split("_")[0]+'/Empl/PIC/'+val.split('_')[1]+'/'+val.split('_')[1]+'.jpg'
-      }catch(e){
-        return './imgs/avatar.png';
-      }
+      }catch(e){}
     }
   },
   methods: {
@@ -180,7 +176,7 @@ export default {
         this.$emit('afresh');
       }
     },
-    // 发送消息
+    //发送文本消息
     Jiguang_sendMsg() {
         JIM.sendSingleMsg({
             target_username: this.targetObj.username,
@@ -192,14 +188,7 @@ export default {
         })
         .onSuccess((data,msg) => {
             this.sendMsg = null;
-            this.contents.push({
-                content: {
-                  msg_body: {text: msg.content.msg_body.text},
-                  from_id: this.userInfo.easemobUsername
-                },
-                ctime_ms: data.ctime_ms,
-                isPic: false
-            });
+            this.appendContent3(data, msg);
             this.toBottom();
         })
         .onFail(data => {
@@ -224,66 +213,104 @@ export default {
             boxcontent.scrollIntoView(false);
       },300);
     },
-    //用户实时聊天消息监听
+    //用户实时聊天消息监听(文本和图片等)
     Jiguang_onMsg() {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
       JIM.onMsgReceive(data => {
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
-        let text = base.msg_body.text;
+        let fromId = base.from_id;
+        let txt = base.msg_body.text;
         let createTime = base.create_time;
 
-        if(base.from_id == this.targetObj.username){
-          this.appendContent1(mediaId,text,createTime);
+        if(fromId == this.targetObj.username){
+          this.appendContent1(mediaId,fromId,txt,createTime);
         }else{
           let index = this.history.findIndex(element=>{
-            return  base.from_id == element.from_username;
+            return  fromId == element.from_username;
           })
-          this.appendContent2(mediaId,text,createTime,index);
+          this.appendContent2(mediaId,fromId,txt,createTime,index);
         }
-        this.toBottom();
       });
     },
-    //当前聊天经纪人
-    appendContent1(mediaId,text,createTime) {
-      JIM.getResource({'media_id':  mediaId})
-        .onSuccess(data=> {
-          this.contents.push({ 
-              content: {
-                msg_body: {media_id: data.url,text: text}
-              },
-              ctime_ms: createTime
-          });
-        })
-    },
-    //其他聊天经纪人
-    appendContent2(mediaId,text,createTime,index) {
-      JIM.getResource({'media_id':  mediaId})
-      .onSuccess(data=> {
-        this.history[index].msgs.push({
+    //当前聊天经纪人-->用户
+    appendContent1(mediaId,fromId,txt,createTime) {
+      if(mediaId){
+        JIM.getResource({'media_id':  mediaId})
+          .onSuccess(data=> {
+            this.contents.push({ 
+                content: {
+                  msg_body: {media_id: data.url,text: txt},
+                  from_id: fromId
+                },
+                ctime_ms: createTime
+            });
+          })
+          this.toBottom();
+      }else{
+        this.contents.push({ 
             content: {
-              msg_body: {media_id: data.url,text: text}
+              msg_body: {text: txt},
+              from_id: fromId
             },
             ctime_ms: createTime
-        })
-      })
+        });
+        this.toBottom();  
+      }
     },
+    //其他聊天经纪人-->用户
+    appendContent2(mediaId,fromId,txt,createTime,index) {
+      if(mediaId){
+        JIM.getResource({'media_id':  mediaId})
+        .onSuccess(data=> {
+          this.history[index].msgs.push({
+            content: {
+              msg_body: {media_id: data.url,text: txt},
+              from_id: fromId
+            },
+            ctime_ms: createTime
+          })
+          this.toBottom();
+        })
+      }else{
+        this.history[index].msgs.push({
+          content: {
+            msg_body: {text: txt},
+            from_id: fromId
+          },
+          ctime_ms: createTime
+        })
+        this.toBottom();
+      }
+    },
+    //用户自己-->用户
     appendContent3(data, msg) {
       let createTime = data.ctime_ms;
       let mediaId = msg.content.msg_body.media_id;
-      let text = msg.content.msg_body.text;
-      //用户自己
-      JIM.getResource({'media_id':  mediaId})
-        .onSuccess(data=> {
-          this.contents.push({
+      let txt = msg.content.msg_body.text;
+      if(mediaId){
+        JIM.getResource({'media_id':  mediaId})
+          .onSuccess(data=> {
+            this.contents.push({
               content: {
-                msg_body: {media_id: data.url,text: text},
+                msg_body: {media_id: data.url,text: txt},
                 from_id: this.userInfo.easemobUsername
               },
               ctime_ms: createTime
+            })
+            this.toBottom();
           })
+      }else{
+        this.contents.push({
+          content: {
+            msg_body: {text: txt},
+            from_id: this.userInfo.easemobUsername
+          },
+          ctime_ms: createTime
         })
+        this.toBottom();
+      }
     },
     //构造图片FormData
     getFile(e) {
@@ -319,6 +346,7 @@ export default {
       //当前聊天的经纪人
       this.nowName = item.nickName;
       this.targetObj = this.conversations[index];
+      this.$store.commit('ADDFIREND', this.targetObj);
       //重置小红点
       this.Jiguang_resetUnreadCount();
       //打开聊天窗口
