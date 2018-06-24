@@ -213,7 +213,7 @@ export default {
             boxcontent.scrollIntoView(false);
       },300);
     },
-    //用户实时聊天消息监听(文本和图片等)
+    //用户实时聊天消息监听(文本和图片)
     Jiguang_onMsg() {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
