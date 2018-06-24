@@ -9,79 +9,105 @@
   <!-- 用户登录 、注册dialog组件 -->
   <div class="dialog">
     <transition name="bounce">
-        <div class="panel_login " v-if="showFlag">
+        <div class="panel_login" v-if="showFlag">
             <i class="close_login" @click.stop="cancel()">×</i>
             <div class="panel_tab" v-if="showbox == 1">
               <!-- 账号密码登录 -->
               <div class="title">账号密码登录</div>
-              <form class="inputGroup" autocomplete="off">
+              <div class="inputGroup">
                   <input type="text" 
                        v-model="phonenum1" 
                        placeholder="请输入手机号"
+                       autocomplete="off"
+                       @keyup.enter="login()"
                        maxlength="11"/>
                   <input type="password" 
                       v-model="password1" 
                       maxlength="20" 
+                      autocomplete="off"
+                      @keyup.enter="login()"
                       placeholder="请输入登录密码"/>
                 <div class="fr fontColor" @click="jump(4)">忘记密码</div>
                 <button @click="login()">登录</button>
                 <div class="fl fontColor" @click="jump(3)">手机快捷登录</div>
                 <div class="come_login">没有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </form>
+              </div>
             </div>
             <!-- 手机号码注册 -->
             <div class="panel_tab" v-if="showbox == 2">
               <div class="title">手机号码注册</div>
-               <form class="inputGroup" autocomplete="off">
+               <div class="inputGroup" >
                 <input type="text" 
                       v-model="phonenum2" 
                       placeholder="请输入手机号" 
+                      autocomplete="off"
                       maxlength="11"/>
                 <div class="AuthCode">
                 <input type="text" 
                        v-model="msgcode1" 
+                       autocomplete="off"
                        placeholder="请输入验证码"/>
                        <button :class="disabled1?'sendCode':''" @click="sendMsgCode(1)">{{sendBtn1}}</button>
                 </div>
                 <input type="password" 
                       v-model="password2" 
                       placeholder="请输入密码（最少六位，数字加字母）" 
+                      autocomplete="off"
                       maxlength="11"/>
                 <input type="password" 
                       v-model="password3" 
                       placeholder="请再次输入密码" 
+                      autocomplete="off"
                       maxlength="11"/>
                 <div class="fontColor advantage">
 							    <el-checkbox v-model="agree">同意</el-checkbox><span style="color:#ff4343;font-size:14px">《世华服务协议》</span>
                 </div>
                 <button @click="register()">注册</button>
                 <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(1)">去登录</span></div>
-              </form>
+              </div>
             </div>
             <!-- 手机快捷登陆 -->
             <div class="panel_tab" v-if="showbox == 3">
               <div class="title">手机快捷登陆</div>
-              <form class="inputGroup" autocomplete="off">
-                <input type="text" v-model="phonenum3" placeholder="请输入手机号" maxlength="11">
+              <div class="inputGroup" autocomplete="off">
+                <input type="text"  
+                      v-model="phonenum3" 
+                      placeholder="请输入手机号" 
+                      autocomplete="off"
+                      maxlength="11"/>
                 <div class="AuthCode"><input type="text" v-model="msgcode2" placeholder="请输入验证码" @keyup.enter="rapid()"><button :class="disabled2?'sendCode':''" @click="sendMsgCode(2)">{{sendBtn2}}</button></div>
                 <button @click="rapid()">登录</button>
                 <div class="dl_login"  @click="jump(1)">账号密码登录</div>
                 <div class="come_login">没有账号？<span style="color:#ff4343;cursor:pointer;" @click="jump(2)">去注册</span></div>
-              </form>
+              </div>
             </div>
             <!-- 找回密码 -->
             <div class="panel_tab" v-if="showbox == 4">
               <div class="title">找回密码</div>
-              <form class="inputGroup" autocomplete="off">
-                <input type="text" v-model="phonenum4" placeholder="请输入手机号" maxlength="11">
+              <div class="inputGroup" autocomplete="off">
+                <input type="text" 
+                      v-model="phonenum4" 
+                      placeholder="请输入手机号" 
+                      maxlength="11"
+                      autocomplete="off"/>
                 <div class="AuthCode">
-                  <input type="text" v-model="msgcode3" placeholder="请输入验证码"><button :class="disabled3?'sendCode':''" @click="sendMsgCode(3)">{{sendBtn3}}</button>
+                  <input type="text" 
+                          v-model="msgcode3" 
+                          autocomplete="off"
+                          placeholder="请输入验证码"/>
+                  <button :class="disabled3?'sendCode':''" @click="sendMsgCode(3)">{{sendBtn3}}</button>
                 </div>
-                <input type="password" v-model="password4" placeholder="请输入密码(最少六位,数字加字母)">
-                <input type="password" v-model="password5" placeholder="再次输入密码">
+                <input type="password" 
+                        v-model="password4" 
+                        autocomplete="off"
+                        placeholder="请输入密码(最少六位,数字加字母)"/>
+                <input type="password" 
+                        v-model="password5" 
+                        autocomplete="off"
+                        placeholder="再次输入密码"/>
                             <button @click="findPassword()">确定</button>
                             <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
-              </form>
+              </div>
             </div>
         </div>
     </transition>
@@ -329,7 +355,6 @@ export default {
     jump(num) {
       this.clearAllInput();//清空文本域
       this.times = 0;//清空定时器
-      // this.$emit("changeDialog", num);
       this.$store.commit('OPENLOGINDIALOG', num);
     }
   }
@@ -359,6 +384,7 @@ export default {
   box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
   border-radius: 2px;
   padding: 40px 0 40px;
+    transition: top ease-in .5s;
 }
 .panel_login .close_login{
   cursor: pointer;
@@ -474,11 +500,19 @@ input::-webkit-input-placeholder {
 .bounce-enter-active{
   animation: bounce-in .5s;
 }
+.bounce-leave-active{
+  // animation: bounce-out .5s;
+}
 @keyframes bounce-in {
   0%{transform: scale(0)}
-  90%{transform: scale(1.05)}
+  95%{transform: scale(1.05)}
   100%{transform: scale(1)}
 }
+@keyframes bounce-out {
+  0%{transform: scale(1)}
+  100%{transform: scale(0);opacity:0}
+}
+
 </style>
 
 

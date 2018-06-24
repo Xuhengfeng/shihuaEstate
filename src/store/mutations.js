@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 15:07:07
+ * @Last Modified time: 2018-06-24 19:36:57
  */
 import router from '../router/index'
 //同步处理
@@ -97,16 +97,25 @@ export default {
 	},
 	//历史漫游消息
 	HISTORY(state, payload) {
+		payload.forEach(item=>{
+			item.msgs.forEach(item2=>{
+				JIM.getResource({
+					'media_id': item2.content.msg_body.media_id,
+				  }).onSuccess(data=> {
+					item2.content.msg_body.media_id = data.url;
+				  }).onFail(data=> {});
+			})
+		})
 		state.history = [...state.history , ...payload];
 	},
 	//会话列表(好友列表)
 	FIREND(state, payload) {
 		// 好友遍历
 		payload.forEach(item => {
-			// 历史漫游遍历
-			state.history.forEach(item2 => {
-				item.lastMsg = item2.msgs.pop().content.msg_body;
+			let index = state.history.findIndex(element=>{
+				return element.from_username == item.username;
 			})
+			item.lastMsg = state.history[index].msgs.pop().content.msg_body;
 		});
 		state.conversations = payload;
 	},

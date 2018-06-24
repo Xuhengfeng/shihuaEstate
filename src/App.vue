@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 18:09:21
+ * @Last Modified time: 2018-06-24 02:19:07
  */
 <template>
   <div id="app">
@@ -164,7 +164,8 @@ export default {
     //监听是否在线
     Jiguang_onDisconnect() {
       console.log('掉线,重新初始化....')
-      JIM.onDisconnect(()=>{
+      JIM.onDisconnect((res)=>{
+        console.log(res)
         this.afresh();
       })
     },

@@ -310,7 +310,7 @@ export default {
     //加入对比清单
     addCompare(item, e) {
       //未登录用户提示弹窗登录
-      if(!this.logined) return this.changeDialog(1);
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       let payload = {
         contrastList: this.contrastList,
         item: item
@@ -331,7 +331,8 @@ export default {
     },
     //加入待看清单
     addContrast(item, e) {
-       if(!this.logined) return this.$alert('用户未登录!');
+        //未登录用户提示弹窗登录
+        if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
         if( this.$store.state.appinthouse.length <= 3){
           
              this.$http.post(this.$url.URL.APPOINT_ADD,{

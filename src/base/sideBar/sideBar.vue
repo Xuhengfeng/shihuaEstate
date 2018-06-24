@@ -89,7 +89,7 @@ export default {
       showbox: null, //显示对应的dialog
       compareBtn: false,//对比
       compareBtntwo: false,//待看
-      scity: JSON.parse(localStorage.selectCity),//用户选定城市
+      scity: null,//用户选定城市
       id:"",            //待看id
       sdid: ""
     };
