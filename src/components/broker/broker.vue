@@ -108,15 +108,12 @@
 		</div>
 		<!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
-    <!-- 对话框 登录 注册 修改密码  -->
-		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
 import oFly from "../../base/fly/fly";
-import oDialog from "../../base/dialog/dialog";
 export default {
   data() {
     return {
@@ -182,13 +179,10 @@ export default {
     }
   },
   methods: {
-    //显示对应的弹窗
-    changeDialog(num) {
-      this.showbox = num; 
-      this.$refs.odialog.show();
-    },
     //打开聊天
     startChat(item) {
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       //装饰item
       let newItem = {
         avatar: item.photo,
@@ -199,8 +193,6 @@ export default {
         id: item.id,
         mtime: new Date().getTime()
       }
-      //未登录用户提示弹窗登录
-      if(!this.logined) return this.changeDialog(1);
       //添加经纪人到会话列表中
       this.$store.commit('ADDFIREND', newItem);         
     },
@@ -305,7 +297,6 @@ export default {
   },
   components: {
     oHeader,
-    oDialog,
     oFly
   }
 };

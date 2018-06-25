@@ -6,7 +6,7 @@
                 <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
                     <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
-                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.name|brokerHeadImg"></div>
+                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.username|brokerHeadImg"></div>
                         <div class="row">
                             <h4>{{item.nickName}}</h4>
                             <p>{{item.lastMsg.text?item.lastMsg.text:null}}</p>
@@ -27,6 +27,8 @@
           <div class="title"><span>{{nowName}}</span><div class="close" @click="close()"></div></div>
               <div class="chatArea">
                   <ul>
+                      <div class="chat-tophint">聊天的时候，经纪人无法知道您的手机号！</div>
+
                       <template v-for="item in contents">
                           <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
                           <li class="chat-block" :class="item.content.from_id==ownId?'chat-block-right':'chat-block-left'">
@@ -43,7 +45,6 @@
                           </li>
                       </template>
                       
-                      <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
                       <!-- 滚动到底部 -->
                       <p class="scroll"></p>
                   </ul>
@@ -105,6 +106,10 @@ export default {
     //历史漫游消息
     history() {
       return this.$store.state.history;
+    },
+    //当前聊天经纪人
+    currentLineBroker() {
+      return this.$store.state.currentLineBroker;
     }
   },
   watch: {
@@ -130,7 +135,20 @@ export default {
         nickname: this.currentLineBroker.nickName,//中文
         appkey: this.userInfo.brokerAppKey
       }
-      this.nowName = this.currentLineBroker.nickName;//经纪人极光账户昵称
+
+      //匹配对应的经纪人 和 历史聊天记录
+      let index = this.conversations.findIndex(element=>{
+        return element.username == this.currentLineBroker.username;
+      })
+      let index2 = this.history.findIndex(element=>{
+        return element.from_username == this.currentLineBroker.username;
+      })
+
+      //当前聊天的经纪人和内容
+      this.targetObj = this.conversations[index];
+      this.nowName = this.conversations[index].nickName;
+      this.contents = this.history[index2].msgs?this.history[index2].msgs:[];
+      this.toBottom();
     }
   },
   filters: {
@@ -221,7 +239,7 @@ export default {
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
-        let txt = base.msg_body.text;
+        let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = base.create_time;
 
         if(fromId == this.targetObj.username){
@@ -232,8 +250,21 @@ export default {
           })
           this.appendContent2(mediaId,fromId,txt,createTime,index);
         }
+
+        //重新刷新会话列表
+        JIM.getConversation()
+        .onSuccess(data => {
+          console.log('会话列表', data);
+          console.log('会话列表', data.conversations);
+          this.$store.commit('FIREND', data.conversations);
+        })
+        .onFail(data => {
+          console.log("会话列表失败:" + JSON.stringify(data));
+        });
+
       });
     },
+
     //当前聊天经纪人-->用户
     appendContent1(mediaId,fromId,txt,createTime) {
       if(mediaId){
@@ -288,7 +319,7 @@ export default {
     appendContent3(data, msg) {
       let createTime = data.ctime_ms;
       let mediaId = msg.content.msg_body.media_id;
-      let txt = msg.content.msg_body.text;
+      let txt = msg.content.msg_body.text?msg.content.msg_body.text:"";
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
@@ -335,22 +366,31 @@ export default {
     },
     //点击其中一个聊天者
     selectItem(item) {
-      //匹配对应的history
-      let index = this.history.findIndex(element=>{
+      //匹配对应的经纪人 和 历史聊天记录
+      let index = this.conversations.findIndex(element=>{
+        return element.username == item.username;
+      })
+      let index2 = this.history.findIndex(element=>{
         return element.from_username == item.username;
       })
-      //回到底部
-      this.toBottom();
-      //当前聊天的内容
-      this.contents = this.history[index].msgs;
-      //当前聊天的经纪人
-      this.nowName = item.nickName;
+
+      //当前聊天的经纪人和内容
       this.targetObj = this.conversations[index];
-      this.$store.commit('ADDFIREND', this.targetObj);
+      this.nowName = this.conversations[index].nickName;
+      this.contents = this.history[index2].msgs;
+
+      //当前经纪人  顶置
+      this.$store.commit('CURRENTBROKER', this.targetObj);
+      // this.$store.commit('FIRENDFIRST', this.targetObj);
+
+
       //重置小红点
       this.Jiguang_resetUnreadCount();
       //打开聊天窗口
       this.open();
+
+      //聊天内容回到底部
+      this.toBottom();
     },
     //重置小红点
     Jiguang_resetUnreadCount() {
@@ -358,7 +398,7 @@ export default {
       JIM.resetUnreadCount({
         'username': this.targetObj.username
       })
-    },
+    }
   }
 };
 </script>
@@ -468,6 +508,9 @@ export default {
               color: #666;
               font-size: 12px;
               line-height: 20px;
+              white-space:nowrap; 
+              overflow:hidden; 
+              text-overflow:ellipsis;
             }
           }
         }
@@ -534,10 +577,10 @@ export default {
           color: #aaa;
           font-size: 12px;
           line-height: 12px;
+          padding: 20px 0;
           text-align: center;
         }
         ul {
-          padding-top: 20px;
           box-sizing: border-box;
           height: 270px;
           overflow-y: auto;
