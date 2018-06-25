@@ -59,17 +59,21 @@
 							</li>
 						</ul>
 					</div>
-					<div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">世华易居网南宁二手房>南宁二手房</div>
-					<!--分页器-->
-					<el-pagination
-           @current-change="handleCurrentChange"
-					  background
-					  layout="prev, pager, next"
-            prev-text="上一页"
-					   next-text="下一页"
-					  :total="1000"
-					  class="fr">
-					</el-pagination>
+					 <div class="pageFooter">
+              <div class="fl" style="color: rgba(0,0,0,0.5);font-size: 12px;">
+                <router-link to="home">世华易居网南宁二手房</router-link>>
+                <router-link to="buyhouse">南宁二手房</router-link>
+              </div>
+              <el-pagination class="fr oPagination"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :current-page.sync="params.pageNo"
+                  :total="querycount.count">
+              </el-pagination>
+          </div>
 				</div>
 			</div>
 		</div>
@@ -93,17 +97,15 @@ export default {
       num: 0,
       showBtn: false,
       showBtnone: false,
-      queryRentcount: {
-        //租房房总数量
-        count: ""
-      },
-      queryone: null, //租房房区域
       inputresult: null,
       inputresulttwo: null,
       inputone: "",
       inputtwo: "",
       inputthree: "",
       inputfour: "",
+       querycount: {//检索总数量
+        count: 0
+      },
       params: {
         areaId: null,
         districtId: null,
@@ -155,7 +157,14 @@ export default {
           this.shoper = response.data.data;    
           console.log(this.shoper )        
         });
+        this.countRequest();
 
+    },
+     //请求门店数量
+    countRequest() {
+      this.$http.post(this.$url.URL.SHOPERS_COUNT, this.params).then(response => {
+        this.querycount = response.data.data;
+      });
     },
     changeshow() {
       this.showBtn = true;
@@ -301,6 +310,10 @@ export default {
   height: 18px;
   line-height: 18px;
   font-size: 13px;
+}
+.pageFooter{
+  overflow: hidden;
+  padding-top: 20px;
 }
 
 /*content部分css*/

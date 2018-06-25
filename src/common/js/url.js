@@ -60,6 +60,7 @@ let URL = {
 	SMSCODE_LOGIN:_host+'/member/smsCodelogin',                 //用户手机 验证码登录
 	SMSCODE_RESETLOGIN:_host+'/member/resetPassword',           //用户重置密码 验证码登录
 	SHOPERS_LIST:_host +'/shop/shops',  					    //找门店
+	SHOPERS_COUNT:_host +'/shop/shopsCount',  					    //找门店数量
 
 	// 经纪人
 	BROKERS:_host +'/broker/',  		         			    //经纪人详情
