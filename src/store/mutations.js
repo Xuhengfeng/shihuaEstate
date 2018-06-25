@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 11:26:01
+ * @Last Modified time: 2018-06-25 15:03:11
  */
 import router from '../router/index'
 //同步处理
@@ -91,10 +91,6 @@ export default {
 	ADDTWO(state, payload){
 		state.appinthouse = payload;
 	},
-	//开始聊天
-	STARTCHAT(state, payload) {
-		state.chat = payload;
-	},
 	//历史漫游消息
 	HISTORY(state, payload) {
 		payload.forEach(item=>{
@@ -105,6 +101,7 @@ export default {
 					item2.content.msg_body.media_id = data.url;
 				  }).onFail(data=> {});
 			})
+			payload.lastMsg = {text: ''};
 		})
 		state.history = [...state.history , ...payload];
 	},
@@ -115,7 +112,11 @@ export default {
 			let index = state.history.findIndex(element=>{
 				return element.from_username == item.username;
 			})
-			item.lastMsg = state.history[index].msgs.pop().content.msg_body;
+			if(index==-1){
+				item.lastMsg = {text: ''};
+			}else{
+				item.lastMsg = state.history[index].msgs.pop().content.msg_body;
+			}
 		});
 		state.conversations = payload;
 	},
@@ -123,22 +124,48 @@ export default {
 	ADDFIREND(state, payload) {
 		console.log('进来了')
 		//当前聊天的经纪人
-		state.currentLineBroker = payload;
-		
+		payload.lastMsg = {text: ''};
+		state.currentLineBroker = payload;	
+		state.chat = true;
+
+		//找到会话列表中的当前用户
 		let index = state.conversations.findIndex(item=>{
 			return item.username == payload.username;
 		})
+		
 		//当前经纪人不存在于会话列表中
 		if(index==-1) {
 			state.conversations.unshift(payload);
-			state.history.unshift([]);
-		}else{
-			//调换次序
-			state.conversations.splice(index, 1);
-			state.conversations.unshift(payload);
-			state.history.splice(index, 1);
-			state.history.unshift([]);
+			state.history.unshift({
+				from_username: payload.username,
+				lastMsg: {text: ''}
+			});
 		}
-		this.commit('STARTCHAT', true);
+		//当前经纪人存在于会话列表中
+		else{
+			console.log('进行顶置')
+			this.commit('FIRENDFIRST', payload);
+		}
+	},
+	//会话列表(当前好友进行顶置)
+	FIRENDFIRST(state, payload) {
+		//找到会话列表中的当前用户
+		let index = state.conversations.findIndex(item=>{
+			return item.username == payload.username;
+		})
+
+
+		//当前经纪人进行顶置
+		state.conversations[0] = state.conversations.splice(index, 1, state.conversations[0])[0];
+		console.log(state.conversations[0])
+		console.log(state.conversations)
+
+		
+		//当前经纪人历史缓存同步顶置
+		state.history[0] = state.history.splice(index, 1, state.history[0])[0];
+	},
+	//开始聊天
+	STARTCHAT(state, payload) {
+		state.chat = payload;
 	}
 }

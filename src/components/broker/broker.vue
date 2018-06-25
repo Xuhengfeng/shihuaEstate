@@ -181,6 +181,8 @@ export default {
   methods: {
     //打开聊天
     startChat(item) {
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       //装饰item
       let newItem = {
         avatar: item.photo,
@@ -191,8 +193,6 @@ export default {
         id: item.id,
         mtime: new Date().getTime()
       }
-      //未登录用户提示弹窗登录
-      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       //添加经纪人到会话列表中
       this.$store.commit('ADDFIREND', newItem);         
     },
@@ -297,7 +297,6 @@ export default {
   },
   components: {
     oHeader,
-    oDialog,
     oFly
   }
 };

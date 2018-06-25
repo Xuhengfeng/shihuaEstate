@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-24 22:09:31
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-25 14:29:05
  */
 <template>
   <div id="app">
@@ -155,8 +155,8 @@ export default {
         })
         .onSuccess(data => {
             this.Jiguang_userInfo();//用户信息
-            this.Jiguang_syncConversation();//这里首次同步监听离线消息
             this.Jiguang_conversation();//这里首次会话列表
+            this.Jiguang_syncConversation();//这里首次同步监听离线消息
             this.$refs.oChat.Jiguang_onMsg();//监听消息
         })
         .onFail(data => {});

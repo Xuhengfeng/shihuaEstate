@@ -6,7 +6,7 @@
                 <li :key="index" v-for="(item,index) in brokerTalks" @click="selectItem(item,index)">
                     <div class="time">{{item.mtime|formatTime}}</div>
                     <div class="broker">
-                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.name|brokerHeadImg"></div>
+                        <div class="img" :class="item.unread_msg_count>0?'imgPoint':''"><img :src="item.username|brokerHeadImg"></div>
                         <div class="row">
                             <h4>{{item.nickName}}</h4>
                             <p>{{item.lastMsg.text?item.lastMsg.text:null}}</p>
@@ -307,7 +307,7 @@ export default {
     appendContent3(data, msg) {
       let createTime = data.ctime_ms;
       let mediaId = msg.content.msg_body.media_id;
-      let txt = msg.content.msg_body.text;
+      let txt = msg.content.msg_body.text?sg.content.msg_body.text:"";
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
@@ -354,22 +354,29 @@ export default {
     },
     //点击其中一个聊天者
     selectItem(item) {
-      //匹配对应的history
-      let index = this.history.findIndex(element=>{
+      //匹配对应的经纪人 和 历史聊天记录
+      let index = this.conversations.findIndex(element=>{
+        return element.username == item.username;
+      })
+      let index2 = this.history.findIndex(element=>{
         return element.from_username == item.username;
       })
-      //回到底部
-      this.toBottom();
-      //当前聊天的内容
-      this.contents = this.history[index].msgs;
-      //当前聊天的经纪人
-      this.nowName = item.nickName;
+
+      //当前聊天的经纪人和内容
       this.targetObj = this.conversations[index];
-      this.$store.commit('ADDFIREND', this.targetObj);
+      this.nowName = this.conversations[index].nickName;
+      this.contents = this.history[index2].msgs;
+
+      //当前经纪人进行顶置
+      this.$store.commit('FIRENDFIRST', this.targetObj);
+
       //重置小红点
       this.Jiguang_resetUnreadCount();
       //打开聊天窗口
       this.open();
+
+      //回到底部
+      this.toBottom();
     },
     //重置小红点
     Jiguang_resetUnreadCount() {
@@ -377,7 +384,7 @@ export default {
       JIM.resetUnreadCount({
         'username': this.targetObj.username
       })
-    },
+    }
   }
 };
 </script>
