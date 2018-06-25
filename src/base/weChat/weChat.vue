@@ -147,7 +147,7 @@ export default {
       //当前聊天的经纪人和内容
       this.targetObj = this.conversations[index];
       this.nowName = this.conversations[index].nickName;
-      this.contents = this.history[index2].msgs;
+      this.contents = this.history[index2].msgs?this.history[index2].msgs:[];
       this.toBottom();
     }
   },
@@ -379,8 +379,10 @@ export default {
       this.nowName = this.conversations[index].nickName;
       this.contents = this.history[index2].msgs;
 
-      //当前经纪人进行顶置
+      //当前经纪人  顶置
+      this.$store.commit('CURRENTBROKER', this.targetObj);
       // this.$store.commit('FIRENDFIRST', this.targetObj);
+
 
       //重置小红点
       this.Jiguang_resetUnreadCount();

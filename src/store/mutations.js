@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 15:38:32
+ * @Last Modified time: 2018-06-25 16:18:33
  */
 import router from '../router/index'
 //同步处理
@@ -119,6 +119,11 @@ export default {
 			}
 		});
 		state.conversations = payload;
+	},
+	//当前的经纪人
+	CURRENTBROKER(state, payload) {
+		payload.lastMsg = {text: ''};
+		state.currentLineBroker = payload;	
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
