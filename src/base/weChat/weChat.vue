@@ -132,7 +132,8 @@ export default {
       //当前聊天的经纪人
       this.targetObj = {
         username: this.currentLineBroker.username,//经纪人极光账户
-        nickname: this.currentLineBroker.nickName,//中文
+        nickName: this.currentLineBroker.nickName,//中文
+        password: this.currentLineBroker.username.split('-').join(''),
         appkey: this.userInfo.brokerAppKey
       }
 
@@ -215,10 +216,11 @@ export default {
         });
     },
     Jiguang_register() {
+      console.log(this.targetObj);
+
       this.$http.get(this.$url.URL.USER_JIGUANGREG+
                     "?username="+this.targetObj.username+
-                    "&password="+this.targetObj.password+
-                    "&nickname="+this.targetObj.nickname)
+                    "&nickname="+this.targetObj.nickName)
                 .then(data=>{
                   //主动回调一次发送消息
                   this.Jiguang_sendMsg();
@@ -241,6 +243,8 @@ export default {
         let fromId = base.from_id;
         let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = base.create_time;
+
+        console.log(base);
 
         if(fromId == this.targetObj.username){
           this.appendContent1(mediaId,fromId,txt,createTime);

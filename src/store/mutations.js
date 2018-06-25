@@ -127,7 +127,6 @@ export default {
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
-		console.log('进来了')
 		//当前聊天的经纪人
 		payload.lastMsg = {text: ''};
 		state.currentLineBroker = payload;	

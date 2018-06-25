@@ -190,6 +190,7 @@ export default {
         name: item.emplName,
         nickName: item.emplName,
         username: item.chatUsername,
+        password: item.chatUsername.split('_').join(''),
         id: item.id,
         mtime: new Date().getTime()
       }

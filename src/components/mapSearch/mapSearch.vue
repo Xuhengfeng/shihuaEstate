@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-01 17:31:41
+ * @Last Modified time: 2018-06-25 17:22:38
  */
 <template>
     <!-- 地图找房 -->
@@ -60,6 +60,7 @@
                     </li>
                 </ul>
                 <ul class="tools fr">
+                   <!-- 学校找房 和商圈找房   -->
                     <li v-if="metroNum == 1">
                         <i class="iconfont icon-location"></i>地铁找房                        
                     </li>
@@ -68,7 +69,7 @@
                     </li>
 
                     <li @click="beginDraw()" v-if="circleNum == 1">
-                        <i class="iconfont icon-location"></i>画圈找房                      
+                        <i class="iconfont icon-location"></i>画圈找房                    
                     </li>
                     <li @click="exitDraw()" v-if="circleNum == 2" style="color:#ff4343">
                         <i class="iconfont icon-location"></i>退出画圈找房                      
