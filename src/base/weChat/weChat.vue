@@ -380,14 +380,14 @@ export default {
       this.contents = this.history[index2].msgs;
 
       //当前经纪人进行顶置
-      this.$store.commit('FIRENDFIRST', this.targetObj);
+      // this.$store.commit('FIRENDFIRST', this.targetObj);
 
       //重置小红点
       this.Jiguang_resetUnreadCount();
       //打开聊天窗口
       this.open();
 
-      //回到底部
+      //聊天内容回到底部
       this.toBottom();
     },
     //重置小红点
