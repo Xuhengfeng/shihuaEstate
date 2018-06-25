@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 15:03:11
+ * @Last Modified time: 2018-06-25 15:38:32
  */
 import router from '../router/index'
 //同步处理
@@ -143,7 +143,7 @@ export default {
 		}
 		//当前经纪人存在于会话列表中
 		else{
-			console.log('进行顶置')
+			//进行顶置处理
 			this.commit('FIRENDFIRST', payload);
 		}
 	},
@@ -153,16 +153,13 @@ export default {
 		let index = state.conversations.findIndex(item=>{
 			return item.username == payload.username;
 		})
-
-
+		let index2 = state.history.findIndex(element=>{
+			return element.username == payload.username;
+		})
 		//当前经纪人进行顶置
 		state.conversations[0] = state.conversations.splice(index, 1, state.conversations[0])[0];
-		console.log(state.conversations[0])
-		console.log(state.conversations)
-
-		
-		//当前经纪人历史缓存同步顶置
-		state.history[0] = state.history.splice(index, 1, state.history[0])[0];
+		//当前经纪人历史聊天顶置
+		state.history[0] = state.history.splice(index2, 1, state.history[0])[0];
 	},
 	//开始聊天
 	STARTCHAT(state, payload) {

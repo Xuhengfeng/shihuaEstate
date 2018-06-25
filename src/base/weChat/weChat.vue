@@ -106,6 +106,10 @@ export default {
     //历史漫游消息
     history() {
       return this.$store.state.history;
+    },
+    //当前聊天经纪人
+    currentLineBroker() {
+      return this.$store.state.currentLineBroker;
     }
   },
   watch: {
@@ -131,7 +135,20 @@ export default {
         nickname: this.currentLineBroker.nickName,//中文
         appkey: this.userInfo.brokerAppKey
       }
-      this.nowName = this.currentLineBroker.nickName;//经纪人极光账户昵称
+
+      //匹配对应的经纪人 和 历史聊天记录
+      let index = this.conversations.findIndex(element=>{
+        return element.username == this.currentLineBroker.username;
+      })
+      let index2 = this.history.findIndex(element=>{
+        return element.from_username == this.currentLineBroker.username;
+      })
+
+      //当前聊天的经纪人和内容
+      this.targetObj = this.conversations[index];
+      this.nowName = this.conversations[index].nickName;
+      this.contents = this.history[index2].msgs;
+      this.toBottom();
     }
   },
   filters: {
@@ -245,11 +262,6 @@ export default {
           console.log("会话列表失败:" + JSON.stringify(data));
         });
 
-        //重新刷新缓存历史漫游消息
-        JIM.onSyncConversation(data=> {
-          this.$store.commit('HISTORY', data);
-        });
-
       });
     },
 
@@ -307,7 +319,7 @@ export default {
     appendContent3(data, msg) {
       let createTime = data.ctime_ms;
       let mediaId = msg.content.msg_body.media_id;
-      let txt = msg.content.msg_body.text?sg.content.msg_body.text:"";
+      let txt = msg.content.msg_body.text?msg.content.msg_body.text:"";
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
