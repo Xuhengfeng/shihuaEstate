@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-24 19:36:57
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-25 11:26:01
  */
 import router from '../router/index'
 //同步处理
@@ -121,6 +121,7 @@ export default {
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
+		console.log('进来了')
 		//当前聊天的经纪人
 		state.currentLineBroker = payload;
 		
@@ -129,8 +130,14 @@ export default {
 		})
 		//当前经纪人不存在于会话列表中
 		if(index==-1) {
-			state.conversations.push(payload);
-			state.history.push([]);
+			state.conversations.unshift(payload);
+			state.history.unshift([]);
+		}else{
+			//调换次序
+			state.conversations.splice(index, 1);
+			state.conversations.unshift(payload);
+			state.history.splice(index, 1);
+			state.history.unshift([]);
 		}
 		this.commit('STARTCHAT', true);
 	}

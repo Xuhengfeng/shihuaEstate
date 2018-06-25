@@ -27,6 +27,8 @@
           <div class="title"><span>{{nowName}}</span><div class="close" @click="close()"></div></div>
               <div class="chatArea">
                   <ul>
+                      <div class="chat-tophint">聊天的时候，经纪人无法知道您的手机号！</div>
+
                       <template v-for="item in contents">
                           <li class="chat-time">{{item.ctime_ms|formatTime}}</li>
                           <li class="chat-block" :class="item.content.from_id==ownId?'chat-block-right':'chat-block-left'">
@@ -43,7 +45,6 @@
                           </li>
                       </template>
                       
-                      <div class="chat-tophint" v-show="!contents.length">聊天的时候，经纪人无法知道您的手机号！</div>
                       <!-- 滚动到底部 -->
                       <p class="scroll"></p>
                   </ul>
@@ -221,7 +222,7 @@ export default {
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
-        let txt = base.msg_body.text;
+        let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = base.create_time;
 
         if(fromId == this.targetObj.username){
@@ -232,8 +233,26 @@ export default {
           })
           this.appendContent2(mediaId,fromId,txt,createTime,index);
         }
+
+        //重新刷新会话列表
+        JIM.getConversation()
+        .onSuccess(data => {
+          console.log('会话列表', data);
+          console.log('会话列表', data.conversations);
+          this.$store.commit('FIREND', data.conversations);
+        })
+        .onFail(data => {
+          console.log("会话列表失败:" + JSON.stringify(data));
+        });
+
+        //重新刷新缓存历史漫游消息
+        JIM.onSyncConversation(data=> {
+          this.$store.commit('HISTORY', data);
+        });
+
       });
     },
+
     //当前聊天经纪人-->用户
     appendContent1(mediaId,fromId,txt,createTime) {
       if(mediaId){
@@ -468,6 +487,9 @@ export default {
               color: #666;
               font-size: 12px;
               line-height: 20px;
+              white-space:nowrap; 
+              overflow:hidden; 
+              text-overflow:ellipsis;
             }
           }
         }
@@ -534,10 +556,10 @@ export default {
           color: #aaa;
           font-size: 12px;
           line-height: 12px;
+          padding: 20px 0;
           text-align: center;
         }
         ul {
-          padding-top: 20px;
           box-sizing: border-box;
           height: 270px;
           overflow-y: auto;

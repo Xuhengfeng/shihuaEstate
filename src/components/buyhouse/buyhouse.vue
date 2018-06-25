@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 17:04:56
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-25 11:30:37
  */
 <template>
 	<div>
@@ -287,7 +287,7 @@ export default {
     //收藏房源
     collection(item,e) {
       //未登录用户提示弹窗登录
-      if(!this.logined) return this.changeDialog(1);
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
       //判断当前点击对象是否已收藏
       if(this.collectionFlag){
          this.$http

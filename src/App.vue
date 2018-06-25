@@ -121,7 +121,7 @@ export default {
     },
     //是否登录
     isLogin() {
-      this.isLogin&&this.Jiguang_Init();
+      this.isLogin&&this.afresh();
     }
   },
   methods:{
@@ -143,6 +143,7 @@ export default {
         })
         .onSuccess(data => {
             that.Jiguang_login();//极光登录
+            this.Jiguang_onDisconnect();//监听是否在线
         })
         .onFail(error => {});
     },
@@ -153,10 +154,9 @@ export default {
             password: this.userInfo.easemobPassword
         })
         .onSuccess(data => {
-            this.Jiguang_onDisconnect();//监听是否在线
             this.Jiguang_userInfo();//用户信息
-            this.Jiguang_syncConversation();//同步监听离线消息
-            this.Jiguang_conversation();//会话列表
+            this.Jiguang_syncConversation();//这里首次同步监听离线消息
+            this.Jiguang_conversation();//这里首次会话列表
             this.$refs.oChat.Jiguang_onMsg();//监听消息
         })
         .onFail(data => {});
@@ -165,7 +165,6 @@ export default {
     Jiguang_onDisconnect() {
       console.log('掉线,重新初始化....')
       JIM.onDisconnect(res=>{
-        console.log(res)
         this.afresh();
       })
     },
