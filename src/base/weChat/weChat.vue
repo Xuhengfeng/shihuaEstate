@@ -83,7 +83,8 @@ export default {
       flag: false, //用来记住 聊天窗口是否被打开
       nowName: null,//当前聊天者姓名
       ownId: null,
-      targetObj: null,//当前聊天的经纪人     
+      targetObj: null,//当前聊天的经纪人 
+      indexNum: null,//监听历史index    
     };
   },
   computed: {
@@ -236,7 +237,6 @@ export default {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
       JIM.onMsgReceive(data => {
-        console.log(data)
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
@@ -244,14 +244,14 @@ export default {
         let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = base.create_time;
 
-        let index = this.history.findIndex(element=>{
+        this.indexNum = this.history.findIndex(element=>{
           return  fromId == element.from_username;
         })
 
         if(fromId == this.targetObj.username){
-          this.appendContent1(mediaId,fromId,fromName,txt,createTime,index);
+          this.appendContent1(mediaId,fromId,fromName,txt,createTime);
         }else{
-          this.appendContent2(mediaId,fromId,fromName,txt,createTime,index);
+          this.appendContent2(mediaId,fromId,fromName,txt,createTime);
         }
 
         //重新刷新会话列表
@@ -266,7 +266,7 @@ export default {
 
 
     //当前聊天经纪人-->用户
-    appendContent1(mediaId,fromId,fromName,txt,createTime,index) {
+    appendContent1(mediaId,fromId,fromName,txt,createTime) {
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
@@ -279,7 +279,7 @@ export default {
               ctime_ms: createTime
             }
             this.contents.push(obj)
-            this.history[index].msgs.push(obj);
+            this.history[this.indexNum].msgs.push(obj);
             this.toBottom();
         })
       }else{
@@ -292,17 +292,17 @@ export default {
           ctime_ms: createTime
         }
         this.contents.push(obj)
-        this.history[index].msgs.push(obj);
+        this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
       //历史聊天缓存同步
-      let payload = {index: index, data: this.history}
+      let payload = {index: this.indexNum, data: this.history}
       this.$store.commit('SYNCHISTORY', payload);
     },
 
 
     //其他聊天经纪人-->用户
-    appendContent2(mediaId,fromId,fromName,txt,createTime,index) {
+    appendContent2(mediaId,fromId,fromName,txt,createTime) {
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
         .onSuccess(data=> {
@@ -315,7 +315,7 @@ export default {
             ctime_ms: createTime
           }
           this.contents.push(obj)
-          this.history[index].msgs.push(obj);
+          this.history[this.indexNum].msgs.push(obj);
           this.toBottom();
         })
       }else{
@@ -328,11 +328,11 @@ export default {
           ctime_ms: createTime
         }
         this.contents.push(obj)
-        this.history[index].msgs.push(obj);
+        this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
       //历史聊天缓存同步
-      let payload = {index: index, data: this.history}
+      let payload = {index: this.indexNum, data: this.history}
       this.$store.commit('SYNCHISTORY', payload);
     },
 
@@ -342,10 +342,6 @@ export default {
       let createTime = data.ctime_ms;
       let mediaId = msg.content.msg_body.media_id;
       let txt = msg.content.msg_body.text?msg.content.msg_body.text:"";
-      let index = this.history.findIndex(element=>{
-        return  this.userInfo.easemobUsername == element.from_username;
-      })
-
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
@@ -358,7 +354,7 @@ export default {
               ctime_ms: createTime
             }
             this.contents.push(obj)
-            this.history[index].msgs.push(obj);
+            this.history[this.indexNum].msgs.push(obj);
             this.toBottom();
         })
       }else{
@@ -371,11 +367,11 @@ export default {
           ctime_ms: createTime
         }
         this.contents.push(obj)
-        this.history[index].msgs.push(obj);
+        this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
       //历史聊天缓存同步
-      let payload = {index: index, data: this.history}
+      let payload = {index: this.indexNum, data: this.history}
       this.$store.commit('SYNCHISTORY', payload);
     },
 
@@ -409,19 +405,18 @@ export default {
       let index = this.conversations.findIndex(element=>{
         return element.username == item.username;
       })
-      let index2 = this.history.findIndex(element=>{
+
+      this.indexNum = this.history.findIndex(element=>{
         return element.from_username == item.username;
       })
 
       //当前聊天的经纪人和内容
       this.targetObj = this.conversations[index];
       this.nowName = this.conversations[index].nickName;
-      this.contents = this.history[index2].msgs;
+      this.contents = this.history[this.indexNum].msgs;
 
-      //当前经纪人  顶置
+      //当前经纪人 
       this.$store.commit('CURRENTBROKER', this.targetObj);
-      // this.$store.commit('FIRENDFIRST', this.targetObj);
-
 
       //重置小红点
       this.Jiguang_resetUnreadCount();
