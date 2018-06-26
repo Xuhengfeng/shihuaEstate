@@ -229,7 +229,7 @@ export default {
         let fromId = base.from_id;
         let fromName = base.from_username;
         let txt = base.msg_body.text?base.msg_body.text:'';
-        let createTime = base.create_time;
+        let createTime = data.messages[0].ctime_ms;
 
         this.indexNum = this.history.findIndex(element=>{
           return  fromId == element.from_username;
