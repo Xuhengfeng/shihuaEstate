@@ -216,15 +216,13 @@ export default {
         });
     },
     Jiguang_register() {
-      console.log(this.targetObj);
-
-      this.$http.get(this.$url.URL.USER_JIGUANGREG+
-                    "?username="+this.targetObj.username+
-                    "&nickname="+this.targetObj.nickName)
-                .then(data=>{
-                  //主动回调一次发送消息
-                  this.Jiguang_sendMsg();
-                })
+      let params = {chatUsername: this.targetObj.username}
+      this.$http
+          .post(this.$url.URL.USER_JIGUANGREG,params)
+          .then(data=>{
+            //主动回调一次发送消息
+            // this.Jiguang_sendMsg();
+          })
     },
     //滚动底部
     toBottom() {
@@ -238,115 +236,150 @@ export default {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
       JIM.onMsgReceive(data => {
+        console.log(data)
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
+        let fromName = base.from_username;
         let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = base.create_time;
 
-        console.log(base);
+        let index = this.history.findIndex(element=>{
+          return  fromId == element.from_username;
+        })
 
         if(fromId == this.targetObj.username){
-          this.appendContent1(mediaId,fromId,txt,createTime);
+          this.appendContent1(mediaId,fromId,fromName,txt,createTime,index);
         }else{
-          let index = this.history.findIndex(element=>{
-            return  fromId == element.from_username;
-          })
-          this.appendContent2(mediaId,fromId,txt,createTime,index);
+          this.appendContent2(mediaId,fromId,fromName,txt,createTime,index);
         }
 
         //重新刷新会话列表
         JIM.getConversation()
         .onSuccess(data => {
-          console.log('会话列表', data);
-          console.log('会话列表', data.conversations);
           this.$store.commit('FIREND', data.conversations);
         })
-        .onFail(data => {
-          console.log("会话列表失败:" + JSON.stringify(data));
-        });
+        .onFail(data => {});
 
       });
     },
 
+
     //当前聊天经纪人-->用户
-    appendContent1(mediaId,fromId,txt,createTime) {
+    appendContent1(mediaId,fromId,fromName,txt,createTime,index) {
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
-            this.contents.push({ 
-                content: {
-                  msg_body: {media_id: data.url,text: txt},
-                  from_id: fromId
-                },
-                ctime_ms: createTime
-            });
-          })
-          this.toBottom();
+            let obj = {
+              content: {
+                msg_body: {media_id: data.url,text: txt},
+                from_id: this.userInfo.easemobUsername,
+                from_username: fromName
+              },
+              ctime_ms: createTime
+            }
+            this.contents.push(obj)
+            this.history[index].msgs.push(obj);
+            this.toBottom();
+        })
       }else{
-        this.contents.push({ 
-            content: {
-              msg_body: {text: txt},
-              from_id: fromId
-            },
-            ctime_ms: createTime
-        });
-        this.toBottom();  
+        let obj = {
+          content: {
+            msg_body: {text: txt},
+            from_id: fromId,
+            from_username: fromName
+          },
+          ctime_ms: createTime
+        }
+        this.contents.push(obj)
+        this.history[index].msgs.push(obj);
+        this.toBottom();
       }
+      //历史聊天缓存同步
+      let payload = {index: index, data: this.history}
+      this.$store.commit('SYNCHISTORY', payload);
     },
+
+
     //其他聊天经纪人-->用户
-    appendContent2(mediaId,fromId,txt,createTime,index) {
+    appendContent2(mediaId,fromId,fromName,txt,createTime,index) {
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
         .onSuccess(data=> {
-          this.history[index].msgs.push({
+          let obj = {
             content: {
               msg_body: {media_id: data.url,text: txt},
-              from_id: fromId
+              from_id: fromId,
+              from_username: fromName
             },
             ctime_ms: createTime
-          })
+          }
+          this.contents.push(obj)
+          this.history[index].msgs.push(obj);
           this.toBottom();
         })
       }else{
-        this.history[index].msgs.push({
+        let obj = {
           content: {
             msg_body: {text: txt},
-            from_id: fromId
+            from_id: fromId,
+            from_username: fromName
           },
           ctime_ms: createTime
-        })
+        }
+        this.contents.push(obj)
+        this.history[index].msgs.push(obj);
         this.toBottom();
       }
+      //历史聊天缓存同步
+      let payload = {index: index, data: this.history}
+      this.$store.commit('SYNCHISTORY', payload);
     },
+
+
     //用户自己-->用户
     appendContent3(data, msg) {
       let createTime = data.ctime_ms;
       let mediaId = msg.content.msg_body.media_id;
       let txt = msg.content.msg_body.text?msg.content.msg_body.text:"";
+      let index = this.history.findIndex(element=>{
+        return  this.userInfo.easemobUsername == element.from_username;
+      })
+
       if(mediaId){
         JIM.getResource({'media_id':  mediaId})
           .onSuccess(data=> {
-            this.contents.push({
+            let obj = {
               content: {
                 msg_body: {media_id: data.url,text: txt},
-                from_id: this.userInfo.easemobUsername
+                from_id: this.userInfo.easemobUsername,
+                from_username: this.userInfo.easemobUsername
               },
               ctime_ms: createTime
-            })
+            }
+            this.contents.push(obj)
+            this.history[index].msgs.push(obj);
             this.toBottom();
-          })
+        })
       }else{
-        this.contents.push({
+        let obj = {
           content: {
             msg_body: {text: txt},
-            from_id: this.userInfo.easemobUsername
+            from_id: this.userInfo.easemobUsername,
+            from_username: this.userInfo.easemobUsername
           },
           ctime_ms: createTime
-        })
+        }
+        this.contents.push(obj)
+        this.history[index].msgs.push(obj);
         this.toBottom();
       }
+      //历史聊天缓存同步
+      let payload = {index: index, data: this.history}
+      this.$store.commit('SYNCHISTORY', payload);
     },
+
+
     //构造图片FormData
     getFile(e) {
       let fd = new FormData();
@@ -368,6 +401,8 @@ export default {
       })
       .onFail(data=> {});
     },
+
+
     //点击其中一个聊天者
     selectItem(item) {
       //匹配对应的经纪人 和 历史聊天记录
@@ -396,6 +431,8 @@ export default {
       //聊天内容回到底部
       this.toBottom();
     },
+
+
     //重置小红点
     Jiguang_resetUnreadCount() {
       console.log("重置"+this.targetObj.username)

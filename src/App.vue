@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 14:29:05
+ * @Last Modified time: 2018-06-26 15:55:36
  */
 <template>
   <div id="app">
@@ -143,17 +143,17 @@ export default {
         })
         .onSuccess(data => {
             that.Jiguang_login();//极光登录
-            this.Jiguang_onDisconnect();//监听是否在线
         })
         .onFail(error => {});
     },
     //极光登录
     Jiguang_login() {
-        JIM.login({
-            username: this.userInfo.easemobUsername,
+      JIM.login({
+        username: this.userInfo.easemobUsername,
             password: this.userInfo.easemobPassword
         })
         .onSuccess(data => {
+            this.Jiguang_onDisconnect();//监听是否在线
             this.Jiguang_userInfo();//用户信息
             this.Jiguang_conversation();//这里首次会话列表
             this.Jiguang_syncConversation();//这里首次同步监听离线消息
@@ -182,18 +182,15 @@ export default {
     Jiguang_conversation() {
       JIM.getConversation()
       .onSuccess(data => {
-        console.log('会话列表', data);
-        console.log('会话列表', data.conversations);
         this.$store.commit('FIREND', data.conversations);
       })
-      .onFail(data => {
-        console.log("会话列表失败:" + JSON.stringify(data));
-      });
+      .onFail(data => {});
     },
     //离线消息同步监听
     Jiguang_syncConversation(){
       JIM.onSyncConversation(data=> {
         //缓存历史漫游消息
+        console.log(data)
         this.$store.commit('HISTORY', data);
       });
     },
