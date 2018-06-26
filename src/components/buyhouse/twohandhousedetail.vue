@@ -101,7 +101,7 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"><</div>
+                     <div @click="changeNum(1)"></div>
                      <div @click="changeNum(2)">></div>
                    </div>
                 </div>
@@ -131,8 +131,9 @@
                         <div class="image fl" @click="toSkip(item)">
                           <img :src="item.housePic"  />
                         </div>
+                       
                         <div class="direciton">
-                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
+                          <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}}  <!-- <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span> --></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
                           <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                           <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
@@ -153,7 +154,7 @@
                         <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
-                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
+                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }}  <!-- <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span> --></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName }}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}|精装</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.saleTotal }}<span style="font-size: 14px;">万</span></span></div>
                         <div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">中楼层(共30层)2010年搭建-大运新城</span><span class="fr">单价{{item.salePrice }}元/平米</span></div>
                         <!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->

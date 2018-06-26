@@ -233,7 +233,7 @@
 				this.collectionFlag = !this.collectionFlag;
 			},
 			toSkip(item) {
-				this.$router.push({ path: "/sellrentdetail/" + item.sdid});
+				this.$router.push({ path: "/buyhouse/twohandhousedetail/" + item.sdid});
 			},
 			render() {
 				//小区详情BUILDSECOND_HOUSELIST
