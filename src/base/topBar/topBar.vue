@@ -34,13 +34,13 @@
                     <ol class="item2">
                         <router-link tag="li" to="/houseestate">小区找房</router-link>
                         <router-link tag="li" to="">代办业务</router-link>
-						<router-link tag="li" to="">便民服务</router-link>
-                        <router-link tag="li" to="">房屋托管</router-link>
-                        <router-link tag="li" to="">装修</router-link>
-                        <router-link tag="li" to="">世华公益</router-link>
+                        <router-link tag="li" to="/convenienceservices">便民服务</router-link>
+                        <router-link tag="li" to="/housetuoguan">房屋托管</router-link>
+                        <router-link tag="li" to="/decoration">装修</router-link>
+                        <router-link tag="li" to="/publicgood">世华公益</router-link>
                         <router-link tag="li" to="/consultant">咨询</router-link>
-                        <router-link tag="li" to="">购房指南</router-link>
-                        <router-link tag="li" to="">行业咨询</router-link>
+                        <router-link tag="li" to="/buyhouseguide">购房指南</router-link>
+                        <router-link tag="li" to="/industryconsultation">行业咨询</router-link>
                     </ol>
                 </router-link>
                 <router-link tag="li" to="/buyhouseguide">旅居投资</router-link>

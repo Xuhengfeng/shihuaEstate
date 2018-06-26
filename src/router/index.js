@@ -22,6 +22,14 @@ const rentHouseDetail = resolve => require(['components/rentHouse/rentHouseDetai
 
 
 const houseestate = resolve => require(['components/houseestate/houseestate'], resolve)//小区
+const housetuoguan = resolve => require(['components/housetuoguan/housetuoguan'], resolve)//房屋托管
+const convenienceservices = resolve => require(['components/convenienceservices/convenienceservices'], resolve)//便民服务
+const decoration = resolve => require(['components/decoration/decoration'], resolve)//装修
+const publicgood = resolve => require(['components/publicgood/publicgood'], resolve)//世华公益
+const industryconsultation = resolve => require(['components/industryconsultation/industryconsultation'], resolve)//世华公益
+
+
+
 const estatedetail = resolve => require(['components/houseestate/estatedetail'], resolve)//小区详情
 const entrustmentrent = resolve => require(['components/entrustment/entrustmentrent'], resolve)//业主委托我要出售 出租 
 const broker = resolve => require(['components/broker/broker.vue'], resolve)//找经纪人
@@ -81,6 +89,23 @@ const router = new Router({
 		//小区
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
+
+
+		//房屋托管
+		{path:"/housetuoguan",component:housetuoguan,meta:{KeepAlive:false}},//房屋托管
+		
+
+		//便民服务
+		{path:"/convenienceservices",component:convenienceservices,meta:{KeepAlive:false}},//便民服务
+
+		//装修
+		{path:"/decoration",component:decoration,meta:{KeepAlive:false}},//装修
+
+		//世华公益
+		{path:"/publicgood",component:publicgood,meta:{KeepAlive:false}},//世华公益
+
+		//行业咨询
+		{path:"/industryconsultation",component:industryconsultation,meta:{KeepAlive:false}},//行业咨询
 
 		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[//咨询
 			{path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页
