@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 16:18:33
+ * @Last Modified time: 2018-06-26 16:33:04
  */
 import router from '../router/index'
 //同步处理
@@ -91,7 +91,7 @@ export default {
 	ADDTWO(state, payload){
 		state.appinthouse = payload;
 	},
-	//历史漫游消息
+	//初始化历史漫游消息
 	HISTORY(state, payload) {
 		payload.forEach(item=>{
 			item.msgs.forEach(item2=>{
@@ -104,6 +104,10 @@ export default {
 			payload.lastMsg = {text: ''};
 		})
 		state.history = [...state.history , ...payload];
+	},
+	//同步历史记录
+	SYNCHISTORY(state, payload) {
+		state.history[payload.index] = payload.data;
 	},
 	//会话列表(好友列表)
 	FIREND(state, payload) {
@@ -127,7 +131,6 @@ export default {
 	},
 	//会话列表(添加好友)
 	ADDFIREND(state, payload) {
-		console.log('进来了')
 		//当前聊天的经纪人
 		payload.lastMsg = {text: ''};
 		state.currentLineBroker = payload;	
