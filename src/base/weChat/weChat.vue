@@ -138,10 +138,12 @@ export default {
         return element.from_username == this.currentLineBroker.username;
       })
 
+      
       //当前聊天的经纪人和内容
       this.targetObj = this.conversations[index];
       this.nowName = this.conversations[index].nickName;
       this.contents = this.history[index2].msgs?this.history[index2].msgs:[];
+      this.indexNum = index2;
       this.toBottom();
     }
   },
