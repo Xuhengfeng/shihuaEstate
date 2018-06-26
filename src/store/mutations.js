@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-26 16:33:04
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-27 00:59:27
  */
 import router from '../router/index'
 //同步处理
@@ -95,19 +95,21 @@ export default {
 	HISTORY(state, payload) {
 		payload.forEach(item=>{
 			item.msgs.forEach(item2=>{
-				JIM.getResource({
-					'media_id': item2.content.msg_body.media_id,
-				  }).onSuccess(data=> {
-					item2.content.msg_body.media_id = data.url;
-				  }).onFail(data=> {});
+				if(item2.content.msg_body.media_id){
+					JIM.getResource({
+						'media_id': item2.content.msg_body.media_id,
+					  }).onSuccess(data=> {
+						item2.content.msg_body.media_id = data.url;
+					  }).onFail(data=> {});
+				}
 			})
-			payload.lastMsg = {text: ''};
+			item.lastMsg = {text: ''};
 		})
 		state.history = [...state.history , ...payload];
 	},
 	//同步历史记录
 	SYNCHISTORY(state, payload) {
-		state.history[payload.index] = payload.data;
+		state.history = payload.data;
 	},
 	//会话列表(好友列表)
 	FIREND(state, payload) {
@@ -119,13 +121,15 @@ export default {
 			if(index==-1){
 				item.lastMsg = {text: ''};
 			}else{
-				item.lastMsg = state.history[index].msgs.pop().content.msg_body;
+				let lastIndex = state.history[index].msgs.length-1;
+				item.lastMsg = state.history[index].msgs[lastIndex].content.msg_body;
 			}
 		});
 		state.conversations = payload;
 	},
 	//当前的经纪人
 	CURRENTBROKER(state, payload) {
+		//清空最后一条消息动态
 		payload.lastMsg = {text: ''};
 		state.currentLineBroker = payload;	
 	},

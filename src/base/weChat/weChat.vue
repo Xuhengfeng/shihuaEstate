@@ -130,14 +130,6 @@ export default {
     },
     //当前聊天的经纪人
     currentLineBroker() {
-      //当前聊天的经纪人
-      this.targetObj = {
-        username: this.currentLineBroker.username,//经纪人极光账户
-        nickName: this.currentLineBroker.nickName,//中文
-        password: this.currentLineBroker.username.split('-').join(''),
-        appkey: this.userInfo.brokerAppKey
-      }
-
       //匹配对应的经纪人 和 历史聊天记录
       let index = this.conversations.findIndex(element=>{
         return element.username == this.currentLineBroker.username;
@@ -190,11 +182,7 @@ export default {
     },
     //发送
     sendBtn() {
-      if(JIM.isLogin()){
-        this.Jiguang_sendMsg();
-      }else{
-        this.$emit('afresh');
-      }
+      JIM.isLogin()?this.Jiguang_sendMsg():this.$emit('afresh');
     },
     //发送文本消息
     Jiguang_sendMsg() {
@@ -209,7 +197,6 @@ export default {
         .onSuccess((data,msg) => {
             this.sendMsg = null;
             this.appendContent3(data, msg);
-            this.toBottom();
         })
         .onFail(data => {
           //经纪人未注册的情况下 帮经纪人进行注册
@@ -222,7 +209,7 @@ export default {
           .post(this.$url.URL.USER_JIGUANGREG,params)
           .then(data=>{
             //主动回调一次发送消息
-            // this.Jiguang_sendMsg();
+            this.Jiguang_sendMsg();
           })
     },
     //滚动底部
@@ -232,7 +219,7 @@ export default {
             boxcontent.scrollIntoView(false);
       },300);
     },
-    //用户实时聊天消息监听(文本和图片)
+    //用户实时聊天消息监听(文本和图片) 注意自己本身发送消息不被监听
     Jiguang_onMsg() {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
@@ -278,7 +265,6 @@ export default {
               },
               ctime_ms: createTime
             }
-            this.contents.push(obj)
             this.history[this.indexNum].msgs.push(obj);
             this.toBottom();
         })
@@ -291,7 +277,6 @@ export default {
           },
           ctime_ms: createTime
         }
-        this.contents.push(obj)
         this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
@@ -314,7 +299,6 @@ export default {
             },
             ctime_ms: createTime
           }
-          this.contents.push(obj)
           this.history[this.indexNum].msgs.push(obj);
           this.toBottom();
         })
@@ -327,7 +311,6 @@ export default {
           },
           ctime_ms: createTime
         }
-        this.contents.push(obj)
         this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
@@ -353,7 +336,6 @@ export default {
               },
               ctime_ms: createTime
             }
-            this.contents.push(obj)
             this.history[this.indexNum].msgs.push(obj);
             this.toBottom();
         })
@@ -366,7 +348,6 @@ export default {
           },
           ctime_ms: createTime
         }
-        this.contents.push(obj)
         this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
