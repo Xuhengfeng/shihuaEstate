@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-27 16:42:50
+ * @Last Modified time: 2018-06-27 16:55:24
  */
 <template>
   <!-- 租售 -->
@@ -484,7 +484,8 @@ export default {
         buildNum: this.houseOne, //栋号
         unitNum: this.houseTwo, //单元号
         roomNum: this.houseThree, //房号
-        address: this.address //详细地址
+        address: this.address, //详细地址
+        applicantType: this.whoValue//我是
       };
       switch(true){
         case !this.username:return this.$alert('姓名不能为空!');break;
@@ -492,6 +493,7 @@ export default {
         case !/^1[34578]\d{9}$/.test(this.telphone):return this.$alert('手机号码格式不对!');break;
         case !this.cityCode:return this.$alert('城市不能为空!');break;
         case !this.brokerId:return this.$alert('小区不能为空!');break;
+        case !this.whoValue:return this.$alert('请选择我的属性');break;
         case !this.houseTyName,!this.houseOne,!this.houseThree: return this.$alert('信息填写不全!');break;
       }
       this.$http.post(this.IPS[this.IPSnum], params).then(response => {
