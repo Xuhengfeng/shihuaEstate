@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 00:15:37
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-27 11:12:15
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -27,6 +27,8 @@ const convenienceservices = resolve => require(['components/more/convenienceserv
 const decoration = resolve => require(['components/more/decoration'], resolve)//装修
 const publicgood = resolve => require(['components/more/publicgood'], resolve)//世华公益
 const industryconsultation = resolve => require(['components/more/industryconsultation'], resolve)//世华公益
+const agencyBusiness = resolve => require(['components/more/agencyBusiness'], resolve)//世华公益
+
 
 
 
@@ -106,6 +108,9 @@ const router = new Router({
 
 		//行业咨询
 		{path:"/industryconsultation",component:industryconsultation,meta:{KeepAlive:false}},//行业咨询
+
+		//代办业务
+		{path:"/agencyBusiness",component:agencyBusiness,meta:{KeepAlive:false}},//代办业务
 
 		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[//咨询
 			{path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页

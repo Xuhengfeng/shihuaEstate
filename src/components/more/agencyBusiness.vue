@@ -2,19 +2,15 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:09:22 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-27 16:42:50
+ * @Last Modified time: 2018-06-27 16:39:14
  */
 <template>
-  <!-- 租售 -->
+  <!-- 代办业务 -->
   <div class="sellRent">
 		<div class="main">
 			<div class="container">
 				<div class="form-box" v-show="!brokerFlag">
-					<div class="form-hd">
-						<div v-for="(item,index) in items">
-							<div @click="changeItem(index)">{{item}} <input type="radio" :checked="checked==index?true:false"></div>
-						</div>
-					</div>
+					<!-- <div class="form-hd"></div> -->
 					<div class="form-bd">
 						<ul>
 							<li>
@@ -78,15 +74,20 @@
 								<div>具体地址</div>
 								<input type="text" placeholder="请输入房源具体地址" v-model="address">
 							</li>
+              <li class="agencyBusiness">
+								<div>业务类型</div>
+								<input type="text" placeholder="请输选择需要代办业务的类型" readonly v-model="businessName" @click="toggleBusiness()">
+                <ul v-show="isSelectNum == 5">
+                  <li v-for="item in bussinessList" @click="selectBusinessNum(item)">{{item.name}}</li>
+                </ul>
+							</li>
 							<li>
 								<div>经纪人</div>
-								<div class="broker">
-									<input type="text" placeholder="选择你的经纪人" v-model="brokerValue" @click="toggleBroker()">
-								</div>
+								<input type="text" placeholder="选择你的经纪人" v-model="brokerValue" @click="toggleBroker()">
 							</li>
               <li class="who">
 								<div>我是</div>
-								<input type="text" placeholder="选择业主/推荐人" readonly v-model="whoName" @click="toggleWho()">
+								<input type="text" placeholder="选择卖方/买方/推荐人" readonly v-model="whoName" @click="toggleWho()">
                 <ul v-show="isSelectNum == 6">
                   <li v-for="item in whoList" @click="selectWhoNum(item)">{{item.name}}</li>
                 </ul>
@@ -143,8 +144,8 @@
                   :total="querycount.count">
               </el-pagination>
           </div>
+
 				</div>
-        
 			</div>
 		</div>
   </div>
@@ -160,15 +161,15 @@ export default {
       querycount: {//检索总数量
         count: 0
       },
-      cityValue: "", //选择城市
       cityCode: "", //城市编码
       cityList: [], //城市列表
       currentCity: JSON.parse(localStorage.selectCity).value, //首页默认点击的城市
+      cityValue: "", //选择城市
 
       brokerId: "", //经纪人id
       brokerFlag: false, //经纪人
-      brokerValue: "", //经纪人
       brokerLists: [], //经纪人列表
+      brokerValue: "", //经纪人
 
       houseTyName: "", //小区名称
       houseTyId: "", //小区id
@@ -184,23 +185,20 @@ export default {
 
       houseThree: "", //门牌号
       houseThreeList: [], //门牌号列表
+      
+      bussinessList: null,//业务类型列表
+      businessName: null,//业务类型
+      businessValue: null,//业务类型
 
       whoList: [//我是类型列表
-        {name:'业主',value:'OWNER'},
+        {name:'卖方',value:'SELLER'},
+        {name:'买方',value:'PURCHASER'},
         {name:'推荐人',value:'RECMD_MAN'}
       ],
       whoName: null,//我的类型
       whoValue: null,//我的类型
 
       address: "", //地址
-      items: ["我要出售", "我要出租"],
-      //出售 出租
-      IPS: [
-        this.$url.URL.HOUSE_ENTRUSTAPPLY_SELLHOUSE,
-        this.$url.URL.HOUSE_ENTRUSTAPPLY_RENTHOUSE
-      ],
-      checked: 0,
-      IPSnum: 0,
       page: 1,
     };
   },
@@ -213,6 +211,8 @@ export default {
     this.countRequest();
     // 小区列表
     this.xiaoquListRequest();
+    // 业务类型
+    this.businessRequest();
   },
   watch: {
     cityCode() {
@@ -231,6 +231,17 @@ export default {
       this.whoName = item.name;
       this.whoValue = item.value;
     },
+
+    //业务类型
+    toggleBusiness() {
+      this.isSelectNum = 5;
+    },
+    selectBusinessNum(item) {
+      this.isSelectNum = null;
+      this.businessName = item.name;
+      this.businessValue = item.value;
+    },
+    
 
     close() {
       this.isSelectNum = null;
@@ -251,6 +262,7 @@ export default {
       this.houseThreeList = null;
       this.address = null;
       this.brokerValue = null;
+      this.bussinessName = null;
       this.whoName = null;
     },
     //清空关于城市的
@@ -363,37 +375,39 @@ export default {
     //请求城市列表
     cityListRequest() {
       let map = { hot: { title: "热门", item: [] } };
-      this.$http.get(this.$url.URL.DICTIONARY_CITYS).then(response => {
-        response.data.data.forEach((obj, index) => {
-          //城市数据 重新map排列
-          const type = obj.value.slice(0, 1).toUpperCase();
-          if (!map[type]) {
-            map[type] = { title: type, item: [] };
-          }
-          map[type].item.push({
-            name: obj.name,
-            key: obj.value.slice(0, 1).toUpperCase(),
-            value: obj.value
-          });
-          let ret = [];
-          for (let key in map) {
-            let val = map[key];
-            if (val.title.match(/[a-zA-Z]/)) ret.push(val);
-          }
-          ret.sort((a, b) => {
-            return a.title.charCodeAt() - b.title.charCodeAt();
-          });
-          this.cityList = ret;
-        });
-      });
+      this.$http
+          .get(this.$url.URL.DICTIONARY_CITYS)
+          .then(res => {
+                res.data.data.forEach((obj, index) => {
+                  //城市数据 重新map排列
+                  const type = obj.value.slice(0, 1).toUpperCase();
+                  if (!map[type]) {
+                    map[type] = { title: type, item: [] };
+                  }
+                  map[type].item.push({
+                    name: obj.name,
+                    key: obj.value.slice(0, 1).toUpperCase(),
+                    value: obj.value
+                  });
+                  let ret = [];
+                  for (let key in map) {
+                    let val = map[key];
+                    if (val.title.match(/[a-zA-Z]/)) ret.push(val);
+                  }
+                  ret.sort((a, b) => {
+                    return a.title.charCodeAt() - b.title.charCodeAt();
+                  });
+                  this.cityList = ret;
+                });
+              });
     },
     //请求经纪人
     brokerListRequest(val) {
       let scity = this.cityCode ? this.cityCode : this.currentCity;
       this.$http
         .post(this.$url.URL.BROKERS_LIST, { scity: scity, pageNo: val})
-        .then(response => {
-          this.brokerLists = response.data.data;
+        .then(res => {
+          this.brokerLists = res.data.data;
         });
     },
     //请求小区
@@ -472,7 +486,14 @@ export default {
           : (this.houseTwoList = res.data.data)
         });
     },
-
+    // 请求业务类型
+    businessRequest() {
+      this.$http
+          .get(this.$url.URL.DICTIONARY_DICTYPE+'AGENT_BIZ_TYPE')
+          .then(res=>{
+            this.bussinessList = res.data.data;
+          })
+    },
     //提交
     commitRequest() {
       let params = {
@@ -484,7 +505,10 @@ export default {
         buildNum: this.houseOne, //栋号
         unitNum: this.houseTwo, //单元号
         roomNum: this.houseThree, //房号
-        address: this.address //详细地址
+        address: this.address, //详细地址
+        loanAgencyType: this.businessValue,//业务类型
+        applicantType: this.whoValue//我是
+        
       };
       switch(true){
         case !this.username:return this.$alert('姓名不能为空!');break;
@@ -492,15 +516,16 @@ export default {
         case !/^1[34578]\d{9}$/.test(this.telphone):return this.$alert('手机号码格式不对!');break;
         case !this.cityCode:return this.$alert('城市不能为空!');break;
         case !this.brokerId:return this.$alert('小区不能为空!');break;
+        case !this.businessValue:return this.$alert('请选择业务类型');break;
+        case !this.whoValue:return this.$alert('请选择我的属性');break;
         case !this.houseTyName,!this.houseOne,!this.houseThree: return this.$alert('信息填写不全!');break;
       }
-      this.$http.post(this.IPS[this.IPSnum], params).then(response => {
+      this.$http.post(this.$url.URL.HOUSE_AGENCYAPPLY_HOUSE, params).then(res => {
         this.clearAllInput();
         this.$alert('提交成功!')
       });
     },
-
-    //获取经纪人总数量
+    //请求经纪人数量
     countRequest() {
       let params = {
         scity: this.selectCity.value,
@@ -510,7 +535,7 @@ export default {
       this.$http.post(this.$url.URL.BROKERS_LISTCOUNT, params).then(response => {
         this.querycount = response.data.data;
       });
-    }
+    },
   }
 };
 </script>
@@ -527,13 +552,15 @@ export default {
     top: 100px;
     left: 50%;
     width: 614px;
-    height: 700px;
+    padding: 50px 0;
+    height: 595px;
     transform: translateX(-50%);
     background: #ffffff;
   }
 }
 .city,
 .xiaoqu,
+.agencyBusiness,
 .who,
 .houseNum1,
 .houseNum2,
@@ -577,6 +604,7 @@ export default {
 }
 
 .xiaoqu,
+.agencyBusiness,
 .who,
 .houseNum1,
 .houseNum2,

@@ -33,7 +33,7 @@
                 <router-link tag="li" to="">更多
                     <ol class="item2">
                         <router-link tag="li" to="/houseestate">小区找房</router-link>
-                        <router-link tag="li" to="">代办业务</router-link>
+                        <router-link tag="li" to="/agencyBusiness">代办业务</router-link>
                         <router-link tag="li" to="/convenienceservices">便民服务</router-link>
                         <router-link tag="li" to="/housetuoguan">房屋托管</router-link>
                         <router-link tag="li" to="/decoration">装修</router-link>
@@ -97,10 +97,10 @@ export default {
         }
     },
     mounted() {
-        $('.two>li').click(function() {
-            console.log(this)
-        $(this).addClass('fontColor').siblings().removeClass('fontColor');
-        })
+        // $('.two>li').click(function() {
+        //     console.log(this)
+        // $(this).addClass('fontColor').siblings().removeClass('fontColor');
+        // })
     },
     components: {
         oDialog

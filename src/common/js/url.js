@@ -72,11 +72,11 @@ let URL = {
 	BROKERS_HOUSELIST:_host +'/broker/houseList/',  			//经纪人 -他的在售
 	BROKERS_RENTHOUSELIST:_host +'/broker/rentHouseList/',  	//经纪人 -他的在售
 	BROKERS_BROKEREVAL:_host +'/brokerEval/fillBrokerEvaluate', //经纪人评价
-	
-
 
 	HOUSE_ENTRUSTAPPLY_SELLHOUSE:_host + "/houseEntrustApply/sellHouse",//出售申请
 	HOUSE_ENTRUSTAPPLY_RENTHOUSE:_host + "/houseEntrustApply/rentHouse",//出租申请
+	HOUSE_AGENCYAPPLY_HOUSE:_host + "/loanAgencyApplyRest/loanAgency",//代办业务申请
+
 	HOUSE_COLLECTIONLIST:_host + "/buildCollection/collectionList",//小区收藏列表
 	HOUSE_SECONDHOUSE:_host + "/map-house/coordinate/secondHouse", //坐标找房 二手房
 	HOUSE_RENTHOUSE:_host + "/map-house/coordinate/rentHouse",     //坐标找房 租房
