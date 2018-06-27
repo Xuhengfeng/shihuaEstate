@@ -266,7 +266,11 @@ export default {
     },
     //请求经纪人数量
     countRequest() {
-      this.$http.post(this.$url.URL.BROKERS_LISTCOUNT, this.params).then(response => {
+      let params = {
+        scity: this.selectCity.value,
+        pageNo: 1
+      }
+      this.$http.post(this.$url.URL.BROKERS_LISTCOUNT, params).then(response => {
         this.querycount = response.data.data;
       });
     },
