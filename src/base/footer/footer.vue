@@ -5,9 +5,9 @@
 			<div class="container">
 				<div class="friendship">
 					<!--a站外 router-link站内-->
-					<span><a href="">关于世华易居</a></span>  <span style="margin-left: 28px;">|</span>
+					<span><a href="">集团简介</a></span>  <span style="margin-left: 28px;">|</span>
+					<span><a href="">集团文化</a></span>   <span style="margin-left: 28px;">|</span>
 					<span><a href="">联系我们</a></span>   <span style="margin-left: 28px;">|</span>
-					<span><a href="">隐私声明</a></span>   <span style="margin-left: 28px;">|</span>
 					<span><a href="">南宁小区</a></span>   <span style="margin-left: 28px;">|</span>
 					<span><a href="">南宁小区联系人</a></span>
 				</div>
