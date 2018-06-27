@@ -22,6 +22,7 @@ const rentHouseDetail = resolve => require(['components/rentHouse/rentHouseDetai
 
 
 const houseestate = resolve => require(['components/houseestate/houseestate'], resolve)//小区
+const forginwork = resolve => require(['components/forginwork/forginwork'], resolve)//海外置业
 const housetuoguan = resolve => require(['components/more/housetuoguan'], resolve)//房屋托管
 const convenienceservices = resolve => require(['components/more/convenienceservices'], resolve)//便民服务
 const decoration = resolve => require(['components/more/decoration'], resolve)//装修
@@ -92,6 +93,8 @@ const router = new Router({
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
 
+		// 海外置业
+		{path:"/forginwork",component:forginwork,meta:{KeepAlive:true}},// 海外置业
 
 		//房屋托管
 		{path:"/housetuoguan",component:housetuoguan,meta:{KeepAlive:false}},//房屋托管

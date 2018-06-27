@@ -44,7 +44,7 @@
                     </ol>
                 </router-link>
                 <router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
-                <router-link tag="li" to="/buyhouseguide">海外置业</router-link>
+                <router-link tag="li" to="/forginwork">海外置业</router-link>
                 <router-link tag="li" to="/shoper">找门店</router-link>
                 <router-link tag="li" to="/broker">找经纪人</router-link>
                 <router-link tag="li" to="">业主委托
