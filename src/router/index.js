@@ -22,11 +22,11 @@ const rentHouseDetail = resolve => require(['components/rentHouse/rentHouseDetai
 
 
 const houseestate = resolve => require(['components/houseestate/houseestate'], resolve)//小区
-const housetuoguan = resolve => require(['components/housetuoguan/housetuoguan'], resolve)//房屋托管
-const convenienceservices = resolve => require(['components/convenienceservices/convenienceservices'], resolve)//便民服务
-const decoration = resolve => require(['components/decoration/decoration'], resolve)//装修
-const publicgood = resolve => require(['components/publicgood/publicgood'], resolve)//世华公益
-const industryconsultation = resolve => require(['components/industryconsultation/industryconsultation'], resolve)//世华公益
+const housetuoguan = resolve => require(['components/more/housetuoguan'], resolve)//房屋托管
+const convenienceservices = resolve => require(['components/more/convenienceservices'], resolve)//便民服务
+const decoration = resolve => require(['components/more/decoration'], resolve)//装修
+const publicgood = resolve => require(['components/more/publicgood'], resolve)//世华公益
+const industryconsultation = resolve => require(['components/more/industryconsultation'], resolve)//世华公益
 
 
 
@@ -36,8 +36,8 @@ const broker = resolve => require(['components/broker/broker.vue'], resolve)//�
 const brokerdetail = resolve => require(['components/broker/brokerdetail'], resolve)//找经纪人详情
 const shoper = resolve => require(['components/shoper/shoper.vue'], resolve)//找门店
 const shoperdetail = resolve => require(['components/shoper/shoperdetail'], resolve)//找门店详情
-const buyhouseguide = resolve => require(['components/buyhouseguide/buyhouseguide'], resolve)//购房指南
-const guidedetail = resolve => require(['components/buyhouseguide/guidedetail'], resolve)//指南详情
+const buyhouseguide = resolve => require(['components/more/buyhouseguide'], resolve)//购房指南
+const guidedetail = resolve => require(['components/more/guidedetail'], resolve)//指南详情
 
 const mine = resolve => require(['components/mine/mine'], resolve)//我的个人账户
 const indexhome = resolve => require(['components/mine/indexhome'], resolve)//账户首页
