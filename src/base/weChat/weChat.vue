@@ -422,6 +422,12 @@ export default {
       JIM.resetUnreadCount({
         'username': this.targetObj.username
       })
+      //重新刷新会话列表
+      JIM.getConversation()
+      .onSuccess(data => {
+        this.$store.commit('FIREND', data.conversations);
+      })
+      .onFail(data => {});
     }
   }
 };
