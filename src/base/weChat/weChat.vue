@@ -34,7 +34,7 @@
                           <li class="chat-block" :class="item.content.from_id==ownId?'chat-block-right':'chat-block-left'">
                               
                               <a href="#me" v-if="item.content.from_id==ownId"><img :src="userInfo.headImage"></a>
-                              <a href="#target"  v-else><img :src="item.content.from_id|brokerHeadImg"></a>
+                              <a href="#target"  v-else ><img :src="item.content.from_id|brokerHeadImg"></a>
                               
                               <div class="chat-content">
                                   <!-- 内容 -->
@@ -202,7 +202,7 @@ export default {
         })
         .onFail(data => {
           //经纪人未注册的情况下 帮经纪人进行注册
-          if(data.code==880103) this.Jiguang_register();
+          //if(data.code==880103) this.Jiguang_register();
         });
     },
     Jiguang_register() {
@@ -237,10 +237,15 @@ export default {
           return  fromId == element.from_username;
         })
 
-        if(fromId == this.targetObj.username){
-          this.appendContent1(mediaId,fromId,fromName,txt,createTime);
+        //说明是好友, 存在会话列表中
+        if(this.indexNum>-1){
+          if(fromId == this.targetObj.username){
+            this.appendContent1(mediaId,fromId,fromName,txt,createTime);
+          }else{
+            this.appendContent2(mediaId,fromId,fromName,txt,createTime);
+          }
         }else{
-          this.appendContent2(mediaId,fromId,fromName,txt,createTime);
+          this.$alert('不是好友给你发送消息')
         }
 
         //重新刷新会话列表
@@ -262,7 +267,7 @@ export default {
             let obj = {
               content: {
                 msg_body: {media_id: data.url,text: txt},
-                from_id: this.userInfo.easemobUsername,
+                from_id: fromId,
                 from_username: fromName
               },
               ctime_ms: createTime
@@ -417,6 +422,12 @@ export default {
       JIM.resetUnreadCount({
         'username': this.targetObj.username
       })
+      //重新刷新会话列表
+      JIM.getConversation()
+      .onSuccess(data => {
+        this.$store.commit('FIREND', data.conversations);
+      })
+      .onFail(data => {});
     }
   }
 };
@@ -767,3 +778,4 @@ export default {
   margin-bottom: 0!important;
 }
 </style>
+

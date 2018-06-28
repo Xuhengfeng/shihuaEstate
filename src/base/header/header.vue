@@ -14,7 +14,7 @@
 				<input ref="oInput" type="text" :placeholder="placeholder" v-model="word"  @keyup.enter="query()"/>
 				<div @click="query()"></div>
 			</div>
-			<div class="menu fr">
+			<div class="menu fr" v-show="isMapSearch">
 				<ul class="menuright fl" @click="mapSearch()">
 					<li><img src="../../imgs/buyhouse/diwei.png" /></li>
 					<li class="mapSearchHouse">地图找房</li>
@@ -40,12 +40,17 @@ export default {
 		//占位字符串
 		placeholder: {
 			type: String,
-			default: '请输入关键词进行检索',
+			default: '请输入关键词进行检索'
 		},
 		//是否显示搜索框
 		isShowQueryBox: {
 			type: Boolean,
-			default: true,
+			default: true
+		},
+		//是否显示地图
+		isMapSearch: {
+			type: Boolean,
+			default: true
 		}
 	},
 	data() {

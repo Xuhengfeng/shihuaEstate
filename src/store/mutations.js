@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-27 00:59:27
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-06-28 17:19:06
  */
 import router from '../router/index'
 //同步处理
@@ -96,11 +96,15 @@ export default {
 		payload.forEach(item=>{
 			item.msgs.forEach(item2=>{
 				if(item2.content.msg_body.media_id){
-					JIM.getResource({
-						'media_id': item2.content.msg_body.media_id,
-					  }).onSuccess(data=> {
-						item2.content.msg_body.media_id = data.url;
-					  }).onFail(data=> {});
+					// 走极光接口返回图片地址
+					// JIM.getResource({
+					// 	'media_id': item2.content.msg_body.media_id,
+					//   }).onSuccess(data=> {
+					// 	item2.content.msg_body.media_id = data.url;
+					//   }).onFail(data=> {});
+					
+    	            // 直接拼接图片地址 减少请求 
+					item2.content.msg_body.media_id = 'http://dl.im.jiguang.cn/'+item2.content.msg_body.media_id;
 				}
 			})
 			item.lastMsg = {text: ''};
