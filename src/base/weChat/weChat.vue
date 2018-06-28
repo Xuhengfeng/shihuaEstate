@@ -202,7 +202,7 @@ export default {
         })
         .onFail(data => {
           //经纪人未注册的情况下 帮经纪人进行注册
-          if(data.code==880103) this.Jiguang_register();
+          //if(data.code==880103) this.Jiguang_register();
         });
     },
     Jiguang_register() {
@@ -237,10 +237,15 @@ export default {
           return  fromId == element.from_username;
         })
 
-        if(fromId == this.targetObj.username){
-          this.appendContent1(mediaId,fromId,fromName,txt,createTime);
+        //说明是好友, 存在会话列表中
+        if(this.indexNum>-1){
+          if(fromId == this.targetObj.username){
+            this.appendContent1(mediaId,fromId,fromName,txt,createTime);
+          }else{
+            this.appendContent2(mediaId,fromId,fromName,txt,createTime);
+          }
         }else{
-          this.appendContent2(mediaId,fromId,fromName,txt,createTime);
+          this.$alert('不是好友给你发送消息')
         }
 
         //重新刷新会话列表
@@ -262,7 +267,7 @@ export default {
             let obj = {
               content: {
                 msg_body: {media_id: data.url,text: txt},
-                from_id: this.userInfo.easemobUsername,
+                from_id: fromId,
                 from_username: fromName
               },
               ctime_ms: createTime
