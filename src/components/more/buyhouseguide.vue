@@ -29,9 +29,9 @@
             </div>
             <div class="r-content">
                 <h3>{{item.title}}</h3>
-                <p>
+                <div class="description">
                   {{item.summary}}
-                </p>
+                </div>
                 <div class="circle">
                   <div v-html="$options.filters.timefilter(item.publishDateTime)"></div>
                 </div>
@@ -71,12 +71,6 @@ export default {
       querycount: {//检索总数量
         count: 0
       },
-      inputresult: null,
-      inputresulttwo: null,
-      inputone: "",
-      inputtwo: "",
-      inputthree: "",
-      inputfour: "",
       params: {//请求参数体
         areaId: 1,
         districtId: 1,
@@ -87,15 +81,11 @@ export default {
         scity: null,
         sortMode: null
       },
-      broker: [], //经纪人列表
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
     };
   },
   created() {
     this.guideDataRequest();
-  },
-  computed: {
-
   },
   filters:{
     timefilter(val){
@@ -109,9 +99,9 @@ export default {
       let second = parseInt(s);
       let day = (h/24)>0? parseInt(h/24): 0;
       if(day==0){
-        html = '<p>'+hours+'</p><p>小时前</p>';
+        html = '<p class="hours">'+hours+'</p><p>小时前</p>';
       }else{
-        html = '<p>'+day+'</p><p>天</p>';
+        html = '<p class="day">'+day+'</p><p>天</p>';
       }
       return html;
     }
@@ -186,6 +176,7 @@ export default {
         height: 110px;
         margin-right: 25px;
         background: #f5f5f5;
+        img{width: 100%;height: 100%}
       }
       .r-content{
         flex: 1;
@@ -193,9 +184,18 @@ export default {
         h3{
           margin-bottom: 20px;
           font-size: 22px;
+          white-space:nowrap; 
+          overflow:hidden; 
+          text-overflow:ellipsis;
         }
-        p{
-          font-size: 14px;
+        .description{
+            font-size: 14px;
+            padding-right: 120px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+             -webkit-line-clamp: 3;
+            overflow: hidden;
         }
         .circle{
           position: absolute;
@@ -211,10 +211,12 @@ export default {
             p{
               line-height: 25px;
               font-size: 12px;
-              &:first-child{
+            }
+            .hours,.day{
+                height: 25px;
+                line-height: 25px;
                 margin-top: 20px;
                 font-size: 30px;
-              }
             }
           }
         }
@@ -228,6 +230,7 @@ export default {
   font-weight: bold;
 }
 </style>
+
 
 
 
