@@ -34,7 +34,7 @@
                           <li class="chat-block" :class="item.content.from_id==ownId?'chat-block-right':'chat-block-left'">
                               
                               <a href="#me" v-if="item.content.from_id==ownId"><img :src="userInfo.headImage"></a>
-                              <a href="#target"  v-else><img :src="item.content.from_id|brokerHeadImg"></a>
+                              <a href="#target"  v-else ><img :src="item.content.from_id|brokerHeadImg"></a>
                               
                               <div class="chat-content">
                                   <!-- 内容 -->

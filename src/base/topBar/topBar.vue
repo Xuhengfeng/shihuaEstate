@@ -15,7 +15,7 @@
                 </div>
                 <div v-else>
                     <img class="headImage" :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
-                    <span class="user">{{userInfo.nickname}}</span>
+                    <router-link tag="span" to="/mine">{{userInfo.nickname}}</router-link>
                     <span>/</span> 
                     <span class="logout"  @click="logout()">退出</span>
                     <ul>

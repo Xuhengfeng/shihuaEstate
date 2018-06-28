@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-26 15:55:36
+ * @Last Modified time: 2018-06-28 14:10:12
  */
 <template>
   <div id="app">
@@ -215,6 +215,7 @@ export default {
 </script>
 
 <style lang="less">
+// 全局样式
 @import "../static/css/reset.css";/*重置样式*/
 @import "../static/css/iconfont.css";/*字体图标*/
 @import 'common/css/base.less';/*base样式*/
@@ -229,5 +230,11 @@ html,body{
     height:100%;
     font-size:@font-size-medium-x;
   }			
+  .noContent{
+    color: #5e7382;
+    height: 200px;
+    line-height: 200px;
+    text-align: center;
+  }
 }
 </style>

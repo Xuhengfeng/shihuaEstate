@@ -334,13 +334,6 @@ export default {
   font-size: 13px;
 }
 
-//没有搜索到任何数据
-.noContent{
-  color: #5e7382;
-  height: 100px;
-  line-height: 100px;
-  text-align: center;
-}
 .pageFooter{
   overflow: hidden;
   padding-top: 20px;

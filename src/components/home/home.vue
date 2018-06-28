@@ -55,7 +55,7 @@
 								<div class="headImage">
 									<img :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
 								</div>
-								<span class="user">{{userInfo.nickname}}</span>
+								<router-link tag="span" to="/mine">{{userInfo.nickname}}</router-link>
 								<span>/</span> 
 								<span class="logout"  @click="logout()">退出</span>
 							</div>
