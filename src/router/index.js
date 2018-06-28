@@ -62,7 +62,13 @@ const indexconsult = resolve => require(['components/mine/indexconsult'], resolv
 const myproblem = resolve => require(['components/consultant/myproblem'], resolve)//我要咨询
 const consultantbuyhouse = resolve => require(['components/consultant/consultantbuyhouse'], resolve)//买房咨询
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
-const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
+const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//
+const aboutgroup = resolve => require(['components/group/aboutgroup'], resolve)//关于我们
+const groupintourde = resolve => require(['components/group/groupintourde'], resolve)//集团简介
+const groupculture = resolve => require(['components/group/groupculture'], resolve)//集团文化
+const group = resolve => require(['components/group/group'], resolve)//集团
+
+
 
 Vue.use(Router)
 const router = new Router({
@@ -120,6 +126,14 @@ const router = new Router({
 			{path:"/consultantindexdetail/:id",component:consultantindexdetail,meta:{KeepAlive:false}},//咨询详情
 			{path:"consultantbuyhouse",component:consultantbuyhouse,meta:{KeepAlive:false}},//买房咨询
 		]},
+
+
+		{path:"/group",redirect:'/group/groupintourde',component:group,children:[//关于集团
+			{path:"groupintourde",component:groupintourde,meta:{KeepAlive:false}},//集团简介
+			{path:"groupculture",component:groupculture,meta:{KeepAlive:false}},//集团文化
+			{path:"aboutgroup",component:aboutgroup,meta:{KeepAlive:false}},//关于我们
+		]},
+		
 		{path:"/listdetail/:id",component:listdetail,meta:{KeepAlive:false}},//顾问详情
 		{path:"/queryinfodetail/:id",component:queryinfodetail,meta:{KeepAlive:false}},//资讯详情
 		{path:"/myproblem/:id",component:myproblem,meta:{KeepAlive:false}},//我要咨询
