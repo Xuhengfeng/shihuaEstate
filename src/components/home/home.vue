@@ -497,9 +497,9 @@
 			searchHouse() {
 				let num = this.placeholderTextType;
 				switch(num) {
-					case 0:this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: 0}});break;
-					case 1:this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: 1}});break;
-					case 2:this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: 2}});break;
+					case 0:return this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: 0}});
+					case 1:return this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: 1}});
+					case 2:return this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: 2}});
 				}
 			}
 		}
@@ -1035,6 +1035,7 @@
   50%{transform: scale(1.1)}
   100%{transform: scale(1)}
 }
+
 .bounce-enter-active{
   animation: bounce-in .5s;
 }
