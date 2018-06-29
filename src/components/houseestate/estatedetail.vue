@@ -76,8 +76,8 @@
 												<img :src="item.housePic"  />
 											</div>
 											<div class="direciton">
-												<div class="introduce intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}} <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span></div>
-													<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.rentPrice }}<span style="font-size: 14px;">元/月</span></span></div>
+												<div class="introduce intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}}</div>
+													<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.salePrice }}<span style="font-size: 14px;">元/月</span></span></div>
 												<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
 												<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 													<div class="introduce ">
@@ -96,7 +96,7 @@
 									<div class="content fr">
 										<div class="price ">
 											<div class="text">
-												<div class="unitPrice"><span class="unitPriceValue">{{buildlistinfo.avgSalePrice }}<span class="mintter">元/平米</span></i></span></div>
+												<div class="unitPrice"><span class="unitPriceValue">{{buildlistinfo.avgSalePrice }}<span class="mintter">元/平米</span></span></div>
 											</div>
 											<div class="removeIcon"></div> 
 										</div>
@@ -146,7 +146,7 @@
 				houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
 				keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
 				keyword: '',//关键词
-			
+				showed:true,
 			 buildlistinfo: {
 					 //小区房详情
 					broker: {
@@ -243,7 +243,6 @@
 				.then(response => {
 					this.buildlistinfo = response.data.data;
 					this.buildsdid = response.data.data.sdid;
-					console.log(	this.buildsdid)
 					this.px = response.data.data.px;
 					this.py = response.data.data.py;
 
@@ -282,11 +281,13 @@
 				)
 				.then(response => {
 					this.samehouselist= response.data.data;
+					console.log( this.samehouselist)
 				});
 			},
 			change(num) {
 					//同小区二手房房源
 					this.neayHouseRequest(num, this.buildsdid);
+					
 			}
 		},
 		components: {
