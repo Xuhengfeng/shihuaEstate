@@ -5,10 +5,6 @@
 			<div class="logo fl">
 				<img src="../../imgs/buyhouse/logored.png" />
 			</div>
-			<div class="searchBox fl">
-				<input ref="oInput" type="text" :placeholder="placeholder" v-model="word"  @keyup.enter="query()"/>
-				<div @click="query()"></div>
-			</div>
 			<!-- <div class="menu">我要咨询</div> -->
 		</div>
 	</div> 
@@ -41,53 +37,17 @@
 
 <script>
 export default {
-	props: {
-		//地图 二手房 租房  小区 11 12 13
-		houseTypeId: {
-			type: Number,
-			default: 11
-		},
-		//关键词
-		keyword: {
-			type: String,
-			default: ''
-		},
-		//关键词类型 二手房 新房 租房 0 1 2
-		keywordTypeId: {
-			type: Number,
-			default: 0
-		},
-		placeholder: {
-			type: String,
-			default: '请输入关键词进行检索',
-		}
-	},
 	data() {
 		return {
-            word: '',//关键词
-            num:0,
+			num:0,
             list: [
-				{name: '咨询首页', url: '/consultant/consultantindex'},//咨询首页
-				{name: '买房咨询',url: '/consultant/consultantbuyhouse'},//买房咨询
-				{name: '交易过户', url: '/consultant/consultantindex'},//交易过户
-                {name: '卖房咨询',url: '/consultant/consultantindex'},//卖房咨询
-                {name: '租房咨询',url: '/consultant/consultantindex' },//租房咨询
-                {name: '其他咨询', url: '/consultant/consultantindex'},//其他咨询
+                {name: '集团简介',url: '/group/groupintourde'},//集团简介
+                {name: '集团文化', url: '/group/groupculture'},//集团文化
+				{name: '关于我们', url: '/group/aboutgroup'},//关于我们
 			]
 		}
 	},
-	created() {
-		this.word = this.keyword;
-    },
 	methods: {
-		query() {
-			let params = {
-				keyword: this.word,
-				keywordTypeId: this.keywordTypeId
-			}
-			this.$refs.oInput.blur();
-			return this.$emit('query', params);
-        },
         clickrouter(index) {
           this.num = index;
 		}

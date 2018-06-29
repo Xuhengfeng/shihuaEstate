@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-29 11:07:31
+ * @Last Modified time: 2018-06-29 11:51:43
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -65,7 +65,13 @@ const myproblem = resolve => require(['components/consultant/myproblem'], resolv
 const consultantbuyhouse = resolve => require(['components/consultant/consultantbuyhouse'], resolve)//买房咨询
 
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
-const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
+const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//
+const aboutgroup = resolve => require(['components/group/aboutgroup'], resolve)//关于我们
+const groupintourde = resolve => require(['components/group/groupintourde'], resolve)//集团简介
+const groupculture = resolve => require(['components/group/groupculture'], resolve)//集团文化
+const group = resolve => require(['components/group/group'], resolve)//集团
+
+
 
 Vue.use(Router)
 const router = new Router({
@@ -124,6 +130,13 @@ const router = new Router({
 			{path:"consultantbuyhouse",component:consultantbuyhouse,meta:{KeepAlive:false}},//买房咨询
 		]},
 
+
+		{path:"/group",redirect:'/group/groupintourde',component:group,children:[//关于集团
+			{path:"groupintourde",component:groupintourde,meta:{KeepAlive:false}},//集团简介
+			{path:"groupculture",component:groupculture,meta:{KeepAlive:false}},//集团文化
+			{path:"aboutgroup",component:aboutgroup,meta:{KeepAlive:false}},//关于我们
+		]},
+		
 		{path:"/listdetail/:id",component:listdetail,meta:{KeepAlive:false}},//顾问详情
 		{path:"/queryinfodetail/:id",component:queryinfodetail,meta:{KeepAlive:false}},//资讯详情
 		{path:"/myproblem/:id",component:myproblem,meta:{KeepAlive:false}},//我要咨询
@@ -135,6 +148,8 @@ const router = new Router({
 		{path:"/buyhouseguide",component:buyhouseguide,children:[{//购房指南
 				path:"guidedetail",component:guidedetail},//指南详情
 			]},
+		{path:"/industryconsultationDetail",component:industryconsultationDetail},//行业资讯详情
+		
 		{path:"/mine",redirect:'/mine/indexhome',component:mine,children:[{//我的个人账户
 				path:"indexhome",component:indexhome,meta:{KeepAlive:false}},{//账户首页
 				path:"indexseeone",component:indexseeone,meta:{KeepAlive:false}},{//待看列表
@@ -150,7 +165,6 @@ const router = new Router({
 				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
 				path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
 			]},
-		{path:"/industryconsultationDetail",component:industryconsultationDetail}//行业资讯详情
   	]
 })
 
