@@ -58,7 +58,7 @@
                             placeholder="点击输入你要咨询的问题..."
                             @keyup.enter="sendBtn()">
                     </textarea>
-                    <a class="im-input-pic" title="插入图片"><input type="file" @change="getFile"/></a>
+                    <a class="im-input-pic" title="插入图片"><input type="file" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" @change="getFile"/></a>
                     <div></div>
                   </div>
                   <div>
@@ -244,8 +244,6 @@ export default {
           }else{
             this.appendContent2(mediaId,fromId,fromName,txt,createTime);
           }
-        }else{
-          this.$alert('不是好友给你发送消息')
         }
 
         //重新刷新会话列表
@@ -321,6 +319,13 @@ export default {
         this.history[this.indexNum].msgs.push(obj);
         this.toBottom();
       }
+
+      //其他用户发送消息过来进行提示当前用户
+      this.$notify.info({
+        title: '消息',
+        message: '徐横峰给你发送消息了'
+      });
+
       //历史聊天缓存同步
       let payload = {index: this.indexNum, data: this.history}
       this.$store.commit('SYNCHISTORY', payload);
