@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-27 11:12:15
+ * @Last Modified time: 2018-06-29 11:07:31
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -41,6 +41,7 @@ const shoper = resolve => require(['components/shoper/shoper.vue'], resolve)//�
 const shoperdetail = resolve => require(['components/shoper/shoperdetail'], resolve)//找门店详情
 const buyhouseguide = resolve => require(['components/more/buyhouseguide'], resolve)//购房指南
 const guidedetail = resolve => require(['components/more/guidedetail'], resolve)//指南详情
+const industryconsultationDetail = resolve => require(['components/more/industryconsultationDetail'], resolve)//行业资讯详情
 
 const mine = resolve => require(['components/mine/mine'], resolve)//我的个人账户
 const indexhome = resolve => require(['components/mine/indexhome'], resolve)//账户首页
@@ -53,14 +54,16 @@ const indexdelegation = resolve => require(['components/mine/indexdelegation'], 
 const indexdelegationdetail = resolve => require(['components/mine/indexdelegationdetail'], resolve)//我的委托详情
 const indexbroker = resolve => require(['components/mine/indexbroker'], resolve)//我的经纪人
 const comment = resolve => require(['components/mine/comment'], resolve)//我的评论
+
 const consultant = resolve => require(['components/consultant/consultant'], resolve)//咨询
 const consultantindex = resolve => require(['components/consultant/consultantindex'], resolve)//咨询首页
 const consultantindexdetail = resolve => require(['components/consultant/consultantindexdetail'], resolve)//咨询详情
-const queryinfodetail = resolve => require(['components/consultant/queryinfodetail'], resolve)//资讯详情
+const queryinfodetail = resolve => require(['components/consultant/queryinfodetail'], resolve)//咨询详情
 const listdetail = resolve => require(['components/consultant/listdetail'], resolve)//咨询首页
 const indexconsult = resolve => require(['components/mine/indexconsult'], resolve)//我的咨询
 const myproblem = resolve => require(['components/consultant/myproblem'], resolve)//我要咨询
 const consultantbuyhouse = resolve => require(['components/consultant/consultantbuyhouse'], resolve)//买房咨询
+
 const indexmessage = resolve => require(['components/mine/indexmessage'], resolve)//消息
 const indexeditInfo = resolve => require(['components/mine/indexeditInfo'], resolve)//编辑资料
 
@@ -120,10 +123,10 @@ const router = new Router({
 			{path:"/consultantindexdetail/:id",component:consultantindexdetail,meta:{KeepAlive:false}},//咨询详情
 			{path:"consultantbuyhouse",component:consultantbuyhouse,meta:{KeepAlive:false}},//买房咨询
 		]},
+
 		{path:"/listdetail/:id",component:listdetail,meta:{KeepAlive:false}},//顾问详情
 		{path:"/queryinfodetail/:id",component:queryinfodetail,meta:{KeepAlive:false}},//资讯详情
 		{path:"/myproblem/:id",component:myproblem,meta:{KeepAlive:false}},//我要咨询
-		
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
 		{path:"/brokerdetail/:id",component:brokerdetail,meta:{KeepAlive:false}},//找经纪人详情
@@ -147,6 +150,7 @@ const router = new Router({
 				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
 				path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
 			]},
+		{path:"/industryconsultationDetail",component:industryconsultationDetail}//行业资讯详情
   	]
 })
 

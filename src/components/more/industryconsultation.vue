@@ -19,47 +19,48 @@
 				</div>
 			</div>
 		</div> -->
-
+    
     <div class="main">
       <div class="container">
         <ul>
-          <li v-for="item in list">
-            <div class="img">
-              <img :src="item.imageUrl">
-            </div>
-            <div class="r-content">
-                <h3>{{item.title}}</h3>
-                <div class="description">
-                  {{item.summary}}
-                </div>
-                <div class="circle">
-                  <div class="content" v-html="$options.filters.timefilter(item.publishDateTime)"></div>
-                </div>
-            </div>
+          <li v-for="item in list" @click="infoDetail(item)">
+              <div class="img">
+                <img :src="item.imageUrl">
+              </div>
+              <div class="r-content">
+                  <h3>{{item.title}}</h3>
+                  <div class="description">
+                    {{item.summary}}
+                  </div>
+                  <div class="circle">
+                    <div class="content" v-html="$options.filters.timefilter(item.publishDateTime)"></div>
+                  </div>
+              </div>
           </li>
         </ul>
         <div class="noContent" v-show="!list">暂无数据!</div>
+        <!-- 分页器 -->
+        <div class="pageFooter">
+          <el-pagination class="fr oPagination"
+            @current-change="handleCurrentChange"
+            background
+            layout="prev, pager, next"
+            prev-text="上一页"
+            next-text="下一页"
+            :current-page.sync="params.pageNo"
+            :total="querycount.count">
+          </el-pagination>
+        </div>
       </div>
     </div>
 
-		<!-- 分页器 -->
-		<div class="pageFooter">
-			<el-pagination class="fr oPagination"
-				@current-change="handleCurrentChange"
-				background
-				layout="prev, pager, next"
-				prev-text="上一页"
-				next-text="下一页"
-				:current-page.sync="params.pageNo"
-				:total="querycount.count">
-			</el-pagination>
-		</div>
-
+  
 	</div>
 </template>
 
 <script>
 import oHeader from "../../base/header/header";
+import oIframe from "../../base/iframe/iframe";
 export default {
   data() {
     return {
@@ -69,7 +70,7 @@ export default {
       showBtn: false,
       showBtnone: false,
       querycount: {//检索总数量
-        count: 1
+        count: 10
       },
       params: {//请求参数体
         areaId: 1,
@@ -83,6 +84,10 @@ export default {
       },
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
     };
+  },
+  components: {
+    oHeader,
+    oIframe
   },
   created() {
     this.infoDataRequest();
@@ -100,9 +105,7 @@ export default {
       let day = (h/24)>0? parseInt(h/24): 0;
       if(day==0){
         html = '<p class="hours">'+hours+'</p><p>天</p>';
-        // html = '<p class="hours" style="height:25px;line-height:25px;margin-top:20px;font-size:30px">'+hours+'</p><p style="height:25px;line-height:25px">小时前</p>';
       }else{
-        // html = '<p class="day" style="height:25px;line-height:25px;margin-top:20px;font-size:30px">'+day+'</p><p style="height:25px;line-height:25px">天</p>';
         html = '<p class="day">'+day+'</p><p>天</p>';
       }
       return html;
@@ -118,6 +121,7 @@ export default {
     tag(index) {
       this.queryone = index;
     },
+    // 列表请求
     infoDataRequest() {
       this.$http
           .get(this.$url.URL.GUIDE_LIST2+12)
@@ -125,11 +129,13 @@ export default {
               this.list = res.data.data;
           })
     },
-
+    // 查看详情
+    infoDetail(item) {
+      // 路由外页面
+      this.$router.push({path:"/industryconsultationDetail", query: {contentUrl: item.contentUrl}})
+    }
   },
-  components: {
-    oHeader
-  }
+
 };
 </script>
 

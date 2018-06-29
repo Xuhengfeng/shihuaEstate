@@ -226,6 +226,8 @@ export default {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
       JIM.onMsgReceive(data => {
+        console.log(data)
+        
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
