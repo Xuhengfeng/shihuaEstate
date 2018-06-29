@@ -427,6 +427,7 @@ export default {
     Jiguang_resetUnreadCount() {
       console.log("重置"+this.targetObj.username)
       JIM.resetUnreadCount({
+        'appkey': this.targetObj.appkey,
         'username': this.targetObj.username
       })
       //重新刷新会话列表
