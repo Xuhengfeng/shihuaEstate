@@ -81,7 +81,7 @@
 								<router-link tag="li" to="/industryconsultation">行业咨询</router-link>
 							</ul>
 						</router-link>
-						<router-link tag="li" to="/buyhouseguide">旅居投资</router-link>
+						<router-link tag="li" to="/residence">旅居投资</router-link>
 						<router-link tag="li" to="/forginwork">海外置业</router-link>
 						<router-link tag="li" to="/shoper">找门店</router-link>
 						<router-link tag="li" to="/broker">找经纪人</router-link>
