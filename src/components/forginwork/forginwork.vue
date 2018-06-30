@@ -1,6 +1,8 @@
 <template>
     <div class="home">
-        <div class="header"></div>
+        <div class="header">
+            <img src="../../imgs/home/zhuone.png">
+        </div>
         <div class="message">
             <ul>
                 <li><img src="../../imgs/home/qidai.png"/></li>
@@ -22,12 +24,16 @@ export default {
 <style lang="less" scoped>
 .header {
     width: 100%;
-    height: 480px;
-    // background-color: #F5F5F5;
-    background-image: url(../../imgs/home/zhuone.png);
-    background-repeat: no-repeat;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    img{
+        width: 1920px;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+    }
 }
 .message{
     text-align: center;

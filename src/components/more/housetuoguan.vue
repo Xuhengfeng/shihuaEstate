@@ -1,6 +1,8 @@
 <template>
     <div class="home">
-        <div class="header"></div>
+        <div class="header">
+            <img src="../../imgs/home/housetuoguan.png">
+        </div>
         <div class="section bgColor1">
             <div class="container">
                 <div class="clean">
@@ -92,12 +94,16 @@ export default {
 <style lang="less" scoped>
 .header {
     width: 100%;
-    height: 480px;
-    background-color: #F5F5F5;
-    background-image: url(../../imgs/home/housetuoguan.png);
-    background-repeat: no-repeat;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    img{
+        width: 1920px;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+    }
 }
 .title{
     font-size: 36px;

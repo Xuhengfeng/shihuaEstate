@@ -1,6 +1,8 @@
 <template>
     <div class="home">
-        <div class="header"> </div>
+        <div class="header">
+            <img src="../../imgs/home/touzi.jpg">
+        </div>
     <div class="morrcity">
         <div class="container">
             <ul class="city">
@@ -31,11 +33,16 @@ export default {
 <style lang="less" scoped>
 .header {
     width: 100%;
-    height: 480px;
-    background-color: #F5F5F5;
-    background-image: url(../../imgs/home/touzi.jpg);
-    background-repeat: no-repeat;
-    // background-size: cover;
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    img{
+        width: 1920px;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+    }
 }
 .morrcity{
     height: 480px;
