@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 15:53:33
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-06-30 22:04:53
  */
 <template>
   <div class="sideBar">
@@ -80,6 +80,10 @@
               </div> -->
           </li>
       </ul>
+      <div class="up">
+        <i class="iconfont xhf-icon-top"></i>
+        TOP
+      </div>
   </div>
 </template>
 <script>
@@ -175,6 +179,23 @@ export default {
   mounted() {
     this.calcElt();
     window.onresize = this.calcElt();
+    $(()=>{
+      // 监听窗体滚动高度
+      $(window).scroll(()=>{
+        let oTop = $(window).scrollTop()+$(window).height();
+        let oHeight = $(document).height();
+        if(oTop>oHeight-1000){
+          $('.up').fadeIn();
+        }else{
+          $('.up').fadeOut();
+        }
+      })
+      // 回到顶部
+      $('.up').click(()=>{
+        $('html,body').animate({scrollTop: 0},'slow');
+      })
+
+    })
   }
 };
 </script>
@@ -367,6 +388,13 @@ export default {
       //屏幕外第三个内容布局
       //屏幕外第四个内容布局
     }
+  }
+  .up {
+    position: absolute;
+    bottom: 30px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
   }
 }
 </style>
