@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-25 17:22:38
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2018-07-01 17:51:36
  */
 <template>
     <!-- 地图找房 -->
@@ -11,10 +11,29 @@
             <div class="header-hd">
                 <router-link to="" tag="div" class="logo"></router-link>
                 <div class="sign fr">
-                    <div v-if="true">
-                        <span class="login">登录</span><span class="logout">注册</span>
+                  
+                   <div class="one" v-if="!isLogin">
+                      <i class="iconfont xhf-icon-yonghu"></i>
+                      <span class="login" @click="login()">登录</span> 
+                      <span>/</span>
+                      <span class="register" @click="register()">立即注册</span>
                     </div>
-                    <div v-else><span class="login">徐横峰</span>|<span class="logout">退出</span></div>
+                    <div class="two" v-else>
+                      <div class="headImage">
+                        <img :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
+                      </div>
+                      <router-link tag="span" to="/mine">{{userInfo.nickname}}</router-link>
+                      <span>/</span> 
+                      <span class="logout"  @click="logout()">退出</span>
+                    </div>
+                    <!-- <ul class="item4" v-if="isLogin">
+                      <router-link tag="li" to="">消息</router-link>
+                      <router-link tag="li" to="/mine">个人账户</router-link>
+                      <router-link tag="li" to="">预约看房</router-link>
+                      <router-link tag="li" to="">我的收藏</router-link>
+                      <router-link tag="li" to="">我的委托</router-link>
+                    </ul> -->
+
                 </div>
                 <div class="menu fr">
                     <ul>
@@ -159,10 +178,30 @@ export default {
       titlenumber: '0',    //显示文本类型
     }
   },
+  computed: {
+    isLogin() {
+      return this.$store.state.logined;
+    },
+    userInfo() {
+      return this.$store.state.LoginedUser;
+    }
+  },
   created() {
     this.$route.query.houseType=="11"?this.num=0:this.num=1;
   },
   methods: {
+    //登陆
+    login() {
+      this.$store.commit('OPENLOGINDIALOG', 1);
+    },
+    //注册
+    register() {
+      this.$store.commit('OPENLOGINDIALOG', 2);			
+    },
+    //退出
+    logout() {
+      this.$store.dispatch('logout');
+    },
     //显示房源列表
     isShowHouseList() {
       if(this.isShowSide){
@@ -494,17 +533,37 @@ export default {
       img {vertical-align: middle}
     }
     .sign{
-      div{
+      .one{
         font-size: 12px;
         color: #666;
-        height: 60px;
-        line-height: 60px;
         text-align: center;
-        margin-right: 12px;
-        margin-left: 40px;
+        margin: 22px 12px 0 40px;
         .login,.logout {
           color: #666;
           padding: 0 10px;
+        }
+      }
+      .two{
+        margin: 22px 12px 0 40px;
+        /* 登录/退出 */
+        .login:hover,
+        .register:hover,
+        .logout:hover{
+          color: red;
+          cursor: pointer;
+        }
+        .headImage{
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          overflow: hidden;
+          float: left;
+          margin-right: 10px;
+          vertical-align: middle;
+          img{
+            width: 100%;
+            height: 100%;
+          }
         }
       }
     }
@@ -730,6 +789,8 @@ export default {
   margin-bottom: 10px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
+
+
 </style>
 
 

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-30 22:04:53
+ * @Last Modified time: 2018-07-01 14:47:09
  */
 <template>
   <div class="sideBar">
@@ -395,6 +395,7 @@ export default {
     font-size: 12px;
     text-align: center;
     cursor: pointer;
+    display: none;
   }
 }
 </style>
