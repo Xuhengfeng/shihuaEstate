@@ -6,7 +6,8 @@
       <img src="../../imgs/more/bianming.png">
     </div>
     <div class="main">
-      ddf
+        <div></div>
+        <section><img src="../../imgs/more/bianming2.png"></section>
     </div>
 	</div>
 </template>
@@ -37,5 +38,8 @@ export default {
 }
 .main{
   overflow: hidden;
+}
+.main section{
+  text-align: center;
 }
 </style>
