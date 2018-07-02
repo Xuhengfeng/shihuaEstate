@@ -1,9 +1,7 @@
 <template>
     <!-- 路由外页面 -->
     <div class="wrapper">
-        <div class="container">
-            <iframe name="myframe" ref="myFrame" :height="myHeight" :src="contentUrl" frameborder="0" ></iframe>
-        </div>
+        <iframe name="myframe" ref="myFrame" :height="myHeight" :src="contentUrl" frameborder="0" ></iframe>
     </div>
 </template>
 <script>
@@ -28,6 +26,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.wrapper{
+    width: 1170px;
+    margin: 0 auto;
+}
 .wrapper iframe{
     width: 100%;
     min-height: 500px;

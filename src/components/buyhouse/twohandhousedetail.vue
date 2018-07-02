@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-02 14:37:12
+ * @Last Modified time: 2018-07-02 14:48:07
  */
 <template>
 	<div>
@@ -185,7 +185,7 @@
                     <span class="unit"><span>万</span>
                     </span>
                     <div class="text">
-                      <div class="unitPrice"><span class="unitPriceValue">{{housedetail.saleprice }}<i>元/平米</i></span></div>
+                      <div class="unitPrice"><span class="unitPriceValue">{{housedetail.saleprice }}元/平米</span></div>
                       <div class="tax" id="tax-text">首付及贷款情况请咨询经纪人</div>
                     </div>
                     <div class="removeIcon"></div>

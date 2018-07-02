@@ -25,7 +25,6 @@ export default {
 .header {
     width: 100%;
     height: 500px;
-    overflow: hidden;
     position: relative;
     img{
         width: 1920px;

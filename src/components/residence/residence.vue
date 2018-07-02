@@ -1,26 +1,26 @@
 <template>
-    <div class="home">
+    <div>
         <div class="header">
             <img src="../../imgs/home/touzi.jpg">
         </div>
-    <div class="morrcity">
-        <div class="container">
-            <ul class="city">
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            <li>北海</li>
-            </ul>
+        <div class="morrcity">
+            <div class="container">
+                <ul class="city">
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                <li>北海</li>
+                </ul>
+            </div>
         </div>
-    </div>
     </div>
 </template>
 
@@ -34,7 +34,6 @@ export default {
 .header {
     width: 100%;
     height: 500px;
-    overflow: hidden;
     position: relative;
     img{
         width: 1920px;
@@ -57,5 +56,6 @@ export default {
     margin-right: 65px;
     margin-top: 50px;
     background:white;
+    color: #000000;
 }
 </style>
