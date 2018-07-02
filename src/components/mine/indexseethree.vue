@@ -95,7 +95,7 @@ export default {
                 photo: null,
             },
             textAreaVal: null,//用户评价的内容
-            isShowModel: true,
+            isShowModel: false,
             city: JSON.parse(localStorage.selectCity),
             brokerAssesstags: null,//经纪人评价
         };
@@ -130,7 +130,7 @@ export default {
         // 经纪人信息
         brokerRequest() {
             let isStar = [];
-            let brokerId = 1147;//假如经纪人的id是1147 后面再替换 
+            let brokerId = 2052;//假如经纪人的id是1147 后面再替换 
             this.$http
             .get(this.$url.URL.BROKERS+this.city.value+"/"+brokerId)
             .then(response=>{

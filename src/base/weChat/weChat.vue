@@ -84,7 +84,7 @@ export default {
       nowName: null,//当前聊天者姓名
       ownId: null,
       targetObj: null,//当前聊天的经纪人 
-      indexNum: null,//监听历史index    
+      indexNum: 0,//监听历史index    
     };
   },
   computed: {
@@ -202,7 +202,7 @@ export default {
         })
         .onFail(data => {
           //经纪人未注册的情况下 帮经纪人进行注册
-          //if(data.code==880103) this.Jiguang_register();
+          if(data.code==880103) this.Jiguang_register();
         });
     },
     Jiguang_register() {
@@ -231,7 +231,7 @@ export default {
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
-        let fromName = base.from_username;
+        let fromName = base.from_name;
         let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = data.messages[0].ctime_ms;
 
@@ -241,14 +241,21 @@ export default {
 
         //说明是好友, 存在会话列表中
         if(this.indexNum>-1){
-          if(fromId == this.targetObj.username){
-            this.appendContent1(mediaId,fromId,fromName,txt,createTime);
-          }else{
-            this.appendContent2(mediaId,fromId,fromName,txt,createTime);
+          try {
+            if(fromId == this.targetObj.username){
+              this.appendContent1(mediaId,fromId,fromName,txt,createTime);
+            }else{
+              this.appendContent2(mediaId,fromId,fromName,txt,createTime);
+            }
+          } catch (error) {
+            this.appendContent2(mediaId,fromId,fromName,txt,createTime);            
           }
+        }else{
+          //不存在则重置为0
+          this.indexNum = 0;
         }
 
-        //重新刷新会话列表
+        //重新刷新会话列表(更新用户最后一条消息)
         JIM.getConversation()
         .onSuccess(data => {
           this.$store.commit('FIREND', data.conversations);
@@ -268,8 +275,8 @@ export default {
               content: {
                 msg_body: {media_id: data.url,text: txt},
                 from_id: fromId,
-                from_username: fromName
               },
+              from_username: fromName,
               ctime_ms: createTime
             }
             this.history[this.indexNum].msgs.push(obj);
@@ -280,8 +287,8 @@ export default {
           content: {
             msg_body: {text: txt},
             from_id: fromId,
-            from_username: fromName
           },
+          from_username: fromName,
           ctime_ms: createTime
         }
         this.history[this.indexNum].msgs.push(obj);
@@ -302,8 +309,8 @@ export default {
             content: {
               msg_body: {media_id: data.url,text: txt},
               from_id: fromId,
-              from_username: fromName
             },
+            from_username: fromName,
             ctime_ms: createTime
           }
           this.history[this.indexNum].msgs.push(obj);
@@ -314,8 +321,8 @@ export default {
           content: {
             msg_body: {text: txt},
             from_id: fromId,
-            from_username: fromName
           },
+          from_username: fromName,
           ctime_ms: createTime
         }
         this.history[this.indexNum].msgs.push(obj);
@@ -325,7 +332,7 @@ export default {
       //其他用户发送消息过来进行提示当前用户
       this.$notify.info({
         title: '消息',
-        message: '徐横峰给你发送消息了'
+        message: fromName+'给你发送消息了'
       });
 
       //历史聊天缓存同步
@@ -346,8 +353,8 @@ export default {
               content: {
                 msg_body: {media_id: data.url,text: txt},
                 from_id: this.userInfo.easemobUsername,
-                from_username: this.userInfo.easemobUsername
               },
+              from_username: this.userInfo.easemobUsername,
               ctime_ms: createTime
             }
             this.history[this.indexNum].msgs.push(obj);
@@ -358,8 +365,8 @@ export default {
           content: {
             msg_body: {text: txt},
             from_id: this.userInfo.easemobUsername,
-            from_username: this.userInfo.easemobUsername
           },
+          from_username: this.userInfo.easemobUsername,
           ctime_ms: createTime
         }
         this.history[this.indexNum].msgs.push(obj);
@@ -414,7 +421,7 @@ export default {
       this.$store.commit('CURRENTBROKER', this.targetObj);
 
       //重置小红点
-      this.Jiguang_resetUnreadCount();
+      this.Jiguang_resetUnreadCount(item);
       //打开聊天窗口
       this.open();
 
@@ -422,20 +429,13 @@ export default {
       this.toBottom();
     },
 
-
     //重置小红点
-    Jiguang_resetUnreadCount() {
-      console.log("重置"+this.targetObj.username)
+    Jiguang_resetUnreadCount(item) {
       JIM.resetUnreadCount({
         'appkey': this.targetObj.appkey,
         'username': this.targetObj.username
       })
-      //重新刷新会话列表
-      JIM.getConversation()
-      .onSuccess(data => {
-        this.$store.commit('FIREND', data.conversations);
-      })
-      .onFail(data => {});
+      item.unread_msg_count = 0;
     }
   }
 };

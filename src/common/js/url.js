@@ -62,7 +62,7 @@ let URL = {
 	USER_LOGIN:_host+'/member/login',                            //用户登录
 	USER_JIGUANGSIGN:_host+'/jiguang/signature',                 //用户极光IM鉴权
 	USER_JIGUANGBIND:_host+'/jiguang/binding',                   //用户极光账号和登录账号绑定
-	USER_JIGUANGREG:_host+'/jiguang/reguser',                    //用户极光注册
+	USER_JIGUANGREG:_host+'/jiguang/broker/reguser',             //用户极光注册
 	USER_LOGOUT:_host+'/member/logout',                          //用户退出
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码

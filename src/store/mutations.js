@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-29 00:47:35
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-07-02 14:08:22
  */
 import router from '../router/index'
 //同步处理
@@ -129,12 +129,11 @@ export default {
 				item.lastMsg = state.history[index].msgs[lastIndex].content.msg_body;
 			}
 		});
+		// 好友列表
 		state.conversations = payload;
 	},
 	//当前的经纪人
 	CURRENTBROKER(state, payload) {
-		//清空最后一条消息动态
-		// payload.lastMsg = {text: ''};
 		state.currentLineBroker = payload;	
 	},
 	//会话列表(添加好友)
@@ -154,7 +153,13 @@ export default {
 			state.conversations.unshift(payload);
 			state.history.unshift({
 				from_username: payload.username,
-				lastMsg: {text: ''}
+				lastMsg: {text: ''},
+				content: {
+					msg_body: {text: ''},
+					from_id: payload.id,
+				},
+				msgs: [],
+        	    ctime_ms: payload.mtime
 			});
 		}
 		//当前经纪人存在于会话列表中

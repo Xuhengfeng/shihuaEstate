@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-07-01 00:04:29
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-07-02 14:37:12
  */
 <template>
 	<div>
@@ -30,7 +30,7 @@
                   <i class="iconfont xhf-icon-right arrow-right"></i>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList">
+                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(index)">
                           <img :src="item">
                       </div>
                     </div>
@@ -270,7 +270,8 @@ export default {
       id:"",//带看id
       page: 1,//默认带看记录是第一页
       scity: JSON.parse(localStorage.selectCity),//用户选定城市
-      collectionFlag: true//收藏标识
+      collectionFlag: true,//收藏标识
+      oSwiper1: null
     };
   },
   created() {
@@ -466,65 +467,75 @@ export default {
               this.samehouseused = response.data.data;
             });
         });
+    },
+    slideTo(index) {
+      this.oSwiper1.slideTo(index);
     }
   },
   mounted() {
     setTimeout(()=> {
-      var viewSwiper = new Swiper(".view .swiper-container", {
+      // 实例1
+      var oSwiper1 = new Swiper(".view .swiper-container", {
         onSlideChangeStart: function() {
           updateNavPosition();
         }
       });
+      this.oSwiper1 = oSwiper1;
 
+      // 上一页
       $(".view .arrow-left,.preview .arrow-left").on("click", function(e) {
         e.preventDefault();
-        if (viewSwiper.activeIndex == 0) {
-          viewSwiper.slideTo(viewSwiper.slides.length - 1, 1000);
+        if (oSwiper1.activeIndex == 0) {
+          oSwiper1.slideTo(oSwiper1.slides.length - 1, 1000);
           return;
         }
-        viewSwiper.slidePrev();
+        oSwiper1.slidePrev();
       });
 
+      // 移入移出
       $('.view').mouseover(()=>{
         $(".view .arrow-left,.view .arrow-right").show();
       }).mouseout(()=>{
         $(".view .arrow-left,.view .arrow-right").hide();
       })
 
+      // 下一页
       $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
         e.preventDefault();
-        if (viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
-          viewSwiper.slideTo(0, 1000);
+        if (oSwiper1.activeIndex == oSwiper1.slides.length - 1) {
+          oSwiper1.slideTo(0, 1000);
           return;
         }
-        viewSwiper.slideNext();
+        oSwiper1.slideNext();
       });
 
-      var previewSwiper = new Swiper(".preview .swiper-container", {
+      // 实例2
+      var oSwiper2 = new Swiper(".preview .swiper-container", {
         visibilityFullFit: true,
         slidesPerView: "auto",
         allowTouchMove: false,
         onTap: function() {
-          console.log(1111)
-          viewSwiper.slideTo(previewSwiper.clickedIndex);
+          oSwiper1.slideTo(oSwiper2.clickedIndex);
         }
       });
+
 
       function updateNavPosition() {
         $(".preview .active-nav").removeClass("active-nav");
         var activeNav = $(".preview .swiper-slide")
-          .eq(viewSwiper.activeIndex)
+          .eq(oSwiper1.activeIndex)
           .addClass("active-nav");
         if (!activeNav.hasClass("swiper-slide-visible")) {
-          if (activeNav.index() > previewSwiper.activeIndex) {
+          if (activeNav.index() > oSwiper2.activeIndex) {
             var thumbsPerNav =
-              Math.floor(previewSwiper.width / activeNav.width()) - 1;
-            previewSwiper.slideTo(activeNav.index() - thumbsPerNav);
+              Math.floor(oSwiper2.width / activeNav.width()) - 1;
+            oSwiper2.slideTo(activeNav.index() - thumbsPerNav);
           } else {
-            previewSwiper.slideTo(activeNav.index());
+            oSwiper2.slideTo(activeNav.index());
           }
         }
       }
+
     }, 1000);
   },
   components: {
