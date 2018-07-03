@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-02 14:08:22
+ * @Last Modified time: 2018-07-03 15:47:04
  */
 import router from '../router/index'
 //同步处理
@@ -48,7 +48,13 @@ export default {
 		state.LoginedUser = null;
 		state.userAuthJiGuang = null;
 		state.AuthJiG = null;
-		console.log(router)
+
+		state.chat = false;
+		state.conversations = [];
+		state.history = [];
+		state.currentLineBroker = null;
+		state.loginDialogNum = null;
+
 		router.push({path: "/"});
 		
 		//用户退出极光IM

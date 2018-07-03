@@ -158,7 +158,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li  @click="toSkiptwo(item)"  v-for="item in hotBuilding" >
+						<li  @click="toSkiptwo(item)"  v-for="item in hotBuilding">
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
