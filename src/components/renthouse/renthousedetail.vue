@@ -98,8 +98,8 @@
                     </div>
                   </div>
                    <div class="more">
-                     <div @click="changeNum(1)"></div>
-                     <div @click="changeNum(2)">></div>
+                     <div @click="changeNum(1)"><i class="iconfont xhf-icon-left"></i></div>
+                     <div @click="changeNum(2)"><i class="iconfont xhf-icon-right"></i></div>
                    </div>
                 </div>
             </div>
