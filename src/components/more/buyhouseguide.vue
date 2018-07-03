@@ -23,7 +23,7 @@
     <div class="main">
       <div class="container">
         <ul>
-          <li v-for="item in listone.infoContentList">
+          <li v-for="item in listone[num].infoContentList" @click="infoDetail(item)">
             <div class="img">
               <img :src="item.imageUrl">
             </div>
@@ -38,7 +38,7 @@
             </div>
           </li>
         </ul>
-        <div class="noContent" v-show="!listone.infoContentList">暂无数据!</div>
+        <div class="noContent" v-show="!listone[num].infoContentList.length">暂无数据!</div>
       </div>
     </div>
 
@@ -63,7 +63,9 @@ import oHeader from "../../base/header/header";
 export default {
   data() {
     return {
-      listone:[],
+      listone:[
+        {infoContentList: []}
+      ],
       keyword: '',//搜索框关键词
       queryone: 0, 
       showBtn: false,
@@ -81,6 +83,7 @@ export default {
         scity: null,
         sortMode: null
       },
+      num: 0,
       selectCity: JSON.parse(localStorage.selectCity),//当前城市
     };
   },
@@ -115,15 +118,21 @@ export default {
     },
     tag(index) {
       this.queryone = index;
+      this.num = index;
     },
     guideDataRequest() {
       this.$http
           .get(this.$url.URL.PURCHASE_GUIDE)
           .then(res => {
-              console.log(res)
               this.listone = res.data.data;
           })
     },
+    // 查看详情
+    infoDetail(item) {
+      console.log(item)
+      // 路由外页面
+      this.$router.push({path:"/industryconsultationDetail", query: {contentUrl: item.phoneContentUrl}})
+    }
   },
   components: {
     oHeader
@@ -233,6 +242,18 @@ export default {
   font-weight: bold;
 }
 </style>
+<style>
+.circle p{
+  height: 25px;
+  line-height: 25px;
+}
+.circle .hours,
+.circle .day{
+    margin-top: 20px;
+    font-size: 30px;
+}
+</style>
+
 
 
 
