@@ -226,8 +226,6 @@ export default {
       // 首先要判断是否和当前对应的经纪人聊天 如果是则直接push到当前的this.contents;
       // 如果不是则应当push到相应的经纪人的history去
       JIM.onMsgReceive(data => {
-        console.log(data)
-        
         let base = data.messages[0].content;
         let mediaId = base.msg_body.media_id;
         let fromId = base.from_id;
@@ -235,6 +233,7 @@ export default {
         let txt = base.msg_body.text?base.msg_body.text:'';
         let createTime = data.messages[0].ctime_ms;
 
+        //找到历史数据缓存的数组
         this.indexNum = this.history.findIndex(element=>{
           return  fromId == element.from_username;
         })
@@ -261,7 +260,7 @@ export default {
           this.$store.commit('FIREND', data.conversations);
         })
         .onFail(data => {});
-
+        
       });
     },
 

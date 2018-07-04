@@ -163,19 +163,17 @@ export default {
     },
     //监听是否在线
     Jiguang_onDisconnect() {
-      console.log('掉线,重新初始化....')
       JIM.onDisconnect(res=>{
         this.afresh();
       })
-    },
-   
+    },   
     //获取极光IM信息
     Jiguang_userInfo() {
       JIM.getUserInfo({
         username: this.userInfo.easemobUsername,
         appkey: this.AuthJiG.appkey
       }).onSuccess(data => {
-        console.log("获取用户Im信息成功：" + JSON.stringify(data));
+        //console.log("获取用户Im信息成功：" + JSON.stringify(data));
       });
     },
     //获取极光IM会话列表
@@ -190,7 +188,6 @@ export default {
     Jiguang_syncConversation(){
       JIM.onSyncConversation(data=> {
         //缓存历史漫游消息
-        console.log(data)
         this.$store.commit('HISTORY', data);
       });
     },

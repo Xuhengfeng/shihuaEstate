@@ -219,7 +219,7 @@
                       <div class="duibi_a" @click="addCompare(housedetail, $event)"  v-if="housedetail.isComparison">已加对比</div>
                       <div class="duibi_a">分享房源</div>
                   </div>
-                  <div class="callpeople">联系经纪人</div>
+                  <div class="callpeople" @click="startChat()">联系经纪人</div>
                   <div class="peopleintrode">
                       <div class="fl"><img :src="housedetail.broker.photo"></div>
                       <ul>
@@ -282,18 +282,41 @@ export default {
     logined() {
       return this.$store.state.logined;
     },
+    //登录用户的信息
+    userInfo() {
+      return this.$store.state.LoginedUser;
+    },
     //对比列表
     contrastList() {
       return this.$store.state.contrastList;
     }
   },
   methods: {
+    //打开聊天
+    startChat() {
+      //未登录用户提示弹窗登录
+      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
+      let item = this.housedetail.broker;
+      //装饰item
+      let newItem = {
+        avatar: item.photo,
+        appkey: this.userInfo.brokerAppKey,
+        name: item.emplName,
+        nickName: item.emplName,
+        username: item.chatUsername,
+        password: item.chatUsername.split('_').join(''),
+        id: item.id,
+        mtime: new Date().getTime()
+      }
+      //添加经纪人到会话列表中
+      this.$store.commit('ADDFIREND', newItem);         
+    },
     //更多 带看记录
     moreSeelog() {
       //带看记录
       this.$http.get(this.$url.URL.HOUSE_HOUSESEE  + this.id + "?pageNo=" + this.page)
       .then(response =>{
-            this.housesee =  response.data.data
+          this.housesee =  response.data.data
       })
     },
     //上一页 下一页
