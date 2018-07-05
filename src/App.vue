@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-28 14:10:12
+ * @Last Modified time: 2018-07-05 15:18:19
  */
 <template>
   <div id="app">
@@ -70,7 +70,7 @@ export default {
     this._mapquerys();
 
     //极光IM 全局挂载 刷新
-    window.JIM = new JMessage({debug: true});
+    window.JIM = new JMessage({debug: false});
     this.isLogin&&this.afresh();
   },
   computed: {
