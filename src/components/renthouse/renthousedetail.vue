@@ -16,8 +16,8 @@
               <div class="pc-slide">
                 <div class="view image">
                   <div class="swiper-container">
-                    <a class="arrow-left" href="#"></a>
-                    <a class="arrow-right" href="#"></a>
+                    <i class="iconfont xhf-icon-left arrow-left"></i>
+                    <i class="iconfont xhf-icon-right arrow-right"></i>
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in sellrentdetail.housePicList">
                           <img :src="item">
@@ -26,8 +26,8 @@
                   </div>
                 </div>
                 <div class="preview">
-                  <a class="arrow-left" href="#"></a>
-                  <a class="arrow-right" href="#"></a>
+                  <i class="iconfont xhf-icon-left arrow-left"></i>
+                  <i class="iconfont xhf-icon-right arrow-right"></i>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in sellrentdetail.housePicList">
@@ -425,6 +425,12 @@ export default {
         }
         viewSwiper.slidePrev();
       });
+      // 移入移出
+      $('.view').mouseover(()=>{
+        $(".view .arrow-left,.view .arrow-right").show();
+      }).mouseout(()=>{
+        $(".view .arrow-left,.view .arrow-right").hide();
+      })
       $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
         e.preventDefault();
         if (viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
@@ -784,84 +790,83 @@ export default {
   width: 714px;
   margin: 0 auto;
 }
-
-.view .swiper-container {
+.view{
+  position: relative;
   width: 714px;
-  height: 500px;
+  height: 400px;
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+}
+.view .arrow-left,
+.view .arrow-right{
+  position: absolute;
+  top: 50%;
+  font-size: 30px;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 100px;
+  background: rgba(0,0,0,0.3);
+  text-align: center;
+  line-height: 100px;
+  color: #f40;
+  display: none;
+  cursor: pointer;
+}
+.view .arrow-left{
+  left: 0;
+}
+.view .arrow-right{
+  right: 0;
 }
 
-.view .arrow-left {
-  background: url(../../imgs/buyhouse/index_tab_l.png) no-repeat left top;
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  margin-top: -25px;
-  width: 28px;
-  height: 51px;
-  z-index: 10;
-}
-
-.view .arrow-right {
-  background: url(../../imgs/buyhouse/index_tab_r.png) no-repeat left bottom;
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  margin-top: -25px;
-  width: 28px;
-  height: 51px;
-  z-index: 10;
-}
 
 .preview {
   width: 100%;
   margin-top: 10px;
   position: relative;
 }
-
 .preview .swiper-container {
   width: 645px;
   height: 82px;
   margin-left: 35px;
 }
-
 .preview .swiper-slide {
   width: 87px;
   height: 82px;
   cursor: pointer;
+  margin-right: 10px;
+  text-align: center;
 }
-
-.preview .slide6 {
-  width: 82px;
-}
-
-.preview .arrow-left {
-  background: url(../../imgs/buyhouse/feel3.png) no-repeat left top;
+.preview .arrow-left,
+.preview .arrow-right{
   position: absolute;
-  left: 10px;
   top: 50%;
-  margin-top: -9px;
   width: 9px;
   height: 18px;
-  z-index: 10;
+  font-size: 30px;
+  transform: translateY(-50%);
+  color: #f40;
+}
+.preview .arrow-left{
+  left: 0;
+}
+.preview .arrow-right{
+  right: 9px;
 }
 
-.preview .arrow-right {
-  background: url(../../imgs/buyhouse/feel4.png) no-repeat left bottom;
+.preview .active-nav::before{
+  content: '';
+  display: inline-block;
   position: absolute;
-  right: 10px;
-  top: 50%;
-  margin-top: -9px;
-  width: 9px;
-  height: 18px;
-  z-index: 10;
-}
-
-.preview img {
-  padding: 1px;
-}
-
-.preview .active-nav img {
-  padding: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid #f40;
+  box-sizing: border-box;
 }
 .swiperimg {
   width: 120px;

@@ -16,11 +16,10 @@ export default {
             return{
                 scity: JSON.parse(localStorage.selectCity),//当前城市
                 info:""   ,//问题详情
-                userInfo:JSON.parse(sessionStorage.userInfo),
             }
         },
         created() {
-                this.render()
+                this.render();
         },
         methods:{
             render() {

@@ -72,7 +72,7 @@
 						</div> -->
 					</div>
 						<div class="resultDes">
-							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>套{{this.selectCity.name}}二手房</h2>
+							<h2 class="total">共找到<span style="color: red;"> {{querycount.count}} </span>套{{this.selectCity.name}}租房</h2>
 							<div class="listContentLine"></div>
 						</div>
 					

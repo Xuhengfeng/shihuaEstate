@@ -632,7 +632,7 @@
 
 .city-change .fc-main li .city-enum {
 	height: 100%;
-	max-width: 250px;
+	max-width: 245px;
 }
 
 .city-change .fc-main li {

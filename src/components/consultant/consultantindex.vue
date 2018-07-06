@@ -28,7 +28,7 @@
                         <div class="introduce" >{{item.name}} </div>
                         <div class="introduce">
                                 <!-- <span class="word">1111111</span> -->
-                                <div class="fr call">向他咨询</div>
+                                <div @click="toSkipthree(item)" class="fr call">向他咨询</div>
                         </div> 
                         <div class="introduce ">
                             <span class="intrspan one">{{item.label}}</span>
@@ -118,6 +118,10 @@
                 },
                 toSkiptwo(item) {
                      let path = "/listdetail/"+ item.employeeId;
+                    this.$router.push({ path: path });
+                },
+                 toSkipthree(item) {
+                     let path = "/myproblem/:id";
                     this.$router.push({ path: path });
                 }
             }
