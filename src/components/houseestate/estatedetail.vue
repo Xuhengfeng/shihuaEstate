@@ -69,7 +69,7 @@
  							</div>
  						</div>
 						 	<div class="item">
-								 <div class="headtitle"> 同小区房源 <div class="fr changetab"><span @click="change(0)">二手房</span><span @click="change(1)">租房</span></div></div>
+								 <div class="headtitle"> 同小区房源 <div class="fr changetab"></div> <!-- <span @click="change(0)">二手房</span><span @click="change(1)">租房</span> --></div>
 									<ul>
 										<li v-for="item in samehouselist">
 											<div class="image fl"  @click="toSkip(item)">
@@ -590,7 +590,7 @@
   overflow: hidden;
 }
 .item ul li {
-  margin-top: 50px;
+  // margin-top: 50px;
 	float: left;
   cursor: pointer;
 }

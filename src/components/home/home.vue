@@ -60,11 +60,11 @@
 								<span class="logout"  @click="logout()">退出</span>
 							</div>
 							<ul class="item4" v-if="isLogin">
-								<router-link tag="li" to="">消息</router-link>
 								<router-link tag="li" to="/mine">个人账户</router-link>
 								<router-link tag="li" to="">预约看房</router-link>
 								<router-link tag="li" to="">我的收藏</router-link>
 								<router-link tag="li" to="">我的委托</router-link>
+								<router-link tag="li" to="/mine/indexmessage">消息</router-link>
 							</ul>
 						</router-link>
 						
@@ -78,7 +78,7 @@
 								<router-link tag="li" to="/publicgood">世华公益</router-link>
 								<router-link tag="li" to="/consultant">咨询</router-link>
 								<router-link tag="li" to="/buyhouseguide">购房指南</router-link>
-								<router-link tag="li" to="/industryconsultation">行业咨询</router-link>
+								<router-link tag="li" to="/industryconsultation">行业资讯</router-link>
 							</ul>
 						</router-link>
 						<router-link tag="li" to="/residence">旅居投资</router-link>
@@ -304,7 +304,7 @@
 			},
 			userInfo() {
             	return this.$store.state.LoginedUser;
-        	}
+			}
 		},
 		created() {
 			this.defaultCityRequest();
@@ -322,6 +322,7 @@
 			}
 		},
 		methods: {
+			
 			//默认定位
 			defaultCityRequest()  {
 				this.$http.get(this.$url.URL.DEFAULT_CITY)
@@ -493,6 +494,9 @@
 				this.renderRequest(name);
 				localStorage.selectCity = JSON.stringify(selectCity);	
 			},
+			// clickrouter(index) {
+			// this.num = index;
+			// },
 			//开始找房
 			searchHouse() {
 				let num = this.placeholderTextType;
@@ -595,7 +599,7 @@
 }
 
 .city-change .fc-main {
-	padding: 0 40px;
+	padding: 0 35px;
 	height: 335px;
 	overflow-y: auto;
 }
@@ -1043,5 +1047,8 @@
   0%{transform: scale(0)}
   90%{transform: scale(1.05)}
   100%{transform: scale(1)}
+}
+.bgColor{
+	color:red; 
 }
 </style>

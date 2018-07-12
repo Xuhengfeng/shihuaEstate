@@ -19,18 +19,18 @@
                     <span>/</span> 
                     <span class="logout"  @click="logout()">退出</span>
                     <ul>
-                        <router-link tag="li" to="">消息</router-link>
                         <router-link tag="li" to="/mine">个人账户</router-link>
                         <router-link tag="li" to="">预约看房</router-link>
                         <router-link tag="li" to="">我的收藏</router-link>
                         <router-link tag="li" to="">我的委托</router-link>
+                         <router-link tag="li" to="/mine/indexmessage">消息</router-link>
                     </ul>
                 </div>
                 <div>热线电话0779-3837272</div>
             </div>
 
             <ul class="two fl">
-                <router-link tag="li" to="">更多
+                <router-link tag="li" :class="wordColor==9?'bgColor':''" to="">更多
                     <ol class="item2">
                         <router-link tag="li" to="/houseestate">小区找房</router-link>
                         <router-link tag="li" to="/agencyBusiness">代办业务</router-link>
@@ -40,22 +40,22 @@
                         <router-link tag="li" to="/publicgood">世华公益</router-link>
                         <router-link tag="li" to="/consultant">咨询</router-link>
                         <router-link tag="li" to="/buyhouseguide">购房指南</router-link>
-                        <router-link tag="li" to="/industryconsultation">行业咨询</router-link>
+                        <router-link tag="li" to="/industryconsultation">行业资讯</router-link>
                     </ol>
                 </router-link>
-                <router-link tag="li" to="/residence">旅居投资</router-link>
-                <router-link tag="li" to="/forginwork">海外置业</router-link>
-                <router-link tag="li" to="/shoper">找门店</router-link>
-                <router-link tag="li" to="/broker">找经纪人</router-link>
-                <router-link tag="li" to="">业主委托
+                <router-link tag="li" to="/residence" :class="wordColor==1?'bgColor':''">旅居投资</router-link>
+                <router-link tag="li" to="/forginwork" :class="wordColor==2?'bgColor':''">海外置业</router-link>
+                <router-link tag="li" to="/shoper" :class="wordColor==3?'bgColor':''">找门店</router-link>
+                <router-link tag="li" to="/broker" :class="wordColor==4?'bgColor':''">找经纪人</router-link>
+                <router-link tag="li" to="" :class="wordColor==5?'bgColor':''">业主委托
                     <ol class="item2">
                         <router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
 						<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
                     </ol>
                 </router-link>
-                <router-link tag="li" to="/rentHouse">租房</router-link>
-                <router-link tag="li" to="/newHouse">新房</router-link>
-                <router-link tag="li" to="/buyHouse">二手房</router-link>
+                <router-link tag="li" to="/rentHouse" :class="wordColor==6?'bgColor':''">租房</router-link>
+                <router-link tag="li" to="/newHouse" :class="wordColor==7?'bgColor':''">新房</router-link>
+                <router-link tag="li" to="/buyHouse"  :class="wordColor==8?'bgColor':''">二手房</router-link>
                 <router-link tag="li" to="/home">首页</router-link>
             </ul>
         </div>
@@ -78,7 +78,10 @@ export default {
         },
         userInfo() {
             return this.$store.state.LoginedUser;
-        }
+        },
+        wordColor() {
+            return this.$store.state.wordcolor;
+        },
     },
 	methods: {
 		changeDialog(num) {//显示对应的对话框
@@ -219,5 +222,10 @@ export default {
     left: 20px;
     transform: translateY(-50%);
 }
-
+.bgColor{
+   color: #ff4343;
+}
+.bgColor1{
+    color: white;
+}
 </style>

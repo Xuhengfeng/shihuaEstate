@@ -196,10 +196,6 @@
                     </div>
                   </div>
                   <div class="aroundInfo">
-                    <div class="communityName"><i></i><span class="label">小区名称</span>
-                      <a href="/xiaoqu/2411048689454/" target="_blank" class="info ">帝港海湾豪园</a>
-                      <a href="#around" class="map">地图</a>
-                    </div>
                     <div class="areaName"><i></i><span class="label">所在区域</span><span class="info">&nbsp;<a>{{sellrentdetail.areaName }}</a></span>
                       <a href="" class="supplement" title="" style="color:#394043;"></a>
                     </div>

@@ -191,5 +191,9 @@ export default {
 	//开始聊天
 	STARTCHAT(state, payload) {
 		state.chat = payload;
+	},
+	//修改topbar样式
+	WORDCOLOR(state, payload){
+		state.wordcolor = payload;
 	}
 }

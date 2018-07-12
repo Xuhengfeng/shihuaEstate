@@ -9,7 +9,7 @@
 					<ul>
 						<li>
 							<ol class="fl">
-                <li class="title">位置: 区域</li>
+                <li class="title">位置:</li>
 								<li :key="index" v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
@@ -261,7 +261,7 @@ export default {
           this.listone = response.data.data;
         });
       this.$http
-        .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_RENTAL") //房源售价
+        .get(this.$url.URL.DICTIONARY_DICTYPE + "HOUSE_RENTAL"+"/"+ city) //房源售价
         .then(response => {
           response.data.data.unshift({value: null, name: "不限"});
     		  this.listtwo = response.data.data;

@@ -10,7 +10,7 @@
 					<ul>
 						<li>
 							<ol class="fl">
-                <li class="title">位置: 区域</li>
+                <li class="title">位置:</li>
 								<li :key="index" v-for="(item, index) in listone" :class="{querybtn:queryone==index }" @click="address(item, index)">{{item.name}}</li>
 							</ol>
 						</li>
@@ -157,9 +157,7 @@ export default {
         areaId: null,
         districtId: null,
         keyword: "",
-        maxBuildArea: null,
         maxSellPrice : null,
-        minBuildArea: null,
         minSellPrice : null,
         pageNo: 1,
         pageSize: null,
@@ -253,7 +251,7 @@ export default {
           this.listone = response.data.data;
         });
       this.$http
-        .get(this.$url.URL.DICTIONARY_DICTYPE + "SELL_UNIT_PRICE" + "/" + city) //均价
+        .get(this.$url.URL.DICTIONARY_DICTYPE + "SELL_UNIT_PRICE"+"/"+ city) //均价
         .then(response => {
           response.data.data.unshift({value: null, name: "不限"});
 		      this.listtwo = response.data.data;
@@ -275,6 +273,7 @@ export default {
       .post(this.$url.URL.BUILDLIST, newParams)
       .then(response=>{
         this.houseList = response.data.data;
+        console.log( this.houseList)
       })
     },
     //搜索
@@ -295,11 +294,11 @@ export default {
       this.querytwo = index;
       this.params.pageNo = 1;
       if(item.value){
-        this.params.minRentPrice = item.value.split("-")[0];
-        this.params.maxRentPrice = item.value.split("-")[1];
+        this.params.minSellPrice = item.value.split("-")[0];
+        this.params.maxSellPrice = item.value.split("-")[1];
       }else{
-        this.params.minRentPrice = null;  
-        this.params.maxRentPrice = null; 
+        this.params.minSellPrice = null;  
+        this.params.maxSellPrice = null; 
       }
       this.houseRequest(); 
       this.countRequest();

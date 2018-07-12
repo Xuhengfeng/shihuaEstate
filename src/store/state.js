@@ -19,5 +19,6 @@ const state = {
 	currentLineBroker: null, //当前聊天的经纪人
 
 	loginDialogNum: null,//登录 注册
+	wordcolor: null,     //字体颜色
 }
 export default state;

@@ -6,10 +6,10 @@
 				<div class="friendship">
 					<!--a站外 router-link站内-->
 					<span><router-link tag="a" to="/group/groupintourde">集团简介</router-link></span>  <span style="margin-left: 28px;">|</span>
-					<span><a href="">集团文化</a></span>   <span style="margin-left: 28px;">|</span>
-					<span><a href="">联系我们</a></span>   <span style="margin-left: 28px;">|</span>
-					<span><a href="">南宁小区</a></span>   <span style="margin-left: 28px;">|</span>
-					<span><a href="">南宁小区联系人</a></span>
+					<span><router-link tag="a" to="/group/groupculture">集团文化</router-link></span>   <span style="margin-left: 28px;">|</span>
+					<span><router-link tag="a" to="/group/aboutgroup">联系我们</router-link></span>   <span style="margin-left: 28px;">|</span>
+					<span><router-link tag="a" to="/houseestate">南宁小区</router-link></span>   <span style="margin-left: 28px;">|</span>
+					<span><router-link tag="a" to="/broker">南宁小区联系人</router-link></span>
 				</div>
 				<div class="footer-bd">
 					<div class="footer-bd-one">

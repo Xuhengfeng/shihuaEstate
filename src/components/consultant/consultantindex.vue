@@ -1,6 +1,6 @@
 <template>
     <div>
-       <div class="titlep">热门咨询</div>
+       <div class="titlep">热门资讯</div>
 
        <div class="hot-box">
             <div class="hot-item">
@@ -16,7 +16,7 @@
             <img src="../../imgs/home/ader.png"/>
         </div>
 
-        <div class="titlep fl">世华顾问</div> <div class="fr">查看更多</div>
+        <div class="titlep fl">世华顾问</div> 
 
         <div class="item">
             <ul>

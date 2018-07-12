@@ -16,7 +16,7 @@
 					<ul>
 						<li>
 							<ol class="fl">
-                <li class="title">位置: 区域</li>
+                <li class="title">位置:</li>
 								<li :key="index" :data-id="index" v-for="(item,index) in listone" :class="{querybtn:queryone==index}" @click="address(item, index, $event)">{{item.name}}</li>
 							</ol>
 						</li>

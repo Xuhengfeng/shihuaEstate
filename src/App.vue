@@ -103,6 +103,34 @@ export default {
     //监听路由路径
     $route(to, from) {
       let path = to.path;
+      console.log(path)
+      if(path == "/residence"){
+        this.$store.commit('WORDCOLOR',1);
+      }
+      if(path == "/forginwork"){
+        this.$store.commit('WORDCOLOR',2);
+      }
+      if(path == "/shoper"){
+        this.$store.commit('WORDCOLOR',3);
+      }
+      if(path == "/broker"){
+        this.$store.commit('WORDCOLOR',4);
+      }
+      if(path == "/entrustmentrent/rent"){
+        this.$store.commit('WORDCOLOR',5);
+      }
+       if(path == "/rentHouse"){
+        this.$store.commit('WORDCOLOR',6);
+      }
+      if(path == "/newHouse"){
+        this.$store.commit('WORDCOLOR',7);
+      }
+      if(path == "/buyHouse"){
+        this.$store.commit('WORDCOLOR',8);
+      }
+      if(path == "/houseestate"){
+        this.$store.commit('WORDCOLOR',9);
+      }
       if (path == "/mapSearch") {
         this.isShowTop = 0;
         this.isShowFooter = 0;
