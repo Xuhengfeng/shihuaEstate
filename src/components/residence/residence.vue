@@ -7,17 +7,23 @@
             <div class="container">
                 <ul class="city">
                 <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
-                <li>北海</li>
+                <li>威海</li>
+                <li>大理</li>
+                <li>湛江</li>
+                <li>桂林</li>
+                <li>海口</li>
+                <li>琼海</li>
+                <li>南宁</li>
+                <li>阳江</li>
+                <li>惠州</li>
+                <li>河源</li>
+                <li>清远</li>
+                <li>贵阳</li>
+                <li>柳州</li>
+                <li>衡阳</li>
+                <li>岳阳</li>
+                <li>防港城</li>
+                <li>汕头</li>
                 </ul>
             </div>
         </div>

@@ -69,10 +69,10 @@ export default {
             list: [
 				{name: '咨询首页', url: '/consultant/consultantindex'},//咨询首页
 				{name: '买房咨询',url: '/consultant/consultantbuyhouse'},//买房咨询
-				{name: '交易过户', url: '/consultant/consultantindex'},//交易过户
-                {name: '卖房咨询',url: '/consultant/consultantindex'},//卖房咨询
-                {name: '租房咨询',url: '/consultant/consultantindex' },//租房咨询
-                {name: '其他咨询', url: '/consultant/consultantindex'},//其他咨询
+				// {name: '交易过户', url: '/consultant/consultantbuyhouse'},//交易过户
+                // {name: '卖房咨询',url: '/consultant/consultantbuyhouse'},//卖房咨询
+                // {name: '租房咨询',url: '/consultant/consultantbuyhouse' },//租房咨询
+                // {name: '其他咨询', url: '/consultant/consultantbuyhouse'},//其他咨询
 			]
 		}
 	},

@@ -6,10 +6,13 @@
  */
 <template>
 	<div>
-		<o-header :houseTypeId="houseTypeId" 
+		<!-- <o-header :houseTypeId="houseTypeId" 
 					:keywordTypeId="keywordTypeId" 
 					:keyword="keyword"
-					@query="query"></o-header>
+					@query="query"></o-header> -->
+					<o-header :houseTypeId="houseTypeId" 
+              :isShowQueryBox="false"
+              ></o-header>
 		<div class="title container">
 			<div class="tit fl">
 				<p>{{buildlistinfo.buildName }}</p>

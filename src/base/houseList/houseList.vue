@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="r-content">
-                <div class="collection">收藏</div>
+                <!-- <div class="collection">收藏</div> -->
                 <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
                 <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
             </div>
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="r-content">
-                <div class="collection">收藏</div>
+                <!-- <div class="collection">收藏</div> -->
                 <div class="housetype"><span>{{item.houseType}}</span></div>
                 <div class="sellPrice">单价<span>{{item.rentPrice }}</span>元/平米</div>
             </div>
@@ -54,7 +54,7 @@
             </div>
             <div class="direciton">
                 <div class="introduce" @click="toSkip(item)" >{{item.buildName}}
-                <span class="fr" @click.stop="collection(item,$event)">收藏</span>
+                <!-- <span class="fr" @click.stop="collection(item,$event)">收藏</span> -->
             </div>
             <div class="introduce">
                 <img src="../../imgs/buyhouse/house.png" />
@@ -102,7 +102,7 @@
                 </div>
             </div>
             <div class="r-content">
-                <div class="collection">收藏</div>
+                <!-- <div class="collection">收藏</div> -->
                 <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
                 <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
             </div>

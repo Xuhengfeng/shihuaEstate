@@ -120,7 +120,7 @@ export default {
     //监控登录状态
     logined() {
       return this.$store.state.logined;
-    }
+    },
   },
   methods: {
     //清空对比

@@ -20,5 +20,6 @@ const state = {
 
 	loginDialogNum: null,//登录 注册
 	wordcolor: null,     //字体颜色
+	num: null    //
 }
 export default state;

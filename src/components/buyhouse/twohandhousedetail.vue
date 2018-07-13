@@ -6,7 +6,9 @@
  */
 <template>
 	<div>
-		<o-header></o-header>
+		<o-header :houseTypeId="houseTypeId" 
+              :isShowQueryBox="false"
+              ></o-header>
     <div class="section container">
         <!-- 左侧main内容 -->
         <div class="main">
@@ -243,6 +245,7 @@ import "../../../static/js/swiper-3.3.1.min.js";
 export default {
   data() {
     return {
+      houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
       showbox: null, //显示对应的dialog
       datas: "",
       num: 0,

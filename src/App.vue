@@ -89,7 +89,10 @@ export default {
     //是否登录
     isLogin() {
       return this.$store.state.logined;
-    }
+    },
+    	// num() {
+      //       return this.$store.state.wordcolor;
+  	  // },
   },
   watch: {
     //打开登录 注册对话框
@@ -103,7 +106,7 @@ export default {
     //监听路由路径
     $route(to, from) {
       let path = to.path;
-      console.log(path)
+
       if(path == "/residence"){
         this.$store.commit('WORDCOLOR',1);
       }
@@ -130,6 +133,10 @@ export default {
       }
       if(path == "/houseestate"){
         this.$store.commit('WORDCOLOR',9);
+      }
+
+      if(path == "/indexcollection"){
+        this.$store.commit('WORDCOLOR',5);
       }
       if (path == "/mapSearch") {
         this.isShowTop = 0;

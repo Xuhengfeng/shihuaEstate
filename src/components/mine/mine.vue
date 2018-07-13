@@ -1,9 +1,4 @@
-/*
- * @Author: 徐横峰 
- * @Date: 2018-04-26 14:05:54 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-05-30 15:24:27
- */
+
 <template>
 	<!-- 我的 -->
 	<div class="mine">
@@ -38,7 +33,7 @@
 export default {
 	data() {
 		return {
-			num: 0,
+			num:0,
 			list: [
 				{name: '账户首页', url: '/mine/indexhome'},//账户首页
 				{name: '待看列表', url: '/mine/indexseeone'},//待看列表
@@ -58,7 +53,20 @@ export default {
 	computed: {
 		userInfo() {
             return this.$store.state.LoginedUser;
-        }
+		},
+	// 	num() {
+    //         return this.$store.state.wordcolor;
+  	//   },
+	},
+	created() {
+		let path = this.$route.path;
+		console.log(path=="/mine/indexseeone")
+		if(path=="/mine/indexseeone" ){
+			this.num=1
+		}
+		if(path=="/mine/indexcollection" ){
+			this.num=5
+		}
 	},
 	methods:{
 		clickrouter(index) {

@@ -130,7 +130,7 @@ export default {
             position: relative;
             float: right;
             text-align: right;
-            width: 180px;
+            width: 190px;
             &:hover ul{
                 visibility: visible;
                 li:hover{ color: #ff4343}

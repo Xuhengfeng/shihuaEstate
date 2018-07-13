@@ -76,6 +76,7 @@ export default {
 	// //删除待看清单中一个
 	deleteTwo({commit}, item) {
 		console.log(item)
+		console.log(item.id)
 		axios.delete(API.URL.APPOINT_DELETE +item.id).then((response) => {});
 		commit('DELETETWO', item);
 	},

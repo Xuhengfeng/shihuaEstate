@@ -195,5 +195,9 @@ export default {
 	//修改topbar样式
 	WORDCOLOR(state, payload){
 		state.wordcolor = payload;
-	}
+	},
+	//修改topbar样式
+	// NUM(state, payload){
+	// 	state.num = payload;
+	// }
 }

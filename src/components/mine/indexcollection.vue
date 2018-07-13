@@ -3,7 +3,7 @@
         <div>
           <div class="collectlist">
               <ul>
-                <li :class="index==num?'bgColor':''" 
+                <li :class="wordColor==index?'bgColor':''" 
                     :key="index" 
                     v-for="(item ,index) in tab"
                     @click="change(index)">{{item}}</li>
@@ -56,7 +56,10 @@ export default {
     //获取用户登录状态
     logined() {
       return this.$store.state.logined;
-    }
+    },
+     wordColor() {
+            return this.$store.state.wordcolor;
+     }
   },
     methods: {
       collectionListRequest(num) {
@@ -82,13 +85,12 @@ export default {
             } )
             .then(response => {
                 this.myinfo = response.data.data;
-                console.log(this.myinfo)
             });
       },
       change(num) {
         this.num = num;
         this.collectionListRequest(num);
-        console.log(this.collecttwohouse )
+        console.log(this.num)
       },
     },
     components: {
