@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-29 11:51:43
+ * @Last Modified time: 2018-07-16 17:42:35
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -76,7 +76,7 @@ const group = resolve => require(['components/group/group'], resolve)//集团
 
 Vue.use(Router)
 const router = new Router({
-	// mode: 'history', //历史模式, 取消地址栏"#"
+	mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
