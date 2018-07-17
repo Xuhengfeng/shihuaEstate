@@ -13,10 +13,6 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const env = require('../config/prod.env')
 const PrerenderSPAPlugin = require('prerender-spa-plugin')
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({
@@ -37,13 +33,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       'process.env': env
     }),
     new PrerenderSPAPlugin( // npm run build的输出目录
-<<<<<<< HEAD
-        path.resolve(__dirname, '../dist'),
-        // 需要进行预渲染的页面
-        ['/home', '/mine/indexhome','/mine/indexseeone','/mine/indexseetwo'], 
-        {captureAfterTime: 5000,maxAttempts: 10}
-			),
-=======
       path.resolve(__dirname, '../dist'),
       // 需要进行预渲染的页面
       ['/buyHouse', '/mine/indexhome', '/mine/indexseeone', '/', '/newHouse', '/rentHouse', '/houseestate', '/shoper', '/buyhouseguide'], {
@@ -51,7 +40,6 @@ const webpackConfig = merge(baseWebpackConfig, {
         maxAttempts: 10,
       }
     ),
->>>>>>> master
     new UglifyJsPlugin({
       uglifyOptions: {
         compress: {
