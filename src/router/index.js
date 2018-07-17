@@ -143,7 +143,7 @@ const router = new Router({
 		
 		{path:"/listdetail/:id",component:listdetail,meta:{KeepAlive:false}},//顾问详情
 		{path:"/queryinfodetail/:id",component:queryinfodetail,meta:{KeepAlive:false}},//资讯详情
-		{path:"/myproblem/:id",component:myproblem,meta:{KeepAlive:false}},//我要咨询
+		{path:"/myproblem/",component:myproblem,meta:{KeepAlive:false}},//我要咨询
 		{path:"/entrustmentrent/:id",component:entrustmentrent,meta:{KeepAlive:false}},//业主委托我要出售 出租
 		{path:"/broker",component:broker,meta:{KeepAlive:false}},//找经纪人
 		{path:"/brokerdetail/:id",component:brokerdetail,meta:{KeepAlive:false}},//找经纪人详情

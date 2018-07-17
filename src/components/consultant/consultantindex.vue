@@ -121,8 +121,7 @@
                     this.$router.push({ path: path });
                 },
                  toSkipthree(item) {
-                     let path = "/myproblem/:id";
-                    this.$router.push({ path: path });
+                    this.$router.push({ path: "/myproblem/", query:{id: item.employeeId, name: item.name}});
                 }
             }
         }

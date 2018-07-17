@@ -109,7 +109,7 @@
             <div class="five">
                 <div class="guanlianxiaoqu">
                     <div class="title">关联小区</div>
-                    <div class="image fl">
+                    <div class="image fl" @click="toSkipone(bulidinfo)">
                       <img :src="bulidinfo.housePic" alt="" />
                     </div>
                     <div class="direciton">
@@ -344,6 +344,9 @@ export default {
       let path = "/rentHouseDetail/" + item.sdid;
       this.$router.push({ path: path });
       this.render();
+    },
+     toSkipone(bulidinfo) {
+      this.$router.push({ path: "/estatedetail/" + bulidinfo.sdid});
     },
     //租房房详情
     render() {

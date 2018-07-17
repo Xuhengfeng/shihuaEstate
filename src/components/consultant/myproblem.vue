@@ -23,8 +23,7 @@
 				<div class="leftContent">
 					
                     <div class="tiwen-box shadow" data-url="/wenda/tiwen/">
-                    <p class="title" v-if="this.logined">咨询内容<span class="has-zhuanjia">——张三</span></p>
-                     <p class="title">咨询内容</p>
+                    <p class="title">咨询内容<span class="has-zhuanjia">——{{this.ename}}</span></p>
                     <p class="title-small">标题</p>
                     <div class="ques-word">
                         <input type="text" id="question" maxlength="30" placeholder="" v-model="questword">
@@ -35,7 +34,7 @@
                       <textarea class="ques-detail" placeholder="描述尽量详细，以便于顾问能够回答的更精准～"  v-model="questdetail"></textarea>
                       <p class="title-small">标签</p>
                       <ul id="lists" class="lists">
-                          <li v-for="item in questiontag"><span class="list-eum">{{item.name}}</span></li>
+                          <li @click="clickrouter(item,$event,index)" v-for="(item,index) in questiontag" :class="index==num?'querybtn':''"><span class="list-eum">{{item.name}}</span></li>
                           </ul>
                           <!-- <p class="duanxin"><span id="right" class="right-btn"></span>当有新回复时，我们将会通过您绑定的手机号进行短信提醒</p> -->
                           <button @click="commitRequest()" style="display:block" class="commit-btn logged">提交</button>
@@ -57,7 +56,12 @@ export default {
       listdetail:"",
       questword:"",
       questdetail:"",
-      questiontag:""
+      questiontag:"",
+      myproblem:"",
+      num:null,
+      employeeId:"",//经纪人id
+      ename:"",
+      nickname:JSON.parse(sessionStorage.userInfo).nickname
     };
   },
   created() {
@@ -73,35 +77,50 @@ export default {
 
      
     render() {
-    //    let id =  this.$route.params.id
+     this.employeeId =  this.$route.query.id
+     this.ename =  this.$route.query.name
+      //获取标签
         this.$http
             .get(this.$url.URL.DICTIONARY_DICTYPE +'QUESTION_TAG')
             .then(response => {
             this.questiontag = response.data.data;
-            console.log( this.questiontag )
             });
+
       
+    },
+    clickrouter(item,e,index) {
+      this.num = index;
+      this.label = item.name;
+    },
+     //清空全部操作
+    clearAllInput() {
+      this.employeeId = null;
+      this.label = null;
+      this.questdetail = null;
+      this.questword = null;
     },
      //提交
     commitRequest() {
         console.log(this.questword)
          console.log(this.questdetail)
-    //   let params = {
-    //     cityCode: this.cityCode, //城市编码
-
-    //   };
-    //   switch(true){
-    //     case !this.username:return this.$alert('姓名不能为空!');break;
-    //     case !this.telphone:return this.$alert('手机号码不能为空!');break;
-    //     case !/^1[34578]\d{9}$/.test(this.telphone):return this.$alert('手机号码格式不对!');break;
-    //     case !this.cityCode:return this.$alert('城市不能为空!');break;
-    //     case !this.brokerId:return this.$alert('小区不能为空!');break;
-    //     case !this.houseTyName,!this.houseOne,!this.houseThree: return this.$alert('信息填写不全!');break;
-    //   }
-    //   this.$http.post(this.IPS[this.IPSnum], params).then(response => {
-    //     this.clearAllInput();
-    //     this.$alert('提交成功!')
-    //   });
+          console.log( this.label )
+      let params = {
+            employeeId:this.employeeId,
+            label : this.label,
+            memberName :this.nickname,
+            problemDescribe:this.questdetail,//内容
+            problemTitle :this.questword,//标题
+            scity:this.scity
+      };
+      switch(true){
+        case !this.questword:return this.$alert('标题不能为空!');break;
+        case !this.questdetail:return this.$alert('描述不能为空!');break;
+         case !this.label:return this.$alert('标签不能为空!');break;
+      }
+      this.$http.post(this.$url.URL.CONSULTANT_SUB_PROBLEM, params).then(response => {
+        this.clearAllInput();
+        this.$alert('提交成功!')
+      });
     }
   }
 };
@@ -111,8 +130,10 @@ export default {
 
 //高亮
 .querybtn {
-  color: #ff4343;
+  color: #ef1f1f;
   font-weight: bold;
+
+  
 }
 
 

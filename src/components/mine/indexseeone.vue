@@ -40,7 +40,7 @@
                 <div class="desc">看房时间</div>
                 <div class="date-picker"> 
                 <ul class="dates"> 
-                <li class="date selected" v-for="item in datelist" @click="appoint(item,$event)">
+                <li class="date selected" v-for="(item,index) in datelist" @click="appoint(item,$event,index)":class="index==fontcolor?'bgColor':''">
                     <div class="week-day">{{item.w}}</div>
                     <div class="month-info">
                     <div class="month-day">{{item.d}}</div>
@@ -50,7 +50,7 @@
                 </ul>
              </div>
                 <div class="time-picker">
-                    <span class="no-r left-r" @click="range($event,index)" v-for="(item,index) in appointRange">{{item.range}}</span>
+                    <span class="no-r left-r" @click="range($event,index)" v-for="(item,index) in appointRange":class="index==num?'bgColor':''">{{item.range}}</span>
                 </div>
                  <div class="desc">待看经纪人</div>
                 <div class="mesg">
@@ -138,6 +138,8 @@ export default {
             order:true,    //点击预约显示
             allChecked: false,
             houseSdid:"",   //房源sdid
+            num:null,//高亮
+            fontcolor:null//高亮
         };
     },
     created() {
@@ -279,8 +281,31 @@ export default {
                 });
             }
         },
-        appoint(item,e) {
-         this.appointDate =item.all
+        appoint(item,e,index) {
+            if(index ==0){
+                this.fontcolor=index
+                this.appointDate =item.all
+            }
+             if(index ==1){
+                this.fontcolor=index
+                this.appointDate =item.all
+            }
+             if(index ==2){
+                this.fontcolor=index
+                this.appointDate =item.all
+            }
+             if(index ==3){
+                this.fontcolor=index
+                this.appointDate =item.all
+            }
+             if(index ==4){
+                this.fontcolor=index
+                this.appointDate =item.all
+            }
+             if(index ==5){
+                this.fontcolor=index
+                this.appointDate =item.all
+            }
         },
         //时间位数补齐  
         PrefixInteger(num, n) {
@@ -289,18 +314,25 @@ export default {
         range(e,index) {
              this.rangetime = e.target.innerHTML
              if(index ==0){
+                    this.num=index
                 this.rangetime = "ALL_DAY"
+             
              }
              if(index ==1){
+                     this.num=index
                 this.rangetime = "FORENOON"
+             
              }
              if(index ==2){
+                   this.num=index
                 this.rangetime = "AFTERNOON"
+               
              }
              if(index ==3){
+                 this.num=index
                 this.rangetime = "NIGHT"
+                 
              }
-             console.log(this.rangetime)
         },
         btn() {
             this.order = false
@@ -470,7 +502,7 @@ dl, dt, dd, ul, ol, li {
     text-align: center;
     line-height: 38px;
     padding: 0;
-    color: #394043;
+    // color: #394043;
 }
 .book-time input {
     margin-left: 15px;
@@ -623,6 +655,10 @@ dl, dt, dd, ul, ol, li {
     font-size: 18px;
     color: #ffffff;
   }
+}
+.bgColor{
+	background: red!important;
+	color: #ffffff;
 }
 
 </style>
