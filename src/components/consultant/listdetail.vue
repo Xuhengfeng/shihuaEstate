@@ -135,7 +135,6 @@ export default {
             })
             .then(response => {
             this.listdetail= response.data.data;
-            console.log(this.listdetail)
             });
     },
     changeshow() {
