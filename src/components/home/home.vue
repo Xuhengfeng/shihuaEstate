@@ -691,6 +691,7 @@
 	color: #fff;
 	line-height: 28px;
 	margin-left: 15px;
+	cursor: pointer;
 }
 
 .navmenu {

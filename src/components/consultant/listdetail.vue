@@ -29,23 +29,14 @@
 									<img :src="listdetail.photo"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" >1111</div>
+									<div class="introduce" >{{listdetail.label}}</div>
 									<div class="introduce">
-                      <span class="word">所属门店：11111}</span>
-										 <span class="fr prices">5.0<span class="grade">评分</span></span>
+										 <!-- <span class="fr prices">5.0<span class="grade">评分</span></span> -->
                      	 <span class="fr brokerccloect" @click="toSkip()">向他咨询</span>
                                      </div> 
                                      <div class="introduce">
-                                    	 <span class="word">收藏经纪人</span>
-						
-                                     </div> 
-                                     <div class="introduce">
-                                    	 <span class="word">世华工号：1</span>
+                                    	 <span class="word">{{listdetail.summary}}</span>
 										 
-                                     </div> 
-                                     <div class="introduce">
-                                    	 <span class="word">联系电话：1</span>
-										
                                      </div> 
 								</div> 
 							</li>
@@ -54,46 +45,40 @@
                     <div class="peoplemes">
                         <div class="fl message">
                             <ul>
-                                <li>入职时间：1</li>
-                                  <li>综合评价：1</li>
-                                    <li>主营板块：科技园区</li>
+                                  <li>顾问简介：{{listdetail.summary}}</li>
+                                    <li>主营板块：{{listdetail.label}}</li>
                             </ul> 
 				        </div> 
                         <div class="fr message">
-                            <ul class="watchsee">
-                                <li>1</li>
-                                  <li>历史成交</li>
+                             <ul class="watchsee">
+                                <li>{{listdetail.problemNum }}</li>
+                                  <li>被提问数</li>
                             </ul> 
                              <ul class="watchsee">
-                                <li>1</li>
-                                  <li>被收藏</li>
-                            </ul> 
-                             <ul class="watchsee">
-                                <li>1</li>
-                                  <li>带看量</li> 
+                                <li>{{listdetail.answerNum }}</li>
+                                  <li>回答</li> 
                             </ul> 
 				        </div> 
                     </div>
-                     <div class="titlep" style="margin-top:35px;">热门咨询</div>
+            <div class="titlep" style="margin-top:35px;">热门咨询</div>
 
-                    <div class="hot-box">
-                            <div class="hot-item">
-                            <div class="h-box ">
-                                <div class="fl"  >
-                                    <span >1111111111111</span>
-                                    <p>11111111111111111</p>
-                                    <span>111111111111111111111</span>
-                                </div>
-                                <div class="fr">
-                                    <span>
-                                        <i>11</i>
-                                        个回答
-                                    </span>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                            </div>
-                        </div>
+          <div class="hot-box">
+                  <div class="hot-item">
+                  <div class="h-box " v-for="item in listdetail.answerList">
+                      <div class="fl"  >
+                          <p>{{item.content}}</p>
+                      </div>
+                      <!-- <div class="fr">
+                          <span>
+                              <i>11</i>
+                              个回答
+                          </span>
+                      </div> -->
+                      <div class="clear"></div>
+                  </div>
+                   <div class="noContent" v-show="!listdetail.length">暂无数据!</div>
+                  </div>
+              </div>
 				</div>
 			</div>
 		</div>
@@ -135,6 +120,7 @@ export default {
             })
             .then(response => {
             this.listdetail= response.data.data;
+            console.log( this.listdetail)
             });
     },
     changeshow() {
@@ -189,6 +175,7 @@ export default {
       color: rgba(0, 0, 0, 0.85);
       font-weight: bold;
       cursor: pointer;
+     margin-top: 10px;
     }
   }
 }
@@ -331,7 +318,7 @@ export default {
   text-align: center;
   line-height: 45px;
   top: 30px;
-  right: -65px;
+  right: 6px;
 }
 .grade{
   margin-left: 4px;
