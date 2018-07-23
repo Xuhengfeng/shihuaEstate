@@ -18,9 +18,8 @@
 					<div class="footer-bd-two">
 						<div><img src="../../imgs/home/phone.png" style="margin-right: 10px;" /><span style="font-size: 45px;">0779-3837272</span></div>
 						<div style="margin-left: 47px;">
-							<p class="adress">地址:广西北海市北海大道与湖南路交界</p>
-							<p class="adress">邮编:537100</p>
-							<p class="adress">东旭华庭106号铺</p>
+							<p class="adress">地址:深圳市大冲商务中心A座1408</p>
+							<p class="adress">邮编:518000</p>
 						</div>
 					</div>
 					<div class="footer-bd-three">
@@ -40,10 +39,10 @@
 				</div>
 				<div class="footer-ft">
 					<p >
-						Copyright 2018 广西世华房地产代理公司 粤ICP备   18074181号-1
+						Copyright 2018 世华易居科技有限公司 粤ICP备   18074181号-1
 					</p>
 					<p >
-						联系电话: 0779-3837272 | 地址:广西北海市北海大道与湖南路交界东旭华庭106号铺
+						联系电话: 0779-3837272 | 地址:深圳市大冲商务中心A座1408
 					</p>
 				</div>
 			</div>

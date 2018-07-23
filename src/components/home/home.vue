@@ -243,7 +243,7 @@
 					<h3 class="title">世华易居APP</h3>
 					<h4 class="description">锁定真实房源 哪怕市场变幻</h4>
 					<p>购房宝APP 提供二手房丶新房丶租房丶商业地产真实信息,</br>
-						一键委托,快速交易。更有世华地产公司强大品牌支持，买卖放心。
+						一键委托,快速交易。更有世华易居公司强大品牌支持，买卖放心。
 					</p>
 					<div class="btngroup">
 						<div><img src="../../imgs/home/Android.png" alt="" /></div>
@@ -645,7 +645,7 @@
 
 .city-change .fc-main li .city-enum a {
 	margin-left: 7px;
-	display: inline-block;
+	display: inline-block;      
 	color: #333333;
 	cursor: pointer;
 }
