@@ -3,7 +3,7 @@
        <div class="hot-box" v-for="item in buyhconsult">
             <div class="hot-item">
              <div class="h-box ">
-                <div class="fl"  @click="toSkip()">
+                <div class="fl"  @click="toSkipone(item)">
                     <span >{{item.problemTitle}}</span>
                     <p>{{item.problemDescribe}}</p>
                     <span>{{item.pubTime}}</span>
@@ -47,6 +47,10 @@
                         
                         
                         });
+                },
+                toSkipone(item){
+                    let path = "/queryinfodetail/" + item.id;
+                    this.$router.push({ path: path });
                 },
             }
         }

@@ -78,6 +78,14 @@ export default {
 	},
 	created() {
 		this.word = this.keyword;
+		let path = this.$route.path;
+		// console.log(path=="/mine/indexseeone")
+		if(path=="/consultant/consultantindex" ){
+			this.num=0
+		}
+		if(path=="/consultant/consultantbuyhouse" ){
+			this.num=1
+		}
     },
 	methods: {
 		query() {

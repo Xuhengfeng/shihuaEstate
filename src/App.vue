@@ -132,8 +132,47 @@ export default {
         this.$store.commit('WORDCOLOR',8);
       }
       if(path == "/houseestate"){
-        this.$store.commit('WORDCOLOR',9);
+        this.$store.commit('WORDCOLOR','a');
       }
+      if(path == "/agencyBusiness"){
+        this.$store.commit('WORDCOLOR','b');
+      }
+
+      if(path == "/convenienceservices"){
+          this.$store.commit('WORDCOLOR','c');
+       }
+
+      if(path == "/housetuoguan"){
+         this.$store.commit('WORDCOLOR','d');
+        }
+
+      if(path == "/decoration"){
+          this.$store.commit('WORDCOLOR','e');
+        }
+
+      if(path == "/publicgood"){
+         this.$store.commit('WORDCOLOR','f');
+        }
+        if(path == "/consultant"){
+         this.$store.commit('WORDCOLOR','g');
+        }
+
+        if(path == "/buyhouseguide"){
+         this.$store.commit('WORDCOLOR','h');
+        }
+
+        if(path == "/industryconsultation"){
+         this.$store.commit('WORDCOLOR','j');
+        }
+         if(path == "/entrustmentrent/rent"){
+         this.$store.commit('WORDCOLOR','i');
+        }
+         if(path == "/entrustmentrent/sell"){
+         this.$store.commit('WORDCOLOR','k');
+        }
+
+
+
 
       if(path == "/indexcollection"){
         this.$store.commit('WORDCOLOR',5);

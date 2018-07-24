@@ -25,13 +25,13 @@
 					<div class="footer-bd-three">
 						<div>
 							<div class="image">
-								<img src="../../imgs/home/bigerwm.png" alt="" />
+								<img src="../../imgs/home/erwm.png" alt="" />
 							</div>
-							<div style="font-size: 16px;margin-top: 5px;">扫一扫,关注我们</div>
+							<div style="font-size: 16px;margin-top: 5px;">扫一扫,下载我们</div>
 						</div>
 						<div>
 							<div class="image">
-								<img src="../../imgs/home/bigerwm.png" alt="" />
+								<img src="../../imgs/home/big.jpg" alt="" />
 							</div>
 							<div style="font-size: 16px;margin-top: 5px;">扫一扫,关注我们</div>
 						</div>

@@ -79,6 +79,7 @@ export default {
     render() {
      this.employeeId =  this.$route.query.id
      this.ename =  this.$route.query.name
+     console.log( this.ename )
       //获取标签
         this.$http
             .get(this.$url.URL.DICTIONARY_DICTYPE +'QUESTION_TAG')

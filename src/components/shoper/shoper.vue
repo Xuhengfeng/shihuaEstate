@@ -6,7 +6,7 @@
 		<div class="content">
 			<div class="container">
 				<!--右侧部分-->
-				<div class="sidebar fr">
+				<!-- <div class="sidebar fr">
 					<div style="margin-top: 100px;"><span style="font-size: 16px;">购房指南</span><span class="fr" style="font-size: 12px;color: rgba(0,0,0,0.7);">更多</span></div>
 					<ul>
 						<li class="zhinan">外地人可以在南宁买房吗？</li>
@@ -19,7 +19,7 @@
 					<div class="adverTisementLine"></div>
 					<div style="font-size: 16px;color: color: rgba(0,0,0,0.8);margin-top: 30px;">下载世华易居APP</div>
 					<div style="margin-top: 30px;"><img src="../../imgs/buyhouse/erwm.png"/></div>
-				</div>
+				</div> -->
 				<!--左侧内容-->
 				<div class="leftContent">
 					<div class="orderFilter">
@@ -42,9 +42,9 @@
 					<div class="item">
 						<ul>
 							<li :key="index" v-for="(item,index) in shoper">
-								<div class="image" @click="toSkip(item)">
+								<!-- <div class="image" @click="toSkip(item)">
 									<img :src="item.photo"/>
-								</div>
+								</div> -->
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.deptName }} </div>
 									<div class="introduce">

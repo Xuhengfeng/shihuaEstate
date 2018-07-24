@@ -44,7 +44,7 @@
        <div class="hot-box">
             <div class="hot-item">
              <div class="h-box " v-for="item in hotConsultant">
-                <div class="fl"  @click="toSkip(item)">
+                <div class="fl"  @click="toSkipone(item)">
                     <span >{{item.problemTitle}}</span>
                     <p>{{item.problemDescribe}}</p>
                     <span>{{item.pubTime}}</span>
@@ -76,6 +76,12 @@
             created(){
                     this.hotconsultant();
             },
+            computed:{
+                    //监控登录状态
+                        logined() {
+                        return this.$store.state.logined;
+                        },
+            },
             methods: {
                 hotconsultant(){
                                 
@@ -106,6 +112,7 @@
                         })
                         .then(response => {
                         this.remdConsultant = response.data.data;
+                        console.log( this.remdConsultant)
                         });
                 },
                 toSkip(item) {
@@ -121,7 +128,15 @@
                     this.$router.push({ path: path });
                 },
                  toSkipthree(item) {
-                    this.$router.push({ path: "/myproblem/", query:{id: item.employeeId, name: item.name}});
+                     //未登录用户提示弹窗登录
+                    if(!this.logined){
+                        console.log(this.logined)
+                        return this.$store.commit('OPENLOGINDIALOG', 1);
+                        this.$router.push({ path: "/mine/indexcollection"});
+                    } else{
+                            this.$router.push({ path: "/myproblem/", query:{id: item.employeeId, name: item.name}});
+                    }
+                    
                 }
             }
         }

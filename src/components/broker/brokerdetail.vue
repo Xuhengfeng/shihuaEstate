@@ -137,6 +137,7 @@
                       </div>
                     </li>
                   </ul>
+                  <div class="noContent" v-show="!brokerrenthouselist.length">暂无数据!</div>
                 </div>
             </div>
         </div>

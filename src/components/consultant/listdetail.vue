@@ -32,7 +32,7 @@
 									<div class="introduce" >{{listdetail.label}}</div>
 									<div class="introduce">
 										 <!-- <span class="fr prices">5.0<span class="grade">评分</span></span> -->
-                     	 <span class="fr brokerccloect" @click="toSkip()">向他咨询</span>
+                     	 <!-- <span class="fr brokerccloect" @click="toSkip(listdetail)">向他咨询</span> -->
                                      </div> 
                                      <div class="introduce">
                                     	 <span class="word">{{listdetail.summary}}</span>
@@ -106,10 +106,18 @@ export default {
   },
   methods: {
 
-    toSkip(item) {
-                  let path = "/myproblem/:id";
-                  this.$router.push({ path: path });
-              },
+     toSkip(listdetail) {
+                //未登录用户提示弹窗登录
+              if(!this.logined){
+                  
+                  return this.$store.commit('OPENLOGINDIALOG', 1);
+                  this.$router.push({ path: "/mine/indexcollection"});
+              } else{
+                console.log(listdetail)
+                      // this.$router.push({ path: "/myproblem/", query:{id: listdetail.employeeId, name: listdetail.name}});
+              }
+              
+          },
       
     render() {
        let id =  this.$route.params.id
@@ -120,7 +128,6 @@ export default {
             })
             .then(response => {
             this.listdetail= response.data.data;
-            console.log( this.listdetail)
             });
     },
     changeshow() {

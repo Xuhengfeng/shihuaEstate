@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" style="overflow: visible;">
         <p class="title">我是标题</p>
         <div class="text">
             {{info.summary}}
@@ -50,6 +50,7 @@ export default {
     .text{
         font-size: 16px;
         padding-bottom: 20px;
+        line-height: 26px;
     }
     .imgage{
         height: 584px;

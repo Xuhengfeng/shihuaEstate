@@ -9,7 +9,7 @@
                 <li>商务合作<span style="margin-left:10px;">欢迎咨询</span></li>
                 <li>电话：0771-5652566</li>
                 <li>http://www.shihua365.cn</li>
-                <li>南宁市青秀区懂葛路118号青秀万达写字楼西二栋47层</li>
+                <li>深圳市大冲商务中心A座1408</li>
             </ul>
         </div>
     </div>

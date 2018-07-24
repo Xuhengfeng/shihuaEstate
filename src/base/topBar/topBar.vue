@@ -30,17 +30,17 @@
             </div>
 
             <ul class="two fl">
-                <router-link tag="li" :class="wordColor==9?'bgColor':''" to="">更多
+                <router-link tag="li" to="">更多
                     <ol class="item2">
-                        <router-link tag="li" to="/houseestate">小区找房</router-link>
-                        <router-link tag="li" to="/agencyBusiness">代办业务</router-link>
-                        <router-link tag="li" to="/convenienceservices">便民服务</router-link>
-                        <router-link tag="li" to="/housetuoguan">房屋托管</router-link>
-                        <router-link tag="li" to="/decoration">装修</router-link>
-                        <router-link tag="li" to="/publicgood">世华公益</router-link>
-                        <router-link tag="li" to="/consultant">咨询</router-link>
-                        <router-link tag="li" to="/buyhouseguide">购房指南</router-link>
-                        <router-link tag="li" to="/industryconsultation">行业资讯</router-link>
+                        <router-link tag="li" to="/houseestate" :class="wordColor=='a'?'bgColor':''">小区找房</router-link>
+                        <router-link tag="li" to="/agencyBusiness" :class="wordColor=='b'?'bgColor':''">代办业务</router-link>
+                        <router-link tag="li" to="/convenienceservices" :class="wordColor=='c'?'bgColor':''">便民服务</router-link>
+                        <router-link tag="li" to="/housetuoguan" :class="wordColor=='d'?'bgColor':''">房屋托管</router-link>
+                        <router-link tag="li" to="/decoration" :class="wordColor=='e'?'bgColor':''">装修</router-link>
+                        <router-link tag="li" to="/publicgood" :class="wordColor=='f'?'bgColor':''">世华公益</router-link>
+                        <router-link tag="li" to="/consultant" :class="wordColor=='g'?'bgColor':''">咨询</router-link>
+                        <router-link tag="li" to="/buyhouseguide" :class="wordColor=='h'?'bgColor':''">购房指南</router-link>
+                        <router-link tag="li" to="/industryconsultation" :class="wordColor=='j'?'bgColor':''">行业资讯</router-link>
                     </ol>
                 </router-link>
                 <router-link tag="li" to="/residence" :class="wordColor==1?'bgColor':''">旅居投资</router-link>
@@ -49,8 +49,8 @@
                 <router-link tag="li" to="/broker" :class="wordColor==4?'bgColor':''">找经纪人</router-link>
                 <router-link tag="li" to="" :class="wordColor==5?'bgColor':''">业主委托
                     <ol class="item2">
-                        <router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
-						<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
+                        <router-link tag="li" to="/entrustmentrent/rent" :class="wordColor=='i'?'bgColor':''">我要租房</router-link>
+						<router-link tag="li" to="/entrustmentrent/sell" :class="wordColor=='k'?'bgColor':''">我要出售</router-link>
                     </ol>
                 </router-link>
                 <router-link tag="li" to="/rentHouse" :class="wordColor==6?'bgColor':''">租房</router-link>
@@ -223,9 +223,11 @@ export default {
     transform: translateY(-50%);
 }
 .bgColor{
-   color: #ff4343;
+   color: #ff4343!important;
 }
-.bgColor1{
-    color: white;
-}
+// .bgColor1{
+//     background: #ff4343;
+// }
+
+
 </style>
