@@ -66,7 +66,28 @@
 
 <script>
 export default {
-
+		data() {
+                return {
+					scity: JSON.parse(localStorage.selectCity),//当前城市
+                     infoquerychild:"" //资讯子栏目列表
+                }
+			},
+			created(){
+				 this.hotconsultant();
+			},
+			methods: {
+				hotconsultant() {
+					 //获取资讯子栏目列表
+                        this.$http
+                        .get(this.$url.URL.INFOQUERY +"15"+"?pageNo=1", {
+                         scity: this.scity.value,
+                        })
+                        .then(response => {
+                        this.infoquerychild = response.data.data;
+                        console.log(this.infoquerychild)
+                        });
+				}
+			}
 }
 </script>
 

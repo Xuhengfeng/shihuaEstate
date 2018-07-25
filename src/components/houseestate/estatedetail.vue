@@ -75,13 +75,13 @@
 								 <div class="headtitle"> 同小区房源 <div class="fr changetab"></div> <!-- <span @click="change(0)">二手房</span><span @click="change(1)">租房</span> --></div>
 									<ul>
 										<li v-for="item in samehouselist">
-											<div class="image fl"  @click="toSkip(item)">
-												<img :src="item.housePic"  />
+											<div class="image fl" @click="toSkip(item)" >
+												<img :src="item.housePic"/>
 											</div>
 											<div class="direciton">
-												<div class="introduce intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{item.houseTitle}}</div>
-													<div class="introduce"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.salePrice }}<span style="font-size: 14px;">元/月</span></span></div>
-												<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
+												<div class="introduceOn intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}}</div>
+													<div class="introduceOn"><img src="../../imgs/buyhouse/house.png" /><span class="word">{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection}}|{{item.houseFeature}}</span> <span class="fr" style="font-size: 24px;color: rgba(239,31,31,0.85);">{{item.salePrice }}<span style="font-size: 14px;">元/月</span></span></div>
+												<div class="introduceOn"><img src="../../imgs/buyhouse/dingwei.png" /><span class="word">{{item.houseTag}}</span></div>
 												<!-- <div class="introduce"><img src="../../imgs/buyhouse/guangzhu.png" /><span class="word">519人关注/共119次带看/一个月内发布</span></div> -->
 													<div class="introduce ">
 													<span class="intrspan" style="background-color: #e5f2ff;color: rgba(0,85,164,0.85); ">学区房</span>
@@ -116,7 +116,7 @@
 										<div class="duibi">
 											 <div class="duibi_a" @click="addCollection($event)" v-if="!buildlistinfo.isCollect" >收藏房源</div>
              				   <div class="duibi_a" @click="addCollection($event)" v-if="buildlistinfo.isCollect" >已收藏</div>
-												<div class="duibi_a">分享房源</div>
+												<div class="duibi_a"  @click="share()">分享房源</div>
 											</div>
 												<div class="callpeople">小区二手房</div>
 												<ul class="twohangul">
@@ -132,6 +132,10 @@
 													</li>
 											</ul>
 									</div>
+									 <div class="panel_login" v-if="shaer">
+                   <i class="close_login" @click="cancelShare()">×</i>
+                	  <share :config="config"></share>
+                  </div>
 								</div>
 							</div>
 						</div>
@@ -166,6 +170,18 @@
 				IPS: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
 				selectCity: JSON.parse(localStorage.selectCity),//当前城市
 				 collectionFlag: true, //收藏标识
+				 shaer:false,
+					config: {
+								// url                 : '', // 网址，默认使用 window.location.href
+								// source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
+								// title               : '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
+								// description         : '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+								// image               : '', // 图片, 默认取网页中第一个img标签
+								sites               : [ 'weibo','wechat', 'qq','qzone',], // 启用的站点
+								// disabled            : ['google', 'facebook', 'twitter'], // 禁用的站点
+								// wechatQrcodeTitle   : '微信扫一扫：分享', // 微信二维码提示文字
+								// wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
+					}
 			};
 		},
 		 watch: {
@@ -236,7 +252,7 @@
 				this.collectionFlag = !this.collectionFlag;
 			},
 			toSkip(item) {
-				this.$router.push({ path: "/buyhouse/twohandhousedetail/" + item.sdid});
+				this.$router.push({ path:"/buyhouse/twohandhousedetail/"+ item.sdid});
 			},
 			render() {
 				//小区详情BUILDSECOND_HOUSELIST
@@ -284,14 +300,19 @@
 				)
 				.then(response => {
 					this.samehouselist= response.data.data;
-					console.log( this.samehouselist)
 				});
 			},
 			change(num) {
 					//同小区二手房房源
 					this.neayHouseRequest(num, this.buildsdid);
 					
-			}
+			},
+			share(){
+					this.shaer=true
+			},
+			cancelShare(){
+					this.shaer=false
+			},
 		},
 		components: {
 			oHeader,
@@ -356,6 +377,7 @@
 </script>
 
 <style lang="less" scoped>
+  @import '../../../static/css/client.css';
 	@import '../../../static/css/swiper-3.4.2.min.css';
 	@import "../../../static/css/swiper-3.4.2.min.css";
 .title {
@@ -387,7 +409,8 @@
   float: left;
   padding: 12px 27px;
   border: 1px solid gainsboro;
-  margin-left: 30px;
+	margin-left: 30px;
+	cursor: pointer;
 }
 .collect{
 	margin-top: 100px;
@@ -605,11 +628,16 @@
 		position: relative;
     left: 42px;
 }
+.introduceOn{
+	 margin-left: 16px;
+		width: 535px;
+    margin-left: 25px;
+    height: 38px;
+		float: left;
+}
 .introduce span {
   font-size: 14px;
 }
-
-
 .introduce .word {
   vertical-align: top;
   margin-left: 10px;
@@ -796,6 +824,30 @@
     height: 100%;
   }
 }
+.panel_login{
+    background-color: #fff;
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    margin-left: -190px;
+    margin-top: -205px;
+    -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    padding: 40px 0 40px;
+    -webkit-transition: top ease-in 0.5s;
+    transition: top ease-in 0.5s;
+}
+.panel_login .close_login {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    padding: 4px;
+    color: #000000;
+}
+
 // .pc-slide {
 //   width: 714px;
 //   margin: 0 auto;

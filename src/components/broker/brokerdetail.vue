@@ -121,7 +121,7 @@
                   <div class="title">他在租房源</div>
                   <ul>
                     <li v-for="item in brokerrenthouselist">
-                      <div class="image fl"  @click="toSkip(item)">
+                      <div class="image fl"  @click="toSkipone(item)">
                          <img :src="item.housePic" />
                       </div>
                       <div class="direciton">
@@ -194,6 +194,12 @@ export default {
         });
       }
       this.collectionFlag = !this.collectionFlag;
+    },
+     toSkip(item) {
+      this.$router.push({ path: "/buyhouse/twohandhousedetail/" + item.sdid});
+    },
+     toSkipone(item) {
+      this.$router.push({ path: "/rentHouseDetail/" + item.sdid});
     },
     //收藏房源
     collection(item,e) {
@@ -419,6 +425,7 @@ export default {
 
 .introduce span {
   font-size: 14px;
+  cursor: pointer;
 }
 
 .introduce .word {

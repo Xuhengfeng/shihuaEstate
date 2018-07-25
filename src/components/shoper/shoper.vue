@@ -390,11 +390,12 @@ export default {
   color: rgba(0, 0, 0, 0.7);
 }
 .prices {
-  font-family: tahoma;
-  position: relative;
-  right: 370px;
-  font-size: 24px!important;
-  color: rgba(239, 31, 31, 0.85);
+    font-family: tahoma;
+    position: relative;
+    right: 485px;
+    font-size: 24px!important;
+    color: rgba(239, 31, 31, 0.85);
+    cursor: pointer;
   
 }
 .phone{

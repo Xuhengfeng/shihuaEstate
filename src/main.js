@@ -8,6 +8,9 @@ import store from './store'//共享数据
 import $ from 'jquery';
 import "babel-polyfill";//兼容ie
 import Icon from './base/mySvg/mySvg';
+import Share from 'vue-social-share'
+import 'vue-social-share/dist/client.css';
+Vue.use(Share)
 Vue.component('icon', Icon)
 
 //url路径

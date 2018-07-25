@@ -1,6 +1,6 @@
 <template>
     <div class="container" style="overflow: visible;">
-        <p class="title">我是标题</p>
+        <p class="title">{{info.title}}</p>
         <div class="text">
             {{info.summary}}
         </div>
@@ -24,8 +24,6 @@ export default {
         methods:{
             render() {
                 let id = this.$route.params.id;
-                
-                console.log( id )
                 //热门咨询
                 this.$http
                     .get(this.$url.URL.INFO +id, {
@@ -33,7 +31,6 @@ export default {
                     })
                     .then(response => {
                     this.info = response.data.data;
-                    console.log(this.info)
                     });
             }
         }

@@ -179,7 +179,7 @@
                   <div class="price ">
                     <span class="total">{{sellrentdetail.saleTotal}}</span>
                     <div class="text">
-                      <div class="unitPrice"><span class="unitPriceValue">{{sellrentdetail.rentPrice }}<i>元/平米</i></span></div>
+                      <div class="unitPrice"><span class="unitPriceValue">{{sellrentdetail.rentPrice}}<span class="unitPriceValueWored">元/月</span></span></div>
                     </div>
                     <div class="removeIcon"></div>
                   </div>
@@ -203,6 +203,9 @@
                     </div>
                     <div class="visitTime"><i></i><span class="label">看房时间</span><span class="info">提前预约随时可看</span></div>
                   </div>
+                  <div class="duibi">
+                      <div class="duibi_a" @click="share()">分享房源</div>
+                  </div>
                   <div class="callpeople">联系经纪人</div>
                   <div class="peopleintrode">
                       <div class="fl"><img :src="sellrentdetail.broker.photo"></div>
@@ -211,6 +214,10 @@
                         <li class="telphone">{{sellrentdetail.broker.phone}}</li>
                         <li class="decription">亲自勘察，真实房源，竭诚为您服务</li>
                       </ul>
+                  </div>
+                  <div class="panel_login" v-if="shaer">
+                   <i class="close_login" @click="cancelShare()">×</i>
+                  <share :config="config"></share>
                   </div>
               </div>
         </div>
@@ -254,7 +261,19 @@ export default {
       id:"",//带看id
       page: 1,//默认带看记录是第一页
 	    scity: JSON.parse(localStorage.selectCity),//用户选定城市
-			collectionFlag: true, //收藏标识
+      collectionFlag: true, //收藏标识
+      shaer:false,
+       config: {
+            // url                 : '', // 网址，默认使用 window.location.href
+            // source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
+            // title               : '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
+            // description         : '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+            // image               : '', // 图片, 默认取网页中第一个img标签
+            sites               : [ 'weibo','wechat', 'qq','qzone',], // 启用的站点
+            // disabled            : ['google', 'facebook', 'twitter'], // 禁用的站点
+            // wechatQrcodeTitle   : '微信扫一扫：分享', // 微信二维码提示文字
+            // wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
+      }
     };
   },
   components: {
@@ -337,6 +356,12 @@ export default {
       }
       this.collectionFlag = !this.collectionFlag;
     },
+    share(){
+        this.shaer=true
+     },
+     cancelShare(){
+         this.shaer=false
+     },
     //切换房源
 	  toSkip(item) {
 			document.body.scrollTop = 0
@@ -357,10 +382,6 @@ export default {
           this.sellrentdetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
            this.sdid =  response.data.data.sdid;
-           	console.log(this.sellrentdetail)
-           console.log(this.sdid)
-           console.log( this.buildsdid )
-
           this.px = response.data.data.px;
           this.py = response.data.data.py;
           this.id = response.data.data.id
@@ -472,6 +493,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../../static/css/client.css';
 @import '../../../static/css/swiper-3.4.2.min.css';
 .section{
   display: flex;
@@ -653,6 +675,7 @@ export default {
       div{
         width: 112px;
         height: 46px;
+        cursor: pointer;
         line-height: 46px;
         background: #ffffff;
         border: 1px solid #cacaca;
@@ -685,9 +708,10 @@ export default {
               margin-left: 15px;
               vertical-align: 6px;
               .unitPrice {
-                font-size: 16px;
-                color: #394043;
-                .unitPriceValue {font-weight: bold;color: #394043}
+                color: #e4393c;
+                margin-left: 75px;
+                .unitPriceValue {font-weight: bold;color: #e4393c;font-size: 46px;}
+                .unitPriceValueWored{font-size: 16px;}
               }
               .tax {
                 margin-top: 11px;
@@ -877,6 +901,29 @@ export default {
 .swiperimg img {
   width: 100%;
   height: 100%;
+}
+.panel_login{
+    background-color: #fff;
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    margin-left: -190px;
+    margin-top: -205px;
+    -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    padding: 40px 0 40px;
+    -webkit-transition: top ease-in 0.5s;
+    transition: top ease-in 0.5s;
+}
+.panel_login .close_login {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    padding: 4px;
+    color: #000000;
 }
 
 </style>

@@ -204,8 +204,8 @@ export default {
     changeshowone() {
       this.showBtnone = true;
     },
-    toSkip() {
-      
+    toSkip(item) {
+      window.open(item.contenUrl,"_blank")
     }
   },
   components: {

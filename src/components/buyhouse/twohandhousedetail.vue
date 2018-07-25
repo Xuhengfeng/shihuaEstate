@@ -215,7 +215,7 @@
                   <div class="duibi">
                       <div class="duibi_a" @click="addCompare(housedetail, $event)" v-if="!housedetail.isComparison">加入对比</div>
                       <div class="duibi_a" @click="addCompare(housedetail, $event)"  v-if="housedetail.isComparison">已加对比</div>
-                      <div class="duibi_a">分享房源</div>
+                      <div class="duibi_a" @click="share()">分享房源</div>
                   </div>
                   <div class="callpeople" @click="startChat()">联系经纪人</div>
                   <div class="peopleintrode">
@@ -225,6 +225,10 @@
                         <li class="telphone">{{housedetail.broker.phone}}</li>
                         <li class="decription">亲自勘察，真实房源，竭诚为您服务</li>
                       </ul>
+                  </div>
+                  <div class="panel_login" v-if="shaer">
+                   <i class="close_login" @click="cancelShare()">×</i>
+                  <share :config="config"></share>
                   </div>
               </div>
         </div>
@@ -243,6 +247,8 @@ import "../../../static/js/jquery-3.2.1.min.js";
 import "../../../static/js/swiper-3.3.1.min.js";
 
 export default {
+  
+   
   data() {
     return {
       houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
@@ -270,7 +276,21 @@ export default {
       page: 1,//默认带看记录是第一页
       scity: JSON.parse(localStorage.selectCity),//用户选定城市
       collectionFlag: true,//收藏标识
-      oSwiper1: null
+      shaer:false,
+      oSwiper1: null,
+       config: {
+          // url                 : '', // 网址，默认使用 window.location.href
+          // source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
+          // title               : '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
+          // description         : '', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+          // image               : '', // 图片, 默认取网页中第一个img标签
+          sites               : [ 'weibo','wechat', 'qq','qzone',], // 启用的站点
+          // disabled            : ['google', 'facebook', 'twitter'], // 禁用的站点
+          // wechatQrcodeTitle   : '微信扫一扫：分享', // 微信二维码提示文字
+          // wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
+    },
+   
+     
     };
   },
   created() {
@@ -331,6 +351,12 @@ export default {
         }
       }
     },
+    share(){
+        this.shaer=true
+     },
+     cancelShare(){
+         this.shaer=false
+     },
     //加入对比清单
     addCompare(item, e) {
       //未登录用户提示弹窗登录
@@ -572,6 +598,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '../../../static/css/client.css';
 @import '../../../static/css/swiper-3.4.2.min.css';
 .section{
   display: flex;
@@ -979,5 +1006,27 @@ export default {
     height: 100%;
   }
 }
-
+.panel_login{
+    background-color: #fff;
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    top: 50%;
+    margin-left: -190px;
+    margin-top: -205px;
+    -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    padding: 40px 0 40px;
+    -webkit-transition: top ease-in 0.5s;
+    transition: top ease-in 0.5s;
+}
+.panel_login .close_login {
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    padding: 4px;
+    color: #000000;
+}
 </style>
