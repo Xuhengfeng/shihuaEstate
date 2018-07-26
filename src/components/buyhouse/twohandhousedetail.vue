@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-02 14:48:07
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-07-26 01:34:50
  */
 <template>
 	<div>
@@ -17,9 +17,8 @@
             <div class="one">
               <div class="pc-slide">
                 <div class="view">
+                  <div id="move" style="left: 0; top: 0;"></div>
                   <div class="swiper-container">
-                    <i class="iconfont xhf-icon-left arrow-left"></i>
-                    <i class="iconfont xhf-icon-right arrow-right"></i>
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in housedetail.housePicList">
                           <img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
@@ -37,6 +36,9 @@
                       </div>
                     </div>
                   </div>
+                </div>
+                <div id="bigImg">
+                    <img :src="magnifyImg" alt="图片"/>
                 </div>
               </div>
             </div>
@@ -255,6 +257,7 @@ export default {
       showbox: null, //显示对应的dialog
       datas: "",
       num: 0,
+      magnifyImg: null,//放大图片的路径
       dialogVisible: false,
       loginshow: null, //登陆注册阴影层
       rightnow: true, //登陆注册判断条件
@@ -278,7 +281,7 @@ export default {
       collectionFlag: true,//收藏标识
       shaer:false,
       oSwiper1: null,
-       config: {
+      config: {
           // url                 : '', // 网址，默认使用 window.location.href
           // source              : '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
           // title               : '', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
@@ -470,8 +473,9 @@ export default {
       this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
         .then(response => {
           this.housedetail = response.data.data;
+          this.magnifyImg = this.housedetail.housePicList[0];
           this.buildsdid =  response.data.data.buildSdid;
-           this.sdid =  response.data.data.sdid;
+          this.sdid =  response.data.data.sdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
           this.id = response.data.data.id
@@ -519,7 +523,8 @@ export default {
             });
         });
     },
-    slideTo(index) {
+    slideTo(item,index) {
+      this.magnifyImg = item;
       this.oSwiper1.slideTo(index);
     }
   },
@@ -543,11 +548,41 @@ export default {
         oSwiper1.slidePrev();
       });
 
-      // 移入移出
-      $('.view').mouseover(()=>{
-        $(".view .arrow-left,.view .arrow-right").show();
-      }).mouseout(()=>{
-        $(".view .arrow-left,.view .arrow-right").hide();
+      //放大镜
+      $('.view')
+      .mousemove(function(ent){
+          $('#move,#bigImg').show();
+          var e = ent||event;
+          //文档位置
+          var x = e.pageX;
+          var y = e.pageY;
+          //坐标原点对齐
+          x = x - $(this).offset().left;
+          y = y - $(this).offset().top;
+          //move的位置
+          x = x - $('#move').width()/2;
+          y = y - $('#move').height()/2;
+          //边界限制
+          var maxLeft = $(this).width()-$('#move').width();
+          var maxTop = $(this).height()-$('#move').height();
+          if(x<=0){
+              x = 0;
+          }else if(x>=maxLeft){
+              x = maxLeft;
+          }
+          if(y<=0){
+              y = 0;
+          }else if(y>=maxTop){
+              y = maxTop;
+          }
+          //移动的比例
+          var bLeft = x / maxLeft * ($('#bigImg img').width()-$('#bigImg').width());
+          var bTop =  y / maxTop * ($('#bigImg img').height()-$('#bigImg').height());
+          $('#move').css({'left': x, 'top': y});
+          $('#bigImg img').css({'marginLeft': -bLeft, 'marginTop': -bTop});
+      })
+      .mouseout(function(){
+          $('#move,#bigImg').hide();
       })
 
       // 下一页
@@ -789,7 +824,7 @@ export default {
       }
     }
     .content{
-        margin-top: 10px; 
+        margin-top: 25px; 
           .price{
             position: relative;
             height: 49px;
@@ -918,6 +953,7 @@ export default {
 
 /*轮播切换*/
 .pc-slide {
+  position: relative;
   width: 714px;
   margin: 0 auto;
 }
@@ -925,10 +961,16 @@ export default {
   position: relative;
   width: 714px;
   height: 400px;
-  .swiper-container {
-    width: 100%;
-    height: 100%;
-  }
+  
+}
+.view .swiper-container,
+.view .swiper-slide{
+  width: 100%;
+  height: 100%;
+}
+.view img{
+  width: 100%;
+  height: 100%;
 }
 .view .arrow-left,
 .view .arrow-right{
@@ -1030,5 +1072,33 @@ export default {
     top: 15px;
     padding: 4px;
     color: #000000;
+}
+
+/* 移动的盒子 */
+#move{
+  display: none;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  z-index: 1000;
+  background: rgba(0,174,102,0.4);
+  border: 1px solid rgba(5,113,68,0.4);
+  cursor: move;
+}
+/* 图片放大区域 */
+#bigImg{
+  display: none;
+  overflow: hidden;
+  position: absolute;
+  left: 730px;
+  top: 0;
+  width: 430px;
+  height: 490px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+/* 图片放大比例 */
+#bigImg img{
+  height: 800px;
 }
 </style>
