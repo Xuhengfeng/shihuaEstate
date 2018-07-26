@@ -25,7 +25,7 @@
                <i class="iconfont xhf-icon-right arrow-right"></i>
 								<div class="swiper-wrapper">
 									<div class="swiper-slide"  v-for="item in buildlistinfo.housePicList">
-										<img :src="item">
+										<img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
 									</div>
 								</div>
 							</div>
@@ -36,7 +36,7 @@
 							<div class="swiper-container">
 								<div class="swiper-wrapper">
 									<div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in buildlistinfo.housePicList">
-										<img :src="item">
+										<img :src="item|imgfilter" :onerror="null|imgonroorr">
 									</div>
 								</div>
 							</div>
@@ -53,10 +53,10 @@
 											<li><span class="label">建筑时间</span>{{buildlistinfo.buildAge}}</li>
 										<li><span class="label">栋数</span>{{buildlistinfo.totalBuildNum}}</li>
 											<li><span class="label">小区面积</span>{{buildlistinfo.totalCoverArea }}</li>
-										<li><span class="label">小区类型</span>{{buildlistinfo.buildType }} </li>
+										<!-- <li><span class="label">小区类型</span>{{buildlistinfo.buildType }} </li> -->
 										<li><span class="label">车位数</span>{{buildlistinfo.carDownNum }}</li>
 										<li><span class="label">绿化率</span>{{buildlistinfo.greenRatio }}</li>
-											<li><span class="label">小区简介</span>{{buildlistinfo.buildSynop }}</li>
+											<li><span class="label">小区简介<br></span>{{buildlistinfo.buildSynop }}</li>
 										</ul>
 					  		</div>
 							</div>
@@ -66,7 +66,7 @@
  								<ul>
 									<li><span class="label">银行</span>{{buildlistinfo.bankInfo }}</li>
 									<li><span class="label">交通</span>{{buildlistinfo.transportInfo }}</li>
- 									<li><span class="label">学校</span>{{buildlistinfo.schoolInfo }} </li>
+ 									<li><span class="label">学校</span>{{buildlistinfo.schoolInfo }} </li><br>
 									<li><span class="label">医院</span>{{buildlistinfo.hospitalInfo }}</li>
  								</ul>
  							</div>
@@ -76,7 +76,7 @@
 									<ul>
 										<li v-for="item in samehouselist">
 											<div class="image fl" @click="toSkip(item)" >
-												<img :src="item.housePic"/>
+												<img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"/>
 											</div>
 											<div class="direciton">
 												<div class="introduceOn intrdex" style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}}</div>
@@ -123,7 +123,7 @@
 													<li class="twohangright" v-for="item in houseList">
 															<div  >
 																<div class="image_r">
-																<img :src="item.housePic">
+																<img :src="item.housePic|imgfilter" :onerror="null|imgonroorr">
 																</div>
 																<div class="text">
 																	{{item.houseTitle}}{{item.houseType}}
@@ -600,10 +600,11 @@
 
  .contents ul li {
   display: inline-block;
-  width: 50%;
+  // width: 50%;
   line-height: 24px;
   font-size: 14px;
-  color: #394043;
+	color: #394043;
+	margin-left: 25px;
 }
 
 .contents ul li .label {

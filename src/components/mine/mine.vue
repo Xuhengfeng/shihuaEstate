@@ -60,13 +60,17 @@ export default {
 	},
 	created() {
 		let path = this.$route.path;
-		console.log(path=="/mine/indexseeone")
+		console.log(path)
 		if(path=="/mine/indexseeone" ){
 			this.num=1
 		}
 		if(path=="/mine/indexcollection" ){
 			this.num=5
 		}
+		if(path=="/mine/indexdelegation" ){
+			this.num=6
+		}
+		
 	},
 	methods:{
 		clickrouter(index) {

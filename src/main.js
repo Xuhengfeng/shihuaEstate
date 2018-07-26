@@ -13,6 +13,11 @@ import 'vue-social-share/dist/client.css';
 Vue.use(Share)
 Vue.component('icon', Icon)
 
+//全局配置过滤器
+import vfilter from "./common/js/vfilter.js"
+for (let key in vfilter) {
+Vue.filter(key, vfilter[key])
+}
 //url路径
 import URL from './common/js/url.js'
 Vue.prototype.$url = URL;

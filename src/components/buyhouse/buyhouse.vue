@@ -122,7 +122,7 @@
 						<ul v-show="houseList.length">
 							<li :key="index" v-for="(item,index) in houseList">
 								<div class="image" @click="toSkip(item)">
-									<img :src="item.housePic"/>
+									<img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"/>
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.houseTitle}}
@@ -361,7 +361,7 @@ export default {
           this.listone = response.data.data;
         });
       this.$http
-        .get(this.$url.URL.DICTIONARY_DICTYPE + "SELL_PRICE") //房源售价
+        .get(this.$url.URL.DICTIONARY_DICTYPE + "SELL_PRICE"+"/"+ city) //房源售价
         .then(response => {
           response.data.data.unshift({value: null, name: "不限"});          
           this.listtwo = response.data.data;
