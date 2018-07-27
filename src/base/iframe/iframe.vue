@@ -1,7 +1,7 @@
 <template>
     <!-- 路由外页面 -->
     <div class="wrapper">
-        <iframe name="myframe" ref="myFrame" :height="myHeight" :src="contentUrl" frameborder="0" ></iframe>
+        <iframe name="myframe" ref="myFrame" :src="contentUrl" frameborder="0" ></iframe>
     </div>
 </template>
 <script>
@@ -15,13 +15,16 @@ export default {
     methods: {
         // 计算内容高度
         calcFrameHeight() {
+            console.dir(this.$refs.myFrame);
             let oheight = this.$refs.myFrame.ownerDocument.body.scrollHeight;
             this.contentUrl = this.$route.query.contentUrl;
             this.myHeight = oheight;
         }
     },
     mounted() {
-        this.calcFrameHeight();
+        $(document).ready(()=>{ 
+            this.calcFrameHeight();
+        }); 
     }
 }
 </script>

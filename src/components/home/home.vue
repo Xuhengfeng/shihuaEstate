@@ -309,7 +309,20 @@
 			}
 		},
 		created() {
-			this.defaultCityRequest();
+			try{
+				//地址已经缓存的
+				if(JSON.parse(localStorage.selectCity)) {
+					let cityName = JSON.parse(localStorage.selectCity).name;
+					this.selectCity = cityName;
+					this.changeAddress(cityName);
+				}else{
+					//定位
+					this.locationType(2);
+				}
+			}catch(error){
+				//定位
+				this.locationType(2);
+			}
 		},
 		watch: {
 			selectCity() {
@@ -324,45 +337,73 @@
 			}
 		},
 		methods: {
-			
+			//定位
+			locationType(num) {
+				if(num==1){
+					//先进行默认城市定位 默认城市定位走不了,借助百度定位
+					this.defaultCityRequest()
+					.then(res=>{
+						if(!res.data.data){
+							this.baiduCityRequest();
+						}
+					})
+					.catch(error=>{
+						this.baiduCityRequest();
+					})
+				}
+				else if(num==2){
+					//先百度定位定位失败的话,借助默认定位城市定位 
+					this.baiduCityRequest()
+					.then(res=>{
+						this.changeAddress(res);
+					})
+				}
+			},
 			//默认定位
 			defaultCityRequest()  {
-				this.$http.get(this.$url.URL.DEFAULT_CITY)
-				.then(response=>{
-					let cityName = response.data.data.name;
-					this.selectCity = cityName;
-					//这是页面所有请求的开始
-					this.changeAddress(cityName);
-					localStorage.address = cityName;
-					localStorage.selectCity = JSON.stringify(response.data.data);
-					//借助百度定位
-					if(!response.data.data){
-						this.baiduCityRequest();
-					}
-				})
-				.catch(error=>{
-					this.baiduCityRequest();
+				return new Promise((resolve,reject)=>{
+					this.$http.get(this.$url.URL.DEFAULT_CITY)
+					.then(response=>{
+						let cityName = response.data.data.name;
+						this.selectCity = cityName;
+						localStorage.address = cityName;
+						localStorage.selectCity = JSON.stringify(response.data.data);
+						//这是页面所有请求的开始
+						this.changeAddress(cityName);
+						//其他执行
+						resolve(response);
+					})
+					.catch(error=>{
+						//其他执行
+						reject();
+					})
 				})
 			},
+
 			//百度定位
 			baiduCityRequest() {
 				let that = this;
 				let geoc = new BMap.Geocoder(); 
 				let geolocation = new BMap.Geolocation();
-				//定位 初始城市
-				geolocation.enableSDKLocation();//开启SDK辅助定位
-				geolocation.getCurrentPosition(function(r) {
-					if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
-						let point = new BMap.Point(r.point.lng,r.point.lat);
-						geoc.getLocation(point, function(rs) {
-							that.address = rs.addressComponents.city.slice(0, -1);
-							that.changeAddress(that.address);
-							localStorage.address = that.address;
-						});    
-					}else{//逆地址解析不成功
-						that.selectCity = city.name?city.name:'北海';
-					}    
-				});
+				return new Promise((resolve,reject)=>{
+					//定位 初始城市
+					geolocation.enableSDKLocation();//开启SDK辅助定位
+					geolocation.getCurrentPosition(function(r) {
+						if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
+							let point = new BMap.Point(r.point.lng,r.point.lat);
+							geoc.getLocation(point, function(rs) {
+								that.address = rs.addressComponents.city.slice(0, -1);
+								localStorage.address = that.address;
+								//其他执行
+								resolve(that.address);
+							});    
+						}else{//逆地址解析不成功
+							that.selectCity = city.name?city.name:'北海';
+							//其他执行
+							reject();
+						}    
+					});
+				})
 			},
 			renderRequest(cityCode) {
 				//请求城市列表

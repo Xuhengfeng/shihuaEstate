@@ -67,7 +67,7 @@ export default {
   created() {
     //初始化vuex
     this.$store.commit('FIRSTSTATUS');
-    this._mapquerys();
+    // this._mapquerys();
 
     //极光IM 全局挂载 刷新
     window.JIM = new JMessage({debug: false});

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
- * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-07-26 01:34:50
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-07-26 15:53:20
  */
 <template>
 	<div>
@@ -177,12 +177,11 @@
         <!-- 右侧sidebar -->
         <div class="side">
             	<div class="btn">
-                <div @click="addCollection($event)" v-if="!housedetail.isCollect" >收藏房源</div>
-                <div @click="addCollection($event)" v-if="housedetail.isCollect" >已收藏</div>
-                <div  @click.stop="addContrast(housedetail, $event)" v-if="!housedetail.isAppoint">预约看房</div> 
-                <div  @click.stop="addContrast(housedetail, $event)" v-if="housedetail.isAppoint">已预约</div> 
+                <div @click.stop="addCollection($event)" v-if="!housedetail.isCollect" >收藏房源</div>
+                <div @click.stop="addCollection($event)" v-if="housedetail.isCollect" >已收藏</div>
+                <div @click.stop="addContrast(housedetail, $event)" v-if="!housedetail.isAppoint">预约看房</div> 
+                <div @click.stop="addContrast(housedetail, $event)" v-if="housedetail.isAppoint">已预约</div> 
               </div>
-
               <div class="content">
                   <div class="price ">
                     <span class="total">{{housedetail.saleTotal}}</span>
@@ -238,7 +237,6 @@
     <!-- 飞入的物体 -->
     <o-fly class="fly" ref="fly"></o-fly>
 	</div>
-
 </template>
 
 <script>
@@ -247,10 +245,7 @@ import BMap from "../../base/BMap/BMap";
 import oFly from "../../base/fly/fly";
 import "../../../static/js/jquery-3.2.1.min.js";
 import "../../../static/js/swiper-3.3.1.min.js";
-
 export default {
-  
-   
   data() {
     return {
       houseTypeId: 11, //地图 二手房 租房  小区 11 12 13
@@ -291,9 +286,7 @@ export default {
           // disabled            : ['google', 'facebook', 'twitter'], // 禁用的站点
           // wechatQrcodeTitle   : '微信扫一扫：分享', // 微信二维码提示文字
           // wechatQrcodeHelper  : '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>'
-    },
-   
-     
+      },
     };
   },
   created() {
@@ -819,6 +812,7 @@ export default {
         background: #ffffff;
         border: 1px solid #cacaca;
         margin-left: 10px;
+        cursor: pointer;
         &:nth-of-type(2){background: red}
       }
     }
