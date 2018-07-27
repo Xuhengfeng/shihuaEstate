@@ -106,7 +106,7 @@ export default {
     //监听路由路径
     $route(to, from) {
       let path = to.path;
-
+      console.log(path)
       if(path == "/residence"){
         this.$store.commit('WORDCOLOR',1);
       }
@@ -170,13 +170,38 @@ export default {
          if(path == "/entrustmentrent/sell"){
          this.$store.commit('WORDCOLOR','k');
         }
+        //  if(path == "/mine"){
+        //  this.$store.commit('WORDCOLOR','o');
+        // }
+        //  if(path == "/mine/indexseeone"){
+        //  this.$store.commit('WORDCOLOR','p');
+        // }
+        // if(path == "/mine/indexcollection"){
+        //  this.$store.commit('WORDCOLOR','q');
+        // }
+        // if(path == "/mine/indexdelegation"){
+        //  this.$store.commit('WORDCOLOR','r');
+        // }
+        //  if(path == "/mine/indexmessage"){
+        //  this.$store.commit('WORDCOLOR','s');
+        // }
+        
 
 
 
 
-      if(path == "/indexcollection"){
-        this.$store.commit('WORDCOLOR',5);
-      }
+      // if(path == "/indexcollection"){
+      //   this.$store.commit('wordcolor',5);
+      // }
+      //  if(path == "/indexseeone"){
+      //   this.$store.commit('WORDCOLOR',1);
+      // }
+      //   if(path == "/indexseeone"){
+      //   this.$store.commit('WORDCOLOR',1);
+      // }
+      //   if(path == "/indexseeone"){
+      //   this.$store.commit('WORDCOLOR',1);
+      // }
       if (path == "/mapSearch") {
         this.isShowTop = 0;
         this.isShowFooter = 0;

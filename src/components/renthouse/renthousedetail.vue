@@ -22,7 +22,7 @@
                     <i class="iconfont xhf-icon-right arrow-right"></i>
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in sellrentdetail.housePicList">
-                          <img :src="item">
+                          <img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
                       </div>
                     </div>
                   </div>
@@ -33,7 +33,7 @@
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in sellrentdetail.housePicList">
-                          <img :src="item">
+                          <img :src="item|imgfilter" :onerror="null|imgonroorr">
                       </div>
                     </div>
                   </div>
@@ -110,7 +110,7 @@
                 <div class="guanlianxiaoqu">
                     <div class="title">关联小区</div>
                     <div class="image fl" @click="toSkipone(bulidinfo)">
-                      <img :src="bulidinfo.housePic" alt="" />
+                      <img :src="bulidinfo.housePic|imgfilter" :onerror="null|imgonroorr">
                     </div>
                     <div class="direciton">
                       <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}}</div>
@@ -128,7 +128,7 @@
                     <ul>
                       <li v-for="item in samehouserent">
                         <div class="image fl" @click="toSkip(item)">
-                          <img :src="item.housePic"  />
+                          <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr" />
                         </div>
                         <div class="direciton">
                        <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle}}   <!--  <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span> --></div>
@@ -149,7 +149,7 @@
                   <ul>
                     <li v-for="item in rentrimhousing">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img :src="item.housePic" />
+                        <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr" />
                       </div>
                       <div class="direciton">
                         <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }} <!--  <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span> --></div>

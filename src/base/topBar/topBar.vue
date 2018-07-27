@@ -20,9 +20,9 @@
                     <span class="logout"  @click="logout()">退出</span>
                     <ul>
                         <router-link tag="li" to="/mine">个人账户</router-link>
-                        <router-link tag="li" to="">预约看房</router-link>
-                        <router-link tag="li" to="">我的收藏</router-link>
-                        <router-link tag="li" to="">我的委托</router-link>
+                        <router-link tag="li" to="/mine/indexseeone">预约看房</router-link>
+                        <router-link tag="li" to="/mine/indexcollection">我的收藏</router-link>
+                        <router-link tag="li" to="/mine/indexdelegation">我的委托</router-link>
                          <router-link tag="li" to="/mine/indexmessage">消息</router-link>
                     </ul>
                 </div>

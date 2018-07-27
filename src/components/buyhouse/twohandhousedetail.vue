@@ -21,7 +21,7 @@
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in housedetail.housePicList">
-                          <img :src="item">
+                          <img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
                       </div>
                     </div>
                   </div>
@@ -31,8 +31,8 @@
                   <i class="iconfont xhf-icon-right arrow-right"></i>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(item,index)">
-                          <img :src="item">
+                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(index)">
+                          <img :src="item|imgfilter" :onerror="null|imgonroorr">
                       </div>
                     </div>
                   </div>
@@ -115,7 +115,7 @@
                 <div class="guanlianxiaoqu">
                     <div class="title">关联小区</div>
                     <div class="image fl" @click="toSkipone(bulidinfo)">
-                      <img :src="bulidinfo.housePic" alt="" />
+                      <img :src="bulidinfo.housePic|imgfilter" :onerror="null|imgonroorr">
                     </div>
                     <div class="direciton">
                       <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}} <span class="fr" style="font-size: 16px;color: "></span></div>
@@ -133,7 +133,7 @@
                     <ul>
                       <li v-for="item in samehouseused">
                         <div class="image fl" @click="toSkip(item)">
-                          <img :src="item.housePic"  />
+                          <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"  />
                         </div>
                        
                         <div class="direciton">
@@ -155,7 +155,7 @@
                   <ul>
                     <li v-for="item in rimhousing">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img :src="item.housePic" />
+                        <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"/>
                       </div>
                       <div class="direciton">
                         <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }}  <!-- <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span> --></div>
@@ -913,7 +913,8 @@ export default {
               width: 120px;
               height: 42px;
               line-height: 42px;    
-              border: 1px solid #eeeeee;   
+              border: 1px solid #eeeeee; 
+              cursor: pointer;  
               &:first-child{margin-right:20px}       
             }
           }

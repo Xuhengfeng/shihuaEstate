@@ -73,7 +73,7 @@
                   					</div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
                     <span class="word">{{item.tag}}</span>
-										<span class="fr prices">{{item.saleTotal}}<span class="wan">均价</span></span></div>
+										<span class="fr prices">{{item.saleTotal}}</span></div>
 									<div class="introduce"><img src="../../imgs/buyhouse/dingwei.png" />
                     <span class="word">{{item.buildSummary}}</span><span class="fr">单价{{item.avgPrice }}元/平米</span>
                   </div>
