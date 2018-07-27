@@ -109,6 +109,25 @@
             </div>
         </li>
 
+        <li v-for="item in list" v-show="isShowNum == 5">
+            <div class="image">
+                <img :src="item.housePic"/>
+            </div>
+            <div class="description">
+                <div class="title">{{item.houseTitle}}</div>
+                <div class="info"><img src="../../imgs/buyhouse/house.png" />{{item.districtName}}|{{item.houseType}}|{{item.builtArea}}平|{{item.houseDirection }}</div>
+                <div class="attention"><img src="../../imgs/buyhouse/dingwei.png" />{{item.houseTitle}}</div>
+                <div class="tag">
+                    <span v-for="item2 in item.houseTag">{{item2}}</span>
+                </div>
+            </div>
+            <div class="r-content">
+                <!-- <div class="collection">收藏</div> -->
+                <div class="totalPrice"><span>{{item.saleTotal}}</span>万</div>
+                <div class="sellPrice">单价<span>{{item.salePrice}}</span>元/平米</div>
+            </div>
+        </li>
+
     </ul>
 </template>
 

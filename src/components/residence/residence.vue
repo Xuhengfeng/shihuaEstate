@@ -6,24 +6,7 @@
         <div class="morrcity">
             <div class="container">
                 <ul class="city">
-                <li>北海</li>
-                <li>威海</li>
-                <li>大理</li>
-                <li>湛江</li>
-                <li>桂林</li>
-                <li>海口</li>
-                <li>琼海</li>
-                <li>南宁</li>
-                <li>阳江</li>
-                <li>惠州</li>
-                <li>河源</li>
-                <li>清远</li>
-                <li>贵阳</li>
-                <li>柳州</li>
-                <li>衡阳</li>
-                <li>岳阳</li>
-                <li>防港城</li>
-                <li>汕头</li>
+                <li v-for="(item,index) in eightycity" @click="citypicture(item,index)">{{item.city}}</li>
                 </ul>
             </div>
         </div>
@@ -32,6 +15,23 @@
 
 <script>
 export default {
+    data() {
+            return {
+                eightycity:[
+                    {city:"北海"},{city:"威海"},{city:"大理"},{city:"湛江"},
+                    {city:"桂林"},{city:"海口"},{city:"琼海"},{city:"南宁"},
+                    {city:"阳江"},{city:"惠州"},{city:"河源"},{city:"清远"},
+                    {city:"贵阳"},{city:"柳州"},{city:"衡阳"},{city:"岳阳"},
+                    {city:"防港城"},{city:"汕头"}
+                    ]
+            }
+        },
+         methods:{
+             citypicture(item,index){
+                  this.$router.push({ path: "/city/"+index});
+             }
+         }
+
 
 }
 </script>

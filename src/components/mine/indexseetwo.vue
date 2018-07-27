@@ -53,7 +53,7 @@ export default {
         return {
             numbol:false,
             // spanList: ['确认中','预约成功','已取消'],//状态
-            isShowNum:2,//默认第一个
+            isShowNum:5,//默认第一个
             readyList: [],//约看日程
             num: 0,//按钮
             cancelCause:"", //取消原因
