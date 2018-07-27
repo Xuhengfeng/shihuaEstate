@@ -100,11 +100,11 @@
                 <input type="password" 
                         v-model="password4" 
                         autocomplete="off"
-                        placeholder="请输入密码(最少六位,数字加字母)"/>
+                        placeholder="输入新密码(最少六位,数字加字母)"/>
                 <input type="password" 
                         v-model="password5" 
                         autocomplete="off"
-                        placeholder="再次输入密码"/>
+                        placeholder="输入新密码"/>
                             <button @click="findPassword()">确定</button>
                             <div class="come_login" style="margin-top: 15px;">已有账号？<span style="color: #ff1010;cursor: pointer;" @click="jump(2)">去注册</span></div>
               </div>
@@ -272,6 +272,15 @@ export default {
     },
     //找回密码 (设置密码登录)
     findPassword() {
+      //校验
+      switch(true){
+        case !this.phonenum4: return this.$alert('手机不能为空!');
+        case this.phonenum4.length!==11: return this.$alert('手机格式不对!');
+        case !this.msgcode3: return this.$alert('验证码不能为空!');
+        case !this.password4,!this.password5: return this.$alert("密码不能为空!");
+        case !(/^[\w]{6,12}$/).test(this.password4)||!(/^[\w]{6,12}$/).test(this.password5): return this.$alert('密码的格式为6-12位，只能是字母、数字和下划线!');
+        case this.password4 !== this.password5: return this.$alert("两次密码不一致!");
+      }
       this.$http
         .post(this.$url.URL.SMSCODE_RESETLOGIN, {
           confirmPassword: this.password4,

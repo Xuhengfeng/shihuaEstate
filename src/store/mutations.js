@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-03 15:47:04
+ * @Last Modified time: 2018-07-26 14:11:38
  */
 import router from '../router/index'
 //同步处理
@@ -99,6 +99,7 @@ export default {
 	},
 	//初始化历史漫游消息
 	HISTORY(state, payload) {
+		console.log(payload);
 		payload.forEach(item=>{
 			item.msgs.forEach(item2=>{
 				if(item2.content.msg_body.media_id){
