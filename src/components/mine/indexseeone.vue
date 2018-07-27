@@ -63,6 +63,7 @@
               </div>
         <div class="brokerList" v-show="brokerFlag">
             <h3>选择经纪人</h3>
+            <span class="close" @click="toggleBroker()">x</span>
             <ul>
                 <li v-for="item in brokerLists" @click="selectBroker(item)">
                     <div>
@@ -660,5 +661,17 @@ dl, dt, dd, ul, ol, li {
 	background: red!important;
 	color: #ffffff;
 }
-
+.close {
+    cursor: pointer;  
+     width: 24px;
+    height: 25px;
+    position: absolute;
+    line-height: 20px;
+    text-align: center;
+    top: 10px;
+    left: 587px;
+    color: white;
+    background: #535353;
+    border-radius: 15px;
+}
 </style>

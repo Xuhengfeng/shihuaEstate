@@ -34,18 +34,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <!-- 分页器 -->
-    <div class="oPagination">
-        <el-pagination 
-            class="fr"
-            @current-change="twoChange"
-            background
-            layout="prev, pager, next"
-            prev-text="上一页"
-                        next-text="下一页"
-            :total="1000">
-        </el-pagination>
-    </div>
 </div>
 </template>
 

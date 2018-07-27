@@ -9,28 +9,24 @@
                     @click="change(index)">{{item}}</li>
               </ul>
           </div>
-          
+           <div class="noContent" v-show="!collecttwohouse.length">无收藏数据!</div>
           <div class="main">
               <ul>
                 <o-HouseList :isShowNum="num" :list="collecttwohouse"></o-HouseList>
               </ul>
           </div>
           <!-- 分页器 -->
-          <div class="oPagination">
-              <el-pagination 
-                  class="fr"
-                  background
-                  layout="prev, pager, next"
-                  prev-text="上一页"
-                  next-text="下一页"
-                  :total="1000">
-              </el-pagination>
-          </div>
+          <!-- <div class="oPagination" v-if="collecttwohouse.length">
+              <el-pagination class="pagination"
+                @current-change="handleCurrentChange"
+                background
+                layout="prev,pager, next"
+                prev-text="上一页"
+                next-text="下一页"
+                :total="1000">
+            </el-pagination>
+          </div> -->
         </div>
-        
-        <!-- 空页面 -->
-        <!-- <o-empty :titles="'还没有收藏的房源'" ></o-empty> -->
-        
     </div>
 </template>
 
@@ -75,8 +71,23 @@ export default {
             catch(err){
               console.log(err)
             }
+            let data = response.data.data;
+             data.forEach(item => {
+                   if(item.status==0){
+                     console.log(!11)
+                     item.status = "正常"
+                   }
+                    if(item.status==1){
+                     item.status = "已售"
+                   }
+                    if(item.status==2){
+                     item.status = "已失效"
+                   }
+                    if(item.status==3){
+                     item.status = "已停售"
+                   }
+                });
             this.collecttwohouse = response.data.data;
-            
           });
 
             this.$http

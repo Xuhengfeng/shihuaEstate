@@ -31,7 +31,7 @@
                   <i class="iconfont xhf-icon-right arrow-right"></i>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(index)">
+                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(item,index)">
                           <img :src="item|imgfilter" :onerror="null|imgonroorr">
                       </div>
                     </div>
@@ -524,6 +524,7 @@ export default {
         });
     },
     slideTo(item,index) {
+       console.log(item)
       this.magnifyImg = item;
       this.oSwiper1.slideTo(index);
     }

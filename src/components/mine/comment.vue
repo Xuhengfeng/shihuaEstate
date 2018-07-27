@@ -26,7 +26,7 @@
                 
             </ul>
             <!--分页器-->
-            <div class="oPagination">
+            <!-- <div class="oPagination">
                 <el-pagination
                     @current-change="handleCurrentChange"
                     background
@@ -36,7 +36,7 @@
                     :total="1000"
                     class="fr pagination">
                 </el-pagination>
-            </div>
+            </div> -->
         </div>
         <!-- 空页面 -->
         <o-empty :titles="'还没有评论信息'" 

@@ -10,6 +10,7 @@
         <!-- 二手房模板 -->
         <li v-for="item in list" v-show="isShowNum == 0">
             <div class="image">
+                <div class="invalid-house">{{item.status}}</div>
                 <img :src="item.housePic"/>
             </div>
             <div class="description">
@@ -301,5 +302,16 @@ ul > li {
 .three {
   background: #e1f5ed;
   color: #33be85;
+}
+ .invalid-house {
+    position: absolute;
+    font-size: 12px;
+    font-weight: normal;
+    color: #fff;
+    background: #535353;;
+    line-height: 25px;
+    padding: 0 6px;
+    height: 25px;
+    margin-top: 15px;
 }
 </style>

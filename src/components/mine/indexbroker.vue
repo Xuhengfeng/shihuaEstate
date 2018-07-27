@@ -22,18 +22,6 @@
                     </div> 
                 </li>
             </ul>
-            <!--分页器-->
-            <div class="oPagination">
-                <el-pagination
-                    @current-change="handleCurrentChange"
-                    background
-                    layout="prev, pager, next"
-                    prev-text="上一页"
-                    next-text="下一页"
-                    :total="1000"
-                    class="fr pagination">
-                </el-pagination>
-            </div>
         </div>
         <!-- 空页面 -->
         <o-empty :titles="'还没有添加经纪人'" 
