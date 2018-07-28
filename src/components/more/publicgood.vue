@@ -10,51 +10,12 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li>
+						<li v-for="item in infoquerychild" @click="pulic(item)">
 							<div class="image">
-								<img src="../../imgs/home/xiaoqu.png">
+								<img :src="item.imageUrl">
 							</div>
 							<div class="description">
-								<p>湛江主流媒体报道世华易居社区</p>
-								<p>湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区</p>
-							</div>
-						</li>
-                        	<li>
-							<div class="image">
-								<img src="../../imgs/home/xiaoqu.png">
-							</div>
-							<div class="description">
-								<p>湛江主流媒体报道世华易居社区</p>
-								<p>湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区</p>
-							</div>
-						</li>
-                        	<li>
-							<div class="image">
-								<img src="../../imgs/home/xiaoqu.png">
-							</div>
-							<div class="description">
-								<p>湛江主流媒体报道世华易居社区</p>
-								<p>湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区</p>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-         <div class="section ">
-			<div class="container">
-				<div class="goods-hd">
-					<span class="twohandhouse">更多公益活动</span>
-				</div>
-				<div class="goods-bd">
-					<ul>
-						<li v-for="item in [1,1,1,1,1,1,1,1,1]">
-							<div class="image">
-								<img src="../../imgs/home/xiaoqu.png">
-							</div>
-							<div class="description">
-								<p>湛江主流媒体报道世华易居社区</p>
-								<p>湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区湛江主流媒体报道世华易居社区</p>
+								<p>{{item.title}}</p>
 							</div>
 						</li>
 					</ul>
@@ -86,6 +47,9 @@ export default {
                         this.infoquerychild = response.data.data;
                         console.log(this.infoquerychild)
                         });
+				},
+				pulic(item){
+					window.open(item.contentUrl,"_blank")
 				}
 			}
 }
@@ -111,8 +75,8 @@ export default {
 	margin-bottom: 30px;
 }
 
-.section .goods-bd .image {
-	width: 272px;
+.section .goods-bd .image img {
+	width: 370px;
 	height: 213px;
 }
 .section .description p:nth-child(1){

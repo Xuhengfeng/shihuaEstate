@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
+    <!-- <div class="container"> -->
          <div class="header">
              <img :src="imgcityurl.url">
         </div>
-    </div>
+    <!-- </div> -->
 </template>
 <script>
 export default {
@@ -27,5 +27,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
- 
+ .header img{
+     width: 100%;
+     height: 100%;
+ }
 </style>
