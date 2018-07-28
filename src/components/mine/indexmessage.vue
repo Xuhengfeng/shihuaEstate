@@ -63,6 +63,11 @@ export default {
     created(){
         this.render();	
     },
+     computed: {
+     wordColor() {
+            return this.$store.state.wordcolor;
+     }
+  },
     methods:{
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);

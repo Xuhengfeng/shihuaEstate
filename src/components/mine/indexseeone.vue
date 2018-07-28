@@ -2,7 +2,7 @@
     <div>
         <div v-show="order">
             <ul>
-                <li v-for="item in houseList" >
+                <li v-for="item in houseList"  >
                     <input class="inpt" type="checkbox" v-model="item.checked" @click="check(item)"/>
                     <div class="image">
                         <img :src="item.housePic"/>
@@ -341,7 +341,7 @@ export default {
         check(item){
            this.houseSdid = item.houseSdid
                 
-        }
+        },
     },
     components: {
         oHouseList,
@@ -674,4 +674,8 @@ dl, dt, dd, ul, ol, li {
     background: #535353;
     border-radius: 15px;
 }
+// .bgColor{
+// 	background: red!important;
+// 	color: #ffffff;
+// }
 </style>
