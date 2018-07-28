@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-05 15:18:19
+ * @Last Modified time: 2018-07-28 15:33:53
  */
 <template>
   <div id="app">
@@ -289,22 +289,6 @@ export default {
         //缓存历史漫游消息
         this.$store.commit('HISTORY', data);
       });
-    },
-    _mapquerys(){
-      this.$http.get(this.$url.URL.DEFAULT_CITY)
-				.then((response)=>{
-          localStorage.selectCity = JSON.stringify(response.data.data);
-          this._appinthouse();
-				})
-    },
-    _appinthouse() {
-      this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
-					scity: JSON.parse(localStorage.selectCity),//用户选定城市
-				})
-				.then(response =>{
-          //初始化待看清单列表
-          this.$store.commit('CHUSHIHUA', response.data.data);
-				})
     }
   }
 };

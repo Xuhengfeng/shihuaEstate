@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-26 14:11:38
+ * @Last Modified time: 2018-07-28 15:32:38
  */
 import router from '../router/index'
 //同步处理
@@ -19,12 +19,6 @@ export default {
 			state.LoginedUser=Object.assign({}, user);
 			state.AuthJiG = JSON.parse(sessionStorage.AuthJiG);
 		}
-	},
-	//初始化待看列表数据
-	CHUSHIHUA(state,payload){
-		payload != null
-		? state.appinthouse = payload
-		: state.appinthouse = [];
 	},
 	//登录
 	LOGIN(state) {
@@ -66,7 +60,7 @@ export default {
 	},
 	//清空待看清单列表
 	CLEARDAIKAN(state) {
-		state.appinthouse = [];
+		state.appintList = [];
 	},
 	//显示对比清单列表
 	SHOWLIST(state, payload) {
@@ -88,14 +82,15 @@ export default {
 		state.contrastList.splice(index, 1);
 	},
 	//删除待看清单的某一个
-	DELETETWO(state, payload) {
+	DELETEONEAPPOINT(state, payload) {
 		let index = state.contrastList.findIndex((item)=>{
 			return payload.sdid == item.sdid;
 		})
-		state.appinthouse.splice(index, 1);
+		state.appintList.splice(index, 1);
 	},	
-	ADDTWO(state, payload){
-		state.appinthouse = payload;
+	//待看清单
+	SHOWAPPOINTLIST(state, payload){
+		state.appintList = payload;
 	},
 	//初始化历史漫游消息
 	HISTORY(state, payload) {

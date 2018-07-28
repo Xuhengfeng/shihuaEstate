@@ -26,7 +26,7 @@ export default {
       this.ballFlag = true;
     },
     beforeEnter(el) {
-      console.log(this.targetEl)
+      console.dir(this.targetEl)
         if(this.ballFlag) {
           //终点位置
           let imgTwo = JSON.parse(localStorage.imgTwo);
@@ -44,13 +44,11 @@ export default {
             /* y 轴 贝塞尔曲线*/
             this.$refs.ball.style.transition="all 0.6s cubic-bezier(.39,1.59,.47,1.26)";
           }
-          
 
           el.style.display = ''
           //外层y向动画
           el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
           el.style.transform = `translate3d(0, ${y}px, 0)`
-
           //内层x动画
           let inner = el.getElementsByClassName('inner-hook')[0]
           inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`

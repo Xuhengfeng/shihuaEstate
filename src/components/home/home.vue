@@ -325,14 +325,15 @@
 			}
 		},
 		watch: {
+			//切换城市刷新当前登录用户对应城市的待看房源清单
 			selectCity() {
-				this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+				this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo=1",{
 					scity: JSON.parse(localStorage.selectCity),//用户选定城市
 				})
-				.then(response =>{
-				let newData = response.data.data;
-				//初始化清单列表
-				this.$store.commit('CHUSHIHUA', newData);
+				.then(res =>{
+					let newData = res.data.data;
+					//刷新待看房源清单
+					this.$store.dispatch('refreshAppointList', res.data.data.value);
 				})
 			}
 		},
