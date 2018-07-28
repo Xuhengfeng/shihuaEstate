@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-07-01 14:47:09
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-07-28 15:30:09
  */
 <template>
   <div class="sideBar">
@@ -15,7 +15,7 @@
                         <span class="fr" @click="clearDaikan()">清空</span>
                     </div>
                         <ul class="content-bd">
-                        <li v-for="item in appinthouse">
+                        <li v-for="item in appintList">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -24,7 +24,7 @@
                                 <div><span>{{item.houseType}}</span><span>{{item.builtArea}}平米</span></div>
                                 <div><span>{{item.saleTotal}}</span>万</div>
                             </div>
-                            <div class="delete" @click="deleteTwo(item)">删除</div>
+                            <div class="delete" @click="deleteOneAppoint(item)">删除</div>
                         </li>
                     </ul>
                     <div class="content-ft">
@@ -99,7 +99,6 @@ export default {
     };
   },
   computed: {
-    //监控store中的contrastList
     contrastList() {
       let list = this.$store.state.contrastList;
       if (list.length > 0) {
@@ -109,9 +108,8 @@ export default {
       }
       return list;
     },
-    //监控appinthouse
-    appinthouse() {
-     let list = this.$store.state.appinthouse;
+    appintList() {
+     let list = this.$store.state.appintList;
      list.length
      ? this.compareBtntwo = true
      : this.compareBtntwo = false;
@@ -138,8 +136,8 @@ export default {
       this.$store.dispatch("deleteOne", item);
     },
     //删除待看列表
-    deleteTwo(item) {
-      this.$store.dispatch("deleteTwo", item);
+    deleteOneAppoint(item) {
+      this.$store.dispatch("deleteOneAppoint", item);
     },
     //立即比较(对比)
     compare() {

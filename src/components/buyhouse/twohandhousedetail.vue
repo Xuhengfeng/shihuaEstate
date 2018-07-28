@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-26 15:53:20
+ * @Last Modified time: 2018-07-28 15:25:08
  */
 <template>
 	<div>
@@ -179,8 +179,8 @@
             	<div class="btn">
                 <div @click.stop="addCollection($event)" v-if="!housedetail.isCollect" >收藏房源</div>
                 <div @click.stop="addCollection($event)" v-if="housedetail.isCollect" >已收藏</div>
-                <div @click.stop="addContrast(housedetail, $event)" v-if="!housedetail.isAppoint">预约看房</div> 
-                <div @click.stop="addContrast(housedetail, $event)" v-if="housedetail.isAppoint">已预约</div> 
+                <div @click.stop="addAppointList(housedetail, $event)" v-if="!housedetail.isAppoint">预约看房</div> 
+                <div @click.stop="addAppointList(housedetail, $event)" v-if="housedetail.isAppoint">已预约</div> 
               </div>
               <div class="content">
                   <div class="price ">
@@ -301,9 +301,13 @@ export default {
     userInfo() {
       return this.$store.state.LoginedUser;
     },
-    //对比列表
+    //对比房源清单
     contrastList() {
       return this.$store.state.contrastList;
+    },
+    //待看房源清单
+    appintList() {
+      return this.$store.state.appintList;
     }
   },
   methods: {
@@ -357,12 +361,9 @@ export default {
     addCompare(item, e) {
       //未登录用户提示弹窗登录
       if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
-      let payload = {
-        contrastList: this.contrastList,
-        item: item
-      }
+      let payload = {contrastList: this.contrastList,item: item};
       if(item.isComparison == true) {
-        return;
+        return this.$alert('已加对比清单');
       }else{
         if(this.contrastList.length<4){
           this.render();
@@ -376,84 +377,46 @@ export default {
       }
     },
     //加入待看清单
-    addContrast(item, e) {
+    addAppointList(item, e) {
         //未登录用户提示弹窗登录
         if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
-        if( this.$store.state.appinthouse.length <= 3){
-          
-             this.$http.post(this.$url.URL.APPOINT_ADD,{
-                sdid:item.sdid,
-                scity:this.scity.value 
-              })
-              .then(response =>{
-                this.$refs.fly.drop(e.target);
-                this.housedetail.isAppoint = true
-                this.appintHouse();
-              })
+        let payload = {appintList: this.appintList,item: item};
+        if(item.isAppoint == true) {
+          return this.$alert('已加待看清单');
         }else{
-            this.$alert('对比清单最多4个!', '添加失败', {
+          if(this.appintList.length<4){
+            this.$refs.fly.drop(e.target);
+            this.$store.dispatch('addOneAppoint', payload);
+          }else{
+            this.$alert('约看清单最多4个!', '添加失败', {
               confirmButtonText: '确定'
             });
           }
+        }
     },
-    //待看列表
-    appintHouse() {
-        this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo="+1,{
-          scity:this.scity.value
-        })
-        .then(response =>{
-            let newData = response.data.data;
-            //添加数据
-            this.$store.commit('ADDTWO', newData);
-        })
-    },
-    //收藏房源
+    //收藏/取消房源
     addCollection(e) {
       //未登录用户提示弹窗登录
       if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
-      if(this.collectionFlag){
-        if(e.target.innerHTML=='已收藏'){
-            this.$http
-          .post(this.$url.URL.HOUSECOLLECTION_CANCEL + this.scity.value +"/"+ this.sdid)
-          .then(response => {
-              e.target.innerHTML = '收藏房源'
-          });
-        }else{
+      if(e.target.innerHTML=='已收藏'){
           this.$http
-          .post(this.$url.URL.HOUSECOLLECTION_ADD +  this.scity.value +"/"+  this.sdid)
-          .then(response => {
-              e.target.innerHTML = '已收藏'
-          });
-        }
-      }
-      this.collectionFlag = !this.collectionFlag;
-    },
-    //收藏房源
-    collection(e) {
-      //未登录用户提示弹窗登录
-      if(!this.logined) return this.$store.commit('OPENLOGINDIALOG', 1);
-      if(this.collectionFlag){
-         this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_ADD + "/"+ this.scity.value +"/"+  this.buildsdid)
+        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + this.scity.value +"/"+ this.sdid)
+        .then(response => {
+            e.target.innerHTML = '收藏房源'
+        });
+      }else{
+        this.$http
+        .post(this.$url.URL.HOUSECOLLECTION_ADD +  this.scity.value +"/"+  this.sdid)
         .then(response => {
             e.target.innerHTML = '已收藏'
         });
-
-      }else{
-           this.$http
-        .post(this.$url.URL.HOUSECOLLECTION_CANCEL + "/"+ this.scity.value +"/"+ this.buildsdid)
-        .then(response => {
-            e.target.innerHTML = '收藏'
-        });
       }
-      this.collectionFlag = !this.collectionFlag;
     },
     //切换房源
 	  toSkip(item) {
-      let path = "/buyhouse/twohandhousedetail/" + item.sdid;
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0
-      this.$router.push({ path: path });
+      this.$router.push({ path: "/buyhouse/twohandhousedetail/" + item.sdid});
       this.render();
     },
     toSkipone(bulidinfo) {
