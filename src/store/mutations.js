@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 15:32:38
+ * @Last Modified time: 2018-07-28 16:29:11
  */
 import router from '../router/index'
 //同步处理
@@ -76,15 +76,16 @@ export default {
 	},
 	//删除对比清单的某一个
 	DELETEONE(state, payload) {
-		let index = state.contrastList.findIndex((item)=>{
+		let index = state.contrastList.findIndex(item =>{
 			return payload.sdid == item.sdid;
 		})
 		state.contrastList.splice(index, 1);
 	},
 	//删除待看清单的某一个
 	DELETEONEAPPOINT(state, payload) {
-		let index = state.contrastList.findIndex((item)=>{
-			return payload.sdid == item.sdid;
+		console.log(payload)
+		let index = state.appintList.findIndex(item =>{
+			return payload.id == item.id;
 		})
 		state.appintList.splice(index, 1);
 	},	

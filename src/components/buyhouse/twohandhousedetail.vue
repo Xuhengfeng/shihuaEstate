@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 15:25:08
+ * @Last Modified time: 2018-07-28 16:36:46
  */
 <template>
 	<div>
@@ -310,6 +310,12 @@ export default {
       return this.$store.state.appintList;
     }
   },
+  watch: {
+    appintList() {
+      console.log(111)
+      this.render();
+    }
+  },
   methods: {
     //打开聊天
     startChat() {
@@ -366,9 +372,9 @@ export default {
         return this.$alert('已加对比清单');
       }else{
         if(this.contrastList.length<4){
-          this.render();
           this.$refs.fly.drop(e.target);
           this.$store.dispatch('addOne', payload);
+          this.render();
         }else{
           this.$alert('对比清单最多4个!', '添加失败', {
             confirmButtonText: '确定'
@@ -428,6 +434,7 @@ export default {
       let city = this.scity.value;
       this.$http.get(this.$url.URL.HOUSE_GETDETAILINFO + city + "/" + sdid)
         .then(response => {
+          console.log(response.data.data)
           this.housedetail = response.data.data;
           this.magnifyImg = this.housedetail.housePicList[0];
           this.buildsdid =  response.data.data.buildSdid;
@@ -455,20 +462,14 @@ export default {
               this.rimhousing = response.data.data;
             });
 
-          //关联小区
-          this.$http
-            .get(this.$url.URL.BULIDINFO + city + "/" + this.buildsdid)
+            //关联小区
+            this.$http.get(this.$url.URL.BULIDINFO + city + "/" + this.buildsdid)
             .then(response => {
               this.bulidinfo = response.data.data;
             });
 
           //同小区房源
-          this.$http
-            .get(
-              this.$url.URL.MAPHOUSEALL_USED_LIST +
-                city +
-                "/" +
-                this.buildsdid,
+            this.$http.get(this.$url.URL.MAPHOUSEALL_USED_LIST +city +"/" +this.buildsdid,
               {
                 pageNo: 1,
                 pageSize: 10
@@ -480,7 +481,6 @@ export default {
         });
     },
     slideTo(item,index) {
-       console.log(item)
       this.magnifyImg = item;
       this.oSwiper1.slideTo(index);
     }
