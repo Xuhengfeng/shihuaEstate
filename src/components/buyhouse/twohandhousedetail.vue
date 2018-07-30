@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 16:36:46
+ * @Last Modified time: 2018-07-28 16:41:38
  */
 <template>
 	<div>
@@ -311,6 +311,9 @@ export default {
     }
   },
   watch: {
+    contrastList() {
+      this.render();
+    },
     appintList() {
       this.render();
     }
