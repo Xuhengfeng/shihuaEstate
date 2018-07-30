@@ -247,6 +247,7 @@ export default {
       loginshow: null, //登陆注册阴影层
       rightnow: true, //登陆注册判断条件
       cancel: false, //取消登陆阴影
+      magnifyImg: null,//放大图片的路径
       sellrentdetail: {
         //租房详情
         broker: {
@@ -384,6 +385,7 @@ export default {
         .then(response => {
           this.sellrentdetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
+          this.magnifyImg = this.sellrentdetail.housePicList[0];
            this.sdid =  response.data.data.sdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
@@ -999,8 +1001,8 @@ export default {
   display: none;
   overflow: hidden;
   position: absolute;
-  left: 730px;
-  top: 0;
+   left: 1005px;
+  top: 275px;
   width: 430px;
   height: 490px;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
