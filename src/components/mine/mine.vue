@@ -63,15 +63,36 @@ export default {
   	console.log(path)
   	if(path=="/mine/indexseeone" ){
   		this.num=1
-  	}
+    }
+    if(path=="/mine/indexseetwo" ){
+  		this.num=2
+    }
+    if(path=="/mine/indexseethree" ){
+  		this.num=3
+    }
+    if(path=="/mine/indexseefour" ){
+  		this.num=4
+    }
   	if(path=="/mine/indexcollection" ){
   		this.num=5
   	}
   	if(path=="/mine/indexdelegation" ){
   		this.num=6
-  	}
+    }
+    if(path=="/mine/indexbroker" ){
+  		this.num=7
+    }
+    if(path=="/mine/comment" ){
+  		this.num=8
+    }
+    if(path=="/mine/indexconsult" ){
+  		this.num=9
+    }
   	if(path=="/mine/indexmessage" ){
   		this.num=10
+    }
+    if(path=="/mine/indexeditInfo" ){
+  		this.num=11
   	}
 
   },

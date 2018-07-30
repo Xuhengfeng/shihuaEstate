@@ -57,7 +57,8 @@ export default {
                     scity:this.selectCity.value
                 })
                 .then(response => {
-                this.broker = response.data.data;    
+                this.broker = response.data.data;   
+                console.log(this.broker) 
                 this.broker.length==0? this.numbol=true : this.numbol=false;
              });
         }
