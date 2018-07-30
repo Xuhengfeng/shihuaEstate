@@ -261,11 +261,10 @@ export default {
                         sdid: item.houseSdid
                     })
                 }
-                //判断没有选中
-                else{
-                    return this.$alert('至少选中一个房源');
-                }
             })
+            if(!this.selectItem.length){
+                this.$alert('至少选中一个房源');
+            }
         },
         //提交预约看房
         commitRequest() {
