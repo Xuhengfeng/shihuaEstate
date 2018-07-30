@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-07 18:13:41 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-30 16:15:23
+ * @Last Modified time: 2018-07-30 16:47:19
  */
 <template>
 	<div>
@@ -915,9 +915,9 @@
   overflow: hidden;
   position: absolute;
  	left: 730px;
-  top: 275px;
+  top: 0;
   width: 430px;
-  height: 0;
+  height: 492px;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
