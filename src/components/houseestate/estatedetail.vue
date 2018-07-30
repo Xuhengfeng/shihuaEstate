@@ -20,12 +20,11 @@
 				<div class="fl">
 					<div class="pc-slide">
 						<div class="view">
+							<div id="move" style="left: 0; top: 0;"></div>
 							<div class="swiper-container">
-							<i class="iconfont xhf-icon-left arrow-left"></i>
-               <i class="iconfont xhf-icon-right arrow-right"></i>
 								<div class="swiper-wrapper">
 									<div class="swiper-slide"  v-for="item in buildlistinfo.housePicList">
-										<img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
+										<img class="swimg" :src="item|imgfilterone" :onerror="null|imgonroorrOne">
 									</div>
 								</div>
 							</div>
@@ -35,12 +34,15 @@
                <i class="iconfont xhf-icon-right arrow-right"></i>
 							<div class="swiper-container">
 								<div class="swiper-wrapper">
-									<div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in buildlistinfo.housePicList">
+									<div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in buildlistinfo.housePicList"  @click="slideTo(item,index)">
 										<img :src="item|imgfilter" :onerror="null|imgonroorr">
 									</div>
 								</div>
 							</div>
 						</div>
+							 <div id="bigImg">
+                    <img :src="magnifyImg" alt="图片"/>
+               </div>
 							<div class="headtitle">小区位置</div>
 									<div class="map">
 				          <b-map :addr="selectCity"></b-map>
@@ -154,6 +156,7 @@
 				keywordTypeId: 0, //关键词类型 二手房 新房 租房 0 1 2
 				keyword: '',//关键词
 				showed:true,
+				 magnifyImg: null,//放大图片的路径
 			 buildlistinfo: {
 					 //小区房详情
 					broker: {
@@ -261,6 +264,7 @@
 				this.$http.get(this.$url.URL.BUILDLISTINFO + city + "/" + sdid)
 				.then(response => {
 					this.buildlistinfo = response.data.data;
+					this.magnifyImg = this.buildlistinfo.housePicList[0];
 					this.buildsdid = response.data.data.sdid;
 					this.px = response.data.data.px;
 					this.py = response.data.data.py;
@@ -313,6 +317,10 @@
 			cancelShare(){
 					this.shaer=false
 			},
+			slideTo(item,index) {
+      this.magnifyImg = item;
+      this.viewSwiper.slideTo(index);
+    },
 		},
 		components: {
 			oHeader,
@@ -320,12 +328,14 @@
 		},
 		mounted() {
 			setTimeout(function(){
+				//实例1
 					var viewSwiper = new Swiper('.view .swiper-container', {
 					onSlideChangeStart: function() {
 						updateNavPosition()
 					}
 				})
 
+				//上一页
 				$('.view .arrow-left,.preview .arrow-left').on('click', function(e) {
 
 					e.preventDefault()
@@ -335,12 +345,50 @@
 					}
 					viewSwiper.slidePrev()
 				});
-				// 移入移出
-				$('.view').mouseover(()=>{
-					$(".view .arrow-left,.view .arrow-right").show();
-				}).mouseout(()=>{
-					$(".view .arrow-left,.view .arrow-right").hide();
+				// // 移入移出
+				// $('.view').mouseover(()=>{
+				// 	$(".view .arrow-left,.view .arrow-right").show();
+				// }).mouseout(()=>{
+				// 	$(".view .arrow-left,.view .arrow-right").hide();
+				// })
+				  //放大镜
+      $('.view')
+      .mousemove(function(ent){
+          $('#move,#bigImg').show();
+          var e = ent||event;
+          //文档位置
+          var x = e.pageX;
+          var y = e.pageY;
+          //坐标原点对齐
+          x = x - $(this).offset().left;
+          y = y - $(this).offset().top;
+          //move的位置
+          x = x - $('#move').width()/2;
+          y = y - $('#move').height()/2;
+          //边界限制
+          var maxLeft = $(this).width()-$('#move').width();
+          var maxTop = $(this).height()-$('#move').height();
+          if(x<=0){
+              x = 0;
+          }else if(x>=maxLeft){
+              x = maxLeft;
+          }
+          if(y<=0){
+              y = 0;
+          }else if(y>=maxTop){
+              y = maxTop;
+          }
+          //移动的比例
+          var bLeft = x / maxLeft * ($('#bigImg img').width()-$('#bigImg').width());
+          var bTop =  y / maxTop * ($('#bigImg img').height()-$('#bigImg').height());
+          $('#move').css({'left': x, 'top': y});
+          $('#bigImg img').css({'marginLeft': -bLeft, 'marginTop': -bTop});
 				})
+				.mouseout(function(){
+						$('#move,#bigImg').hide();
+				})
+
+				//下一页
 				$('.view .arrow-right,.preview .arrow-right').on('click', function(e) {
 					e.preventDefault()
 					if(viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
@@ -349,7 +397,8 @@
 					}
 					viewSwiper.slideNext()
 				})
-
+				
+				//实例2
 				var previewSwiper = new Swiper('.preview .swiper-container', {
 					//visibilityFullFit: true,
 					slidesPerView: 'auto',
@@ -788,6 +837,10 @@
   margin-right: 10px;
   text-align: center;
 }
+.swimg{
+	width: 100%;
+	height: 100%;
+}
 .preview .arrow-left,
 .preview .arrow-right{
   position: absolute;
@@ -848,91 +901,33 @@
     padding: 4px;
     color: #000000;
 }
-
-// .pc-slide {
-//   width: 714px;
-//   margin: 0 auto;
-// }
-
-// .view .swiper-container {
-//   width: 714px;
-//   height: 500px;
-// }
-
-// .view .arrow-left {
-//   background: url(../../imgs/buyhouse/index_tab_l.png) no-repeat left top;
-//   position: absolute;
-//   left: 10px;
-//   top: 50%;
-//   margin-top: -25px;
-//   width: 28px;
-//   height: 51px;
-//   z-index: 10;
-// }
-
-// .view .arrow-right {
-//   background: url(../../imgs/buyhouse/index_tab_r.png) no-repeat left bottom;
-//   position: absolute;
-//   right: 10px;
-//   top: 50%;
-//   margin-top: -25px;
-//   width: 28px;
-//   height: 51px;
-//   z-index: 10;
-// }
-// .preview {
-//   width: 100%;
-//   margin-top: 10px;
-//   position: relative;
-// }
-// .preview .swiper-container {
-//   width: 645px;
-//   height: 82px;
-//   margin-left: 35px;
-// }
-// .preview .swiper-slide {
-//   width: 87px;
-//   height: 82px;
-//   cursor: pointer;
-//   margin-right: 10px;
-//   text-align: center;
-// }
-// .preview .arrow-left,
-// .preview .arrow-right{
-//   position: absolute;
-//   top: 50%;
-//   width: 9px;
-//   height: 18px;
-//   font-size: 30px;
-//   transform: translateY(-50%);
-//   color: #f40;
-// }
-// .preview .arrow-left{
-//   left: 0;
-// }
-// .preview .arrow-right{
-//   right: 9px;
-// }
-
-// .preview .active-nav::before{
-//   content: '';
-//   display: inline-block;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100%;
-//   border: 3px solid #f40;
-//   box-sizing: border-box;
-// }
-// .swiperimg {
-//   width: 120px;
-//   height: 81px;
-// }
-// .swiperimg img {
-//   width: 100%;
-//   height: 100%;
-// }
+/* 移动的盒子 */
+#move{
+  display: none;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  z-index: 1000;
+  background: rgba(0,174,102,0.4);
+  border: 1px solid rgba(5,113,68,0.4);
+  cursor: move;
+}
+/* 图片放大区域 */
+#bigImg{
+  display: none;
+  overflow: hidden;
+  position: absolute;
+  left: 1005px;
+  top: 275px;
+  width: 430px;
+  height: 490px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+/* 图片放大比例 */
+#bigImg img{
+  height: 800px;
+}
 </style>
 
 

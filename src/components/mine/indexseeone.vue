@@ -335,8 +335,8 @@ export default {
                  
              }
         },
-        btn() {
-            this.order = false
+        btn(item) {
+                 this.order = false
         },
         check(item){
            this.houseSdid = item.houseSdid

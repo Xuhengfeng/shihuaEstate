@@ -21,7 +21,7 @@
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in housedetail.housePicList">
-                          <img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
+                          <img :src="item" :onerror="null|imgonroorrOne">
                       </div>
                     </div>
                   </div>
@@ -32,7 +32,7 @@
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(item,index)">
-                          <img :src="item|imgfilter" :onerror="null|imgonroorr">
+                          <img :src="item" :onerror="null|imgonroorr">
                       </div>
                     </div>
                   </div>
@@ -115,7 +115,7 @@
                 <div class="guanlianxiaoqu">
                     <div class="title">关联小区</div>
                     <div class="image fl" @click="toSkipone(bulidinfo)">
-                      <img :src="bulidinfo.housePic|imgfilter" :onerror="null|imgonroorr">
+                      <img :src="bulidinfo.housePic" :onerror="null|imgonroorr">
                     </div>
                     <div class="direciton">
                       <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}} <span class="fr" style="font-size: 16px;color: "></span></div>
@@ -133,7 +133,7 @@
                     <ul>
                       <li v-for="item in samehouseused">
                         <div class="image fl" @click="toSkip(item)">
-                          <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"  />
+                          <img :src="item.housePic" :onerror="null|imgonroorr"  />
                         </div>
                        
                         <div class="direciton">
@@ -312,7 +312,6 @@ export default {
   },
   watch: {
     appintList() {
-      console.log(111)
       this.render();
     }
   },

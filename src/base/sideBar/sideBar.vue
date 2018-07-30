@@ -145,7 +145,7 @@ export default {
     },
     //立即预约 (待看)
     compareone() {
-      this.appinthouse.forEach(item => {
+      this.appintList.forEach(item => {
         this.id = item.id
       });
       this.$router.push({ path: "/mine/indexseeone"});
