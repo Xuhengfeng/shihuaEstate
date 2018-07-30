@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 15:30:09
+ * @Last Modified time: 2018-07-30 10:42:49
  */
 <template>
   <div class="sideBar">
@@ -145,7 +145,7 @@ export default {
     },
     //立即预约 (待看)
     compareone() {
-      this.appinthouse.forEach(item => {
+      this.appintList.forEach(item => {
         this.id = item.id
       });
       this.$router.push({ path: "/mine/indexseeone"});

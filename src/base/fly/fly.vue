@@ -26,17 +26,22 @@ export default {
       this.ballFlag = true;
     },
     beforeEnter(el) {
-      console.dir(this.targetEl)
         if(this.ballFlag) {
           //终点位置
-          let imgTwo = JSON.parse(localStorage.imgTwo);
+          let imgTop;
           this.$refs.ball.style.right = 0;
-          this.$refs.ball.style.top = imgTwo.top+'px';
+          if(this.targetEl.innerHTML=='预约看房'){
+            imgTop = JSON.parse(localStorage.imgOne).top;
+            this.$refs.ball.style.top = imgTop+'px';
+          }else{
+            imgTop = JSON.parse(localStorage.imgTwo).top;
+            this.$refs.ball.style.top = imgTop+'px';
+          }
 
           //起始位置
           let rect = this.targetEl.getBoundingClientRect(); 
           let x = -(window.innerWidth - rect.left-25);
-          let y = -(imgTwo.top-rect.top);
+          let y = -(imgTop-rect.top);
           if(y<=0) {
             /* y 轴 贝塞尔曲线*/
             this.$refs.ball.style.transition="all 0.6s cubic-bezier(0.49, -0.29, 0.75, 0.41)";

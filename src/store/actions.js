@@ -51,7 +51,7 @@ export default {
 	},
 	//清空待看列表
 	clearDaikan({commit}) {
-		this.state.appinthouse.forEach((item)=>{
+		this.state.appintList.forEach((item)=>{
 			axios.delete(API.URL.APPOINT_DELETE+item.id).then(response => {
 				commit('CLEARDAIKAN', item);
 			});
