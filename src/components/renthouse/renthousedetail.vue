@@ -496,16 +496,6 @@ export default {
       .mouseout(function(){
           $('#move,#bigImg').hide();
       })
-
-      // 下一页
-      $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
-        e.preventDefault();
-        if (oSwiper1.activeIndex == oSwiper1.slides.length - 1) {
-          oSwiper1.slideTo(0, 1000);
-          return;
-        }
-        oSwiper1.slideNext();
-      });
       // 下一页
       $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
         e.preventDefault();
