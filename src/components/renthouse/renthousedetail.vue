@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
- * @Last Modified by: 徐横峰
- * @Last Modified time: 2018-05-05 16:10:12
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-07-30 15:53:00
  */
 <template>
 	<div>
@@ -38,7 +38,7 @@
                   </div>
                 </div>
                  <div id="bigImg">
-                    <img :src="magnifyImg" alt="图片"  :onerror="null|imgonroorrOne"/>
+                    <img :src="magnifyImg" :onerror="null|imgonroorrOne"/>
                 </div>
               </div>
             </div>
@@ -506,12 +506,6 @@ export default {
         }
         oSwiper1.slideNext();
       });
-      // // 移入移出
-      // $('.view').mouseover(()=>{
-      //   $(".view .arrow-left,.view .arrow-right").show();
-      // }).mouseout(()=>{
-      //   $(".view .arrow-left,.view .arrow-right").hide();
-      // })
       // 下一页
       $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
         e.preventDefault();
@@ -872,6 +866,7 @@ export default {
 
 /*轮播切换*/
 .pc-slide {
+  position: relative;
   width: 714px;
   margin: 0 auto;
 }
@@ -879,10 +874,16 @@ export default {
   position: relative;
   width: 714px;
   height: 400px;
-  .swiper-container {
-    width: 100%;
-    height: 100%;
-  }
+}
+.view .swiper-container,
+.view .swiper-slide{
+  width: 100%;
+  height: 100%;
+}
+.view img{
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
 }
 .view .arrow-left,
 .view .arrow-right{
@@ -1001,8 +1002,8 @@ export default {
   display: none;
   overflow: hidden;
   position: absolute;
-   left: 1005px;
-  top: 275px;
+  left: 730px;
+  top: 0;
   width: 430px;
   height: 490px;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
@@ -1012,5 +1013,4 @@ export default {
 #bigImg img{
   height: 800px;
 }
-
 </style>

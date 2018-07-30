@@ -1,18 +1,14 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-07 18:13:41 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 19:29:47
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-07-30 16:15:23
  */
 <template>
 	<div>
-		<!-- <o-header :houseTypeId="houseTypeId" 
-					:keywordTypeId="keywordTypeId" 
-					:keyword="keyword"
-					@query="query"></o-header> -->
-					<o-header :houseTypeId="houseTypeId" 
-              :isShowQueryBox="false"
-              ></o-header>
+			<o-header :houseTypeId="houseTypeId" 
+					:isShowQueryBox="false"
+					></o-header>
 		<div class="title container">
 			<div class="tit fl">
 				<p>{{buildlistinfo.buildName }}</p>
@@ -784,6 +780,7 @@
 
 
 .pc-slide {
+	position: relative;
   width: 714px;
   margin: 0 auto;
 }
@@ -917,10 +914,10 @@
   display: none;
   overflow: hidden;
   position: absolute;
-  left: 1005px;
+ 	left: 730px;
   top: 275px;
   width: 430px;
-  height: 490px;
+  height: 0;
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
   z-index: 1000;
 }
