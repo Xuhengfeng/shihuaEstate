@@ -77,7 +77,7 @@
 						<ul>
 							<li :key="index" v-for="(item,index) in houseList">
 								<div class="image" @click="toSkip(item)">
-									<img :src="item.housePic|imgfilter" :onerror="null|imgonroorr" >
+									<img :src="item.housePic" :onerror="null|imgonroorr" >
 								</div>
 								<div class="direciton">
 									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}

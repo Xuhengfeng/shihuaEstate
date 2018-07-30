@@ -17,12 +17,11 @@
             <div class="one">
               <div class="pc-slide">
                 <div class="view image">
+                  <div id="move" style="left: 0; top: 0;"></div>
                   <div class="swiper-container">
-                    <i class="iconfont xhf-icon-left arrow-left"></i>
-                    <i class="iconfont xhf-icon-right arrow-right"></i>
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in sellrentdetail.housePicList">
-                          <img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
+                          <img :src="item" :onerror="null|imgonroorrOne">
                       </div>
                     </div>
                   </div>
@@ -32,11 +31,14 @@
                   <i class="iconfont xhf-icon-right arrow-right"></i>
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in sellrentdetail.housePicList">
-                          <img :src="item|imgfilter" :onerror="null|imgonroorr">
+                      <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in sellrentdetail.housePicList" @click="slideTo(item,index)">
+                          <img :src="item" :onerror="null|imgonroorr">
                       </div>
                     </div>
                   </div>
+                </div>
+                 <div id="bigImg">
+                    <img :src="magnifyImg" alt="图片"  :onerror="null|imgonroorrOne"/>
                 </div>
               </div>
             </div>
@@ -110,7 +112,7 @@
                 <div class="guanlianxiaoqu">
                     <div class="title">关联小区</div>
                     <div class="image fl" @click="toSkipone(bulidinfo)">
-                      <img :src="bulidinfo.housePic|imgfilter" :onerror="null|imgonroorr">
+                      <img :src="bulidinfo.housePic" :onerror="null|imgonroorr">
                     </div>
                     <div class="direciton">
                       <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}}</div>
@@ -245,6 +247,7 @@ export default {
       loginshow: null, //登陆注册阴影层
       rightnow: true, //登陆注册判断条件
       cancel: false, //取消登陆阴影
+      magnifyImg: null,//放大图片的路径
       sellrentdetail: {
         //租房详情
         broker: {
@@ -373,6 +376,7 @@ export default {
      toSkipone(bulidinfo) {
       this.$router.push({ path: "/estatedetail/" + bulidinfo.sdid});
     },
+    
     //租房房详情
     render() {
       let sdid = this.$route.params.id;
@@ -381,6 +385,7 @@ export default {
         .then(response => {
           this.sellrentdetail = response.data.data;
           this.buildsdid =  response.data.data.buildSdid;
+          this.magnifyImg = this.sellrentdetail.housePicList[0];
            this.sdid =  response.data.data.sdid;
           this.px = response.data.data.px;
           this.py = response.data.data.py;
@@ -430,16 +435,23 @@ export default {
               this.samehouserent = response.data.data;
             });
         });
-    }
+    },
+    slideTo(item,index) {
+      this.magnifyImg = item;
+      this.viewSwiper.slideTo(index);
+    },
   },
   mounted() {
     setTimeout(function() {
+
+      //实例1
       var viewSwiper = new Swiper(".view .swiper-container", {
         onSlideChangeStart: function() {
           updateNavPosition();
         }
       });
-
+      
+      // 上一页
       $(".view .arrow-left,.preview .arrow-left").on("click", function(e) {
         e.preventDefault();
         if (viewSwiper.activeIndex == 0) {
@@ -448,12 +460,59 @@ export default {
         }
         viewSwiper.slidePrev();
       });
-      // 移入移出
-      $('.view').mouseover(()=>{
-        $(".view .arrow-left,.view .arrow-right").show();
-      }).mouseout(()=>{
-        $(".view .arrow-left,.view .arrow-right").hide();
+       //放大镜
+      $('.view')
+      .mousemove(function(ent){
+          $('#move,#bigImg').show();
+          var e = ent||event;
+          //文档位置
+          var x = e.pageX;
+          var y = e.pageY;
+          //坐标原点对齐
+          x = x - $(this).offset().left;
+          y = y - $(this).offset().top;
+          //move的位置
+          x = x - $('#move').width()/2;
+          y = y - $('#move').height()/2;
+          //边界限制
+          var maxLeft = $(this).width()-$('#move').width();
+          var maxTop = $(this).height()-$('#move').height();
+          if(x<=0){
+              x = 0;
+          }else if(x>=maxLeft){
+              x = maxLeft;
+          }
+          if(y<=0){
+              y = 0;
+          }else if(y>=maxTop){
+              y = maxTop;
+          }
+          //移动的比例
+          var bLeft = x / maxLeft * ($('#bigImg img').width()-$('#bigImg').width());
+          var bTop =  y / maxTop * ($('#bigImg img').height()-$('#bigImg').height());
+          $('#move').css({'left': x, 'top': y});
+          $('#bigImg img').css({'marginLeft': -bLeft, 'marginTop': -bTop});
       })
+      .mouseout(function(){
+          $('#move,#bigImg').hide();
+      })
+
+      // 下一页
+      $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
+        e.preventDefault();
+        if (oSwiper1.activeIndex == oSwiper1.slides.length - 1) {
+          oSwiper1.slideTo(0, 1000);
+          return;
+        }
+        oSwiper1.slideNext();
+      });
+      // // 移入移出
+      // $('.view').mouseover(()=>{
+      //   $(".view .arrow-left,.view .arrow-right").show();
+      // }).mouseout(()=>{
+      //   $(".view .arrow-left,.view .arrow-right").hide();
+      // })
+      // 下一页
       $(".view .arrow-right,.preview .arrow-right").on("click", function(e) {
         e.preventDefault();
         if (viewSwiper.activeIndex == viewSwiper.slides.length - 1) {
@@ -462,7 +521,7 @@ export default {
         }
         viewSwiper.slideNext();
       });
-
+      // 实例2
       var previewSwiper = new Swiper(".preview .swiper-container", {
         //visibilityFullFit: true,
         slidesPerView: "auto",
@@ -906,8 +965,8 @@ export default {
     background-color: #fff;
     position: fixed;
     z-index: 999;
-    left: 50%;
-    top: 50%;
+     left: 78%;
+    top: 105%;
     margin-left: -190px;
     margin-top: -205px;
     -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
@@ -924,6 +983,34 @@ export default {
     top: 15px;
     padding: 4px;
     color: #000000;
+}
+
+/* 移动的盒子 */
+#move{
+  display: none;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  z-index: 1000;
+  background: rgba(0,174,102,0.4);
+  border: 1px solid rgba(5,113,68,0.4);
+  cursor: move;
+}
+/* 图片放大区域 */
+#bigImg{
+  display: none;
+  overflow: hidden;
+  position: absolute;
+   left: 1005px;
+  top: 275px;
+  width: 430px;
+  height: 490px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+/* 图片放大比例 */
+#bigImg img{
+  height: 800px;
 }
 
 </style>

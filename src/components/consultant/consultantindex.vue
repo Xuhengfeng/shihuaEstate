@@ -157,6 +157,7 @@
     border-bottom: 1px dashed #e1e1e1;
 }
 .h-box .fl {
+    cursor: pointer;
     width:680px;
     line-height: 25px;
 }
@@ -192,6 +193,7 @@
  .h-box>ul>li>.bittel {
     color: #555;
     font-size: 14px;
+    cursor: pointer;
     display: inline-block;
     margin-left: 15px;
 }
@@ -286,6 +288,7 @@
 }
 .call{
     display: inline-block;
+    cursor: pointer;
     width: 116px;
     height: 46px;
     line-height: 46px;

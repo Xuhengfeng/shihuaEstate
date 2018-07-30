@@ -21,7 +21,7 @@
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide " v-for="item in housedetail.housePicList">
-                          <img :src="item|imgfilterone" :onerror="null|imgonroorrOne">
+                          <img :src="item" :onerror="null|imgonroorrOne">
                       </div>
                     </div>
                   </div>
@@ -32,13 +32,13 @@
                   <div class="swiper-container">
                     <div class="swiper-wrapper">
                       <div class="swiper-slide swiperimg" :class=" index==0?'active-nav': '' " v-for="(item,index) in housedetail.housePicList" @click="slideTo(item,index)">
-                          <img :src="item|imgfilter" :onerror="null|imgonroorr">
+                          <img :src="item" :onerror="null|imgonroorr">
                       </div>
                     </div>
                   </div>
                 </div>
                 <div id="bigImg">
-                    <img :src="magnifyImg" alt="图片"/>
+                    <img :src="magnifyImg" alt="图片"  :onerror="null|imgonroorrOne"/>
                 </div>
               </div>
             </div>
@@ -115,7 +115,7 @@
                 <div class="guanlianxiaoqu">
                     <div class="title">关联小区</div>
                     <div class="image fl" @click="toSkipone(bulidinfo)">
-                      <img :src="bulidinfo.housePic|imgfilter" :onerror="null|imgonroorr">
+                      <img :src="bulidinfo.housePic" :onerror="null|imgonroorr">
                     </div>
                     <div class="direciton">
                       <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;">{{bulidinfo.buildName}} <span class="fr" style="font-size: 16px;color: "></span></div>
@@ -133,7 +133,7 @@
                     <ul>
                       <li v-for="item in samehouseused">
                         <div class="image fl" @click="toSkip(item)">
-                          <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"  />
+                          <img :src="item.housePic" :onerror="null|imgonroorr"  />
                         </div>
                        
                         <div class="direciton">
@@ -155,7 +155,7 @@
                   <ul>
                     <li v-for="item in rimhousing">
                       <div class="image fl"  @click="toSkip(item)">
-                        <img :src="item.housePic|imgfilter" :onerror="null|imgonroorr"/>
+                        <img :src="item.housePic" :onerror="null|imgonroorr"/>
                       </div>
                       <div class="direciton">
                         <div style="font-size: 22px;color: rgba(0,0,0,0.85);font-weight: bold;" @click="toSkip(item)">{{item.houseTitle }}  <!-- <span class="fr" @click.stop="collection($event)" style="font-size: 16px;color: ">收藏</span> --></div>
@@ -220,7 +220,7 @@
                   </div>
                   <div class="callpeople" @click="startChat()">联系经纪人</div>
                   <div class="peopleintrode">
-                      <div class="fl"><img :src="housedetail.broker.photo"></div>
+                      <div class="fl"><img :src="housedetail.broker.photo" :onerror="null|imgfilter"  ></div>
                       <ul>
                         <li class="broker">{{housedetail.broker.emplName}}</li>
                         <li class="telphone">{{housedetail.broker.phone}}</li>
@@ -896,10 +896,10 @@ export default {
             font-weight: bold;
             font-size: 18px;
             div{
-              width: 72px;
-              height: 80px;
+               width: 90px;
+               height: 87px;
               margin-right: 10px;
-              img{width: 100%;height:100%}
+              img{width: 100%;height:100%;border-radius:50%;}
             }
             ul li{line-height: 28px}
             .telphone{color: red}
@@ -1012,9 +1012,9 @@ export default {
 .panel_login{
     background-color: #fff;
     position: fixed;
-    z-index: 999;
-    left: 50%;
-    top: 50%;
+    z-index: 9999999999999;
+    left: 78%;
+    top: 105%;
     margin-left: -190px;
     margin-top: -205px;
     -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
