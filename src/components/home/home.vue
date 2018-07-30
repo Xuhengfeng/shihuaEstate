@@ -198,17 +198,17 @@
 				<div class="goods-hd">
 					<span class="twohandhouse">新盘推荐</span>
 					<span class="foryouselect">新起点</span>
-					<span class="morehouse fr"><router-link tag="li" to="">更多好房</router-link></span>
+					<!-- <span class="morehouse fr"><router-link tag="li" to="">更多好房</router-link></span> -->
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in [1,1,1]">
+						<li v-for="item in newHouselist" @click="newsHousestip(item)">
 							<div class="image">
-								<img src="../../imgs/home/xiaoqu.png" />
+								<img :src="item.imageUrl" />
 							</div>
 							<div class="description">
-								<p>梵谷水郡两居室, 满五唯一</p>
-								<p>梵谷水郡 两室一厅 100平米</p>
+								<p>{{item.title}}</p>
+								<p style="line-height: 25px;">{{item.summary}}</p>
 							</div>
 						</li>
 					</ul>
@@ -220,17 +220,16 @@
 				<div class="goods-hd">
 					<span class="twohandhouse">行业资讯</span>
 					<span class="foryouselect">了解更多房产知识</span>
-					<span class="morehouse fr"><router-link tag="li" to="">更多房产知识</router-link></span>
+					<span class="morehouse fr"><router-link tag="li" to="/buyhouseguide">更多房产知识</router-link></span>
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in [1,1,1]">
+						<li v-for="item in hotHouselist" @click="newsHousestip(item)">
 							<div class="image">
-								<img src="../../imgs/home/goufang.png" />
+								<img :src="item.imageUrl" />
 							</div>
 							<div class="description">
-								<p>梵谷水郡两居室, 满五唯一</p>
-								<p>梵谷水郡 两室一厅 100平米</p>
+								<p>{{item.title}}</p>
 							</div>
 						</li>
 					</ul>
@@ -277,6 +276,8 @@
 				rentHouseRecmdlist:[],  //时尚租房
 				hotBuilding:[],    //热门小区
 				newbuildindex:[],//首页新房
+				newHouselist:"",//新房推荐
+				hotHouselist:"",//热门推荐
 				houseUsed:"",  //房源统计
 				houseTypeId: 11,
 				searchinput:'',//搜索关键词
@@ -473,6 +474,20 @@
 				.then((response)=>{
 					this.rentHouseRecmdlist = response.data.data
 				})
+				//新盘推荐
+				this.$http.get(this.$url.URL.INFOQUERY + "1002")
+				.then((response)=>{
+					this.newHouselist = response.data.data
+				})
+				//热门推荐
+				this.$http.get(this.$url.URL.INFOQUERY + "1001")
+				.then((response)=>{
+					this.hotHouselist = response.data.data
+				})
+			},
+			//新盘跳转
+			newsHousestip(item){
+					window.open(item.contentUrl,"_blank")
 			},
 			//登陆
 			login() {
