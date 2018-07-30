@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-04 14:34:35 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 16:41:38
+ * @Last Modified time: 2018-07-30 15:49:36
  */
 <template>
 	<div>
@@ -522,8 +522,8 @@ export default {
           x = x - $('#move').width()/2;
           y = y - $('#move').height()/2;
           //边界限制
-          var maxLeft = $(this).width()-$('#move').width();
-          var maxTop = $(this).height()-$('#move').height();
+          var maxLeft = $(this).width()-$('#move').width()-2;
+          var maxTop = $(this).height()-$('#move').height()-2;
           if(x<=0){
               x = 0;
           }else if(x>=maxLeft){
@@ -920,7 +920,6 @@ export default {
   position: relative;
   width: 714px;
   height: 400px;
-  
 }
 .view .swiper-container,
 .view .swiper-slide{
@@ -930,6 +929,7 @@ export default {
 .view img{
   width: 100%;
   height: 100%;
+  vertical-align: top;
 }
 .view .arrow-left,
 .view .arrow-right{
