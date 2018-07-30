@@ -41,7 +41,7 @@
 							</div>
 						</div>
 							 <div id="bigImg">
-                    <img :src="magnifyImg" alt="图片"/>
+                    <img :src="magnifyImg" alt="图片"  :onerror="null|imgonroorrOne"/>
                </div>
 							<div class="headtitle">小区位置</div>
 									<div class="map">
@@ -882,8 +882,8 @@
     background-color: #fff;
     position: fixed;
     z-index: 999;
-    left: 50%;
-    top: 50%;
+   left: 78%;
+    top: 105%;
     margin-left: -190px;
     margin-top: -205px;
     -webkit-box-shadow: 1px 3px 14px rgba(0, 0, 0, 0.3);
