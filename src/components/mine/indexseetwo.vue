@@ -2,32 +2,25 @@
  * @Author: 徐横峰 
  * @Date: 2018-05-19 13:32:30 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-07 17:34:50
+ * @Last Modified time: 2018-07-30 15:16:35
  * @description: 待看日程
  */
 <template>
     <div>
-        <div v-for="(item,index) in readyList" :key="index">
+        <div :key="index" v-for="(item,index) in appointList">
             <!-- 一个列表项 -->
             <div class="header">
                 <div class="description">
                     <div>
                         <span class="time">{{item.appointDate1}}</span> 
                         <span class="day">{{item.appointDate2}}</span>
-                        <div class="status">
-                            <!-- <span v-for="(item,index) in spanList" 
-                                    :key="index"
-                                    :class="index==num?'spanBgColor':''"
-                                    @click="selectItem(index)">{{item}}</span> -->
-                            <span>{{item.status}}</span>
-                        </div>
+                        <div class="status"><span>{{item.status}}</span></div>
                     </div>
                     <div>约看{{item.houseNum}}套房</div>
-                    <div class="" v-if="item.status=='已取消'||item.status=='已预约'?false:true" ><el-button type="danger"   @click="open(item)">取消预约</el-button></div>
-                     <!-- <div class="" v-if="!cancel" ><el-button type="danger"  @click="open(item)"></el-button></div> -->
+                    <div class="" v-if="item.status=='已取消'||item.status=='已预约'?false:true" ><el-button type="danger" @click="open(item)">取消预约</el-button></div>
                 </div>
-                <div class="broker">
-                    <div class="image"><img :src="item.broker.photo"></div>
+                <div class="broker" v-if="item.broker">
+                    <div class="image"><img :src="item.broker.photo" :onerror="null|onerrorImg"></div>
                     <div>
                         <p><span>{{item.broker.emplName}}</span>{{item.broker.positionName}}</p>
                         <p>{{item.broker.phone}}</p>
@@ -52,9 +45,8 @@ export default {
     data() {
         return {
             numbol:false,
-            // spanList: ['确认中','预约成功','已取消'],//状态
             isShowNum:5,//默认第一个
-            readyList: [],//约看日程
+            appointList: [],//约看日程
             num: 0,//按钮
             cancelCause:"", //取消原因
             selectCity: JSON.parse(localStorage.selectCity),//当前城市
@@ -62,7 +54,7 @@ export default {
         };
     },
     created() {
-        this.readyListRequest();
+        this.appointListRequest();
     },
     methods:{
         //自定义事件 去选房
@@ -72,39 +64,36 @@ export default {
         selectItem(index){
             this.num=index;
         },
-        readyListRequest() {
-            let city = JSON.parse(localStorage.selectCity).value;
+        appointListRequest() {
             this.$http
-            .get(this.$url.URL.APPOINT_READYLIST+"?pageNo="+1+"&scity="+city)
+            .get(this.$url.URL.APPOINT_READYLIST+"?pageNo=1&scity="+JSON.parse(localStorage.selectCity).value)
             .then(response => {
-                let data = response.data.data;
-                data.forEach(item => {
+                let newData = response.data.data;
+                newData.forEach(item => {
                     //修正时间格式形如2018.01.01
                     item.appointDate1 = item.appointDate.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
                     item.appointDate2 = item.appointDate.split(' ')[1];
-                     switch(item.status){
+                    item.houseList.forEach(item2=>item2.houseTag = item2.houseTag.split(','));
+                    switch(item.status){
                         case 0:item.status = '确认中'; break;
                         case 1:item.status = '预约成功';break;
                         case 2: item.status = '已取消';break;
                     }
                 });
-                this.readyList = response.data.data;
-                this.readyList.length==0? this.numbol=true : this.numbol=false;
+                this.appointList = newData;
+                this.appointList.length == 0? this.numbol=true : this.numbol=false;
             });
         },
         open(item) {
             this.$prompt('请输入你取消的内容', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                // inputPattern: /^[\s\S]*.*[^\s][\s\S]*$/,
                 inputErrorMessage: '内容不能为空!'
             }).then(({ value }) => {
                 this.cancelcause(item,value);
             });
         },
         cancelcause(item,value) {
-            console.log(1121)
-            console.log(this)
             this.$http
             .post(this.$url.URL.APPOINT_CANCEL,{
                 scity:this.selectCity,

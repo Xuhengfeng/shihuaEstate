@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div v-show="order">
+        <div v-if="order">
             <ul>
                 <li v-for="item in houseList"  >
-                    <input class="inpt" type="checkbox" v-model="item.checked" @click="check(item)"/>
+                    <input class="inpt" type="checkbox" v-model="item.checked"/>
                     <div class="image">
                         <img :src="item.housePic"/>
                     </div>
@@ -24,13 +24,13 @@
                     </div>
                 </li>
              </ul>
-           <div class="orderdiv" v-show="houseList.length">
+           <div class="orderdiv advantage" v-show="houseList.length">
                <el-checkbox v-model="allChecked">全选</el-checkbox><span style="margin-left:10px;font-size:14px" @click="del()">删除</span>
-               <button class="btn" @click="btn()">预约看房时间</button>
+               <button class="btn" @click="appointHouse()">预约看房时间</button>
          </div> 
         </div>
 
-        <div v-show="!order">
+        <div v-else>
             <div class="book-time">
                 <div class="desc">个人信息</div>
                 <div class="mesg">
@@ -68,7 +68,7 @@
                 <li v-for="item in brokerLists" @click="selectBroker(item)">
                     <div>
                         <div class="image">
-                            <img :src="item.photo">
+                            <img :src="item.photo" :onerror="null|onerrorImg">
                         </div>      
                         <div class="content">
                             <div class="one">
@@ -96,14 +96,14 @@
             </ul>
 
             <!--分页器-->
-            <el-pagination class="pagination"
-                @current-change="handleCurrentChange"
-                background
-                layout="prev,pager, next"
-                prev-text="上一页"
-                next-text="下一页"
-                :total="1000">
-            </el-pagination>
+            <el-pagination class="oPagination"
+                  @current-change="handleCurrentChange"
+                  background
+                  layout="prev, pager, next"
+                  prev-text="上一页"
+                  next-text="下一页"
+                  :total="1000">
+              </el-pagination>
         </div>
 
         <!-- 空页面 -->
@@ -126,6 +126,7 @@ export default {
             username: "", //姓名
             datelist:[],
             houseList: [],//待看房源列表
+            selectItem: [],//选中的待看房源
             id:"",
             brokerFlag: false, //经纪人
             brokerLists: [], //经纪人列表
@@ -137,10 +138,9 @@ export default {
             rangetime:"",
             appointDate:"",    //预约时间
             order:true,    //点击预约显示
-            allChecked: false,
-            houseSdid:"",   //房源sdid
+            allChecked: false,//全选
             num:null,//高亮
-            fontcolor:null//高亮
+            fontcolor:null,//高亮
         };
     },
     created() {
@@ -148,7 +148,14 @@ export default {
         this.brokerListRequest(1);
         this.week()
     },
+    computed: {
+        //待看房源列表
+        appintList() {
+            return this.$store.state.appintList;
+        }
+    },
     watch: {
+        //全选
         allChecked() {
             if(this.allChecked) {
                 this.houseList.forEach(item=>{
@@ -159,6 +166,11 @@ export default {
                     item.checked = false
                 })
             }
+        },
+        //待看房源列表
+        appintList() {
+            this.readyHouseListRequest();
+            this.order = true;
         }
     },
     methods:{
@@ -179,7 +191,6 @@ export default {
                         arr.push(this.format(time));
                     }
                     this.datelist = arr;
-                    // console.log(arr)
                 });
         },
         format(time) {
@@ -205,19 +216,6 @@ export default {
                 d: D,
                 all:Y+"-"+M +"-"+num
             };            
-        },
-        //删除待看房源
-        del() {
-            this.houseList.forEach(item=>{
-                if(item.checked==true){
-                    this.$http
-                       .delete(this.$url.URL.APPOINT_DELETE+  item.id)
-                       .then(response => {
-                        //    location.reload()
-                           this.$router.go(0);
-                       });
-                }
-            })
         },
         //待看房源请求
         readyHouseListRequest() {
@@ -252,21 +250,33 @@ export default {
         toggleBroker() {
            this.brokerFlag = !this.brokerFlag;
         },
+        //点击预约看房时间按钮
+        appointHouse() {
+            this.houseList.forEach(item=>{
+                //判断有选中的情况下
+                if(item.checked == true){
+                    this.order = false;
+                    this.selectItem.push({
+                        scity: item.houseScity,
+                        sdid: item.houseSdid
+                    })
+                }
+                //判断没有选中
+                else{
+                    return this.$alert('至少选中一个房源');
+                }
+            })
+        },
+        //提交预约看房
         commitRequest() {
             let scity = this.cityCode ? this.cityCode : this.currentCity.value;
-         
             let params = {
                 appointDate: this.appointDate, //预约时间
                 appointMobile: this.mobile, //手机号
                 appointName: this.username, //姓名
                 appointRange:this.rangetime ,//预约时段类型
                 brokerId: this.brokerId,      //经纪人id 
-                houseList: [      // 约看房源列表，必填
-                    {
-                    scity: scity,  //城市编码
-                    sdid: this.houseSdid       //房源sdid
-                    }
-                 ]
+                houseList: this.selectItem
               };
               if (
                 scity == "" ||
@@ -278,7 +288,11 @@ export default {
                 this.$alert("信息不能为空!");
             }else {
                 this.$http.post(this.$url.URL.APPOINT_HOUSE, params).then(response => {
-                console.log(response.data.data);
+                    if(response.data.status==1){
+                        this.$alert("提交成功");
+                        this.readyHouseListRequest();
+                        this.order = true;
+                    }
                 });
             }
         },
@@ -334,14 +348,7 @@ export default {
                 this.rangetime = "NIGHT"
                  
              }
-        },
-        btn() {
-            this.order = false
-        },
-        check(item){
-           this.houseSdid = item.houseSdid
-                
-        },
+        }
     },
     components: {
         oHouseList,
@@ -417,7 +424,7 @@ ul > li {
       color: #000000;
     }
     .totalPrice {
-      color: red;
+      color: #fe0000;
       font-size: 14px;
       margin-bottom: 30px;
       span {
@@ -446,7 +453,7 @@ ul > li {
     width: 150px;
     height: 40px;
     text-align: center;
-    background: red;
+    background: #fe0000;
     color: white;
 }
 dl, dt, dd, ul, ol, li {
@@ -483,16 +490,16 @@ dl, dt, dd, ul, ol, li {
     text-align: center;
 }
 .book-time .date-picker .dates .date.selected {
-    border: 1px solid red;
+    border: 1px solid #fe0000;
 }
  .book-time .time-picker {
     margin-left: 25px;
     margin-top: 30px;
 }
 .book-time .time-picker>span.selected {
-    background: red;
+    background: #fe0000;
     color: #fff;
-    border-color:red;
+    border-color:#fe0000;
 }
 .book-time .time-picker>span {
     width: 11%;
@@ -535,7 +542,7 @@ dl, dt, dd, ul, ol, li {
     line-height: 50px;
     font-size: 20px;
     color: #ffffff;
-    background: red;
+    background: #fe0000;
   }
   ul{
     max-height: 530px;
@@ -555,7 +562,7 @@ dl, dt, dd, ul, ol, li {
           width: 90px;
           height: 90px;
           border-radius: 50%;
-          background: red;
+          background: #f5f5f5;
           position: absolute;
           top: 20px;
           left: 20px;
@@ -646,19 +653,22 @@ dl, dt, dd, ul, ol, li {
     margin-right: 225px;
     margin-top: 30px;
   button{
+    cursor: pointer;
     display: block;
     width: 280px;
     height: 40px;
     line-height: 40px;
-    background: red;
+    background: #fe0000;
     border: 0;
     margin: 0 auto;
     font-size: 18px;
     color: #ffffff;
+    outline: none;
   }
 }
 .bgColor{
-	background: red!important;
+    background: #fe0000!important;
+    border-color: #fe0000!important;
 	color: #ffffff;
 }
 .close {
@@ -674,8 +684,7 @@ dl, dt, dd, ul, ol, li {
     background: #535353;
     border-radius: 15px;
 }
-// .bgColor{
-// 	background: red!important;
-// 	color: #ffffff;
-// }
+.oPagination{
+    text-align: center;
+}
 </style>
