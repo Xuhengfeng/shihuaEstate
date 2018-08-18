@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 16:29:11
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-19 00:08:57
  */
 import router from '../router/index'
 //同步处理
@@ -192,9 +192,5 @@ export default {
 	//修改topbar样式
 	WORDCOLOR(state, payload){
 		state.wordcolor = payload;
-	},
-	//修改topbar样式
-	// NUM(state, payload){
-	// 	state.num = payload;
-	// }
+	}
 }

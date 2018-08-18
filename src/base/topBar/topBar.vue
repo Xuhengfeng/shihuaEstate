@@ -59,12 +59,9 @@
                 <router-link tag="li" to="/home">首页</router-link>
             </ul>
         </div>
-        <!-- 对话框 登录 注册 修改密码  -->
-		<o-dialog ref="odialog" :showbox="showbox" @changeDialog="changeDialog"></o-dialog>	
     </div>
 </template>
 <script>
-import oDialog from "../../base/dialog/dialog";
 export default {
     data() {
 		return {
@@ -81,34 +78,22 @@ export default {
         },
         wordColor() {
             return this.$store.state.wordcolor;
-        },
-    },
-	methods: {
-		changeDialog(num) {//显示对应的对话框
-			this.showbox = num; 
-		},
-		login() {//登陆
-			this.showbox = 1; 
-			this.$refs.odialog.show();
-		},
-		register() {//注册
-			this.showbox = 2;
-			this.$refs.odialog.show();
-        },
-        logout() {//退出
-            this.$store.dispatch('logout');
         }
     },
-    mounted() {
-        // $('.two>li').click(function() {
-        //     console.log(this)
-        // $(this).addClass('fontColor').siblings().removeClass('fontColor');
-        // })
-    },
-    components: {
-        oDialog
+	methods: {
+		//登陆
+        login() {
+            this.$store.commit('OPENLOGINDIALOG', 1);
+        },
+        //注册
+        register() {
+            this.$store.commit('OPENLOGINDIALOG', 2);			
+        },
+        //退出
+        logout() {
+            this.$store.dispatch('logout');
+        },
     }
-  
 }
 </script>
 <style lang="less" scoped>

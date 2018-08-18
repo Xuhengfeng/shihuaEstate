@@ -1,40 +1,25 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-28 15:33:53
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-19 01:28:37
  */
 <template>
   <div id="app">
-    <!-- 头部start -->
-    <div v-if="isShowTop == 1">
-			<o-top-bar></o-top-bar>
-		</div>
-    <!-- 头部end -->
-    
-    <!-- 侧边栏start -->
-    <div v-if="isShowSide == 1">
-      <o-side-bar></o-side-bar>
-    </div>
-    <!-- 侧边栏end -->
-
+    <!-- 头部 -->
+		<o-top-bar v-if="isShowTop == 1"></o-top-bar>
+    <!-- 侧边栏 -->
+    <o-side-bar v-if="isShowSide == 1"></o-side-bar>
    	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
     		<router-view v-if="$route.meta.keepAlive"></router-view>
 		</keep-alive>
-
 		<!-- 设置不缓存的页面 -->
 		<router-view v-if="!$route.meta.keepAlive"></router-view>
-
-    <!-- 脚步start -->
-		<div v-if="isShowFooter == 1">
-			<o-footer></o-footer>
-		</div>
-    <!-- 脚步end -->
-
+    <!-- 脚步 -->
+    <o-footer v-if="isShowFooter == 1"></o-footer>
     <!-- 聊天 -->
-    <o-we-chat ref="oChat" @afresh="afresh"></o-we-chat>
-
+    <!-- <o-we-chat ref="oChat" @afresh="afresh"></o-we-chat> -->
     <!-- 对话框 登录 注册 修改密码  -->
 		<o-dialog ref="odialog" :showbox="loginDialogNum"></o-dialog>	
   </div>
@@ -89,10 +74,7 @@ export default {
     //是否登录
     isLogin() {
       return this.$store.state.logined;
-    },
-    	// num() {
-      //       return this.$store.state.wordcolor;
-  	  // },
+    }
   },
   watch: {
     //打开登录 注册对话框
@@ -103,87 +85,44 @@ export default {
         this.$refs.odialog.show();
       }
     },
-    //监听路由路径
+    //监听路由
     $route(to, from) {
-      let path = to.path;
-      // console.log(path)
-      if(path == "/residence"){
-        this.$store.commit('WORDCOLOR',1);
+      let pathTo = to.path;//目的
+      let pathForm = from.path;//来源
+      switch(pathTo){
+        case '/mapSearch':
+          var a=0,b=0,c=0;
+          this.layout(a,b,c);
+        break;
+        case '/':
+        case '/home':
+          var a=0,b=1,c=1;
+          this.layout(a,b,c);
+        break;
+        default: 
+          var a=1,b=1,c=1;
+          this.layout(a,b,c);
       }
-      if(path == "/forginwork"){
-        this.$store.commit('WORDCOLOR',2);
-      }
-      if(path == "/shoper"){
-        this.$store.commit('WORDCOLOR',3);
-      }
-      if(path == "/broker"){
-        this.$store.commit('WORDCOLOR',4);
-      }
-      if(path == "/entrustmentrent/rent"){
-        this.$store.commit('WORDCOLOR',5);
-      }
-       if(path == "/rentHouse"){
-        this.$store.commit('WORDCOLOR',6);
-      }
-      if(path == "/newHouse"){
-        this.$store.commit('WORDCOLOR',7);
-      }
-      if(path == "/buyHouse"){
-        this.$store.commit('WORDCOLOR',8);
-      }
-      if(path == "/houseestate"){
-        this.$store.commit('WORDCOLOR','a');
-      }
-      if(path == "/agencyBusiness"){
-        this.$store.commit('WORDCOLOR','b');
-      }
-
-      if(path == "/convenienceservices"){
-          this.$store.commit('WORDCOLOR','c');
-       }
-
-      if(path == "/housetuoguan"){
-         this.$store.commit('WORDCOLOR','d');
-        }
-
-      if(path == "/decoration"){
-          this.$store.commit('WORDCOLOR','e');
-        }
-
-      if(path == "/publicgood"){
-         this.$store.commit('WORDCOLOR','f');
-        }
-        if(path == "/consultant"){
-         this.$store.commit('WORDCOLOR','g');
-        }
-
-        if(path == "/buyhouseguide"){
-         this.$store.commit('WORDCOLOR','h');
-        }
-
-        if(path == "/industryconsultation"){
-         this.$store.commit('WORDCOLOR','j');
-        }
-         if(path == "/entrustmentrent/rent"){
-         this.$store.commit('WORDCOLOR','i');
-        }
-         if(path == "/entrustmentrent/sell"){
-         this.$store.commit('WORDCOLOR','k');
-        }
-      if (path == "/mapSearch") {
-        this.isShowTop = 0;
-        this.isShowFooter = 0;
-        this.isShowSide = 0;
-      } 
-      else if(path == "/home"||path == "/"){
-        this.isShowTop = 0;
-        this.isShowSide = 1;   
-        this.isShowFooter = 1;
-      } 
-      else {
-        this.isShowTop = 1;     
-        this.isShowSide = 1;   
-        this.isShowFooter = 1;
+      switch(pathForm){
+        case '/residence':this.$store.commit('WORDCOLOR',1);break;
+        case '/forginwork':this.$store.commit('WORDCOLOR',2);break;
+        case '/shoper':this.$store.commit('WORDCOLOR',3);break;
+        case '/broker': this.$store.commit('WORDCOLOR',4);break;
+        case '/entrustmentrent/rent': this.$store.commit('WORDCOLOR',5);break;
+        case '/rentHouse':this.$store.commit('WORDCOLOR',6);break;
+        case '/newHouse':this.$store.commit('WORDCOLOR',7);break;
+        case '/buyHouse': this.$store.commit('WORDCOLOR',8);break;
+        case '/houseestate': this.$store.commit('WORDCOLOR','a');break;
+        case '/agencyBusines': this.$store.commit('WORDCOLOR','b');break;
+        case '/convenienceservices': this.$store.commit('WORDCOLOR','c');break;
+        case '/housetuoguan': this.$store.commit('WORDCOLOR','d');break;
+        case '/decoration': this.$store.commit('WORDCOLOR','e');break;
+        case '/publicgood': this.$store.commit('WORDCOLOR','f');break;
+        case '/consultant': this.$store.commit('WORDCOLOR','g');break;
+        case '/buyhouseguide': this.$store.commit('WORDCOLOR','h');break;
+        case '/industryconsultation': this.$store.commit('WORDCOLOR','j');break;
+        case '/entrustmentrent/rent': this.$store.commit('WORDCOLOR','i');break;
+        case '/entrustmentrent/sell': this.$store.commit('WORDCOLOR','k');break;
       }
     },
     //是否登录
@@ -192,6 +131,11 @@ export default {
     }
   },
   methods:{
+    layout(a,b,c) {
+      this.isShowTop = a;     
+      this.isShowSide = b;   
+      this.isShowFooter = c;
+    },
     //聊天掉线重新用户登录 
     afresh() {
       this.$store.dispatch('getUserInfo');

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-30 23:32:56 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-29 00:30:59
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-06 00:19:28
  */
 //重新封装axios
 import Vue from 'vue'
