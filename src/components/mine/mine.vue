@@ -54,13 +54,9 @@ export default {
     userInfo() {
       return this.$store.state.LoginedUser;
     }
-    // 	num() {
-    //         return this.$store.state.wordcolor;
-    //   },
   },
   created() {
   	let path = this.$route.path;
-  	console.log(path)
   	if(path=="/mine/indexseeone" ){
   		this.num=1
     }

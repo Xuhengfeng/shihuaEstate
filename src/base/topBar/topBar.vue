@@ -23,16 +23,16 @@
                         <router-link tag="li" to="/mine/indexseeone">预约看房</router-link>
                         <router-link tag="li" to="/mine/indexcollection">我的收藏</router-link>
                         <router-link tag="li" to="/mine/indexdelegation">我的委托</router-link>
-                         <router-link tag="li" to="/mine/indexmessage">消息</router-link>
+                        <router-link tag="li" to="/mine/indexmessage">消息</router-link>
                     </ul>
                 </div>
                 <div>热线电话0779-3837272</div>
             </div>
 
             <ul class="two fl">
-                <router-link tag="li" to="">更多
+                <li>更多
                     <ol class="item2">
-                        <router-link tag="li" to="/houseestate" :class="wordColor=='a'?'bgColor':''">小区找房</router-link>
+                        <li><a href="http://www.baidu.com" :class="wordColor=='a'?'bgColor':''">小区找房</a></li>
                         <router-link tag="li" to="/agencyBusiness" :class="wordColor=='b'?'bgColor':''">代办业务</router-link>
                         <router-link tag="li" to="/convenienceservices" :class="wordColor=='c'?'bgColor':''">便民服务</router-link>
                         <router-link tag="li" to="/housetuoguan" :class="wordColor=='d'?'bgColor':''">房屋托管</router-link>
@@ -42,7 +42,7 @@
                         <router-link tag="li" to="/buyhouseguide" :class="wordColor=='h'?'bgColor':''">购房指南</router-link>
                         <router-link tag="li" to="/industryconsultation" :class="wordColor=='j'?'bgColor':''">行业资讯</router-link>
                     </ol>
-                </router-link>
+                </li>
                 <router-link tag="li" to="/residence" :class="wordColor==1?'bgColor':''">旅居投资</router-link>
                 <router-link tag="li" to="/forginwork" :class="wordColor==2?'bgColor':''">海外置业</router-link>
                 <router-link tag="li" to="/shoper" :class="wordColor==3?'bgColor':''">找门店</router-link>
@@ -53,10 +53,10 @@
 						<router-link tag="li" to="/entrustmentrent/sell" :class="wordColor=='k'?'bgColor':''">我要出售</router-link>
                     </ol>
                 </router-link>
-                <router-link tag="li" to="/rentHouse" :class="wordColor==6?'bgColor':''">租房</router-link>
+                <li><a href="http://www.baidu.com" :class="wordColor==6?'bgColor':''">租房</a></li>
                 <router-link tag="li" to="/newHouse" :class="wordColor==7?'bgColor':''">新房</router-link>
-                <router-link tag="li" to="/buyHouse"  :class="wordColor==8?'bgColor':''">二手房</router-link>
-                <router-link tag="li" to="/home">首页</router-link>
+                <li><a href="http://www.baidu.com" :class="wordColor==8?'bgColor':''">二手房</a></li>
+                <li><a href="http://www.baidu.com">首页</a></li>
             </ul>
         </div>
     </div>
@@ -92,7 +92,7 @@ export default {
         //退出
         logout() {
             this.$store.dispatch('logout');
-        },
+        }
     }
 }
 </script>
@@ -210,9 +210,4 @@ export default {
 .bgColor{
    color: #ff4343!important;
 }
-// .bgColor1{
-//     background: #ff4343;
-// }
-
-
 </style>

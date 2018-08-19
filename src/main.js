@@ -16,13 +16,13 @@ Vue.component('icon', Icon)
 //全局配置过滤器
 import vfilter from "./common/js/vfilter.js"
 for (let key in vfilter) {
-Vue.filter(key, vfilter[key])
+    Vue.filter(key, vfilter[key])
 }
 //url路径
 import URL from './common/js/url.js'
 Vue.prototype.$url = URL;
+Vue.config.productionTip = false;
 
-Vue.config.productionTip = false
 /**       
 * 对Date的扩展，将 Date 转化为指定格式的String       
 * 月(M)、日(d)、12小时(h)、24小时(H)、分(m)、秒(s)、周(E)、季度(q) 可以用 1-2 个占位符       
@@ -67,6 +67,16 @@ Date.prototype.$format = function(fmt) {
     }         
     return fmt;       
 };
+//解析url
+Vue.prototype.$parseURL = function(url) {
+    var urlStr=url.split("?")[1].split("&");
+    var urlparams = {};
+    for( let i=0;i<urlStr.length;i++){
+        var item = urlStr[i].split("=")
+        urlparams[item[0]]=item[1]
+    }
+    return urlparams;
+}
 
 /* eslint-disable no-new */
 new Vue({

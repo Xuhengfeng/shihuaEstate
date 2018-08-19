@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-07-01 17:51:36
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-19 23:43:49
  */
 <template>
     <!-- 地图找房 -->
@@ -47,7 +47,7 @@
                     </ul>
                 </div>
             </div>    
-            <div class="header-bd">
+            <!-- <div class="header-bd">
                 <div class="search-bar fl">
                     <input v-model="inputKeyword" type="span" placeholder="输入小区或地铁附站开始找房">
                     <img src="../../imgs/home/search.png" style="width:15px;height:15px;" @click="searchHouse()">
@@ -79,7 +79,6 @@
                     </li>
                 </ul>
                 <ul class="tools fr">
-                   <!-- 学校找房 和商圈找房   -->
                     <li v-if="metroNum == 1">
                         <i class="iconfont icon-location"></i>地铁找房                        
                     </li>
@@ -94,39 +93,35 @@
                         <i class="iconfont icon-location"></i>退出画圈找房                      
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div> 
         <div id="map">
          
         </div>
         <!-- 房源列表 -->
-        <div class="side" ref="side">
+        <div class="side" :class="{'activeSide': isShowSide}">
             <div class="agent-info">
               <div class="title">{{agentInfo.buildname}}</div>
-              <div class="content">
+              <div class="content" v-show="flagPrice">
                   <span class="big">{{agentInfo.avgprice}}元/平</span>
                   <span>参考均价</span>
               </div>
             </div>
             <div class="r-content">
-              <div class="houselist-top" v-if="num==0">本小区在售<span>{{agentInfo.formatsalecount}}</span>套房源</div>
-              <div class="houselist-top" v-else>本小区在租<span>{{agentInfo.formatsalecount}}</span>套房源</div>
+              <div class="houselist-top" v-if="flagPrice">本小区在售<span>{{agentInfo.formatsalecount}}</span>套房源</div>
+              <div class="houselist-top" v-else>本小区在租<span>{{agentInfo.formatrentcount}}</span>套房源</div>
               <ul>
-                <li :key="index" v-for="(item,index) in smallArea">
-                  <div class="image fl"><img :src="item.housePic"></div>
+                <li :key="index" v-for="(item,index) in smallArea" @click="houseDetail(item)">
+                  <div class="image fl"><img :src="item.housePic" :onerror="null|imgonroorr"></div>
                   <div class="item-content">
                       <div class="item-title">{{item.houseTitle}}</div>
                       <div class="description">{{item.areaName}} {{item.districtName}} {{item.houseDirection}}</div>                        
                       <div  class="houseTypeInfo">
                         <span>{{item.houseType}}</span>{{item.builtArea}}m²
                       </div>
-
-                      <div class="houseLabel">
-                        
-                      </div>
-
+                      <div class="houseLabel"></div>
                     <div v-if="flagPrice" class="housePrice">{{item.saleTotal}}万
-                        <span>{{item.salePrice}}元/平米</span>
+                        <span>{{item.salePrice}}元/平</span>
                     </div>
                     <div v-if="!flagPrice" class="housePrice">{{item.rentPrice}}
                         <span>元/月</span>
@@ -135,15 +130,11 @@
                 </li>
               </ul>
             </div>
-            <div class="showController" @click="isShowHouseList">
-              <i class="map_icon">
-                <icon class="icon_close_houselist" ref="icon_close_houselist" :style="{left: sideLeft}" name ="sprite" :w="24" :h="24"></icon>
-              </i>
-            </div>
+            <div class="showController" :class="{'isShow': isShowController}" @click="isShowHouseList" ><img src="../../imgs/back.png"></div>
         </div>
         <div class="changeZoom">
-            <button id="zoom_in" @click="mapZoom(1)">+</button>
-            <button id="zoom_out" @click="mapZoom(2)">-</button>
+            <button id="zoom_in" @click="mapZoom(1)"></button>
+            <button id="zoom_out" @click="mapZoom(2)"></button>
         </div>
     </div>
 </template>
@@ -158,24 +149,23 @@ export default {
       rentAreaDetails: [],//租房房源
       smallArea: [],      //小区列表
       inputKeyword: '',   //输入关键词
-      isShowSide: true,   //是否显示side
-      sideLeft: '-171px', //默认
+      isShowSide: false,   //是否显示side
+      isShowController: false,//是否显示返回
       polygon: '',        //绘图
       svg: '',            //svg对象
       circleNum: 1,       //开始画圈找房1 取消画圈找房2
       metroNum: 1,        //开始地铁找房1 取消地铁找房2
-      flagPrice: true,    //是否显示价格
+      flagPrice: true,    //二手房true  租房false
       agentInfo: '',      //side的info 
       pencil: '../../../static/pencil.ico',
       selectCity: localStorage.selectCity?JSON.parse(localStorage.selectCity):'beihai',
       num: 0,             //修正ip
-      
       //二手房售房 租房 小区所有数据
       //同小区二手房套数列表
       IPS: [this.$url.URL.HOUSE_SECONDHOUSE, this.$url.URL.HOUSE_RENTHOUSE, this.$url.URL.MAPHOUSEALL_TREE],
       IPS2: [this.$url.URL.MAPHOUSEALL_USED_LIST, this.$url.URL.MAPHOURENT_USED_LIST],
       moveFlag: '1',       //手势标识 2表示移动 1表示放缩
-      titlenumber: '0',    //显示文本类型
+      mapdata: []
     }
   },
   computed: {
@@ -187,9 +177,24 @@ export default {
     }
   },
   created() {
-    this.$route.query.houseType=="11"?this.num=0:this.num=1;
+    //判断是二手房 还是租房 
+    let params = this.$parseURL(location.href);
+    if(params.houseType=="11"){
+      this.num=0;
+      this.flagPrice=true;
+    }else{
+      this.num=1;
+      this.flagPrice=false;
+    }
   },
   methods: {
+    houseDetail(item) {
+      if(this.num==0){
+        location.href = "/#/buyhouse/twohandhousedetail/"+item.sdid;
+      }else{
+        location.href = "/#/rentHouseDetail/"+item.sdid;
+      }
+    },
     //登陆
     login() {
       this.$store.commit('OPENLOGINDIALOG', 1);
@@ -204,14 +209,9 @@ export default {
     },
     //显示房源列表
     isShowHouseList() {
-      if(this.isShowSide){
-        this.$refs.side.style.left="0"
-        this.sideLeft = '-180px';
-      }else{
-        this.sideLeft = '-171px';
-        this.$refs.side.style.left="-438px";
+      if(this.smallArea.length){
+        this.isShowSide = !this.isShowSide;
       }
-      this.isShowSide = !this.isShowSide
     },
     //关键词  检索房源数据
     searchHouse() {
@@ -234,6 +234,11 @@ export default {
         minZoom: 11,
         maxZoom: 18
       });
+      var opts = {
+        offset: new BMap.Size(20, 20),
+        anchor: BMAP_ANCHOR_BOTTOM_RIGHT
+      };
+      this.map.addControl(new BMap.ScaleControl(opts)); 
       this.map.enableScrollWheelZoom(true)//启动滚轮放大缩小
       let pt = new BMap.Point(lng, lat);//初始时候 首先获取到目的城市的坐标 例如: 北海站坐标109.134582,21.459389
       this.map.centerAndZoom(pt, 12);//初始中心点和缩放比例 
@@ -265,19 +270,20 @@ export default {
         })
     },
     addLabel(point, obj){
+      console.log(obj)
         //判断当前是处于什么zoom 级别的;
         let currentZoom = this.map.getZoom();
         let html1,html2,html3;
-        if(this.titlenumber=='0'){
+        if(this.flagPrice){
           //区域级别
           html1=`<div class="bubble-2 bubble">
                       <p class="name">${obj.name}</p>
-                      <p class="count">${obj.formatAvgPrice}套</p>
+                      <p class="count">${obj.formatAvgPrice}元</p>
                     </div>`;
           //片区级别
           html2=`<div class="bubble-2 bubble">
                         <p class="name">${obj.name}</p>
-                        <p class="count">${obj.formatAvgPrice}套</p>
+                        <p class="count">${obj.formatAvgPrice}元</p>
                       </div>`;
 
           //小区级别
@@ -292,7 +298,7 @@ export default {
                               data-formatAvgPrice=${obj.formatAvgPrice}
                               data-formatSaleCount=${newSaleCount}
                               data-buildSdid=${obj.buildSdid}>
-                            <i class="num">${obj.buildName}<b> ${newPrice}</b> ${obj.formatSaleCount}</i>
+                            <i class="num">${obj.buildName}(${obj.formatSaleCount})</i>
                             <i class="num triangle"></i>
                           </p>
                       </div>`;
@@ -309,7 +315,7 @@ export default {
                         </div>`;
 
             //小区级别
-            let newSaleCount = obj.formatSaleCount?obj.formatSaleCount.slice(0,-1):null;
+            let newRentCount = obj.formatRentCount?obj.formatRentCount.slice(0,-1):null;
             let newPrice = Math.floor(obj.formatAvgPrice/10000) + '万';
             html3 = `<div class="bubble-3 bubble">
                             <p class="name" 
@@ -318,9 +324,9 @@ export default {
                                 data-buildName=${obj.buildName}
                                 data-districtName=${obj.districtName}
                                 data-formatAvgPrice=${obj.formatAvgPrice}
-                                data-formatSaleCount=${newSaleCount}
+                                data-formatRentCount=${newRentCount}
                                 data-buildSdid=${obj.buildSdid}>
-                              <i class="num">${obj.buildName}<b> ${obj.formatRentCount}</i>
+                              <i class="num">${obj.buildName}<b>(${obj.formatRentCount})</i>
                               <i class="num triangle"></i>
                             </p>
                         </div>`;
@@ -359,7 +365,8 @@ export default {
       let p = e.target.point;
       let currentZoom = this.map.getZoom();
       if(currentZoom>16) {
-          this.map.centerAndZoom(p, 18);
+          this.map.setZoom(19);
+          this.map.panTo(p);
           this.itembtn(e);
       }else if(currentZoom>14&&currentZoom<=16){
           this.map.centerAndZoom(p, 17);
@@ -368,27 +375,34 @@ export default {
       }
     },
     itembtn(e) {
-      this.isShowSide=true;
-      this.isShowHouseList();
-      let str;
-      let domTarget = e.domEvent.target.classList.contains('num');
-      if(domTarget) {
-        str = e.domEvent.target.parentNode.dataset;
-      }else{
-        str = e.domEvent.target.parentNode.parentNode.dataset;
-      }
-      console.log(str)
-      let sdid = str.buildsdid;
-      this.agentInfo=str;
-      this.isShowSide=false;
-      this.$refs.side.style.left="0";
-      this.smallAreaRequest(sdid);
+      this.isShowController = true;
+      this.isShowSide = true;
+      this.agentInfo = $(e.domEvent.target).closest(".name").data();
+      let sdid = this.agentInfo.buildsdid;
+      this.smallArea=[];
+      this.smallAreaRequest(sdid, 1);
     },
     //小区套数列表
-    smallAreaRequest(sdid) {
-      this.$http.get(this.IPS2[this.num]+this.selectCity.value+"/"+sdid+"?pageNo="+1)
+    smallAreaRequest(sdid, page) {
+      this.$http.get(this.IPS2[this.num]+this.selectCity.value+"/"+sdid+"?pageNo="+page)
       .then(res=> {
-        this.smallArea=res.data.data;
+        if(res.data.data.length){
+          this.smallArea=this.smallArea.concat(res.data.data);
+        }
+        this.$nextTick(() => {
+          //滚动加载
+          let el = document.querySelector(".r-content ul");
+          el.onscroll = () => {
+            let scrollTop = el.scrollTop; //页面上卷的高度
+            let wholeHeight = el.scrollHeight; //页面底部到顶部的距离
+            let divHeight = el.clientHeight; //页面可视区域的高度
+            if(scrollTop + divHeight+ 10 >= wholeHeight) {
+              let num = page+1;
+              this.smallAreaRequest(sdid, num);
+            }
+          }
+        })
+        
       })
     },
     //在可视区域内 请求
@@ -419,14 +433,14 @@ export default {
               this.mapdata.push(res.data.data[i])
             }
           }
-          list.forEach((item)=>{
+          list.forEach(item =>{
             let point = new BMap.Point(item.px, item.py);
             this.addLabel(point, item);
           })
         }else{
           this.mapdata=res.data.data
           this.map.clearOverlays(); //清空所有标注this.map.clearOverlays(); //清空所有标注
-          this.mapdata.forEach((item)=>{
+          this.mapdata.forEach(item =>{
             let point = new BMap.Point(item.px, item.py);
             this.addLabel(point, item);
           })
@@ -479,7 +493,6 @@ export default {
         }
       }
       mapNode.onmouseup = ()=>{//结束
-        // this.map.setdivport(xyArr);//调整视野
         this.map.enableDragging();//设置地图打开拖拽
         mapNode.onmousemove = null;
         mapNode.onmousedown = null;
@@ -519,248 +532,258 @@ export default {
   position: relative;
   z-index: 100;
   background: #ffffff;
-  /* 第一块 */
-  .header-hd {
-    overflow: hidden;
-    width: 100%;
-    height: 59px;
-    border-bottom: 1px solid #eee;
-    .logo {
-      float: left;
-      width: 240px;
-      height: 60px;
-      background: url("../../imgs/buyhouse/logored.png") no-repeat center center;
-      img {vertical-align: middle}
-    }
-    .sign{
-      .one{
-        font-size: 12px;
-        color: #666;
-        text-align: center;
-        margin: 22px 12px 0 40px;
-        .login,.logout {
-          color: #666;
-          padding: 0 10px;
-        }
-      }
-      .two{
-        margin: 22px 12px 0 40px;
-        /* 登录/退出 */
-        .login:hover,
-        .register:hover,
-        .logout:hover{
-          color: red;
-          cursor: pointer;
-        }
-        .headImage{
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          overflow: hidden;
-          float: left;
-          margin-right: 10px;
-          vertical-align: middle;
-          img{
-            width: 100%;
-            height: 100%;
-          }
-        }
-      }
-    }
-    .menu {
-      overflow: hidden;
-      height: 60px;
-      line-height: 60px;
-      text-align: center;
-      ul li {
-        float: right;
-        width: 100px;
-        height: 100%;
-        font-size: 14px;
-        font-weight: bold;
-        color: #333;
-        cursor: pointer;
-        &:hover{color: #ff4343}
-      }
-    }
-  }
-  /* 第二块 */
-  .header-bd {
-    width: 100%;
-    height: 50px;
-    border-bottom: 1px solid #eee;
-    .search-bar {
-      position: relative;
-      vertical-align: middle;
-      height: 100%;
-      width: 438px;
-      border-right: 1px solid #eee;
-      input {
-        height: 100%;
-        width: 400px;
-        box-sizing: border-box;
-        margin-left: 20px;
-        padding: 13px 60px 10px 0;
-        outline: none;
-        border: 0;
-        font-size: 13px;
-      }
-      img {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-      }
-    }
-  }
-  .filters,.tools {height: 50px;line-height: 50px}
-  .filters > li {
-    float: left;
-    height: 100%;
-    width: 80px;
-    border-right: 1px solid #eee;
-    text-align: center;
-    position: relative;
-    .filters-content {
-      position: absolute;
-      left: 0;
-      z-index: 1100;
-    }
-  }
-  .tools > li {
-    float: right;
-    height: 100%;
-    padding: 0 20px;
-    cursor: pointer;
-  }
-
 }
-
-
-/* 房源列表 */
+.header .header-hd {
+  overflow: hidden;
+  width: 100%;
+  height: 59px;
+  border-bottom: 1px solid #eee;
+}
+.header .header-hd .logo {
+  float: left;
+  width: 240px;
+  height: 60px;
+  background: url("../../imgs/buyhouse/logored.png") no-repeat center center;
+}
+.header .header-hd .logo img {
+  vertical-align: middle;
+}
+.header .header-hd .sign .one {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin: 22px 12px 0 40px;
+}
+.header .header-hd .sign .one .login,
+.header .header-hd .sign .one .logout {
+  color: #666;
+  padding: 0 10px;
+}
+.header .header-hd .sign .two {
+  margin: 22px 12px 0 40px;
+}
+.header .header-hd .sign .two .login:hover,
+.header .header-hd .sign .two .register:hover,
+.header .header-hd .sign .two .logout:hover {
+  color: red;
+  cursor: pointer;
+}
+.header .header-hd .sign .two .headImage {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  overflow: hidden;
+  float: left;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+.header .header-hd .sign .two .headImage img {
+  width: 100%;
+  height: 100%;
+}
+.header .header-hd .menu {
+  overflow: hidden;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+.header .header-hd .menu ul li {
+  float: right;
+  width: 100px;
+  height: 100%;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+.header .header-hd .menu ul li:hover {
+  color: #ff4343;
+}
+.header .header-bd {
+  width: 100%;
+  height: 50px;
+  border-bottom: 1px solid #eee;
+}
+.header .header-bd .search-bar {
+  position: relative;
+  vertical-align: middle;
+  height: 100%;
+  width: 438px;
+  border-right: 1px solid #eee;
+}
+.header .header-bd .search-bar input {
+  height: 100%;
+  width: 400px;
+  box-sizing: border-box;
+  margin-left: 20px;
+  padding: 13px 60px 10px 0;
+  outline: none;
+  border: 0;
+  font-size: 13px;
+}
+.header .header-bd .search-bar img {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.header .filters,
+.header .tools {
+  height: 50px;
+  line-height: 50px;
+}
+.header .filters > li {
+  float: left;
+  height: 100%;
+  width: 80px;
+  border-right: 1px solid #eee;
+  text-align: center;
+  position: relative;
+}
+.header .filters > li .filters-content {
+  position: absolute;
+  left: 0;
+  z-index: 1100;
+}
+.header .tools > li {
+  float: right;
+  height: 100%;
+  padding: 0 20px;
+  cursor: pointer;
+}
 .side {
   position: fixed;
   left: -438px;
-  top: 111px;
+  top: 60px;
   background: #ffffff;
   width: 438px;
   bottom: 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
   z-index: 1000;
-  .agent-info{
-    height: 112px;
-    padding-left: 24px;
-    .title{
-      font-size: 22px;
-      font-weight: bold;
-      height: 24px;
-      line-height: 24px;
-      margin: 20px 0 10px 0;
-      display: block;
-    }
-    .content{
-      color: #666;
-      font-size: 12px;
-      margin-bottom: 4px;
-      vertical-align: bottom;
-      .big{
-        font-size: 16px;
-        color: #4a4a4a;
-        vertical-align: 1px;
-        font-weight: bold;
-      }
-    }
-  }
-  .r-content{
-    height: 100%;
-    padding-left: 24px;
-    border-top: 1px solid #cacaca;
-    .houselist-top{
-      color: #333;
-      font-weight: bold;
-      height: 30px;
-      line-height: 30px;
-      font-size: 14px;
-      span{color: #ff4343}
-    }
-    ul{
-      width: 400px;
-      height: 100%;
-      overflow-y: scroll;
-      li{
-        display: flex;
-        padding: 10px 0;
-        overflow: hidden;
-        border-bottom: 1px solid #cacaca;
-        margin-right: 10px;
-        .image{
-          flex: 120px 0 0;
-          width: 120px;
-          height: 100px;
-          margin-right: 10px;
-          img{width: 100%; height: 100%}
-        } 
-        .item-content{
-          flex: 1;
-          .item-title{
-            font-size:16px;
-            color:#222222;
-            line-height:1.2;
-            text-align:justify;
-            display:-webkit-box;
-            -webkit-box-orient:vertical;
-            -webkit-line-clamp:2;
-            overflow:hidden;
-          }
-          .description,
-          .houseTypeInfo,
-          .housePrice{
-            font-size:12px;
-            color:#666666;
-            margin-top:9px;
-            line-height:1;
-          }
-          .houseTypeInfo{
-
-          }
-          .housePrice{
-            color: #ff4343;
-            span{color:#666666}
-          }
-        } 
-      }
-    }
-  }
-  .showController {
-    position: absolute;
-    right: -40px;
-    top: 50%;
-    width: 40px;
-    height: 60px;
-    line-height: 60px;
-    background: #ffffff;
-    text-align: center;
-    transform: translateY(-50%);
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
-    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.3), 0 -1px 0 rgba(0, 0, 0, 0.3),
-      0 1px 0 rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-  }
 }
-
-
-
-
-
-
-::-webkit-scrollbar  
-{  
-  width: 1px;  
-  background-color: #cacaca;  
-}  
-.map_icon{
+.side .agent-info {
+  padding-left: 24px;
+}
+.side .agent-info .title {
+  font-size: 22px;
+  font-weight: bold;
+  height: 24px;
+  line-height: 24px;
+  margin: 20px 0 10px 0;
+  display: block;
+}
+.side .agent-info .content {
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 10px;
+  vertical-align: bottom;
+}
+.side .agent-info .content .big {
+  font-size: 16px;
+  color: #4a4a4a;
+  vertical-align: 1px;
+  font-weight: bold;
+}
+.side .r-content {
+  position: relative;
+  height: 100%;
+  padding: 20px 0 50px 24px;
+  border-top: 1px solid #cacaca;
+  background: #fff;
+  z-index: 1000;
+}
+.side .r-content .houselist-top {
+  color: #333;
+  font-weight: bold;
+  height: 30px;
+  line-height: 30px;
+  font-size: 14px;
+}
+.side .r-content .houselist-top span {
+  color: #ff4343;
+}
+.side .r-content ul {
+  width: 400px;
+  height: 100%;
+  overflow-y: scroll;
+}
+.side .r-content ul li {
+  display: flex;
+  padding: 20px 0;
+  overflow: hidden;
+  border-bottom: 1px solid #cacaca;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.side .r-content ul li .image {
+  flex: 120px 0 0;
+  width: 120px;
+  height: 100px;
+  margin-right: 10px;
+}
+.side .r-content ul li .image img {
+  width: 100%;
+  height: 100%;
+}
+.side .r-content ul li .item-content {
+  flex: 1;
+}
+.side .r-content ul li .item-content .item-title {
+  font-size: 16px;
+  color: #222222;
+  line-height: 1.2;
+  text-align: justify;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-weight: bold;
+}
+.side .r-content ul li .item-content .description,
+.side .r-content ul li .item-content .houseTypeInfo,
+.side .r-content ul li .item-content .housePrice {
+  font-size: 12px;
+  color: #666666;
+  margin-top: 9px;
+  line-height: 1;
+}
+.side .r-content ul li .item-content .housePrice {
+  color: #ff4343;
+}
+.side .r-content ul li .item-content .housePrice span {
+  color: #666666;
+}
+.side .showController {
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  width: 40px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  background: #ffffff;
+  transform: translateY(-50%);
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+  z-index: 100;
+  display: none;
+}
+.side .showController img {
+  margin-top: 24px;
+  width: 16px;
+  height: 16px;
+}
+.isShow{
+  display: block!important;
+}
+::-webkit-scrollbar {
+  width: 1px;
+  background-color: #cacaca;
+}
+.map_icon {
   width: 10px;
   height: 16px;
   top: 3px;
@@ -774,23 +797,34 @@ export default {
   top: 0;
   display: block;
 }
-/* 改变zoom控件 */
+.activeSide {
+  left: 0 !important;
+}
+.activeSide .showController img {
+  transform: rotate(180deg);
+}
 .changeZoom {
   position: fixed;
   right: 20px;
-  bottom: 50px;
+  bottom: 60px;
 }
 .changeZoom button {
   background: #ffffff;
-  padding: 20px;
+  width: 30px;
+  height: 30px;
   display: block;
   border: 0;
   outline: none;
-  margin-bottom: 10px;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
 }
-
-
+.changeZoom button:first-child{
+  background: #fff url('../../imgs/add.png') no-repeat center center;
+  background-size: 50%;
+}
+.changeZoom button:last-child{
+  background: #fff url('../../imgs/minus.png') no-repeat center center;
+  background-size: 50%;
+}
 </style>
 
 

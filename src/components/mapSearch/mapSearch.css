@@ -2,7 +2,7 @@
 #map {
   position: absolute;
   min-width: 1200px;
-  top: 111px;
+  top: 60px;
   bottom: 0;
   right: 0;
   left: 0;
@@ -14,8 +14,8 @@
   overflow: visible!important;
 }
 .bubble:hover{
-  background: red;
-  border: 1px solid rgb(255,0,0);
+  background: rgb(255, 0, 0);
+  border: 0px solid rgb(255, 0, 0);
 }
 .bubble-3:hover .triangle{
   border-color: red transparent transparent transparent;
@@ -32,7 +32,7 @@
   background-size: cover;
   color: #ffffff;
   cursor: pointer;
-  border: 1px solid rgb(83,145,244);
+  border: 0 solid rgb(83,145,244);
   background: rgba(83,145,244,1);
 }
 .bubble-2 .name,
@@ -62,7 +62,7 @@
   background: rgba(83,145,244,1);
   position: relative;
   color: #ffffff;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .bubble-3 .name{
   font-size:10px;
