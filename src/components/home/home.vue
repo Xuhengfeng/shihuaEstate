@@ -325,19 +325,6 @@
 				this.locationType(2);
 			}
 		},
-		watch: {
-			//切换城市刷新当前登录用户对应城市的待看房源清单
-			selectCity() {
-				this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo=1",{
-					scity: JSON.parse(localStorage.selectCity),//用户选定城市
-				})
-				.then(res =>{
-					let newData = res.data.data;
-					//刷新待看房源清单
-					this.$store.dispatch('refreshAppointList', res.data.data.value);
-				})
-			}
-		},
 		methods: {
 			//定位
 			locationType(num) {

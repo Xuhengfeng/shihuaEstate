@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-20 22:20:36
+ * @Last Modified time: 2018-08-20 23:28:39
  */
 <template>
   <div class="sideBar">
@@ -15,7 +15,7 @@
                         <span class="fr" @click="clearDaikan()">清空</span>
                     </div>
                         <ul class="content-bd">
-                        <li v-for="item in appointList">
+                        <li v-for="item in list1">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -28,7 +28,7 @@
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button v-if="btn1" @click="compareone()">立即预约</button>
+                        <button v-if="btn1" @click="appoint()">立即预约</button>
                         <p v-else>暂时没有任何预约的房源信息!</p>
                     </div>
             </div>
@@ -41,7 +41,7 @@
                         <span class="fr" @click="clearAll()">清空</span>
                     </div>
                     <ul class="content-bd">
-                        <li v-for="item in contrastList">
+                        <li v-for="item in list2">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -50,7 +50,7 @@
                                 <div><span>{{item.houseType}}</span><span>{{item.builtArea}}平米</span></div>
                                 <div><span>{{item.saleTotal}}</span>万</div>
                             </div>
-                            <div class="delete" @click="deleteOne(item)">删除</div>
+                            <div class="delete" @click="deleteOneContrast(item)">删除</div>
                         </li>
                     </ul>
                     <div class="content-ft">
@@ -93,21 +93,24 @@ export default {
     return {
       btn1: false,    //待看
       btn2: false,    //对比
+      list1: this.appointList,  //待看列表
+      list2: this.contrastList, //对比列表
       scity: null,    //用户选定城市
       id:"",          //待看id
-      sdid: ""
+      sdid: "",
+
     };
   },
   watch: {
-    appointList() {
-      this.appointList.length
-      ?(this.btn2 = true)
-      :(this.btn2 = false);
-    },
-    contrastList() {
-      this.contrastList.length
+    list1() {
+      this.list1.length
       ?(this.btn1 = true)
       :(this.btn1 = false);
+    },
+    list2() {
+      this.list2.length
+      ?(this.btn2 = true)
+      :(this.btn2 = false);
     }
   },
   computed: {
@@ -117,23 +120,31 @@ export default {
     },
   },
   methods: {
-    //清空对比
-    clearAll() {
-      this.btn1 = false;
-      this.$emit('clearAll');
-    },
     //清空待看
     clearDaikan() {
       this.btn2 = false;
       this.$emit('clearDaikan');
     },
-     //删除对比
-    deleteOne(item) {
-      this.$emit('deleteOneContrast', item);
+    //清空对比
+    clearAll() {
+      this.btn1 = false;
+      this.$emit('clearAll');
     },
-    //删除待看列表
+    //删除待看中一个
     deleteOneAppoint(item) {
+      let index = this.list1.findIndex(val=>{
+        return val == item;
+      })
+      this.list1.slice(index, 1);
       this.$emit('deleteOneAppoint', item);
+    },
+    //删除对比中一个
+    deleteOneContrast(item) {
+      let index = this.list2.findIndex(val=>{
+        return val == item;
+      })
+      this.list2.slice(index, 1);
+      this.$emit('deleteOneContrast', item);
     },
     //立即对比
     compare() {

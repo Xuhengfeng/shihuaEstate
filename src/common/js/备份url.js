@@ -12,7 +12,14 @@ let URL = {
     HOTBUILDING: _host + '/build/hotBuilding/',                 //获取首页热门小区
    	DICTIONARY_CITYS:_host + '/dictionary/citys',	            //获取城市列表	
 	DICTIONARY_DEFAULTCITY:_host + '/dictionary/defaultCity',   //获取默认城市	
-	HOUSE_QUERYCOUNT:_host + '/house/queryCount ',              //获取搜索二手房总数量
+	HOUSE_QUERYCOUNT:_host + '/house/queryCount',              //获取搜索二手房总数量
+
+	// 资讯
+	PURCHASE_GUIDE:_host + '/info/purchase-guide/index',       //购房指南首页信息nav
+	GUIDE_LIST:_host + '/info/query/child/',                   //资讯内容列表子栏目
+	GUIDE_LIST2:_host + '/info/query/',                        //资讯内容列表
+	GUIDE_LISTDETAIL:_host + '/info/',                         //资讯内容详情
+	
 
 	// 数据字典
    	DICTIONARY_DICTYPE:_host + '/dictionary/',  				//获取二手房搜索条件字段
@@ -49,11 +56,13 @@ let URL = {
 	RENTHCOLLECTION_ADD:_host+'/rentHCollection/add/',           //租房收藏
 	RENTHCOLLECTION_CANCEL:_host+'/rentHCollection/cancel/',     //取消租房收藏
 	
+
+
 	// 用户登录
 	USER_LOGIN:_host+'/member/login',                            //用户登录
 	USER_JIGUANGSIGN:_host+'/jiguang/signature',                 //用户极光IM鉴权
 	USER_JIGUANGBIND:_host+'/jiguang/binding',                   //用户极光账号和登录账号绑定
-	USER_JIGUANGREG:_host+'/jiguang/reguser',                    //用户极光注册
+	USER_JIGUANGREG:_host+'/jiguang/broker/reguser',             //用户极光注册
 	USER_LOGOUT:_host+'/member/logout',                          //用户退出
 	USER_REGISTER:_host+'/member/register',                     //用户注册
 	FETCHSMSCODE:_host+'/member/fetchSmsCode',                  //验证码

@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-20 22:32:38
+ * @Last Modified time: 2018-08-20 23:07:07
  */
 <template>
   <div id="app">
@@ -12,6 +12,7 @@
     <o-side-bar v-if="isShowSide == 1"
                 :appointList="appointList"
                 :contrastList="contrastList"
+                @deleteOneAppoint ="deleteOneAppoint"
                 ></o-side-bar>
    	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
@@ -38,7 +39,7 @@ export default {
       isShowTop:  0, //显示1 隐藏0
       isShowSide: 1, //显示1 隐藏0
       isShowFooter: 0, //显示1 隐藏0
-      city: null,
+      scity: null,     //当前选定的城市
       appointList: [],  //待看列表
       contrastList: [], //对比列表
     };
@@ -111,10 +112,24 @@ export default {
     },
     //登录状态
     logined() {
+      if(this.logined){
+        this.refreshAppointList();//刷新待看列表
+        this.refreshContrast();//刷新对比列表
+      }else{
+        this.appointList = [];//清空待看列表
+        this.contrastList = [];//清空对比列表
+      }
+    },
+    //切换城市
+    city() {
       this.refreshAppointList();//刷新待看列表
+      this.refreshContrast();//刷新对比列表
     }
   },
   created() {
+    try{
+      this.scity = JSON.parse(localStorage.selectCity).value;
+    }catch(error){};
     this.$store.commit('FIRSTSTATUS');//初始化vuex
   },
   methods:{
@@ -126,33 +141,37 @@ export default {
     },
     //刷新待看列表
     refreshAppointList() {
-      let scity = JSON.parse(localStorage.selectCity).value||'beihai';
       this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo=1",{
+        "scity":  this.scity
+      })
+      .then(res =>{
+        try{
+          this.appointList = res.data.data.slice(0,4);
+        }catch(error){};
+      })
+    },
+    //刷新对比列表
+    refreshContrast() {
+      let scity = JSON.parse(localStorage.selectCity).value||'beihai';
+      this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST +"?pageNo=1",{
         "scity": scity
       })
       .then(res =>{
-        this.appointList = res.data.data;
+        try{
+          this.appointList = res.data.datares.slice(0,4);;
+        }catch(error){};
       })
     },
-    //刷新对比
-    refreshContrast() {
-
-    },
-    //刷新对比详情
-    refreshContrastDetail() {
-      this.$http.get(this.$url.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then(res => {
+    //删除待看中一个
+    deleteOneAppoint(item) {
+      console.log(item)
+      this.$http.delete(this.$url.URL.APPOINT_DELETE +item.id).then(res => {
         console.log(res.data.data);
       });
     },
     //删除对比中一个
     deleteOneContrast(item) {
       this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
-        console.log(res.data.data);
-      });
-    },
-    //删除待看中一个
-    deleteOneAppoint(item) {
-      this.$http.delete(this.$url.URL.APPOINT_DELETE +item.id).then(res => {
         console.log(res.data.data);
       });
     },
@@ -171,6 +190,12 @@ export default {
           console.log(res.data.data);
         });
       })
+    },
+    //刷新对比详情
+    refreshContrastDetail() {
+      this.$http.get(this.$url.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then(res => {
+        console.log(res.data.data);
+      });
     }
   }
 };
