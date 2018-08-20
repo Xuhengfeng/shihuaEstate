@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 00:42:49
+ * @Last Modified time: 2018-08-21 01:53:36
  */
 <template>
   <div id="app">
@@ -17,7 +17,7 @@
                 ></o-side-bar>
    	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
-    		<router-view v-if="$route.meta.keepAlive"></router-view>
+    		<router-view v-if="$route.meta.keepAlive" ></router-view>
 		</keep-alive>
 		<!-- 设置不缓存的页面 -->
 		<router-view v-if="!$route.meta.keepAlive"></router-view>
@@ -171,13 +171,14 @@ export default {
     //删除对比中一个
     deleteOneContrast(item) {
       this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
+        this.$store.commit('CHANGEAPPOINT');
       });
     },
     //清空待看列表
     clearDaikan() {
       this.appointList.forEach(item =>{
         this.$http.delete(API.URL.APPOINT_DELETE+item.id).then(response => {
-          console.log(res.data.data);
+          this.$store.commit('CHANGEAPPOINT');
         });
       })
     },

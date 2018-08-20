@@ -27,12 +27,12 @@
 		</div>
 	</div>
 </template>
-
 <script>
 import router from "../../router";
 export default {
   data() {
     return {
+      refresh: false,
       num: 0,
       list: [
         { name: "账户首页", url: "/mine/indexhome" }, //账户首页

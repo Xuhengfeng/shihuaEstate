@@ -149,9 +149,8 @@ export default {
         this.week()
     },
     computed: {
-        //待看房源列表
-        appintList() {
-            return this.$store.state.appintList;
+        appointFlag() {
+            return this.$store.state.appointFlag;
         }
     },
     watch: {
@@ -168,7 +167,8 @@ export default {
             }
         },
         //待看房源列表
-        appintList() {
+        appointFlag() {
+            console.log(11212)
             this.readyHouseListRequest();
             this.order = true;
         }

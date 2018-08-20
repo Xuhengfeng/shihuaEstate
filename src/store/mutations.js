@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-20 21:27:39
+ * @Last Modified time: 2018-08-21 01:45:51
  */
 import router from '../router/index'
 //同步处理
@@ -43,5 +43,9 @@ export default {
 	//修改topbar样式
 	WORDCOLOR(state, payload){
 		state.wordcolor = payload;
+	},
+	//预约看房变化标志
+	CHANGEAPPOINT(state) {
+		state.appointFlag = !state.appointFlag;
 	}
 }

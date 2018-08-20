@@ -1,8 +1,8 @@
 /*
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-23 17:00:21
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-21 01:43:30
  * @描述: 登录 注册 组件封装
  */
 <template>
@@ -224,7 +224,6 @@ export default {
     },
     //注册
     register() {
-      console.log('222')
       //校验
       switch(true){
         case !this.phonenum2: return this.$alert('手机不能为空!');
