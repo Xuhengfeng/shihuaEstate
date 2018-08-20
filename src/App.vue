@@ -2,14 +2,17 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-19 14:26:42
+ * @Last Modified time: 2018-08-20 22:32:38
  */
 <template>
   <div id="app">
     <!-- 头部 -->
 		<o-top-bar v-if="isShowTop == 1"></o-top-bar>
     <!-- 侧边栏 -->
-    <o-side-bar v-if="isShowSide == 1"></o-side-bar>
+    <o-side-bar v-if="isShowSide == 1"
+                :appointList="appointList"
+                :contrastList="contrastList"
+                ></o-side-bar>
    	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
     		<router-view v-if="$route.meta.keepAlive"></router-view>
@@ -18,8 +21,6 @@
 		<router-view v-if="!$route.meta.keepAlive"></router-view>
     <!-- 脚步 -->
     <o-footer v-if="isShowFooter == 1"></o-footer>
-    <!-- 聊天 -->
-    <!-- <o-we-chat ref="oChat" @afresh="afresh"></o-we-chat> -->
     <!-- 对话框 登录 注册 修改密码  -->
 		<o-dialog ref="odialog" :showbox="loginDialogNum"></o-dialog>	
   </div>
@@ -37,7 +38,9 @@ export default {
       isShowTop:  0, //显示1 隐藏0
       isShowSide: 1, //显示1 隐藏0
       isShowFooter: 0, //显示1 隐藏0
-      city: null
+      city: null,
+      appointList: [],  //待看列表
+      contrastList: [], //对比列表
     };
   },
   components: {
@@ -47,10 +50,6 @@ export default {
     oWeChat,
     oDialog
   },
-  created() {
-    //初始化vuex
-    this.$store.commit('FIRSTSTATUS');
-  },
   computed: {
     //打开登录 注册对话框
     loginDialogNum() {
@@ -59,6 +58,10 @@ export default {
     //登录用户的信息
     userInfo() {
       return this.$store.state.LoginedUser;
+    },
+    //登录状态
+    logined() {
+      return this.$store.state.logined;
     }
   },
   watch: {
@@ -105,13 +108,69 @@ export default {
           case '/entrustmentrent/rent': this.$store.commit('WORDCOLOR','i');break;
           case '/entrustmentrent/sell': this.$store.commit('WORDCOLOR','k');break;
       }  
+    },
+    //登录状态
+    logined() {
+      this.refreshAppointList();//刷新待看列表
     }
   },
+  created() {
+    this.$store.commit('FIRSTSTATUS');//初始化vuex
+  },
   methods:{
+    //通用布局
     layout(a,b,c) {
       this.isShowTop = a;     
       this.isShowSide = b;   
       this.isShowFooter = c;
+    },
+    //刷新待看列表
+    refreshAppointList() {
+      let scity = JSON.parse(localStorage.selectCity).value||'beihai';
+      this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo=1",{
+        "scity": scity
+      })
+      .then(res =>{
+        this.appointList = res.data.data;
+      })
+    },
+    //刷新对比
+    refreshContrast() {
+
+    },
+    //刷新对比详情
+    refreshContrastDetail() {
+      this.$http.get(this.$url.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then(res => {
+        console.log(res.data.data);
+      });
+    },
+    //删除对比中一个
+    deleteOneContrast(item) {
+      this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
+        console.log(res.data.data);
+      });
+    },
+    //删除待看中一个
+    deleteOneAppoint(item) {
+      this.$http.delete(this.$url.URL.APPOINT_DELETE +item.id).then(res => {
+        console.log(res.data.data);
+      });
+    },
+    //清空待看列表
+    clearDaikan() {
+      this.appointList.forEach(item =>{
+        this.$http.delete(API.URL.APPOINT_DELETE+item.id).then(response => {
+          console.log(res.data.data);
+        });
+      })
+    },
+    //清空对比列表
+    clearAll() {
+      this.contrastList.forEach(item =>{
+        this.$http.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(response => {
+          console.log(res.data.data);
+        });
+      })
     }
   }
 };

@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-30 10:42:49
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-20 22:20:36
  */
 <template>
   <div class="sideBar">
@@ -15,7 +15,7 @@
                         <span class="fr" @click="clearDaikan()">清空</span>
                     </div>
                         <ul class="content-bd">
-                        <li v-for="item in appintList">
+                        <li v-for="item in appointList">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -28,8 +28,8 @@
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button v-show="compareBtntwo" @click="compareone()">立即预约</button>
-                        <p v-show="!compareBtntwo">暂时没有任何预约的房源信息!</p>
+                        <button v-if="btn1" @click="compareone()">立即预约</button>
+                        <p v-else>暂时没有任何预约的房源信息!</p>
                     </div>
             </div>
           </li>
@@ -54,8 +54,8 @@
                         </li>
                     </ul>
                     <div class="content-ft">
-                        <button v-show="compareBtn" @click="compare()">立即对比</button>
-                        <p v-show="!compareBtn">暂时没有任何比较的房源信息!</p>
+                        <button v-if="btn2" @click="compare()">立即对比</button>
+                        <p v-else>暂时没有任何比较的房源信息!</p>
                     </div>
               </div>
           </li>
@@ -88,33 +88,29 @@
 </template>
 <script>
 export default {
+  props:['appointList', 'contrastList'],
   data() {
     return {
-      showbox: null, //显示对应的dialog
-      compareBtn: false,//对比
-      compareBtntwo: false,//待看
-      scity: null,//用户选定城市
-      id:"",            //待看id
+      btn1: false,    //待看
+      btn2: false,    //对比
+      scity: null,    //用户选定城市
+      id:"",          //待看id
       sdid: ""
     };
   },
-  computed: {
+  watch: {
+    appointList() {
+      this.appointList.length
+      ?(this.btn2 = true)
+      :(this.btn2 = false);
+    },
     contrastList() {
-      let list = this.$store.state.contrastList;
-      if (list.length > 0) {
-        this.compareBtn = true;
-      } else {
-        this.compareBtn = false;
-      }
-      return list;
-    },
-    appintList() {
-     let list = this.$store.state.appintList;
-     list.length
-     ? this.compareBtntwo = true
-     : this.compareBtntwo = false;
-     return list;
-    },
+      this.contrastList.length
+      ?(this.btn1 = true)
+      :(this.btn1 = false);
+    }
+  },
+  computed: {
     //监控登录状态
     logined() {
       return this.$store.state.logined;
@@ -123,29 +119,29 @@ export default {
   methods: {
     //清空对比
     clearAll() {
-      this.compareBtn = false;
-      this.$store.dispatch("clearAll");
+      this.btn1 = false;
+      this.$emit('clearAll');
     },
     //清空待看
     clearDaikan() {
-      this.compareBtntwo = false;
-      this.$store.dispatch("clearDaikan");
+      this.btn2 = false;
+      this.$emit('clearDaikan');
     },
      //删除对比
     deleteOne(item) {
-      this.$store.dispatch("deleteOne", item);
+      this.$emit('deleteOneContrast', item);
     },
     //删除待看列表
     deleteOneAppoint(item) {
-      this.$store.dispatch("deleteOneAppoint", item);
+      this.$emit('deleteOneAppoint', item);
     },
-    //立即比较(对比)
+    //立即对比
     compare() {
       this.$router.push({path:"/contrast"});
     },
-    //立即预约 (待看)
-    compareone() {
-      this.appintList.forEach(item => {
+    //立即预约
+    appoint() {
+      this.appointList.forEach(item => {
         this.id = item.id
       });
       this.$router.push({ path: "/mine/indexseeone"});
@@ -164,14 +160,6 @@ export default {
       localStorage.imgOne = JSON.stringify(rectOne);
       //待看清单img的位置
       localStorage.imgTwo = JSON.stringify(rectTwo);
-    },
-    _querys() {
-      this.$http
-        .post(this.$url.URL.APPOINT_ADD, {
-          scity: JSON.parse(localStorage.selectCity).value,
-          sdid: this.sdid
-        })
-        .then(response => {});
     }
   },
   mounted() {
@@ -205,195 +193,187 @@ export default {
   bottom: 0;
   width: 40px;
   background: #ffffff;
-  box-shadow: 0 1px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
   z-index: 1002;
-  > ul {
-    width: 100%;
-    height: auto;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    //选项
-    > li {
-      cursor: pointer;
-      padding: 5px 0 3px;
-      margin-bottom: 25px;
-      text-align: center;
-      position: relative;
-      &:hover {
-        background: #e6e6e6;
-        .screenOuter {
-          right: 40px;
-          opacity: 1;
-          visibility: visible;
-        }
-      }
-      image {
-        width: 25px;
-        height: 25px;
-        vertical-align: top;
-      }
-      .screenOuter {
-        visibility: hidden;
-        position: absolute;
-        right: 60px;
-        top: 0;
-        width: 100px;
-        height: 100px;
-        opacity: 0;
-        background: red;
-        transition: all 0.3s ease;
-        //添加border三角形
-        &:after {
-          position: absolute;
-          right: -15px;
-          top: 10px;
-          content: "";
-          width: 0;
-          height: 0;
-          border-width: 8px;
-          border-style: solid;
-          border-color: transparent transparent transparent #ffffff;
-        }
-      }
-      //屏幕外第二个内容布局(和第一个内容布局一样)
-      &.two > .screenOuter {
-        width: 352px;
-        height: auto;
-        background: #ffffff;
-        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-        padding: 15px 0 22px;
-        box-sizing: border-box;
-        .title {
-          height: 30px;
-          margin: 0 25px;
-          border-bottom: 1px solid #cacaca;
-          span {
-            color: #000000;
-            margin-right: 15px;
-            &:nth-of-type(1) {
-              font-size: 18px;
-            }
-            &:nth-of-type(2) {
-              font-size: 12px;
-              color: #313131;
-              opacity: 0.6;
-              margin-top: 5px;
-            }
-            &:last-child {
-              margin: 5px 0 0;
-              font-size: 12px;
-              color: #313131;
-              opacity: 0.6;
-              cursor: pointer;
-            }
-          }
-        }
-        ul > li {
-          position: relative;
-          display: flex;
-          flex-flow: row nowrap;
-          overflow: hidden;
-          padding: 16px 25px;
-          .image {
-            flex: 80px 0 0;
-            width: 80px;
-            height: 60px;
-            background: red;
-            margin-right: 12px;
-            img {
-              width: 100%;
-              height: 100%;
-            }
-          }
-          .r-content {
-            flex: 1;
-            display: flex;
-            flex-flow: column;
-            justify-content: space-between;
-            align-items: flex-start;
-            div {
-              color: #313131;
-              text-align: left;
-              &:nth-of-type(1) {
-                font-size: 14px;
-              }
-              &:nth-of-type(2) {
-                span {
-                  font-size: 12px;
-                  margin-right: 10px;
-                }
-              }
-              &:nth-of-type(3) {
-                color: red;
-                font-size: 12px;
-                span {
-                  font-size: 16px;
-                  margin-right: 5px;
-                }
-              }
-            }
-          }
-          .delete {
-            position: absolute;
-            bottom: 20px;
-            right: 25px;
-            padding: 5px;
-            border: 1px solid #ff0000;
-            border-radius: 5px;
-            font-size: 10px;
-            color: #ff0000;
-            letter-spacing: 2px;
-            cursor: pointer;
-            display: none;
-          }
-          &:hover {
-            background: #eee;
-            .delete {
-              display: block;
-            }
-          }
-        }
-        .content-ft {
-          button {
-            margin: 30px auto 0;
-            width: 290px;
-            height: 42px;
-            line-height: 42px;
-            text-align: center;
-            outline: none;
-            background: red;
-            color: #ffffff;
-            border: 0;
-            border-radius: 5px;
-          }
-          p {
-            padding: 10px;
-            color: #cacaca;
-          }
-        }
-      }
-      &.three > .screenOuter {
-        background: #ff4343;
-        height: 38px;
-        line-height: 38px;
-        color: #ffffff;
-        padding: 0 10px;
-        &:after {
-          border-color: transparent transparent transparent #ff4343;
-        }
-      }
-      //屏幕外第三个内容布局
-      //屏幕外第四个内容布局
-    }
-  }
-  .up {
-    position: absolute;
-    bottom: 30px;
-    font-size: 12px;
-    text-align: center;
-    cursor: pointer;
-    display: none;
-  }
 }
+.sideBar > ul {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  transform: translatey(-50%);
+}
+.sideBar > ul > li {
+  cursor: pointer;
+  padding: 5px 0 3px;
+  margin-bottom: 25px;
+  text-align: center;
+  position: relative;
+}
+.sideBar > ul > li:hover {
+  background: #e6e6e6;
+}
+.sideBar > ul > li:hover .screenOuter {
+  right: 40px;
+  opacity: 1;
+  visibility: visible;
+}
+.sideBar > ul > li image {
+  width: 25px;
+  height: 25px;
+  vertical-align: top;
+}
+.sideBar > ul > li .screenOuter {
+  visibility: hidden;
+  position: absolute;
+  right: 60px;
+  top: 0;
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+  background: red;
+  transition: all 0.3s ease;
+}
+.sideBar > ul > li .screenOuter:after {
+  position: absolute;
+  right: -15px;
+  top: 10px;
+  content: "";
+  width: 0;
+  height: 0;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #ffffff;
+}
+.sideBar > ul > li.two > .screenOuter {
+  width: 352px;
+  height: auto;
+  background: #ffffff;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  padding: 15px 0 22px;
+  box-sizing: border-box;
+}
+.sideBar > ul > li.two > .screenOuter .title {
+  height: 30px;
+  margin: 0 25px;
+  border-bottom: 1px solid #cacaca;
+}
+.sideBar > ul > li.two > .screenOuter .title span {
+  color: #000000;
+  margin-right: 15px;
+}
+.sideBar > ul > li.two > .screenOuter .title span:nth-of-type(1) {
+  font-size: 18px;
+}
+.sideBar > ul > li.two > .screenOuter .title span:nth-of-type(2) {
+  font-size: 12px;
+  color: #313131;
+  opacity: 0.6;
+  margin-top: 5px;
+}
+.sideBar > ul > li.two > .screenOuter .title span:last-child {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #313131;
+  opacity: 0.6;
+  cursor: pointer;
+}
+.sideBar > ul > li.two > .screenOuter ul > li {
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  padding: 16px 25px;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .image {
+  flex: 80px 0 0;
+  width: 80px;
+  height: 60px;
+  background: red;
+  margin-right: 12px;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .image img {
+  width: 100%;
+  height: 100%;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .r-content {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .r-content div {
+  color: #313131;
+  text-align: left;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .r-content div:nth-of-type(1) {
+  font-size: 14px;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .r-content div:nth-of-type(2) span {
+  font-size: 12px;
+  margin-right: 10px;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .r-content div:nth-of-type(3) {
+  color: red;
+  font-size: 12px;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .r-content div:nth-of-type(3) span {
+  font-size: 16px;
+  margin-right: 5px;
+}
+.sideBar > ul > li.two > .screenOuter ul > li .delete {
+  position: absolute;
+  bottom: 20px;
+  right: 25px;
+  padding: 5px;
+  border: 1px solid #ff0000;
+  border-radius: 5px;
+  font-size: 10px;
+  color: #ff0000;
+  letter-spacing: 2px;
+  cursor: pointer;
+  display: none;
+}
+.sideBar > ul > li.two > .screenOuter ul > li:hover {
+  background: #eee;
+}
+.sideBar > ul > li.two > .screenOuter ul > li:hover .delete {
+  display: block;
+}
+.sideBar > ul > li.two > .screenOuter .content-ft button {
+  margin: 30px auto 0;
+  width: 290px;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  outline: none;
+  background: red;
+  color: #ffffff;
+  border: 0;
+  border-radius: 5px;
+}
+.sideBar > ul > li.two > .screenOuter .content-ft p {
+  padding: 10px;
+  color: #cacaca;
+}
+.sideBar > ul > li.three > .screenOuter {
+  background: #ff4343;
+  height: 38px;
+  line-height: 38px;
+  color: #ffffff;
+  padding: 0 10px;
+}
+.sideBar > ul > li.three > .screenOuter:after {
+  border-color: transparent transparent transparent #ff4343;
+}
+.sideBar .up {
+  position: absolute;
+  bottom: 30px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+}
+
 </style>
