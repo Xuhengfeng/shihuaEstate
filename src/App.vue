@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-20 23:07:07
+ * @Last Modified time: 2018-08-21 00:42:49
  */
 <template>
   <div id="app">
@@ -13,6 +13,7 @@
                 :appointList="appointList"
                 :contrastList="contrastList"
                 @deleteOneAppoint ="deleteOneAppoint"
+                @deleteOneContrast ="deleteOneContrast"
                 ></o-side-bar>
    	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
@@ -164,15 +165,12 @@ export default {
     },
     //删除待看中一个
     deleteOneAppoint(item) {
-      console.log(item)
       this.$http.delete(this.$url.URL.APPOINT_DELETE +item.id).then(res => {
-        console.log(res.data.data);
       });
     },
     //删除对比中一个
     deleteOneContrast(item) {
       this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
-        console.log(res.data.data);
       });
     },
     //清空待看列表

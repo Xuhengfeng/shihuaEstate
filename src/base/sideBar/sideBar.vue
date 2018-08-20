@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-20 23:28:39
+ * @Last Modified time: 2018-08-21 00:42:58
  */
 <template>
   <div class="sideBar">
@@ -15,7 +15,7 @@
                         <span class="fr" @click="clearDaikan()">清空</span>
                     </div>
                         <ul class="content-bd">
-                        <li v-for="item in list1">
+                        <li v-for="item in appointList">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -41,7 +41,7 @@
                         <span class="fr" @click="clearAll()">清空</span>
                     </div>
                     <ul class="content-bd">
-                        <li v-for="item in list2">
+                        <li v-for="item in contrastList">
                             <div class="image">
                                 <img :src="item.housePic"/>
                             </div>
@@ -93,8 +93,6 @@ export default {
     return {
       btn1: false,    //待看
       btn2: false,    //对比
-      list1: this.appointList,  //待看列表
-      list2: this.contrastList, //对比列表
       scity: null,    //用户选定城市
       id:"",          //待看id
       sdid: "",
@@ -102,13 +100,13 @@ export default {
     };
   },
   watch: {
-    list1() {
-      this.list1.length
+    appointList() {
+      this.appointList.length
       ?(this.btn1 = true)
       :(this.btn1 = false);
     },
-    list2() {
-      this.list2.length
+    contrastList() {
+      this.contrastList.length
       ?(this.btn2 = true)
       :(this.btn2 = false);
     }
@@ -132,18 +130,18 @@ export default {
     },
     //删除待看中一个
     deleteOneAppoint(item) {
-      let index = this.list1.findIndex(val=>{
+      let index = this.appointList.findIndex(val=>{
         return val == item;
       })
-      this.list1.slice(index, 1);
+      this.appointList.splice(index, 1);
       this.$emit('deleteOneAppoint', item);
     },
     //删除对比中一个
     deleteOneContrast(item) {
-      let index = this.list2.findIndex(val=>{
+      let index = this.contrastList.findIndex(val=>{
         return val == item;
       })
-      this.list2.slice(index, 1);
+      this.contrastList.splice(index, 1);
       this.$emit('deleteOneContrast', item);
     },
     //立即对比
