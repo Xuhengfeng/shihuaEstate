@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 01:53:36
+ * @Last Modified time: 2018-08-21 23:18:09
  */
 <template>
   <div id="app">
@@ -14,11 +14,15 @@
                 :contrastList="contrastList"
                 @deleteOneAppoint ="deleteOneAppoint"
                 @deleteOneContrast ="deleteOneContrast"
+                @clearDaikan="clearDaikan"
+                @clearAllContrast="clearAllContrast"
                 ></o-side-bar>
+                
    	<!-- 缓存组件,created只触发一次啦 -->
     <keep-alive>
     		<router-view v-if="$route.meta.keepAlive" ></router-view>
 		</keep-alive>
+
 		<!-- 设置不缓存的页面 -->
 		<router-view v-if="!$route.meta.keepAlive"></router-view>
     <!-- 脚步 -->
@@ -64,6 +68,10 @@ export default {
     //登录状态
     logined() {
       return this.$store.state.logined;
+    },
+    //预约看房数据变动
+    appointFlag() {
+      return this.$store.state.appointFlag;
     }
   },
   watch: {
@@ -125,6 +133,10 @@ export default {
     city() {
       this.refreshAppointList();//刷新待看列表
       this.refreshContrast();//刷新对比列表
+    },
+    //预约看房数据变动
+    appointFlag() {
+      this.refreshAppointList();//刷新待看列表
     }
   },
   created() {
@@ -166,28 +178,25 @@ export default {
     //删除待看中一个
     deleteOneAppoint(item) {
       this.$http.delete(this.$url.URL.APPOINT_DELETE +item.id).then(res => {
-      });
-    },
-    //删除对比中一个
-    deleteOneContrast(item) {
-      this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
         this.$store.commit('CHANGEAPPOINT');
       });
     },
     //清空待看列表
     clearDaikan() {
       this.appointList.forEach(item =>{
-        this.$http.delete(API.URL.APPOINT_DELETE+item.id).then(response => {
-          this.$store.commit('CHANGEAPPOINT');
-        });
+        this.deleteOneAppoint(item);
       })
     },
+     //删除对比中一个
+    deleteOneContrast(item) {
+      this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
+       
+      });
+    },
     //清空对比列表
-    clearAll() {
+    clearAllContrast() {
       this.contrastList.forEach(item =>{
-        this.$http.delete(API.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(response => {
-          console.log(res.data.data);
-        });
+        this.deleteOneContrast(item);
       })
     },
     //刷新对比详情

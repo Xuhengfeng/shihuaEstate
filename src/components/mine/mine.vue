@@ -1,4 +1,3 @@
-
 <template>
 	<!-- 我的 -->
 	<div class="mine">
@@ -6,7 +5,8 @@
 			<div>
 				<div class="side">
 					<div class="image">
-						<img :src="userInfo.headImage"/>
+						<img v-if="userInfo" :src="userInfo.headImage"/>
+						<img v-else src="../../imgs/home/defalut.jpg"/>
 					</div>
 					<ul>
 						<router-link :key="index" v-for="(item,index) in list" :to="item.url" @click.native="clickrouter(index)">
@@ -14,12 +14,12 @@
 						</router-link>
 					</ul>
 				</div>
+
 				<div class="content">
 					<!-- 缓存组件 -->
 					<keep-alive>
 						<router-view v-if="$route.meta.keepAlive"></router-view>
 					</keep-alive>
-
 					<!-- 设置不缓存的页面 -->
 					<router-view v-if="!$route.meta.keepAlive"></router-view>
 				</div>
@@ -51,8 +51,13 @@ export default {
     };
   },
   computed: {
+    //用户信息
     userInfo() {
       return this.$store.state.LoginedUser;
+    },
+    //判断用户登录
+    logined() {
+      return this.$store.state.logined;
     }
   },
   created() {

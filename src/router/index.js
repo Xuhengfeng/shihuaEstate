@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-19 13:55:52
+ * @Last Modified time: 2018-08-21 23:29:18
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -31,8 +31,6 @@ const decoration = resolve => require(['components/more/decoration'], resolve)//
 const publicgood = resolve => require(['components/more/publicgood'], resolve)//世华公益
 const industryconsultation = resolve => require(['components/more/industryconsultation'], resolve)//世华公益
 const agencyBusiness = resolve => require(['components/more/agencyBusiness'], resolve)//世华公益
-
-
 
 
 const estatedetail = resolve => require(['components/houseestate/estatedetail'], resolve)//小区详情
@@ -74,7 +72,6 @@ const groupculture = resolve => require(['components/group/groupculture'], resol
 const group = resolve => require(['components/group/group'], resolve)//集团
 
 
-
 Vue.use(Router)
 const router = new Router({
 	mode: 'hash', //历史模式, 取消地址栏"history#"
@@ -82,63 +79,39 @@ const router = new Router({
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
   	routes: [
-		{path:"*",redirect:'/',meta:{KeepAlive:false}},//重定向首页
 		{path:"/",component:home,meta:{KeepAlive:false}},//首页
 		{path:"/mapSearch",component:mapSearch,meta:{KeepAlive:false}},//地图找房
 		{path:"/searchlist",component:searchlist,meta:{KeepAlive:false}},//搜索列表
 		{path:"/contrast",component:contrast,meta:{KeepAlive:false}},//房源对比
 
-		// 二手房
-		{path:"/buyHouse",component:buyHouse,meta:{KeepAlive:true}},//我要买房
-		{path:"/buyHouse/twoHandHouseDetail/:id",component:twoHandHouseDetail,meta:{KeepAlive:false}},//二手房详情	
+		//{path:"/buyHouse",component:buyHouse,meta:{KeepAlive:true}},//我要买房
+		//{path:"/buyHouse/twoHandHouseDetail/:id",component:twoHandHouseDetail,meta:{KeepAlive:false}},//二手房详情	
+		//{path:"/rentHouse",component:rentHouse,meta:{KeepAlive:true}},//租房
+		//{path:"/rentHouseDetail/:id",component:rentHouseDetail,meta:{KeepAlive:false}},//租房详情
 	
-		// 新房
 		{path:"/newHouse",component:newHouse,meta:{KeepAlive:true}},//新房
 		{path:"/newHouseDetail/:id",component:newHouseDetail,meta:{KeepAlive:false}},//新房详情
-
-		// 租房
-		{path:"/rentHouse",component:rentHouse,meta:{KeepAlive:true}},//租房
-		{path:"/rentHouseDetail/:id",component:rentHouseDetail,meta:{KeepAlive:false}},//租房详情
-
-		//小区
 		{path:"/houseestate",component:houseestate,meta:{KeepAlive:false}},//小区
 		{path:"/estatedetail/:id",component:estatedetail,meta:{KeepAlive:false}},//小区详情
-
-		// 海外置业
 		{path:"/forginwork",component:forginwork,meta:{KeepAlive:true}},// 海外置业
-
-		// 旅居投资
 		{path:"/residence",component:residence,meta:{KeepAlive:true}},// 旅居投资
-		//城市
-		{path:"/city/:id",component:city,meta:{KeepAlive:false}},
-
-		//房屋托管
+		{path:"/city/:id",component:city,meta:{KeepAlive:false}},//城市
 		{path:"/housetuoguan",component:housetuoguan,meta:{KeepAlive:false}},//房屋托管
-		
-
-		//便民服务
 		{path:"/convenienceservices",component:convenienceservices,meta:{KeepAlive:false}},//便民服务
-
-		//装修
 		{path:"/decoration",component:decoration,meta:{KeepAlive:false}},//装修
-
-		//世华公益
 		{path:"/publicgood",component:publicgood,meta:{KeepAlive:false}},//世华公益
-
-		//行业咨询
 		{path:"/industryconsultation",component:industryconsultation,meta:{KeepAlive:false}},//行业咨询
-
-		//代办业务
 		{path:"/agencyBusiness",component:agencyBusiness,meta:{KeepAlive:false}},//代办业务
 
-		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[//咨询
+		//咨询
+		{path:"/consultant",redirect:'/consultant/consultantindex',component:consultant,children:[
 			{path:"consultantindex",component:consultantindex,meta:{KeepAlive:false}},//咨询首页
 			{path:"/consultantindexdetail/:id",component:consultantindexdetail,meta:{KeepAlive:false}},//咨询详情
 			{path:"consultantbuyhouse",component:consultantbuyhouse,meta:{KeepAlive:false}},//买房咨询
 		]},
 
-
-		{path:"/group",redirect:'/group/groupintourde',component:group,children:[//关于集团
+		//关于集团
+		{path:"/group",redirect:'/group/groupintourde',component:group,children:[
 			{path:"groupintourde",component:groupintourde,meta:{KeepAlive:false}},//集团简介
 			{path:"groupculture",component:groupculture,meta:{KeepAlive:false}},//集团文化
 			{path:"aboutgroup",component:aboutgroup,meta:{KeepAlive:false}},//关于我们
@@ -152,26 +125,29 @@ const router = new Router({
 		{path:"/brokerdetail/:id",component:brokerdetail,meta:{KeepAlive:false}},//找经纪人详情
 		{path:"/shoper",component:shoper,meta:{KeepAlive:false}},//找门店
 		{path:"/shoperdetail",component:shoperdetail,meta:{KeepAlive:false}},//找门店详情
-		{path:"/buyhouseguide",component:buyhouseguide,children:[{//购房指南
-				path:"guidedetail",component:guidedetail},//指南详情
-			]},
 		{path:"/industryconsultationDetail",component:industryconsultationDetail},//行业资讯详情
-		
-		{path:"/mine",redirect:'/mine/indexhome',component:mine,children:[{//我的个人账户
-				path:"indexhome",component:indexhome,meta:{KeepAlive:false}},{//账户首页
-				path:"indexseeone",component:indexseeone,meta:{KeepAlive:false}},{//待看列表
-				path:"indexseetwo",component:indexseetwo,meta:{KeepAlive:false}},{//待看日程
-				path:"indexseethree",component:indexseethree,meta:{KeepAlive:false}},{//已看记录
-				path:"indexseefour",component:indexseefour,meta:{KeepAlive:false}},{//看房报告
-				path:"indexcollection",component:indexcollection,meta:{KeepAlive:false}},{//我的收藏
-				path:"indexdelegation",component:indexdelegation,meta:{KeepAlive:false}},{//我的委托
-				path:"indexbroker",component:indexbroker,meta:{KeepAlive:false}},{//我的经纪人
-				path:"indexconsult",component:indexconsult,meta:{KeepAlive:false}},{//我的咨询
-				path:"indexmessage",component:indexmessage,meta:{KeepAlive:false}},{//消息
-				path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}},{//编辑资料
-				path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
-				path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
-			]},
+
+		//购房指南
+		{path:"/buyhouseguide",component:buyhouseguide,children:[{
+			path:"guidedetail",component:guidedetail},//指南详情
+		]},
+					
+		//我的个人账户
+		{path:"/mine",redirect:'/mine/indexhome',component:mine,children:[{
+			path:"indexhome",component:indexhome,meta:{KeepAlive:false}},{//账户首页
+			path:"indexseeone",component:indexseeone,meta:{KeepAlive:false}},{//待看列表
+			path:"indexseetwo",component:indexseetwo,meta:{KeepAlive:false}},{//待看日程
+			path:"indexseethree",component:indexseethree,meta:{KeepAlive:false}},{//已看记录
+			path:"indexseefour",component:indexseefour,meta:{KeepAlive:false}},{//看房报告
+			path:"indexcollection",component:indexcollection,meta:{KeepAlive:false}},{//我的收藏
+			path:"indexdelegation",component:indexdelegation,meta:{KeepAlive:false}},{//我的委托
+			path:"indexbroker",component:indexbroker,meta:{KeepAlive:false}},{//我的经纪人
+			path:"indexconsult",component:indexconsult,meta:{KeepAlive:false}},{//我的咨询
+			path:"indexmessage",component:indexmessage,meta:{KeepAlive:false}},{//消息
+			path:"indexeditInfo",component:indexeditInfo,meta:{KeepAlive:false}},{//编辑资料
+			path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
+			path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
+		]},
   	]
 })
 

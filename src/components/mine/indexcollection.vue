@@ -9,7 +9,7 @@
                     @click="change(index)">{{item}}</li>
               </ul>
           </div>
-           <div class="noContent" v-show="!collecttwohouse.length">无收藏数据!</div>
+          <div class="noContent" v-show="!collecttwohouse.length">无收藏数据!</div>
           <div class="main">
               <ul>
                 <o-HouseList :isShowNum="num" :list="collecttwohouse"></o-HouseList>
@@ -63,18 +63,13 @@ export default {
           .get(this.IPS[num]+"?pageNo="+this.page)
           .then(response => {
             try{
+              let data = response.data.data;
               //修正数据
-              response.data.data.forEach(item => {
+              data.forEach(item => {
                 item.houseTag = item.houseTag.split(",");
               });
-            }
-            catch(err){
-              console.log(err)
-            }
-            let data = response.data.data;
-             data.forEach(item => {
+              data.forEach(item => {
                    if(item.status==0){
-                     console.log(!11)
                      item.status = "正常"
                    }
                     if(item.status==1){
@@ -87,7 +82,8 @@ export default {
                      item.status = "已停售"
                    }
                 });
-            this.collecttwohouse = response.data.data;
+              this.collecttwohouse = data;
+            }catch(error){}
           });
 
             this.$http

@@ -1,6 +1,6 @@
 <template>
     <div class="item">
-        <div v-show="broker.length">
+        <div>
             <ul>
                 <li v-for="item in broker">
                     <div class="image" @click="toSkip()">
@@ -57,9 +57,12 @@ export default {
                     scity:this.selectCity.value
                 })
                 .then(response => {
-                this.broker = response.data.data;   
-                console.log(this.broker) 
-                this.broker.length==0? this.numbol=true : this.numbol=false;
+                  try{
+                    this.broker = response.data.data;   
+                    this.broker.length==0? this.numbol=true : this.numbol=false;
+                  }catch(error){
+                    this.numbol=true;
+                  }
              });
         }
     },

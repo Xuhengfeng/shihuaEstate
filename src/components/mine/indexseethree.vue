@@ -117,14 +117,18 @@ export default {
             this.$http
             .get(this.$url.URL.APPOINT_COMPLETE+"?pageNo="+1+"&scity="+this.city.value)
             .then(response => {
-                let newData = response.data.data;
-                newData.forEach(item => {
-                    //修正时间格式形如2018.01.01
-                    item.scheduleTime1 = item.scheduleTime.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
-                    item.scheduleTime2 = item.scheduleTime.split(' ')[2];
-                });
-                this.completelist = newData;
-                this.completelist.length==0? this.numbol=true : this.numbol=false;
+                try{
+                    let newData = response.data.data;
+                    newData.forEach(item => {
+                        //修正时间格式形如2018.01.01
+                        item.scheduleTime1 = item.scheduleTime.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
+                        item.scheduleTime2 = item.scheduleTime.split(' ')[2];
+                    });
+                    this.completelist = newData;
+                    this.completelist.length==0? this.numbol=true : this.numbol=false;
+                }catch(error){
+                    this.numbol=true;
+                }
             });
         },
         // 经纪人信息

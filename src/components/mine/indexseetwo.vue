@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-05-19 13:32:30 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-07-30 15:16:35
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-22 00:11:08
  * @description: 待看日程
  */
 <template>
@@ -68,20 +68,24 @@ export default {
             this.$http
             .get(this.$url.URL.APPOINT_READYLIST+"?pageNo=1&scity="+JSON.parse(localStorage.selectCity).value)
             .then(response => {
-                let newData = response.data.data;
-                newData.forEach(item => {
-                    //修正时间格式形如2018.01.01
-                    item.appointDate1 = item.appointDate.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
-                    item.appointDate2 = item.appointDate.split(' ')[1];
-                    item.houseList.forEach(item2=>item2.houseTag = item2.houseTag.split(','));
-                    switch(item.status){
-                        case 0:item.status = '确认中'; break;
-                        case 1:item.status = '预约成功';break;
-                        case 2: item.status = '已取消';break;
-                    }
-                });
-                this.appointList = newData;
-                this.appointList.length == 0? this.numbol=true : this.numbol=false;
+                try{
+                    let newData = response.data.data;
+                    newData.forEach(item => {
+                        //修正时间格式形如2018.01.01
+                        item.appointDate1 = item.appointDate.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
+                        item.appointDate2 = item.appointDate.split(' ')[1];
+                        item.houseList.forEach(item2=>item2.houseTag = item2.houseTag.split(','));
+                        switch(item.status){
+                            case 0:item.status = '确认中'; break;
+                            case 1:item.status = '预约成功';break;
+                            case 2: item.status = '已取消';break;
+                        }
+                    });
+                    this.appointList = newData;
+                    this.appointList.length == 0? this.numbol=true : this.numbol=false;
+                }catch(error){
+                    this.numbol=true;
+                }
             });
         },
         open(item) {

@@ -2,12 +2,12 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 01:45:51
+ * @Last Modified time: 2018-08-21 23:24:22
  */
 import router from '../router/index'
 //同步处理
 export default {
-	//打开登录 注册对话框
+	//打开登录\注册\对话框
 	OPENLOGINDIALOG(state, num) {
 		state.loginDialogNum = num;
 	},
@@ -26,17 +26,14 @@ export default {
 		state.logined = true;
 		sessionStorage.logined = true;
 		let user = JSON.parse(sessionStorage.userInfo);
-		//取登录之后缓存sessionStorage的信息
 		state.LoginedUser = Object.assign({}, user);
 	},
 	//退出
 	LOGOUT(state) {
-		//清空所有关于登录缓存
+		//清空还原
 		sessionStorage.clear();
-		//清空状态
 		state.logined = false;
 		state.LoginedUser = null;
-
 		state.loginDialogNum = null;
 		router.push({path: "/"});
 	},
@@ -44,7 +41,7 @@ export default {
 	WORDCOLOR(state, payload){
 		state.wordcolor = payload;
 	},
-	//预约看房变化标志
+	//预约看房数据变动标志
 	CHANGEAPPOINT(state) {
 		state.appointFlag = !state.appointFlag;
 	}

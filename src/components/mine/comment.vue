@@ -1,6 +1,6 @@
 <template>
     <div class="item">
-        <div v-show="comment.length">
+        <div>
             <ul>
                 <li v-for="item in comment">
                     <div class="image" >
@@ -54,17 +54,21 @@ export default {
             numbol: false,
             comment:"",   //评论
             num:1,
-            selectCity: JSON.parse(localStorage.selectCity),//当前城市
-            nickname: JSON.parse(sessionStorage.userInfo).nickname,
-            headImage: JSON.parse(sessionStorage.userInfo).headImage
+            selectCity: "",//当前城市
+            nickname: "",
+            headImage: ""
         };
     },
     created(){
+        try{
+            this.selectCity = JSON.parse(localStorage.selectCity);
+            this.nickname = JSON.parse(sessionStorage.userInfo).nickname;
+            this.headImage = JSON.parse(sessionStorage.userInfo).headImage;
+        }catch(error){}
         this.render();	
     },
     methods:{
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
             this.render(null, val);		
         },
         render(num) {
@@ -74,8 +78,12 @@ export default {
                     scity:this.selectCity.value,
                 })
                 .then(response => {
-                this.comment = response.data.data;    
-                this.comment.length==0?this.numbol=true:this.numbol=false;
+                    try{                      
+                        this.comment = response.data.data;    
+                        this.comment.length==0?this.numbol=true:this.numbol=false;
+                    }catch(error){
+                       this.numbol = true;
+                    }
              });
         }
     },

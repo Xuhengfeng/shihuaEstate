@@ -41,14 +41,18 @@ export default {
             this.$http
             .get(this.$url.URL.REPORT_LIST+"?pageNo="+1+"&scity="+city)
             .then(response => {
-                let data = response.data.data;
-                data.forEach(item => {
-                    //修正时间格式形如2018.01.01
-                    item.createDateTime1 = item.createDateTime.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
-                    item.createDateTime2 = item.createDateTime.split(' ')[1];
-                });
-                this.reportList = response.data.data;
-                this.reportList.length==0? this.numbol=true : this.numbol=false;
+                try{
+                    let data = response.data.data;
+                    data.forEach(item => {
+                        //修正时间格式形如2018.01.01
+                        item.createDateTime1 = item.createDateTime.split(' ')[0].replace(/[^0-9]/ig, ".").slice(0,-1);
+                        item.createDateTime2 = item.createDateTime.split(' ')[1];
+                    });
+                    this.reportList = response.data.data;
+                    this.reportList.length==0? this.numbol=true : this.numbol=false;
+                }catch(error){
+                    this.numbol=true;
+                }
             });
         }
     },

@@ -120,12 +120,13 @@ export default {
   methods: {
     //清空待看
     clearDaikan() {
-      this.btn2 = false;
-      this.$emit('clearDaikan');
+      this.btn1 = false;
+      this.appointList=[];
+      this.$emit('clearDaikan', this.appointList);
     },
     //清空对比
-    clearAll() {
-      this.btn1 = false;
+    clearAllContrast() {
+      this.btn2 = false;
       this.$emit('clearAll');
     },
     //删除待看中一个

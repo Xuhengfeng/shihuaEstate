@@ -121,6 +121,7 @@ import oEmpty from "../../base/empty/empty";
 export default {
     data() {
         return {
+            order:true,    //点击预约显示
             numbol: false,
             appointRange:[{range:"全天"},{range:"上午"},{range:"下午"},{range:"晚上"}],
             username: "", //姓名
@@ -132,18 +133,21 @@ export default {
             brokerLists: [], //经纪人列表
             brokerValue: "", //经纪人
             brokerId:"",     //经纪人id
-            currentCity: JSON.parse(localStorage.selectCity),
+            currentCity: '',
             currenttime:"",
-            mobile:JSON.parse(sessionStorage.userInfo).mobile ,//电话
+            mobile: '',//电话
             rangetime:"",
             appointDate:"",    //预约时间
-            order:true,    //点击预约显示
             allChecked: false,//全选
             num:null,//高亮
             fontcolor:null,//高亮
         };
     },
     created() {
+        try{
+            this.currentCity = JSON.parse(localStorage.selectCity);
+            this.mobile = JSON.parse(sessionStorage.userInfo).mobile;
+        }catch(error){}
         this.readyHouseListRequest();
         this.brokerListRequest(1);
         this.week()
@@ -168,7 +172,6 @@ export default {
         },
         //待看房源列表
         appointFlag() {
-            console.log(11212)
             this.readyHouseListRequest();
             this.order = true;
         }
@@ -220,16 +223,19 @@ export default {
         //待看房源请求
         readyHouseListRequest() {
             let city = JSON.parse(localStorage.selectCity).value;
-            this.$http
-            .get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo="+1,{
-				  scity: city
-				})
+            this.$http.get(this.$url.URL.APPOINT_DETAILLIST+"?pageNo=1&pageSize=4",{
+                scity: city
+            })
             .then(response => {
-                response.data.data.forEach(item=>{
-                     item.checked = false
-                });
-                this.houseList = response.data.data;
-                this.houseList.length==0? this.numbol=true : this.numbol=false;
+                try{
+                    response.data.data.forEach(item=>{
+                        item.checked = false
+                    });
+                    this.houseList = response.data.data;
+                    this.houseList.length==0? this.numbol=true : this.numbol=false;
+                }catch(error){
+                    this.numbol = true;
+                }
             });
         },
         selectBroker(item) {
@@ -262,9 +268,29 @@ export default {
                     })
                 }
             })
-            if(!this.selectItem.length){
-                this.$alert('至少选中一个房源');
+            if(!this.selectItem.length) this.$alert('至少选中一个房源');
+        },
+        del() {
+            let arr = [];//选中
+            this.houseList.forEach(item=>{
+                //判断有选中的情况下
+                if(item.checked == true){
+                    arr.push(item);
+                }
+            })
+            if(!arr.length) {
+                this.$alert('请选择房源进行删除');
+            }else{
+                arr.forEach(item=>{
+                    this.deleteOneAppoint(item);
+                })
             }
+        },
+        //删除待看中一个
+        deleteOneAppoint(item) {
+            this.$http.delete(this.$url.URL.APPOINT_DELETE +item.id).then(res => {
+                this.$store.commit('CHANGEAPPOINT');
+            });
         },
         //提交预约看房
         commitRequest() {

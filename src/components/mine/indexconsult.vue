@@ -1,8 +1,8 @@
 <template>
     <div class="wd-list">
-        <div v-show="consult.length">
+        <div>
             <ul>
-                <li>	
+                <li v-for="item in consult">	
                     <div class="leftlist fl">
                         <p class="question">
                             <a href="">
@@ -29,7 +29,7 @@
                 </li>
             </ul>
             <!--分页器-->
-            <div class="oPagination">
+            <!-- <div class="oPagination">
                 <el-pagination
                     @current-change="handleCurrentChange"
                     background
@@ -39,7 +39,7 @@
                     :total="1000"
                     class="fr pagination">
                 </el-pagination>
-            </div>
+            </div> -->
         </div>
         <!-- 空页面 -->
         <o-empty :titles="'还没有咨询的信息'" 
@@ -57,15 +57,17 @@ export default {
             numbol:false,
             consult: [],   //咨询列表
             num:1,
-            selectCity: JSON.parse(localStorage.selectCity),//当前城市
+            selectCity: "",//当前城市
         };
     },
     created(){
+        try{
+            this.selectCity = JSON.parse(localStorage.selectCity);
+        }catch(error){}
         this.render();	
     },
     methods:{
         handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
             this.render(null, val);		
         },
         render(num) {
@@ -74,8 +76,12 @@ export default {
                     scity:this.selectCity.value,
                 })
                 .then(response => {
-                this.consult = response.data.data;    
-                this.consult.length==0? this.numbol=true : this.numbol=false;
+                    try{
+                        this.consult = response.data.data;    
+                        this.consult.length==0? this.numbol=true : this.numbol=false;
+                    }catch(error){
+                        this.numbol=true;
+                    }
              });
         }
     },
