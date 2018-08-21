@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 23:18:09
+ * @Last Modified time: 2018-08-22 00:48:31
  */
 <template>
   <div id="app">
@@ -154,7 +154,7 @@ export default {
     },
     //刷新待看列表
     refreshAppointList() {
-      this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo=1",{
+      this.$http.get(this.$url.URL.APPOINT_DETAILLIST +"?pageNo=1&pageSize=4",{
         "scity":  this.scity
       })
       .then(res =>{
@@ -166,12 +166,12 @@ export default {
     //刷新对比列表
     refreshContrast() {
       let scity = JSON.parse(localStorage.selectCity).value||'beihai';
-      this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST +"?pageNo=1",{
+      this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST +"?pageNo=1&pageSize=4",{
         "scity": scity
       })
       .then(res =>{
         try{
-          this.appointList = res.data.datares.slice(0,4);;
+          this.contrastList = res.data.data.slice(0,4);
         }catch(error){};
       })
     },
@@ -190,7 +190,7 @@ export default {
      //删除对比中一个
     deleteOneContrast(item) {
       this.$http.delete(this.$url.URL.CANCEL_CONTRAST+"?houseSdid="+item.sdid).then(res => {
-       
+        this.$store.commit('CONTRASTF');
       });
     },
     //清空对比列表

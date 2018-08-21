@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-19 22:04:13
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-08-22 00:46:58
  */
 <template>
 	<!-- 房源对比 -->
@@ -187,27 +187,16 @@ export default {
 	},
 	created() {
 		this.requestContrast();
-		//这个缓存第二次才走(这么做为了保留最后一次操作对比清单结果)
-		if(localStorage.tempContrastlist) {
-			let arr = JSON.parse(localStorage.tempContrastlist);
-			this.houseList = arr;
-			let newList = this.checkItem(arr.slice(0), arr.length);
-			this.contrastList = newList;
-		}
 	},
 	computed:{
-		contrastDetailList() {
-			return this.$store.state.contrastDetailList;
+		contrastFlag() {
+			return this.$store.state.contrastFlag;
 		}		
 	},
 	watch: {
-		contrastDetailList() {
-			let list = this.$store.state.contrastDetailList;
-			localStorage.tempContrastlist = JSON.stringify(list);
-			this.houseList = list.slice(0);
-			let newList = this.checkItem(list, list.length);
-			this.contrastList = newList;
-		},
+		contrastFlag() {
+			this.requestContrast();
+		}
 	},
 	methods: {
 		//突出优势项
@@ -261,12 +250,11 @@ export default {
 		//获取对比清单列表
 		requestContrast() {
 			this.$http.get(this.$url.URL.TWOHOUSELIST_CONTRAST)
-			.then((res)=>{
-			  if(res.data.data.length) {
-				this.houseList =  res.data.data;
-				//初始化清单列表
-				this.$store.dispatch('showlist', res.data.data);
-			  }
+			.then(res=>{
+				try{
+					//初始化清单列表
+					this.houseList =  res.data.data;
+				}catch(error){}
 			})
 		},
 		//item个数补齐

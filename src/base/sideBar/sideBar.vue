@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 01:53:14
+ * @Last Modified time: 2018-08-22 00:41:57
  */
 <template>
   <div class="sideBar">
@@ -127,7 +127,8 @@ export default {
     //清空对比
     clearAllContrast() {
       this.btn2 = false;
-      this.$emit('clearAll');
+      this.contrastList=[];
+      this.$emit('clearAll', this.contrastList);
     },
     //删除待看中一个
     deleteOneAppoint(item) {

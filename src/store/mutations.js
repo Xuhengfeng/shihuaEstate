@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 00:21:21 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 23:24:22
+ * @Last Modified time: 2018-08-22 00:48:15
  */
 import router from '../router/index'
 //同步处理
@@ -41,8 +41,12 @@ export default {
 	WORDCOLOR(state, payload){
 		state.wordcolor = payload;
 	},
-	//预约看房数据变动标志
+	//预约房源数据变动
 	CHANGEAPPOINT(state) {
 		state.appointFlag = !state.appointFlag;
+	},
+	//对比房源数据变动
+	CONTRASTF(state) {
+		state.contrastFlag = !state.contrastFlag;
 	}
 }
