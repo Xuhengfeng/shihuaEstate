@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-22 00:48:31
+ * @Last Modified time: 2018-08-22 01:03:18
  */
 <template>
   <div id="app">
@@ -47,6 +47,7 @@ export default {
       scity: null,     //当前选定的城市
       appointList: [],  //待看列表
       contrastList: [], //对比列表
+      sdidStr: '',//拼接对比房源详情sdid
     };
   },
   components: {
@@ -170,8 +171,13 @@ export default {
         "scity": scity
       })
       .then(res =>{
+        let str = "";
         try{
           this.contrastList = res.data.data.slice(0,4);
+          this.contrastList.forEach(item=>{
+              str += item.sdid+"#"
+          })
+          refreshContrastDetail(str);
         }catch(error){};
       })
     },
@@ -200,8 +206,9 @@ export default {
       })
     },
     //刷新对比详情
-    refreshContrastDetail() {
-      this.$http.get(this.$url.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+city).then(res => {
+    refreshContrastDetail(sdidStr) {
+      console.log(1212)
+      this.$http.get(this.$url.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+this.city).then(res => {
         console.log(res.data.data);
       });
     }

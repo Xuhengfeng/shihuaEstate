@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-28 10:10:58 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-22 00:53:30
+ * @Last Modified time: 2018-08-22 00:57:02
  */
 <template>
 	<!-- 房源对比 -->
@@ -187,12 +187,13 @@ export default {
 	},
 	created() {
 		this.requestContrast();
-		if(localStorage.tempContrastlist) {
-			let arr = JSON.parse(localStorage.tempContrastlist);
-			this.houseList = arr;
-			let newList = this.checkItem(arr.slice(0), arr.length);
-			this.contrastList = newList;
-		}
+		// if(localStorage.tempContrastlist) {
+		// 	let arr = JSON.parse(localStorage.tempContrastlist);
+		// 	this.houseList = arr;
+		// 	let newList = this.checkItem(arr.slice(0), arr.length);
+		// 	this.contrastList = newList;
+		// }
+		
 	},
 	computed:{
 		contrastFlag() {
@@ -260,6 +261,7 @@ export default {
 				try{
 					//初始化清单列表
 					this.houseList =  res.data.data;
+					this.contrastList = this.checkItem(this.houseList.slice(0), this.houseList.length);
 				}catch(error){}
 			})
 		},
