@@ -32,8 +32,8 @@
             <ul class="two fl">
                 <li>更多
                     <ol class="item2">
-                        <!-- 外链小区页 -->
-                        <li><a href="http://www.baidu.com" :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
+                        <!-- 外链 -->
+                        <li><a :href="host+'/index/beihai'" :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
                         <router-link tag="li" to="/agencyBusiness" :class="wordColor=='b'?'bgColor':''">代办业务</router-link>
                         <router-link tag="li" to="/convenienceservices" :class="wordColor=='c'?'bgColor':''">便民服务</router-link>
                         <router-link tag="li" to="/housetuoguan" :class="wordColor=='d'?'bgColor':''">房屋托管</router-link>
@@ -55,10 +55,10 @@
                     </ol>
                 </router-link>
                 <!-- 外链 -->
-                <li><a href="http://www.baidu.com" :class="wordColor==6?'bgColor':''">租房</a></li>
+                <li><a :href="host+'/house_r/renthouse?scity=beihai'" :class="wordColor==6?'bgColor':''">租房</a></li>
                 <router-link tag="li" to="/newHouse" :class="wordColor==7?'bgColor':''">新房</router-link>
-                <li><a href="http://www.baidu.com" :class="wordColor==8?'bgColor':''">二手房</a></li>
-                <li><a href="http://www.baidu.com">首页</a></li>
+                <li><a :href="host+'/house_c/twohouse?scity=beihai'" :class="wordColor==8?'bgColor':''">二手房</a></li>
+                <li><a :href="host+'/index/beihai'">首页</a></li>
             </ul>
         </div>
     </div>
@@ -69,6 +69,7 @@ export default {
 		return {
 			showbox: 0,
             houseTypeId: 11,
+            host: 'http://112.74.181.229:7031/custAppApi'
 		};
     },
     computed: {
@@ -82,6 +83,10 @@ export default {
             return this.$store.state.wordcolor;
         }
     },
+    created() {
+        var params = this.parseUrl(location);
+        console.log(params);    
+    },
 	methods: {
 		//登陆
         login() {
@@ -94,7 +99,25 @@ export default {
         //退出
         logout() {
             this.$store.dispatch('logout');
-        }
+        },
+        //解析url
+        parseUrl(url) {
+            try{
+                var urlStr=url.split("?")[1].split("&");
+                var urlparams = {};
+                for( let i=0;i<urlStr.length;i++){
+                    var item = urlStr[i].split("=")
+                    urlparams[item[0]]=item[1]
+                }
+                return urlparams;
+            }
+            catch(err){}
+        }  
+    },
+    mounted() {
+        window.addEventListener('storage',function(e){      
+            console.log(e)
+        })
     }
 }
 </script>

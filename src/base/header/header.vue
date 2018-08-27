@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-25 11:27:54 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2018-06-18 02:12:36
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-08-27 10:27:12
  */
 <template>
 	<div class="header">
@@ -60,7 +60,6 @@ export default {
 	},
 	created() {
 		this.word = this.keyword;
-		console.log(this.word)
 	},
 	methods: {
 		mapSearch() {
