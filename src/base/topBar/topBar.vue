@@ -32,7 +32,8 @@
             <ul class="two fl">
                 <li>更多
                     <ol class="item2">
-                        <li><a href="http://www.baidu.com" :class="wordColor=='a'?'bgColor':''">小区找房</a></li>
+                        <!-- 外链小区页 -->
+                        <li><a href="http://www.baidu.com" :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
                         <router-link tag="li" to="/agencyBusiness" :class="wordColor=='b'?'bgColor':''">代办业务</router-link>
                         <router-link tag="li" to="/convenienceservices" :class="wordColor=='c'?'bgColor':''">便民服务</router-link>
                         <router-link tag="li" to="/housetuoguan" :class="wordColor=='d'?'bgColor':''">房屋托管</router-link>
@@ -53,6 +54,7 @@
 						<router-link tag="li" to="/entrustmentrent/sell" :class="wordColor=='k'?'bgColor':''">我要出售</router-link>
                     </ol>
                 </router-link>
+                <!-- 外链 -->
                 <li><a href="http://www.baidu.com" :class="wordColor==6?'bgColor':''">租房</a></li>
                 <router-link tag="li" to="/newHouse" :class="wordColor==7?'bgColor':''">新房</router-link>
                 <li><a href="http://www.baidu.com" :class="wordColor==8?'bgColor':''">二手房</a></li>
@@ -97,117 +99,128 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
-.topBar{
-    background: #394043;
-    height: 70px;
-    font-size: 18px;
-    color: #FFFFFF;
-    position: relative;
+.topBar {
+  background: #394043;
+  height: 70px;
+  font-size: 18px;
+  color: #FFFFFF;
+  position: relative;
 }
-.navmenu{
-    overflow: visible!important;
-    .one{
-        line-height: 70px;
-        position: relative;
-        font-size: 16px;
-        >div:nth-of-type(1){
-            position: relative;
-            float: right;
-            text-align: right;
-            width: 190px;
-            &:hover ul{
-                visibility: visible;
-                li:hover{ color: #ff4343}
-            }
-            ul{
-                position: absolute;
-                right: 20px;
-                top: 70px;
-                width: 80px;
-                z-index:999;
-                background: #FFFFFF;
-                visibility: hidden;
-                >li{
-                    color: black;
-                    font-size: 14px;
-                    height: 30px;
-                    line-height: 30px;
-                    text-align: left;
-                    text-indent: 10px;
-                    border-bottom: 1px solid #a7a7a6;
-                    cursor: pointer;
-                }
-            }
-        }
-        >div:nth-of-type(2){
-            float: right;
-        }
-    }
-    .two{
-        line-height: 70px;
-        >li{
-            position: relative;
-            float: right;
-            margin-right: 26px;
-            cursor: pointer;
-            ol{
-                position: absolute;
-                left: 0;
-                top: 70px;
-                width: 80px;
-                z-index:999;
-                background: #FFFFFF;
-                visibility: hidden;
-                >li{
-                    color: black;
-                    font-size: 14px;
-                    height: 30px;
-                    line-height: 30px;
-                    text-indent: 10px;
-                    border-bottom: 1px solid #a7a7a6;
-                    cursor: pointer;
-                }
-            }
-            &:hover{
-                color: #ff4343;
-                ol{
-                    visibility: visible;
-                    li:hover{color: #ff4343}
-                }
-            }
-
-        }
-    }
+.navmenu {
+  overflow: visible!important;
 }
-.fontColor{
-    color: #ff4343!important;
+.navmenu a{
+    color: #fff;
+}
+.navmenu .one {
+  line-height: 70px;
+  position: relative;
+  font-size: 16px;
+}
+.navmenu .one > div:nth-of-type(1) {
+  position: relative;
+  float: right;
+  text-align: right;
+  width: 190px;
+}
+.navmenu .one > div:nth-of-type(1):hover ul {
+  visibility: visible;
+}
+.navmenu .one > div:nth-of-type(1):hover ul li:hover {
+  color: #ff4343;
+}
+.navmenu .one > div:nth-of-type(1) ul {
+  position: absolute;
+  right: 20px;
+  top: 70px;
+  width: 80px;
+  z-index: 999;
+  background: #FFFFFF;
+  visibility: hidden;
+}
+.navmenu .one > div:nth-of-type(1) ul > li {
+  color: black;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  text-indent: 10px;
+  border-bottom: 1px solid #a7a7a6;
+  cursor: pointer;
+}
+.navmenu .one > div:nth-of-type(2) {
+  float: right;
+}
+.navmenu .two {
+  line-height: 70px;
+}
+.navmenu .two > li {
+  position: relative;
+  float: right;
+  margin-right: 26px;
+  cursor: pointer;
+}
+.navmenu .two > li ol {
+  position: absolute;
+  left: 0;
+  top: 70px;
+  width: 80px;
+  z-index: 999;
+  background: #FFFFFF;
+  visibility: hidden;
+}
+.navmenu .two > li:hover,
+.navmenu .two > li:hover>a
+{
+    color: #ff4343;
+}
+.navmenu .two > li:hover ol {
+    visibility: visible;
+}
+.navmenu .two > li ol > li {
+  color: black;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  text-indent: 10px;
+  border-bottom: 1px solid #a7a7a6;
+  cursor: pointer;
+}
+.navmenu .two > li:hover ol li:hover,
+.navmenu .two > li:hover ol li:hover a{
+  color: #ff4343!important;
 }
 /* 登录/退出 */
 .navmenu .login:hover,
 .navmenu .register:hover,
-.navmenu .logout:hover{
-    color: #ff4343;
-    cursor: pointer;    
+.navmenu .logout:hover {
+  color: #ff4343;
+  cursor: pointer;
 }
 .icon-yonghu,
 .login,
 .logout {
-	font-size: 19 px;
-    color: #FFFFFF;
-    cursor: pointer;
+  font-size: 19 px;
+  color: #FFFFFF;
+  cursor: pointer;
 }
-.headImage{
-    position: absolute;
-	width: 25px;
-	height: 25px;
-	border-radius: 50%;
-    overflow: hidden;
-    top: 50%;
-    left: 20px;
-    transform: translateY(-50%);
+.headImage {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  overflow: hidden;
+  top: 50%;
+  left: 20px;
+  transform: translatey(-50%);
 }
-.bgColor{
-   color: #ff4343!important;
+.bgColor {
+  color: #ff4343!important;
 }
+textarea {
+  width: 400px;
+  height: 300px;
+  font-size: 12px;
+}
+
 </style>

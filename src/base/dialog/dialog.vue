@@ -1,8 +1,8 @@
 /*
  * @Author: mikey.zhaopeng 
  * @Date: 2018-05-17 23:08:17 
- * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-21 01:43:30
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-08-24 10:00:01
  * @描述: 登录 注册 组件封装
  */
 <template>
@@ -506,21 +506,13 @@ input::-webkit-input-placeholder {
 
 //注册和登录弹框动画
 .bounce-enter-active{
-  animation: bounce-in .5s;
-}
-.bounce-leave-active{
-  // animation: bounce-out .5s;
+  animation: bounce-in .3s;
 }
 @keyframes bounce-in {
   0%{transform: scale(0)}
-  95%{transform: scale(1.05)}
+  90%{transform: scale(1.05)}
   100%{transform: scale(1)}
 }
-@keyframes bounce-out {
-  0%{transform: scale(1)}
-  100%{transform: scale(0);opacity:0}
-}
-
 </style>
 
 

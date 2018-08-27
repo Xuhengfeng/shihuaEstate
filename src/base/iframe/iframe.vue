@@ -1,7 +1,7 @@
 <template>
     <!-- 路由外页面 -->
     <div class="wrapper">
-        <iframe name="myframe" ref="myFrame" :src="contentUrl" frameborder="0" ></iframe>
+        <iframe id="myframe" name="myframe" ref="myFrame" :height="myHeight" :src="contentUrl" frameborder="0" scrolling="auto" ></iframe>
     </div>
 </template>
 <script>
@@ -9,22 +9,33 @@ export default {
     data() {
         return {
             contentUrl: "",
-            myHeight: ""
+            myHeight: 6000
         }
+    },
+    created() {
+        this.contentUrl = this.$route.query.contentUrl;
     },
     methods: {
         // 计算内容高度
         calcFrameHeight() {
-            console.dir(this.$refs.myFrame);
-            let oheight = this.$refs.myFrame.ownerDocument.body.scrollHeight;
-            this.contentUrl = this.$route.query.contentUrl;
-            this.myHeight = oheight;
+            
+            var iframe = document.getElementById('myframe');
+            console.log(iframe.ownerDocument.documentElement)
+            console.dir(iframe.ownerDocument.documentElement)
+            var body = iframe.contentWindow.document.getElementsByTagName('html')[0];
+            console.log(body)
+            // let oheight = this.$refs.myFrame.ownerDocument.body.scrollHeight;
+            // console.dir(this.$refs.myFrame)
+            // console.dir(this.$refs.myFrame.style)
+            // console.log(oheight)
+            // this.myHeight = oheight;
         }
     },
     mounted() {
-        $(document).ready(()=>{ 
+        
+        setTimeout(()=>{
             this.calcFrameHeight();
-        }); 
+        },1000);
     }
 }
 </script>
@@ -35,6 +46,5 @@ export default {
 }
 .wrapper iframe{
     width: 100%;
-    min-height: 500px;
 }
 </style>

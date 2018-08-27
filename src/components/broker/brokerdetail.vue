@@ -17,7 +17,7 @@
 					</ul>
 					<div class="adverTisementLine"></div>
 					<div style="font-size: 16px;color: color: rgba(0,0,0,0.8);margin-top: 30px;">下载世华易居APP</div>
-					<div style="margin-top: 30px;"><img src="../../imgs/buyhouse/erwm.png"/></div>
+					<div style="margin-top: 30px;"><img src="../../imgs/buyhouse/erwm.png" style="width:100%"/></div>
 				</div>
 				<!--左侧内容-->
 				<div class="leftContent">
@@ -276,7 +276,7 @@ export default {
 
 //列表项 
 .item ul li{
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   height: 120px;
   margin-top: 30px;

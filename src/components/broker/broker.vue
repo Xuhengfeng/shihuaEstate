@@ -71,7 +71,11 @@
 									<img :src="item.photo" @error="avatar"/>
 								</div>
 								<div class="direciton">
-									<h2 @click="toSkip(item)"><span class="name">{{item.emplName}}</span><span class="position">{{item.positionName}}</span><a @click.stop="startChat(item)"></a></h2>
+									<h2 @click="toSkip(item)">
+                    <span class="name">{{item.emplName}}</span>
+                    <span class="position">{{item.positionName}}</span>
+                    <!-- <a @click.stop="startChat(item)"></a> -->
+                  </h2>
 									<div class="introduce">
                    	  <span class="word">{{item.deptName}}</span>
 										  <span class="fr prices">{{item.grade}}.0<span class="grade">评分</span></span>
