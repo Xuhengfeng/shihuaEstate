@@ -69,7 +69,7 @@ export default {
 		return {
 			showbox: 0,
             houseTypeId: 11,
-            host: 'http://112.74.181.229:7031/custAppApi'
+            host: 'http://shyj.cn/#/custAppApi'
 		};
     },
     computed: {
@@ -85,7 +85,9 @@ export default {
     },
     created() {
         var params = this.parseUrl(location);
+        var localCity = JSON.parse(localStorage.selectCity);
         console.log(params);    
+        console.log(localCity);
     },
 	methods: {
 		//登陆
