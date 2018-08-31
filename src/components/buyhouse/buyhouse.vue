@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 21:51:34 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-06-28 14:02:51
+ * @Last Modified time: 2018-08-31 10:43:02
  */
 <template>
 	<div>
@@ -404,16 +404,13 @@ export default {
         });
     },
     //房源列表请求
-    houseRequest() {
+    async houseRequest() {
       this.keyword = this.$route.query.word;
       this.params.keyword = this.$route.query.word;
       let params = {'keyword': this.keyword, 'scity': this.selectCity.value};
       let newParams = Object.assign({}, this.params, params);
-      this.$http
-      .post(this.$url.URL.HOUSE_QUERY, newParams)
-      .then(response=>{
-        this.houseList = response.data.data;
-      })
+      let result = await this.$http.post(this.$url.URL.HOUSE_QUERY, newParams);
+      this.houseList = result.data.data;
     },
     //搜索
     query(item) {
