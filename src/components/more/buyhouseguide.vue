@@ -23,19 +23,21 @@
     <div class="main">
       <div class="container">
         <ul>
-          <li v-for="item in listone[num].infoContentList" @click="infoDetail(item)">
-            <div class="img">
-              <img :src="item.imageUrl">
-            </div>
-            <div class="r-content">
-                <h3>{{item.title}}</h3>
-                <div class="description">
-                  {{item.summary}}
-                </div>
-                <div class="circle">
-                  <div v-html="$options.filters.timefilter(item.publishDateTime)"></div>
-                </div>
-            </div>
+          <li v-for="item in listone[num].infoContentList">
+            <a :href="item.phoneContentUrl">
+              <div class="img">
+                <img :src="item.imageUrl">
+              </div>
+              <div class="r-content">
+                  <h3>{{item.title}}</h3>
+                  <div class="description">
+                    {{item.summary}}
+                  </div>
+                  <div class="circle">
+                    <div v-html="$options.filters.timefilter(item.publishDateTime)"></div>
+                  </div>
+              </div>
+            </a>
           </li>
         </ul>
         <div class="noContent" v-show="!listone[num].infoContentList.length">暂无数据!</div>
@@ -126,12 +128,6 @@ export default {
           .then(res => {
               this.listone = res.data.data;
           })
-    },
-    // 查看详情
-    infoDetail(item) {
-      console.log(item)
-      // 路由外页面
-      this.$router.push({path:"/industryconsultationDetail", query: {contentUrl: item.phoneContentUrl}})
     }
   },
   components: {
@@ -179,10 +175,10 @@ export default {
 .main{
   ul{
     li{
-      display: flex;
+      a{display: flex;
       flex-flow: row nowrap;
       padding: 32px 0 22px 0;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;}
       .img{
         width: 170px;
         height: 110px;
@@ -199,6 +195,7 @@ export default {
           white-space:nowrap; 
           overflow:hidden; 
           text-overflow:ellipsis;
+          color: #000;
         }
         .description{
             font-size: 14px;
