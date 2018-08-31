@@ -5,10 +5,10 @@
 			<div class="container">
 				<div class="friendship">
 					<!--a站外 router-link站内-->
-					<span><router-link tag="a" to="/group/groupintourde">集团简介</router-link></span>  <span style="margin-left: 28px;">|</span>
-					<span><router-link tag="a" to="/group/groupculture">集团文化</router-link></span>   <span style="margin-left: 28px;">|</span>
-					<span><router-link tag="a" to="/group/aboutgroup">联系我们</router-link></span>   <span style="margin-left: 28px;">|</span>
-					<span><router-link tag="a" to="/houseestate">南宁小区</router-link></span>   <span style="margin-left: 28px;">|</span>
+					<span><router-link tag="a" to="/group/groupintourde">集团简介</router-link> |</span>  
+					<span><router-link tag="a" to="/group/groupculture">集团文化</router-link> |</span>   
+					<span><router-link tag="a" to="/group/aboutgroup">联系我们</router-link> |</span>   
+					<span><router-link tag="a" to="/houseestate">南宁小区</router-link> |</span>   
 					<span><router-link tag="a" to="/broker">南宁小区联系人</router-link></span>
 				</div>
 				<div class="footer-bd">
@@ -16,7 +16,7 @@
 						<img src="../../imgs/home/logo2.png" alt="" />
 					</div>
 					<div class="footer-bd-two">
-						<div><img src="../../imgs/home/phone.png" style="margin-right: 10px;" /><span style="font-size: 45px;">0779-3837272</span></div>
+						<div><img src="../../imgs/home/phone.png" style="margin-right: 10px;" /><span style="font-size: 45px;">0755-86568914</span></div>
 						<div style="margin-left: 47px;">
 							<p class="adress">地址:深圳市大冲商务中心A座1408</p>
 							<p class="adress">邮编:518000</p>
@@ -42,7 +42,7 @@
 						Copyright 2018 世华易居科技有限公司 粤ICP备   18074181号-1
 					</p>
 					<p >
-						联系电话: 0779-3837272 | 地址:深圳市大冲商务中心A座1408
+						联系电话: 0755-86568914 | 地址:深圳市大冲商务中心A座1408
 					</p>
 				</div>
 			</div>
@@ -72,9 +72,13 @@
 	color: #FFFFFF;
 	font-size: 19px;
 }
+.footer .friendship span{
+	vertical-align: top;
+}
 .footer .friendship span a{
-	margin-left: 28px;
+	padding: 0 10px;
 	color: #FFFFFF;
+	vertical-align: top;
 }
 .footer .footer-bd{
 	display: flex;

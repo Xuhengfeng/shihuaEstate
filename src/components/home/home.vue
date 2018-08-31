@@ -224,7 +224,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in hotHouselist" @click="newsHousestip(item)">
+						<li v-for="(item,index) in hotHouselist"  v-show="index<=2?true:false" @click="newsHousestip(item)">
 							<div class="image">
 								<img :src="item.imageUrl" />
 							</div>
