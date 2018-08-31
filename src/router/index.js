@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-08-31 10:37:13
+ * @Last Modified time: 2018-08-31 17:31:19
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -85,9 +85,9 @@ const router = new Router({
 		{path:"/contrast",component:contrast,meta:{KeepAlive:false}},//房源对比
 
 		{path:"/buyHouse",component:buyHouse,meta:{KeepAlive:true}},//我要买房
-		//{path:"/buyHouse/twoHandHouseDetail/:id",component:twoHandHouseDetail,meta:{KeepAlive:false}},//二手房详情	
-		//{path:"/rentHouse",component:rentHouse,meta:{KeepAlive:true}},//租房
-		//{path:"/rentHouseDetail/:id",component:rentHouseDetail,meta:{KeepAlive:false}},//租房详情
+		{path:"/buyHouse/twoHandHouseDetail/:id",component:twoHandHouseDetail,meta:{KeepAlive:false}},//二手房详情	
+		{path:"/rentHouse",component:rentHouse,meta:{KeepAlive:true}},//租房
+		{path:"/rentHouseDetail/:id",component:rentHouseDetail,meta:{KeepAlive:false}},//租房详情
 	
 		{path:"/newHouse",component:newHouse,meta:{KeepAlive:true}},//新房
 		{path:"/newHouseDetail/:id",component:newHouseDetail,meta:{KeepAlive:false}},//新房详情
