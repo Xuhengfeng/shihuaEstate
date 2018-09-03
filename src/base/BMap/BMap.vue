@@ -44,7 +44,6 @@ export default {
       that.map = new BMap.Map("bMap");
       let point = new BMap.Point(116.331398, 39.897445);//城市的坐标
       that.map.centerAndZoom(point, 12);
-
       let geolocation = new BMap.Geolocation();
       geolocation.enableSDKLocation();//开启SDK辅助定位
       geolocation.getCurrentPosition(function(r) {
@@ -59,7 +58,6 @@ export default {
       var local = new BMap.LocalSearch(this.map, {
         renderOptions: {map: this.map,autoViewport: true}
       });
-      console.log(this.addr.name)
       switch(num){
         case 1:local.searchNearby('交通',this.addr.name);break;
         case 2:local.searchNearby('购物',this.addr.name);break;

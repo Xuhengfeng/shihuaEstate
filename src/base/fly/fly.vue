@@ -49,8 +49,7 @@ export default {
             /* y 轴 贝塞尔曲线*/
             this.$refs.ball.style.transition="all 0.6s cubic-bezier(.39,1.59,.47,1.26)";
           }
-
-          el.style.display = ''
+          el.style.display = '';
           //外层y向动画
           el.style.webkitTransform = `translate3d(0, ${y}px, 0)`
           el.style.transform = `translate3d(0, ${y}px, 0)`
