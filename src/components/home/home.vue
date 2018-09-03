@@ -158,7 +158,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li  @click="toSkiptwo(item)"  v-for="item in hotBuilding">
+						<li v-for="(item,index) in hotBuilding" v-show="index<=2?true:false" @click="toSkiptwo(item)">
 							<div class="image">
 								<img :src=item.housePic />
 							</div>
@@ -180,7 +180,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false"  @click="toSkipthree(item)" >
+						<li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false"  @click="toSkipthree(item)">
 							<div class="image">
 								<img :src= item.housePic />
 							</div>
@@ -202,7 +202,7 @@
 				</div>
 				<div class="goods-bd">
 					<ul>
-						<li v-for="item in newHouselist" @click="newsHousestip(item)">
+						<li v-for="(item,index) in newHouselist" v-show="index<=2?true:false" @click="newsHousestip(item)">
 							<div class="image">
 								<img :src="item.imageUrl" />
 							</div>
