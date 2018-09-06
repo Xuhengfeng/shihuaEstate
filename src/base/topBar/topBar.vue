@@ -26,14 +26,14 @@
                         <router-link tag="li" to="/mine/indexmessage">消息</router-link>
                     </ul>
                 </div>
-                <div>热线电话0779-3837272</div>
+                <div>热线电话0755-86568914</div>
             </div>
 
             <ul class="two fl">
                 <li>更多
                     <ol class="item2">
                         <!-- 外链 -->
-                        <li><a :href="host+'/index/beihai'" :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
+                        <li><a :href="estate" :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
                         <router-link tag="li" to="/agencyBusiness" :class="wordColor=='b'?'bgColor':''">代办业务</router-link>
                         <router-link tag="li" to="/convenienceservices" :class="wordColor=='c'?'bgColor':''">便民服务</router-link>
                         <router-link tag="li" to="/housetuoguan" :class="wordColor=='d'?'bgColor':''">房屋托管</router-link>
@@ -69,7 +69,8 @@ export default {
 		return {
 			showbox: 0,
             houseTypeId: 11,
-            host: 'http://shyj.cn/#/custAppApi'
+            host: 'http://shyj.cn/custAppApi',
+            estate: '',//小区
 		};
     },
     computed: {
@@ -84,10 +85,8 @@ export default {
         }
     },
     created() {
-        var params = this.parseUrl(location);
-        var localCity = JSON.parse(localStorage.selectCity);
-        console.log(params);    
-        console.log(localCity);
+        var city = JSON.parse(localStorage.selectCity);
+        this.estate = this.houst + "/buildController/estate?scity=" + city.scity;
     },
 	methods: {
 		//登陆

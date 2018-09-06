@@ -39,7 +39,7 @@
 				</div>
 				<div class="footer-ft">
 					<p >
-						Copyright 2018 世华易居科技有限公司 粤ICP备   18074181号-1
+						Copyright@2018 世华易居科技有限公司粤ICP备 18074181号-1
 					</p>
 					<p >
 						联系电话: 0755-86568914 | 地址:深圳市大冲商务中心A座1408
@@ -58,10 +58,7 @@
 .footer{
 	width: 100%;
 	height: 380px;
-	background-color: #000;
-	background-image: url(../../imgs/home/di.png);
-	background-repeat: no-repeat;
-	background-position: center 0;
+	background: #3e3f43 url("../../imgs/home/di.png") no-repeat center 0;
 	background-size: 1920px auto;
 	padding-top: 30px;
 	box-sizing: border-box;
