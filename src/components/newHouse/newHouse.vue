@@ -252,6 +252,7 @@ export default {
 //高亮
 .querybtn {
   color: #ff4343;
+  font-weight: bold;
 }
 
 //列表项 
