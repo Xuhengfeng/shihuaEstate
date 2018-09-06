@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-09-04 18:25:43
+ * @Last Modified time: 2018-09-06 15:17:57
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -29,8 +29,8 @@ const housetuoguan = resolve => require(['components/more/housetuoguan'], resolv
 const convenienceservices = resolve => require(['components/more/convenienceservices'], resolve)//便民服务
 const decoration = resolve => require(['components/more/decoration'], resolve)//装修
 const publicgood = resolve => require(['components/more/publicgood'], resolve)//世华公益
-const industryconsultation = resolve => require(['components/more/industryconsultation'], resolve)//世华公益
-const agencyBusiness = resolve => require(['components/more/agencyBusiness'], resolve)//世华公益
+const industryconsultation = resolve => require(['components/more/industryconsultation'], resolve)//行业咨询
+const agencyBusiness = resolve => require(['components/more/agencyBusiness'], resolve)//代办业务
 
 
 const estatedetail = resolve => require(['components/houseestate/estatedetail'], resolve)//小区详情
