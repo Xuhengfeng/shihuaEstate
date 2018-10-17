@@ -74,7 +74,7 @@ const group = resolve => require(['components/group/group'], resolve)//集团
 
 Vue.use(Router)
 const router = new Router({
-	mode: 'hash', //历史模式, 取消地址栏"history#"
+	mode: 'history', //历史模式, 取消地址栏"#"
 	scrollBehavior(to, from, savedPosition) {
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
