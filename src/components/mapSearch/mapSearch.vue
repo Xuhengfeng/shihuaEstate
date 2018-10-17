@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-27 20:11:37 
  * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-19 23:43:49
+ * @Last Modified time: 2018-10-17 20:19:21
  */
 <template>
     <!-- 地图找房 -->
@@ -140,7 +140,6 @@
 </template>
 
 <script>
-import './mapSearch.css';
 export default {
   data() {
     return {
@@ -526,8 +525,8 @@ export default {
   }
 }
 </script>
-
 <style lang="less" scoped>
+@import url('./mapSearch.css');
 .header {
   position: relative;
   z-index: 100;
