@@ -67,10 +67,7 @@
 									<img :src="item.imageUrl"/>
 								</div>
 								<div class="direciton">
-									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}
-                    <!-- <span class="fr" @click.stop="collection(item,$event)">收藏</span>
-                    <span class="contrast fr" @click.stop="addContrast(item, $event)">{{item.contentFlag?item.contentFlag:'加入对比'}}</span> -->
-                  					</div>
+									<div class="introduce" @click="toSkip(item)" >{{item.buildName}}</div>
 									<div class="introduce"><img src="../../imgs/buyhouse/house.png" />
                     <span class="word">{{item.tag}}</span>
 										<span class="fr prices">{{item.saleTotal}}</span></div>
@@ -145,17 +142,16 @@ export default {
       },
       houseList: [], //新房列表
       cityCode: null,//用来拼接url地址
-      selectCity: JSON.parse(localStorage.selectCity),//当前城市
+      selectCity: null,//当前城市
       contrastList: [],//对比清单列表
       collectionFlag: true, //收藏标识
     };
   },
   created() {
     //初始化修正请求参数体
-    this.params.scity = this.selectCity.value;
-    this.cityCode = this.selectCity.value;
-
-    this.render(this.selectCity.value);
+    this.params.scity = JSON.parse(localStorage.selectCity).value;
+    this.cityCode =  JSON.parse(localStorage.selectCity).value;
+    this.render();
   },
   methods: {
     //翻页
@@ -165,7 +161,7 @@ export default {
       document.documentElement.scrollTop = 0
       this.houseRequest();
     },
-    render(city) {
+    render() {
       //房源列表请求
       this.houseRequest();
       //新房城市列表
@@ -187,8 +183,8 @@ export default {
       this.$http
         .get(this.$url.URL.NEWBUILDING_INDEX)
         .then(response=>{
-          response.data.data.unshift({cityCode:null,cityName:"不限",dataList:[]});
           this.cityList = response.data.data;
+          this.address(response.data.data[0], 0);
         })
     },
     //点击区域条件
