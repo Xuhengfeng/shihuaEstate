@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-26 16:05:45 
- * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-08-31 17:31:19
+ * @Last Modified by: Xuhengfeng
+ * @Last Modified time: 2018-10-17 21:53:28
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -79,7 +79,8 @@ const router = new Router({
 		return {x: 0, y: 0}//页面切换滚动顶部
 	},
   	routes: [
-		{path:"/",component:home,meta:{KeepAlive:false}},//首页
+		{path:'/',redirect:{name:"home"}},  // 重定向到主页
+		{name:'home', path:'/home',component:home,meta:{KeepAlive:false}},//主页
 		{path:"/mapSearch",component:mapSearch,meta:{KeepAlive:false}},//地图找房
 		{path:"/searchlist",component:searchlist,meta:{KeepAlive:false}},//搜索列表
 		{path:"/contrast",component:contrast,meta:{KeepAlive:false}},//房源对比
@@ -148,6 +149,7 @@ const router = new Router({
 			path:"indexdelegationdetail/:id",component:indexdelegationdetail,meta:{KeepAlive:false}},{//我的委托详情
 			path:"comment",component:comment,meta:{KeepAlive:false}} //我的评论
 		]},
+		{path: "*", redirect: "/"}
   	]
 })
 

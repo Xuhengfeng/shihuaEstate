@@ -88,11 +88,3 @@ new Vue({
 })
 
 
-console.log('%c我怎么都不想睡', 'color:red;background:#fff')
-console.log('%c天特别的亮夜特别的黑。', 'color:red;background:#fff')
-console.log('%c当我深深的呼吸。', 'color:red;background:#fff')
-console.log('%c心中充满想你的甜蜜。', 'color:red;background:#fff')
-console.log('%c想和你走在雨中。', 'color:red;background:#fff')
-console.log('%c想要你牵我的手。', 'color:red;background:#fff')
-console.log('%c这感觉这一切就好像飘在外太空。只有我们存在。', 'color:red;background:#fff')
-console.log('%c快加入我们吧！QQ:564297479', 'color:red;background:#fff')

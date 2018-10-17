@@ -44,6 +44,7 @@
 				</div>
 				<div class="navmenu fr">
 					<ul class="item1">
+
 						<router-link tag="li" to="">
 							<div v-if="!isLogin">
 								<i class="iconfont xhf-icon-yonghu"></i>
@@ -68,9 +69,9 @@
 							</ul>
 						</router-link>
 						
-						<router-link tag="li" to="/more">更多
+						<li>更多
 							<ul>
-								<router-link tag="li" to="/houseestate">小区找房</router-link>
+								<li><a :href='"http://shyj.cn/custAppApi/buildController/estate?scity="+pinyinCity'>小区找房</a></li>
 								<router-link tag="li" to="/agencyBusiness">代办业务</router-link>
 								<router-link tag="li" to="/convenienceservices">便民服务</router-link>
 								<router-link tag="li" to="/housetuoguan">房屋托管</router-link>
@@ -80,7 +81,8 @@
 								<router-link tag="li" to="/buyhouseguide">购房指南</router-link>
 								<router-link tag="li" to="/industryconsultation">行业资讯</router-link>
 							</ul>
-						</router-link>
+						</li>
+
 						<router-link tag="li" to="/residence">旅居投资</router-link>
 						<router-link tag="li" to="/forginwork">海外置业</router-link>
 						<router-link tag="li" to="/shoper">找门店</router-link>
@@ -91,10 +93,12 @@
 								<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
 							</ul>
 						</router-link>
-						<router-link tag="li" to="/rentHouse">租房</router-link>
+
+						<li><a :href='"http://shyj.cn/custAppApi/house_r/renthouse?scity="+pinyinCity'>租房</a></li>
 						<router-link tag="li" to="/newHouse">新房</router-link>
-						<router-link tag="li" to="/buyHouse">二手房</router-link>
-						<router-link tag="li" to="/home">首页</router-link>
+						<li><a :href='"http://shyj.cn/custAppApi/house_c/twohouse?scity="+pinyinCity'>二手房</a></li>
+						<li><a :href='"http://shyj.cn/custAppApi/index/"+pinyinCity'>首页</a></li>
+
 					</ul> 
 				</div>
 				<div class="search-box-wrap">
@@ -271,7 +275,8 @@
 				city: [], //城市列表
 				showbox: 0, //显示对应的dialog
 				address: '',//定位城市
-				selectCity: '定位中...',//用户选择城市
+				selectCity: '定位中',//城市名字
+				pinyinCity: 'beihai',//城市拼音
 				houseRecmdlist:[] , //二手房为你精选
 				rentHouseRecmdlist:[],  //时尚租房
 				hotBuilding:[],    //热门小区
@@ -314,7 +319,6 @@
 				//地址已经缓存的
 				if(JSON.parse(localStorage.selectCity)) {
 					let cityName = JSON.parse(localStorage.selectCity).name;
-					this.selectCity = cityName;
 					this.changeAddress(cityName);
 				}else{
 					//定位
@@ -354,9 +358,10 @@
 					this.$http.get(this.$url.URL.DEFAULT_CITY)
 					.then(response=>{
 						let cityName = response.data.data.name;
-						this.selectCity = cityName;
-						localStorage.address = cityName;
+						let pinyinCityName = pinyin(cityName, {noTone: true}).replace(/\s+/g,"");	
+						localStorage.address = JSON.stringify({'value': pinyinCityName, 'name': cityName});
 						localStorage.selectCity = JSON.stringify(response.data.data);
+						this.selectCity = cityName;
 						//这是页面所有请求的开始
 						this.changeAddress(cityName);
 						//其他执行
@@ -381,8 +386,10 @@
 						if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
 							let point = new BMap.Point(r.point.lng,r.point.lat);
 							geoc.getLocation(point, function(rs) {
-								that.address = rs.addressComponents.city.slice(0, -1);
-								localStorage.address = that.address;
+								let address = rs.addressComponents.city.slice(0, -1);
+								let pinyinAddress = pinyin(address, {noTone: true}).replace(/\s+/g,"");	
+								that.address = address;
+								localStorage.address = JSON.stringify({'value': pinyinAddress, 'name': address});
 								//其他执行
 								resolve(that.address);
 							});    
@@ -530,19 +537,15 @@
 				this.$router.push({path:path});
 			},
 			//选定地址
-			changeAddress(item) {
-				//item是中文, name是拼音
-				let name = pinyin(item, {noTone: true}).replace(/\s+/g,"");	
-				let selectCity = {value: name,name: item};
-				this.selectCity = item;
+			changeAddress(cityName) {
+				let pingyinCity = pinyin(cityName, {noTone: true}).replace(/\s+/g,"");	
+				localStorage.selectCity = JSON.stringify({value: pingyinCity,name: cityName});	
+				this.selectCity = cityName;
+				this.pinyinCity = pingyinCity;
 				this.cityChange = false;
-				//刷新首页
-				this.renderRequest(name);
-				localStorage.selectCity = JSON.stringify(selectCity);	
+				//刷新页面
+				this.renderRequest(pingyinCity);
 			},
-			// clickrouter(index) {
-			// this.num = index;
-			// },
 			//开始找房
 			searchHouse() {
 				let num = this.placeholderTextType;
