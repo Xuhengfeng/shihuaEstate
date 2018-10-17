@@ -42,35 +42,34 @@
 						</div>
 					</transition>
 				</div>
-				<div class="navmenu fr">
-					<ul class="item1">
 
-						<router-link tag="li" to="">
-							<div v-if="!isLogin">
-								<i class="iconfont xhf-icon-yonghu"></i>
-								<span class="login" @click="login()">登录</span> 
-								<span>/</span>
-								<span class="register" @click="register()">立即注册</span>
-							</div>
-							<div v-else>
-								<div class="headImage">
-									<img :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
-								</div>
-								<router-link tag="span" to="/mine">{{userInfo.nickname}}</router-link>
-								<span>/</span> 
-								<span class="logout"  @click="logout()">退出</span>
-							</div>
-							<ul class="item4" v-if="isLogin">
-								<router-link tag="li" to="/mine">个人账户</router-link>
-								<router-link tag="li" to="/mine/indexseeone">预约看房</router-link>
-								<router-link tag="li" to="/mine/indexcollection">我的收藏</router-link>
-								<router-link tag="li" to="/mine/indexdelegation">我的委托</router-link>
-								<router-link tag="li" to="/mine/indexmessage">消息</router-link>
-							</ul>
-						</router-link>
-						
+				<div class="fr user">
+					<div class="login" v-if="!isLogin">
+						<i class="iconfont xhf-icon-yonghu"></i>
+						<span @click="login()">登录</span> 
+						<em>/</em>
+						<span @click="register()">立即注册</span>
+					</div>
+					<div class="logout" v-if="isLogin">
+						<img class="headImage" :src="userInfo.headImage?userInfo.headImage:'../../imgs/home/avatar.png'">
+						<router-link tag="span" to="/mine">{{userInfo.nickname}}11111111</router-link>
+						<em>/</em> 
+						<span @click="logout()">退出</span>
+						<ul class="oUl1" v-if="isLogin">
+							<router-link tag="li" to="/mine">个人账户</router-link>
+							<router-link tag="li" to="/mine/indexseeone">预约看房</router-link>
+							<router-link tag="li" to="/mine/indexcollection">我的收藏</router-link>
+							<router-link tag="li" to="/mine/indexdelegation">我的委托</router-link>
+							<router-link tag="li" to="/mine/indexmessage">消息</router-link>
+						</ul>
+					</div>
+				</div>
+
+				<div class="fr navmenu">
+					<ul class="item1">
 						<li>更多
-							<ul>
+						 	<ul class="oUl2">
+                <!-- 外链 -->
 								<li><a :href='"http://shyj.cn/custAppApi/buildController/estate?scity="+pinyinCity'>小区找房</a></li>
 								<router-link tag="li" to="/agencyBusiness">代办业务</router-link>
 								<router-link tag="li" to="/convenienceservices">便民服务</router-link>
@@ -82,22 +81,23 @@
 								<router-link tag="li" to="/industryconsultation">行业资讯</router-link>
 							</ul>
 						</li>
-
 						<router-link tag="li" to="/residence">旅居投资</router-link>
 						<router-link tag="li" to="/forginwork">海外置业</router-link>
 						<router-link tag="li" to="/shoper">找门店</router-link>
 						<router-link tag="li" to="/broker">找经纪人</router-link>
 						<router-link tag="li" to="/">业主委托
-							<ul>
+							<ul class="oUl3">
 								<router-link tag="li" to="/entrustmentrent/rent">我要租房</router-link>
 								<router-link tag="li" to="/entrustmentrent/sell">我要出售</router-link>
 							</ul>
 						</router-link>
 
-						<li><a :href='"http://shyj.cn/custAppApi/house_r/renthouse?scity="+pinyinCity'>租房</a></li>
+						<li class="hoverFont"><a :href='"http://shyj.cn/custAppApi/house_r/renthouse?scity="+pinyinCity'>租房</a></li>
+						
 						<router-link tag="li" to="/newHouse">新房</router-link>
-						<li><a :href='"http://shyj.cn/custAppApi/house_c/twohouse?scity="+pinyinCity'>二手房</a></li>
-						<li><a :href='"http://shyj.cn/custAppApi/index/"+pinyinCity'>首页</a></li>
+
+						<li class="hoverFont"><a :href='"http://shyj.cn/custAppApi/house_c/twohouse?scity="+pinyinCity'>二手房</a></li>
+						<li class="hoverFont"><a :href='"http://shyj.cn/custAppApi/index/"+pinyinCity'>首页</a></li>
 
 					</ul> 
 				</div>
@@ -311,7 +311,7 @@
 				return this.$store.state.logined;
 			},
 			userInfo() {
-            	return this.$store.state.LoginedUser;
+        return this.$store.state.LoginedUser;
 			}
 		},
 		created() {
@@ -742,9 +742,39 @@
 	margin-left: 15px;
 	cursor: pointer;
 }
-
+.user{
+	margin-top: 10px;
+}
+.user span:hover{
+	color: red;
+	cursor: pointer;
+}
+.user .logout{
+	height: 25px;
+}
+.user .logout img{
+	margin-top:-5px;
+}
+.user .logout:hover .oUl1{
+	display: block;
+}
+.user .oUl1{
+	display: none;
+	padding-top: 10px;
+}
+.user .oUl1 li{
+	color: black;
+	font-size: 14px;
+	height: 30px;
+	width: 80px;
+	line-height: 30px;
+	text-indent: 7px;
+	border-bottom: 1px solid #a7a7a6;
+	background: #fff;
+	cursor: pointer;
+}
 .navmenu {
-	margin-top: 7px;
+	margin: 10px 10px 0 0;
 }
 .navmenu .item1>li {
 	float: right;
@@ -753,44 +783,50 @@
 	color: #FFFFFF;
 	font-size: 18px;
 	position: relative;
-	padding-bottom: 20px;
+}
+.hoverFont a{
+	color: #fff;
+}
+.hoverFont:hover a{
+	color: red;
 }
 .loginregize{
 	margin-left: 20px;
 	font-size: 16px;
 }
 .navmenu .item1>li ul {
+	visibility: hidden;
 	position: absolute;
 	left: 0;
-	visibility: hidden;
 	width: 80px;
-	background: #FFFFFF;
-	margin-top: 15px;
+	padding-top: 15px;
 }
-
-.navmenu .item1>li:hover ul {
+.navmenu .item1>li:hover>ul{
 	visibility: visible;
 }
-
-.navmenu .item1>li ul li {
+.navmenu .item1>li>ul>li{
 	color: black;
 	font-size: 14px;
 	height: 30px;
 	line-height: 30px;
 	text-indent: 10px;
 	border-bottom: 1px solid #a7a7a6;
+	background: #fff;
 }
-
-.navmenu .item1 li:hover:not(:first-child){
+.navmenu .item1>li>ul>li>a{
+	color: #000000;
+}
+.navmenu .item1>li:hover{
+	color: red;
+}
+.oUl1>li:hover,
+.navmenu .oUl2>li:hover,
+.navmenu .oUl2>li:hover>a,
+.navmenu .oUl3>li:hover{
 	color: red;
 }
 
 /* 登录/退出 */
-.navmenu .login:hover,
-.navmenu .register:hover,
-.navmenu .logout:hover{
-	color: red;
-}
 .icon-yonghu,
 .login,
 .logout {
@@ -802,13 +838,7 @@
 	height: 25px;
 	border-radius: 50%;
 	overflow: hidden;
-	float: left;
-	margin-right: 10px;
 	vertical-align: middle;
-	img{
-		width: 100%;
-		height: 100%;
-	}
 }
 
 

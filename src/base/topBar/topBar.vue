@@ -33,7 +33,7 @@
                 <li>更多
                     <ol class="item2">
                         <!-- 外链 -->
-                        <li><a :href="host+'/index/beihai'" :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
+                        <li><a :href='"http://shyj.cn/custAppApi/buildController/estate?scity="+pinyinCity' :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
                         <router-link tag="li" to="/agencyBusiness" :class="wordColor=='b'?'bgColor':''">代办业务</router-link>
                         <router-link tag="li" to="/convenienceservices" :class="wordColor=='c'?'bgColor':''">便民服务</router-link>
                         <router-link tag="li" to="/housetuoguan" :class="wordColor=='d'?'bgColor':''">房屋托管</router-link>
@@ -55,10 +55,10 @@
                     </ol>
                 </router-link>
                 <!-- 外链 -->
-                <li><a :href="host+'/house_r/renthouse?scity=beihai'" :class="wordColor==6?'bgColor':''">租房</a></li>
+                <li><a :href='"http://shyj.cn/custAppApi/house_r/renthouse?scity="+pinyinCity' :class="wordColor==6?'bgColor':''">租房</a></li>
                 <router-link tag="li" to="/newHouse" :class="wordColor==7?'bgColor':''">新房</router-link>
-                <li><a :href="host+'/house_c/twohouse?scity=beihai'" :class="wordColor==8?'bgColor':''">二手房</a></li>
-                <li><a :href="host+'/index/beihai'">首页</a></li>
+                <li><a :href='"http://shyj.cn/custAppApi/house_c/twohouse?scity="+pinyinCity' :class="wordColor==8?'bgColor':''">二手房</a></li>
+                <li><a :href="'http://shyj.cn/custAppApi/index/'+pinyinCity">首页</a></li>
             </ul>
         </div>
     </div>
@@ -69,7 +69,7 @@ export default {
 		return {
 			showbox: 0,
             houseTypeId: 11,
-            host: 'http://shyj.cn/#/custAppApi'
+            pinyinCity: 'beihai',//城市拼音
 		};
     },
     computed: {
@@ -84,10 +84,7 @@ export default {
         }
     },
     created() {
-        var params = this.parseUrl(location);
-        var localCity = JSON.parse(localStorage.selectCity);
-        console.log(params);    
-        console.log(localCity);
+        var pinyinCity = JSON.parse(localStorage.selectCity).value;
     },
 	methods: {
 		//登陆
