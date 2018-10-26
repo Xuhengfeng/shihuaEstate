@@ -84,7 +84,7 @@ export default {
         }
     },
     created() {
-        var pinyinCity = JSON.parse(localStorage.selectCity).value;
+        this.pinyinCity = JSON.parse(localStorage.selectCity).value
     },
 	methods: {
 		//登陆
