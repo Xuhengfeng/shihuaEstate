@@ -2,7 +2,7 @@
  * @Author: 徐横峰 
  * @Date: 2018-04-29 18:52:11 
  * @Last Modified by: 564297479@qq.com
- * @Last Modified time: 2018-10-26 12:06:46
+ * @Last Modified time: 2018-10-29 14:19:16
  */
 <template>
   <div id="app">
@@ -207,7 +207,6 @@ export default {
     },
     //刷新对比详情
     refreshContrastDetail(sdidStr) {
-      console.log(1212)
       this.$http.get(this.$url.URL.TWOHOUSE_CONTRAST+"?sdidStr="+sdidStr+"&scity="+this.city).then(res => {
         console.log(res.data.data);
       });

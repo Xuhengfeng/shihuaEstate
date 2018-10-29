@@ -41,15 +41,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       }
     ),
     new UglifyJsPlugin({
-      //利用多核能力压缩 
-      beautify: { 
-        cache: true, 
-        workers: os.cpus().length 
-      },
-      //最紧凑的输出 
-      beautify: true, 
-      //删除所有的注释 
-      comments: true, 
       uglifyOptions: {
         compress: {
           warnings: false
@@ -71,7 +62,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
+        ? { safe: true, map: { inline: false }, discardComments: {removeAll: true }  }
         : { safe: true }
     }),
     // generate dist index.html with correct asset hash for caching.
