@@ -1,8 +1,8 @@
 /*
  * @Author: 徐横峰 
  * @Date: 2018-04-27 14:34:13 
- * @Last Modified by: Xuhengfeng
- * @Last Modified time: 2018-08-22 00:41:57
+ * @Last Modified by: 564297479@qq.com
+ * @Last Modified time: 2018-10-29 15:42:17
  */
 <template>
   <div class="sideBar">
@@ -64,21 +64,21 @@
                   我收藏的房源
               </div>
           </li>
-          <li class="four"><img src="../../imgs/home/calc.png">
-              <!-- <div class="screenOuter">
+          <!-- <li class="four"><img src="../../imgs/home/calc.png">
+              <div class="screenOuter">
                   计算器
-              </div> -->
+              </div>
           </li>
           <li class="five"><img src="../../imgs/home/ideaTick.png">
-              <!-- <div class="screenOuter">
+              <div class="screenOuter">
                   反馈
-              </div> -->
+              </div>
           </li>
           <li class="six"><img src="../../imgs/home/service.png">
-              <!-- <div class="screenOuter">
+              <div class="screenOuter">
                   客服
-              </div> -->
-          </li>
+              </div>
+          </li> -->
       </ul>
       <div class="up">
         <i class="iconfont xhf-icon-top"></i>

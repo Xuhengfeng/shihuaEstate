@@ -9,7 +9,14 @@
 					<span><router-link tag="a" to="/group/groupculture">集团文化</router-link> |</span>   
 					<span><router-link tag="a" to="/group/aboutgroup">联系我们</router-link> |</span>   
 					<span><router-link tag="a" to="/houseestate">南宁小区</router-link> |</span>   
+
+					<span><a :href='"http://shyj.cn/custAppApi/buildController/estate?scity="+pinyinCity'>{{cityName}}小区</a> |</span>   
+
 					<span><router-link tag="a" to="/broker">南宁小区联系人</router-link></span>
+					
+					<li><a :href='"http://shyj.cn/custAppApi/buildController/estate?scity="+pinyinCity' :class="wordColor=='a'?'bgColor':''" style="color:#000">小区找房</a></li>
+
+
 				</div>
 				<div class="footer-bd">
 					<div class="footer-bd-one">
@@ -39,10 +46,9 @@
 				</div>
 				<div class="footer-ft">
 					<p >
-						Copyright 2018 世华易居科技有限公司 粤ICP备   18074181号-1
-					</p>
-					<p >
-						联系电话: 0755-86568914 | 地址:深圳市大冲商务中心A座1408
+						世华易居(深圳)科技有限公司 | 粤ICP备18074181号-1 | Copyright©2017-2018
+						<br/>
+						联系电话: 0755-86568914 | 地址:深圳市大冲商务中心A座1408						
 					</p>
 				</div>
 			</div>
@@ -52,6 +58,18 @@
 </template>
 
 <script>
+export default {
+    data() {
+		return {
+			pinyinCity: 'beihai',//城市拼音
+			cityName: '北海'
+		}
+	},
+	created() {
+		this.pinyinCity = JSON.parse(localStorage.selectCity).value;
+		this.cityName = JSON.parse(localStorage.selectCity).name;
+    },
+}
 </script>
 
 <style scoped>
@@ -123,9 +141,8 @@
 	text-align: center;
 }
 .footer-ft p{
-	margin-top: 10px;
 	color: #FFFFFF;
-	line-height: 1;
+	line-height: 1.5;
 }
 .adress{
 	margin-top: 10px;
