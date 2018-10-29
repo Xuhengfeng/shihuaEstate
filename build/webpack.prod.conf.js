@@ -41,6 +41,15 @@ const webpackConfig = merge(baseWebpackConfig, {
       }
     ),
     new UglifyJsPlugin({
+      //利用多核能力压缩 
+      beautify: { 
+        cache: true, 
+        workers: os.cpus().length 
+      },
+      //最紧凑的输出 
+      beautify: true, 
+      //删除所有的注释 
+      comments: true, 
       uglifyOptions: {
         compress: {
           warnings: false
